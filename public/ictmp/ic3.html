@@ -1,0 +1,31 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:B;src:url(/fonts/bricolage.woff);font-weight:400 800}
+*{margin:0}body{background:#222;display:flex;gap:20px;padding:10px;flex-wrap:wrap;width:1600px}
+.i{width:512px;height:512px;position:relative;overflow:hidden;background:#0a0a0c;flex:none}
+.i img{position:absolute;filter:drop-shadow(0 12px 18px rgba(0,0,0,.5))}
+/* 1 */
+#v1{background:radial-gradient(circle at 0% 0%,rgba(255,79,134,.55),transparent 55%),radial-gradient(circle at 100% 100%,rgba(77,163,255,.5),transparent 55%),#0a0a0c}
+#v1 .bm{left:181px;top:70px;width:150px;filter:none;opacity:.95}
+#v1 .a{left:44px;top:128px;width:250px;transform:scaleX(-1) rotate(-27deg)}
+#v1 .b{left:218px;top:128px;width:250px;transform:rotate(-27deg)}
+#v1 i{position:absolute;top:220px;width:46px;height:120px;border:7px solid transparent;border-right-color:rgba(255,255,255,.9);border-radius:50%}
+#v1 .l1{left:4px;transform:scaleX(-1)}#v1 .l2{right:4px}
+/* 2 */
+#v2{background:radial-gradient(circle at 50% 50%,rgba(255,106,77,.45),transparent 60%),radial-gradient(circle at 50% 50%,#1a0f1a,#0a0a0c 70%)}
+#v2 img{width:205px;height:205px;left:153px;top:58px;transform-origin:50% 96%}
+/* 3 */
+#v3{background:#0a0a0c}
+#v3 .bub{position:absolute;left:56px;top:70px;width:400px;height:330px;border-radius:120px 120px 120px 34px;background:linear-gradient(135deg,#FF3D7F,#FF6A4D 50%,#FFA53D);box-shadow:inset 0 -18px 40px rgba(0,0,0,.18),inset 0 14px 30px rgba(255,255,255,.25),0 20px 50px rgba(255,79,134,.35)}
+#v3 .bub::after{content:"";position:absolute;left:30px;bottom:-62px;width:90px;height:90px;background:#FF5A5E;clip-path:polygon(0 0,100% 0,0 100%);border-radius:0 0 0 18px}
+#v3 .f{width:170px;top:150px}
+#v3 .sp{width:104px;right:34px;top:30px}
+</style>
+<div class="i" id="v1"><img class="bm" src="collision.png"><img class="a" src="raised_hand_3d_light.png"><img class="b" src="raised_hand_3d_medium-dark.png"><i class="l1"></i><i class="l2"></i></div>
+<div class="i" id="v2">
+<img src="raised_hand_3d_light.png" style="transform:rotate(0deg)">
+<img src="raised_hand_3d_medium.png" style="transform:rotate(72deg)">
+<img src="raised_hand_3d_dark.png" style="transform:rotate(144deg)">
+<img src="raised_hand_3d_medium-light.png" style="transform:rotate(216deg)">
+<img src="raised_hand_3d_medium-dark.png" style="transform:rotate(288deg)">
+</div>
+<div class="i" id="v3"><div class="bub"></div><img class="f" src="man_3d_light.png" style="left:70px"><img class="f" src="girl_3d_dark.png" style="left:270px"><img class="f" src="woman_curly_hair_3d_medium.png" style="left:170px;top:130px;width:180px;z-index:2"><img class="sp" src="sparkles.png"></div>

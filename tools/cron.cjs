@@ -16,6 +16,24 @@ const TX = {
   en: { more: (n) => ` (+${n - 1} more)`, reply: (ti) => `replies to “${ti}”`, join: (n, g) => [`👋 ${n} joined the crew`, `group “${g}”`],
     change: (ti, w, p) => [`✏️ “${ti}” has changed`, `new plan: ${w} · ${p}`], remind: (ti, w, p) => [`⏰ In about 30 min: ${ti}`, `starts ${w} · ${p}`],
     crew: (ti) => [`🎉 Full crew!`, `5+ people are in for “${ti}”`], surprise: "surprise 🎁" },
+  es: { more: (n) => ` (+${n - 1} mens.)`, reply: (ti) => `respuestas en «${ti}»`, join: (n, g) => [`👋 ${n} se une a la crew`, `grupo «${g}»`],
+    change: (ti, w, p) => [`✏️ Cambio en «${ti}»`, `nuevo plan: ${w} · ${p}`], remind: (ti, w, p) => [`⏰ En unos 30 min: ${ti}`, `empieza ${w} · ${p}`],
+    crew: (ti) => [`🎉 ¡Crew completa!`, `5+ personas van a «${ti}»`], surprise: "sorpresa 🎁" },
+  de: { more: (n) => ` (+${n - 1} Nachr.)`, reply: (ti) => `Antworten zu „${ti}“`, join: (n, g) => [`👋 ${n} ist jetzt in der Crew`, `Gruppe „${g}“`],
+    change: (ti, w, p) => [`✏️ „${ti}“ wurde geändert`, `neuer Plan: ${w} · ${p}`], remind: (ti, w, p) => [`⏰ In ca. 30 Min.: ${ti}`, `Start ${w} · ${p}`],
+    crew: (ti) => [`🎉 Crew komplett!`, `5+ Leute sind bei „${ti}“ dabei`], surprise: "Überraschung 🎁" },
+  fr: { more: (n) => ` (+${n - 1} msg)`, reply: (ti) => `réponses à « ${ti} »`, join: (n, g) => [`👋 ${n} rejoint la team`, `groupe « ${g} »`],
+    change: (ti, w, p) => [`✏️ « ${ti} » a changé`, `nouveau plan : ${w} · ${p}`], remind: (ti, w, p) => [`⏰ Dans 30 min environ : ${ti}`, `début ${w} · ${p}`],
+    crew: (ti) => [`🎉 Team au complet !`, `5+ personnes viennent à « ${ti} »`], surprise: "surprise 🎁" },
+  it: { more: (n) => ` (+${n - 1} mess.)`, reply: (ti) => `risposte a «${ti}»`, join: (n, g) => [`👋 ${n} entra nella crew`, `gruppo «${g}»`],
+    change: (ti, w, p) => [`✏️ «${ti}» è cambiato`, `nuovo piano: ${w} · ${p}`], remind: (ti, w, p) => [`⏰ Tra circa 30 min: ${ti}`, `inizio ${w} · ${p}`],
+    crew: (ti) => [`🎉 Crew al completo!`, `5+ persone vanno a «${ti}»`], surprise: "sorpresa 🎁" },
+  cs: { more: (n) => ` (+${n - 1} zpr.)`, reply: (ti) => `odpovědi na „${ti}“`, join: (n, g) => [`👋 ${n} se přidává k partě`, `skupina „${g}“`],
+    change: (ti, w, p) => [`✏️ Změna v „${ti}“`, `nový plán: ${w} · ${p}`], remind: (ti, w, p) => [`⏰ Asi za 30 min: ${ti}`, `začátek ${w} · ${p}`],
+    crew: (ti) => [`🎉 Parta je komplet!`, `Na „${ti}“ jde 5+ lidí`], surprise: "překvapení 🎁" },
+  uk: { more: (n) => ` (+${n - 1} пов.)`, reply: (ti) => `відповіді на «${ti}»`, join: (n, g) => [`👋 ${n} приєднується до компанії`, `група «${g}»`],
+    change: (ti, w, p) => [`✏️ Зміна в «${ti}»`, `новий план: ${w} · ${p}`], remind: (ti, w, p) => [`⏰ Приблизно за 30 хв: ${ti}`, `початок ${w} · ${p}`],
+    crew: (ti) => [`🎉 Компанія в зборі!`, `На «${ti}» іде 5+ людей`], surprise: "сюрприз 🎁" },
 };
 
 const users = new Map();
@@ -32,7 +50,7 @@ async function notify(uids, kind, build, link) {
   for (const uid of [...new Set(uids)].filter(Boolean)) {
     const u = await user(uid);
     if (!u || !u.toks.length || (kind && u.notif && u.notif[kind] === false)) continue;
-    const L = u.lang === "en" ? "en" : "pl", [title, body] = build(TX[L], L);
+    const L = TX[u.lang] ? u.lang : "en", [title, body] = build(TX[L], L);
     const r = await admin.messaging().sendEachForMulticast({
       tokens: u.toks.map((d) => d.id), notification: { title, body }, data: { url: link },
       webpush: { fcmOptions: { link: BASE + link }, notification: { icon: "/icon-192.png", badge: "/icon-192.png", tag: link, renotify: true } },
