@@ -405,7 +405,7 @@ const I={home:sv('<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1
 const PIN='<svg width="44" height="54" viewBox="0 0 44 54"><path d="M22 52C8 36 4 29 4 21a18 18 0 0 1 36 0c0 8-4 15-18 31z" fill="#B6FF3B"/><circle cx="22" cy="21" r="6" fill="#111"/></svg>';
 
 /* ---- awatary: 24 streetwearowych postaci (8 nakryć × 4 oczy × 3 miny × kolory) ---- */
-const AVN=24,MK='#0b0b12';
+const AVN=32,MK='#0b0b12';const avUrl=i=>"/avatars/adventurer/"+((+i||0)%AVN)+".svg";
 const HEAD=a=>[`<path d="M18 23a14 13 0 0 1 28 0v3H18z" fill="${a}"/><rect x="17" y="22" width="30" height="5" rx="2.5" fill="#fff" fill-opacity=".4"/><circle cx="32" cy="9" r="3.5" fill="${a}"/>`,
 `<path d="M19 25a13 12 0 0 1 26 0z" fill="${a}"/><path d="M30 25h19q-3 4-9 4H30z" fill="${a}" fill-opacity=".8"/>`,
 `<path d="M18 29v-5a14 14 0 0 1 28 0v5" fill="none" stroke="${a}" stroke-width="3.5"/><rect x="13" y="26" width="8" height="13" rx="4" fill="${a}"/><rect x="43" y="26" width="8" height="13" rx="4" fill="${a}"/>`,
@@ -421,7 +421,7 @@ const EYES=[`<rect x="20" y="28" width="11" height="8" rx="3" fill="${MK}"/><rec
 const MOUTH=[`<path d="M27 40q5 3 10 0" stroke="${MK}" stroke-width="2" fill="none" stroke-linecap="round"/>`,`<path d="M28 40.5h8" stroke="${MK}" stroke-width="2.2" stroke-linecap="round"/>`,`<path d="M27.5 39q4.5 6 9 0z" fill="${MK}"/>`];
 const avSvg=i=>{const f=COLORS[(i*3+(i>>3))%5];let a=COLORS[(i*2+1)%5];if(a===f)a="#fff";
   return`<svg viewBox="0 0 64 64" width="100%" height="100%"><path d="M6 64c2-13 12-17 26-17s24 4 26 17z" fill="#17171f" stroke="${a}" stroke-width="1.5"/><path d="M26 47l6 6 6-6" fill="none" stroke="${a}" stroke-width="1.5"/><rect x="19" y="13" width="26" height="31" rx="13" fill="${f}"/>${HEAD(a)[i%8]}${EYES[(i+(i>>3))%4]}${MOUTH[(i+(i>>2))%3]}<path d="M54 4l1.8 5 5 1.8-5 1.8L54 18l-1.8-5.4-5-1.8 5-1.8z" fill="#fff"/></svg>`};
-const avc=(cls,v)=>typeof v==="string"&&v?`<span class="av ${cls}"><img src="${esc(v)}" alt=""></span>`:`<span class="av ${cls}">${avSvg(+v||0)}</span>`;
+const avc=(cls,v)=>typeof v==="string"&&v?`<span class="av ${cls}"><img src="${esc(v)}" alt=""></span>`:`<span class="av ${cls}"><img src="${avUrl(v)}" alt="" loading="lazy"></span>`;
 const myAv=()=>{const v=sget("avatar");return v!==""?+v%AVN:hs(auth.currentUser?.uid||"x")%AVN};
 const meAv=()=>sget("photo")||myAv();
 const avIdx=p=>p&&p.ph?p.ph:p&&p.av!=null?+p.av%AVN:hs(p?.id||"x")%AVN;
@@ -539,7 +539,7 @@ function profileView(){
   <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p></div>
   <div class="sgrp"><h3>${t("lang")}</h3><div class="lgs">${LANGS.map(([c,n])=>`<button class="lg ${c==LANG?"sel":""}" data-l="${c}">${n}</button>`).join("")}</div></div>
   <div class="sgrp"><h3>${t("sSafe")}</h3><div class="slist">${row(SI.shield,t("safety"),ch,`onclick="go('/safety')"`)}${row(BAN,t("blocked"),`<em>${blockedL().length||""} ›</em>`,`onclick="go('/blocked')"`)}</div></div>
-  <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),ch,`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),ch,`onclick="go('/privacy')"`)}<a class="srow" href="mailto:${MAIL_TO}?subject=SQUAD">${sv(SI.help)}<span>${t("help")}</span>${ch}</a><div class="srow">${sv(SI.info)}<span>${t("version")}</span><em>${APP_VER}</em></div></div></div>
+  <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),ch,`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),ch,`onclick="go('/privacy')"`)}<a class="srow" href="mailto:${MAIL_TO}?subject=SQUAD">${sv(SI.help)}<span>${t("help")}</span>${ch}</a><div class="srow">${sv(SI.info)}<span>${t("version")}</span><em>${APP_VER}</em></div><a class="srow" href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">${sv(SI.user)}<span>${t("avCredit")}</span><em>›</em></a></div></div>
   <button class="more" id="mo">${t("more")} ${sv(SI.down)}</button>
   <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span>${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
@@ -983,7 +983,7 @@ async function makeCard(k,o,st={}){await fontsReady();
   const host=(G?o.ownerNick:o.hostNick)||"?",hm=G?(o.M||[]).find(m=>m.id===o.ownerId):null;
   const hv=G?(hm?avIdx(hm):avIdx({id:o.ownerId})):(o.hostPh||(o.hostAv!=null?+o.hostAv:avIdx({id:o.hostId})));
   x.fillStyle="#1d1d29";x.beginPath();x.arc(W/2,346,76,0,PI2);x.fill();
-  await K.pic(typeof hv==="string"?hv:svgSrc(avSvg(hv)),W/2-76,270,152,152,true);
+  await K.pic(typeof hv==="string"?hv:avUrl(hv),W/2-76,270,152,152,true);
   x.lineWidth=6;x.strokeStyle=pl.fg;x.beginPath();x.arc(W/2,346,76,0,PI2);x.stroke();
   const it=t("inv",host);x.save();if(sty==="retro"){x.shadowColor="rgba(40,0,60,.85)";x.shadowBlur=16;x.shadowOffsetY=3}K.txt(it,W/2,486,K.fitF(it,920,800,46,30),pl.fg);x.restore();
   const cy=540,X0=90,CW=900,pd=60,title=String((G?o.name:o.title)||"").toUpperCase();
@@ -1090,8 +1090,8 @@ const askLate=cur=>new Promise(res=>{const s=sheet(`<h2>${t("lateT")}</h2><div c
 /* ---------- INSTALACJA: Android (Sklep Play / instalacja z Chrome), iPhone (ekran początkowy) ---------- */
 const PLAY_URL="https://play.google.com/store/apps/details?id=com.cubemobilegames.squad",PLAY_LIVE=false;
 let deferredInstall=null;addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
-Object.assign(L.pl,{insT:"Masz to! Zgarnij SQUAD 📲",insD:"Z aplikacją dostajesz powiadomienia z czatu ekipy i przypomnienie przed startem. Twoje odpowiedzi zostają.",insPlay:"Pobierz ze Sklepu Play",insAdd:"Zainstaluj aplikację",insIos:"Na iPhonie: stuknij Udostępnij ⬆️ na dole Safari, potem „Do ekranu początkowego”.",insLater:"Może później"});
-Object.assign(L.en,{insT:"You're in! Get SQUAD 📲",insD:"With the app you get crew chat notifications and a reminder before the start. Your replies stay.",insPlay:"Get it on Google Play",insAdd:"Install the app",insIos:"On iPhone: tap Share ⬆️ at the bottom of Safari, then “Add to Home Screen”.",insLater:"Maybe later"});
+Object.assign(L.pl,{avCredit:"Awatary: „Adventurer” – Lisa Wischofsky, licencja CC BY 4.0 (DiceBear)",insT:"Masz to! Zgarnij SQUAD 📲",insD:"Z aplikacją dostajesz powiadomienia z czatu ekipy i przypomnienie przed startem. Twoje odpowiedzi zostają.",insPlay:"Pobierz ze Sklepu Play",insAdd:"Zainstaluj aplikację",insIos:"Na iPhonie: stuknij Udostępnij ⬆️ na dole Safari, potem „Do ekranu początkowego”.",insLater:"Może później"});
+Object.assign(L.en,{avCredit:"Avatars: “Adventurer” by Lisa Wischofsky, CC BY 4.0 (DiceBear)",insT:"You're in! Get SQUAD 📲",insD:"With the app you get crew chat notifications and a reminder before the start. Your replies stay.",insPlay:"Get it on Google Play",insAdd:"Install the app",insIos:"On iPhone: tap Share ⬆️ at the bottom of Safari, then “Add to Home Screen”.",insLater:"Maybe later"});
 function installSheet(auto){if(auto&&sget("insShown")){return}sset("insShown","1");
   if(matchMedia("(display-mode: standalone)").matches)return;
   const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),android=/Android/.test(navigator.userAgent);

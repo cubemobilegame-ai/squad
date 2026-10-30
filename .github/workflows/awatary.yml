@@ -1,6 +1,6 @@
 name: Awatary – generuj
 
-# Uruchamiane ręcznie: tworzy awatary DiceBear (Lorelei i Notionists – CC0, Adventurer – CC BY 4.0) i zapisuje je w repozytorium.
+# Uruchamiane ręcznie: tworzy awatary DiceBear (Adventurer – Lisa Wischofsky, CC BY 4.0) i zapisuje je w repozytorium.
 on: workflow_dispatch
 
 permissions:
