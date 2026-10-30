@@ -69,6 +69,11 @@ service cloud.firestore {
       }
     }
 
+    // STATUS aplikacji (przerwa techniczna / awaria) – czytają wszyscy, zmienia tylko konsola / automat
+    match /meta/status {
+      allow get: if true;
+    }
+
     // ZGŁOSZENIA (wiadomość / drop / grupa) – tylko zapis, czyta je moderacja w konsoli
     match /reports/{r} {
       allow create: if signedIn() && request.resource.data.reporterId == request.auth.uid

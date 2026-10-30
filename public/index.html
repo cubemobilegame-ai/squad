@@ -234,6 +234,15 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .kac{background:rgba(255,255,255,.08);color:#fff;font:800 15px Brico,system-ui;display:grid;place-items:center;width:48px;height:48px}.kac img{width:40px;height:40px;object-fit:contain}
 .kst{flex:none;width:60px;height:60px;border-radius:50%;padding:0;border:3px solid transparent;background:none;cursor:pointer}.kst.on{border-color:var(--acc)}.kst .av{width:100%;height:100%}
 .kmk{margin:14px 0 4px}.av img.kv{width:100%;height:100%;object-fit:cover;transform:translateY(5%)}
+.stx{position:fixed;inset:0;z-index:999;background:radial-gradient(circle at 20% 10%,rgba(var(--accr),.22),transparent 50%),radial-gradient(circle at 90% 90%,rgba(255,165,61,.16),transparent 50%),#0b0b12;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;animation:fd .3s}
+.stx.out{background:radial-gradient(circle at 20% 10%,rgba(255,77,94,.24),transparent 50%),radial-gradient(circle at 90% 90%,rgba(255,165,61,.16),transparent 50%),#0b0b12}
+.stb{position:relative;z-index:1;max-width:380px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.stm{width:132px;height:132px;filter:drop-shadow(0 14px 22px rgba(0,0,0,.5));animation:flt 3.2s ease-in-out infinite}
+.stt2{margin:14px 0 6px;padding:6px 12px;border-radius:99px;border:1.5px solid var(--acc);color:var(--acc);font:800 10px Brico,system-ui;letter-spacing:.16em;text-transform:uppercase}
+.stx.out .stt2{border-color:#ff4d5e;color:#ff6b7a}
+.stx h1{font-size:44px;line-height:1;margin:8px 0 12px}.stx p{color:rgba(255,255,255,.72);font-size:15px;line-height:1.5;margin:0 0 6px}.stu b{color:#fff}
+.stx .cta{margin-top:24px;width:min(320px,80vw)}.stl{margin-top:26px;font:800 22px Brico,system-ui;letter-spacing:-.04em;opacity:.55}.stl span{color:var(--acc)}
+.fl.spin{animation:spin 6s linear infinite}.fl.spin.r{animation-direction:reverse}@keyframes spin{to{rotate:360deg}}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -1173,6 +1182,25 @@ const askLate=cur=>new Promise(res=>{const s=sheet(`<h2>${t("lateT")}</h2><div c
   const done=v=>{s.close();res(v)};s.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{vib(10);done(+b.dataset.n)});s.querySelector("#lcn").onclick=()=>done(0);s.onclick=e=>{if(e.target===s)done(0)}});
 
 
+
+
+/* ---------- PRZERWA TECHNICZNA / AWARIA: dokument meta/status w Firestore (pola: mode = "przerwa" | "awaria", msg, until) ---------- */
+Object.assign(L.pl,{stMT:"Przerwa techniczna",stMD:"Dopieszczamy SQUAD, żeby działał jeszcze lepiej. Zaraz wracamy – nie zamykaj ekipy! ✦",stOT:"Ups, mamy awarię",stOD:"Coś się wysypało, ale już nad tym pracujemy. Twoje dropy i czaty są bezpieczne.",stUntil:"Planowany powrót: ",stRetry:"Sprawdź ponownie",stTag:"pracujemy nad tym"});
+Object.assign(L.en,{stMT:"Maintenance break",stMD:"We're polishing SQUAD to make it even better. Back in a moment – don't leave the crew! ✦",stOT:"Oops, something broke",stOD:"Something went down, but we're already on it. Your drops and chats are safe.",stUntil:"Expected back: ",stRetry:"Check again",stTag:"we're on it"});
+function showStatus(x){let el=document.getElementById("stx");const mode=x&&x.mode&&String(x.mode).toLowerCase();
+  if(!mode||!/^(przerwa|maintenance|awaria|outage)$/.test(mode)){if(el)el.remove();return}
+  const out=/^(awaria|outage)$/.test(mode),E=n=>`/e/${n}.webp`;
+  const fl=out?[["electric_plug","f1"],["fire_extinguisher","f2"],["gear","f3 spin"],["boom","f4"]]:[["gear","f1 spin"],["hammer_and_wrench","f2"],["construction","f3"],["gear","f4 spin r"]];
+  const h=`<div class="stx ${out?"out":""}" id="stx" role="alertdialog" aria-live="assertive">${fl.map(([n,c])=>`<img class="fl ${c}" src="${E(n)}" alt="">`).join("")}
+   <div class="stb"><img class="stm" src="${E(out?"face_with_spiral_eyes":"toolbox")}" alt=""><span class="stt2">${t("stTag")}</span>
+   <h1>${t(out?"stOT":"stMT")}</h1><p>${x.msg?esc(String(x.msg)):t(out?"stOD":"stMD")}</p>${x.until?`<p class="stu">${t("stUntil")}<b>${esc(String(x.until))}</b></p>`:""}
+   <button class="cta" id="stre">${t("stRetry")}</button><div class="stl">SQUAD<span>✦</span></div></div></div>`;
+  if(el)el.outerHTML=h;else document.body.insertAdjacentHTML("beforeend",h);
+  document.getElementById("stre").onclick=()=>location.reload()}
+(()=>{const q=new URLSearchParams(location.search).get("status");if(q)return showStatus({mode:q});if(DEMO)return;
+  const S2={f:null,d:null},up=()=>showStatus(S2.d&&S2.d.mode?S2.d:S2.f);
+  fetch("/status.json",{cache:"no-store"}).then(r=>r.json()).then(x=>{S2.f=x;up()}).catch(()=>{});
+  try{onSnapshot(doc(db,"meta","status"),d=>{S2.d=d.exists()?d.data():null;up()},()=>{})}catch{}})();
 
 /* ---------- INSTALACJA: Android (Sklep Play / instalacja z Chrome), iPhone (ekran początkowy) ---------- */
 const FLOAT=`<img class="fl f1" src="/e/fire.webp" alt=""><img class="fl f2" src="/e/crown.webp" alt=""><img class="fl f3" src="/e/pizza.webp" alt=""><img class="fl f4" src="/e/cloud.webp" alt="">`;

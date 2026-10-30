@@ -1,0 +1,33 @@
+name: Przerwa techniczna / awaria
+on:
+  workflow_dispatch:
+    inputs:
+      tryb:
+        description: "Co pokazać użytkownikom"
+        type: choice
+        options: ["wyłącz (aplikacja działa normalnie)", "przerwa techniczna", "awaria"]
+        default: "przerwa techniczna"
+      wiadomosc:
+        description: "Własny tekst (opcjonalnie, puste = tekst domyślny)"
+        required: false
+      powrot:
+        description: "Planowany powrót, np. 22:30 (opcjonalnie)"
+        required: false
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --prefix tools --no-audit --no-fund
+      - name: Ustaw status
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          TRYB: ${{ inputs.tryb }}
+          MSG: ${{ inputs.wiadomosc }}
+          UNTIL: ${{ inputs.powrot }}
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          node tools/status.cjs
