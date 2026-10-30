@@ -599,7 +599,7 @@ function profileView(){
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:34px">${t("profile")}</h1>
   <div class="glass"><div class="phw" id="phw"></div><div class="phl" id="phl"></div><input type="file" id="pf" accept="image/*" hidden>
   <label class="lbl" for="pn">${t("nick")}</label><div class="lr2"><input id="pn" value="${esc(nick)}" maxlength="20" autocomplete="off"><button class="mbtn" id="ps">${t("save")}</button></div>
-  <button class="ghost kmk" id="kmk">${t("avMake")}</button><details class="avd"><summary>${t("avPick")}</summary><div class="avg">${[...Array(AVN)].map((_,i)=>`<button class="ap" data-i="${i}" aria-label="${i+1}">${avc("",i)}</button>`).join("")}</div></details></div>
+  <button class="ghost kmk" id="kmk">${t("avMake")}</button></div>
   ${badgesHtml()}
   <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p></div>
   <div class="sgrp"><h3>${t("lang")}</h3><div class="lgs">${LANGS.map(([c,n])=>`<button class="lg ${c==LANG?"sel":""}" data-l="${c}">${n}</button>`).join("")}</div></div>
@@ -633,7 +633,7 @@ function onboard(){
   view(`<div class="scr"><div class="logo bigl" style="font-size:44px;margin-top:20px">SQUAD</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
   <div class="phw" id="phw"></div><input type="file" id="pf" accept="image/*" hidden>
   <input id="pn" placeholder="${t("nick")}" value="${esc(u.displayName?.split(" ")[0]||"")}" maxlength="20" autocomplete="off">
-  <button class="ghost kmk" id="kmk">${t("avMake")}</button><h3>${t("avPick")}</h3><div class="avg">${[...Array(AVN)].map((_,i)=>`<button class="ap" data-i="${i}" aria-label="${i+1}">${avc("",i)}</button>`).join("")}</div><button class="cta" id="ps">${t("obGo")}</button></div>`);
+  <button class="ghost kmk" id="kmk">${t("avMake")}</button><button class="cta" id="ps">${t("obGo")}</button></div>`);
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));bindPhoto(refresh)};refresh();
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});$("#kmk").onclick=()=>avEditor(refresh);
   $("#ps").onclick=async()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);sset("avatar",myAv());await saveProfile();enablePush(true);route()};
