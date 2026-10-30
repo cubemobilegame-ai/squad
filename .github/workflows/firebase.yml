@@ -26,6 +26,9 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
           node -e 'const j=require(process.env.RUNNER_TEMP+"/sa.json");console.log("Projekt:",j.project_id,"| konto:",j.client_email)'
 
+      - name: Podgląd linku dla zaproszeń do grup (grupa.html)
+        run: node tools/og-grupa.mjs
+
       - name: Linki otwierane w aplikacji (assetlinks.json)
         env: { FP: "${{ secrets.ANDROID_SHA256 }}" }
         run: node tools/assetlinks.mjs

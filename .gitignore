@@ -4,3 +4,4 @@ build-android/
 *.jks
 .firebase/
 firebase-debug.log
+public/grupa.html
