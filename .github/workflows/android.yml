@@ -32,6 +32,8 @@ jobs:
           npm install --no-audit --no-fund --no-save @bubblewrap/core@1 2>&1 | tee -a build.log
           (cd public && python3 -m http.server 8099 > /dev/null 2>&1 &) ; sleep 2
           VERSION_CODE=$(( ${{ github.run_number }} + 1 )) node android/generate.mjs 2>&1 | tee -a build.log
+          sed -i -E 's/minSdkVersion [0-9]+/minSdkVersion 24/; s/minSdk = [0-9]+/minSdk = 24/' build-android/app/build.gradle* || true
+          grep -n -E 'minSdk' build-android/app/build.gradle* || true
           ls build-android
 
       - name: Zbuduj AAB i APK
@@ -60,9 +62,12 @@ jobs:
             rm -f upload.jks aligned.apk
             echo "PODPIS=tak" >> "$GITHUB_ENV"; echo "SHA=$(cat /tmp/sha.txt)" >> "$GITHUB_ENV"
           else
-            echo "::warning::Brak sekretów ANDROID_KEYSTORE_B64 / ANDROID_KEY_PASS – pliki NIEPODPISANE (do Sklepu Play się nie nadają)"
-            cp "$AAB" "wynik/squad-$V-$N-niepodpisany.aab"; cp "$APK" "wynik/squad-$V-$N-niepodpisany.apk"
-            echo "PODPIS=nie" >> "$GITHUB_ENV"; echo "SHA=-" >> "$GITHUB_ENV"
+            echo "::warning::Brak klucza podpisu – APK z TESTOWYM podpisem (do instalacji na telefonie), AAB niepodpisany (nie do Sklepu Play)"
+            keytool -genkeypair -keystore test.jks -alias test -keyalg RSA -keysize 2048 -validity 3650 -storepass testtest -keypass testtest -dname "CN=SQUAD test" >/dev/null 2>&1
+            "$BT/zipalign" -f -p 4 "$APK" aligned.apk
+            "$BT/apksigner" sign --ks test.jks --ks-pass pass:testtest --key-pass pass:testtest --ks-key-alias test --out "wynik/squad-$V-$N-test.apk" aligned.apk
+            cp "$AAB" "wynik/squad-$V-$N-niepodpisany.aab"; rm -f test.jks aligned.apk
+            echo "PODPIS=testowy (tylko APK do testów)" >> "$GITHUB_ENV"; echo "SHA=-" >> "$GITHUB_ENV"
           fi
           ls -la wynik
 
@@ -71,7 +76,7 @@ jobs:
         run: |
           V="$(cat android/version.txt)"; N=$(( ${{ github.run_number }} + 1 ))
           gh release create "android-$V-$N" wynik/* --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-            --title "SQUAD Android $V (versionCode $N)" \
+            --title "SQUAD Android $V (versionCode $N)" --prerelease \
             --notes "AAB do Sklepu Play, APK do instalacji na telefonie. Podpisane: $PODPIS. Odcisk SHA-256 klucza: $SHA"
 
       - name: Log błędu do Releases
