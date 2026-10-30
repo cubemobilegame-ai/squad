@@ -222,7 +222,6 @@ setTimeout(end,4500);I.addEventListener("click",function(){if(plays>=1||Date.now
 let FB,DEMO=false,PATH="/";
 try{
   const C=window.SQUAD_CONFIG;if(!C||/PASTE|WKLEJ|PROJECT_ID/.test(C.apiKey)||/[?&]demo\b/.test(location.search))throw 0;
-  if(/\.(web\.app|firebaseapp\.com)$/.test(location.hostname))C.authDomain=location.hostname;
   const g="https://www.gstatic.com/firebasejs/10.12.2/";
   FB=Object.assign({},...await Promise.all(["app","auth","firestore","messaging"].concat(C.storageBucket?["storage"]:[]).map(n=>import(g+"firebase-"+n+".js").catch(()=>({})))));FB.__c=C;
 }catch{DEMO=true;FB=mock()}
