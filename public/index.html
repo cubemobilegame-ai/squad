@@ -7,7 +7,7 @@
 <title>SQUAD – jesteś w tym?</title>
 <meta property="og:title" content="🔥 Zaproszenie na drop – jesteś w tym?">
 <meta property="og:description" content="Ktoś z ekipy zaprasza cię na wypad. Kliknij i odpowiedz IN / LATE / OUT – bez instalowania.">
-<meta property="og:image" content="https://squad-64cd5.web.app/og/zaproszenie.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="website"><meta property="og:site_name" content="SQUAD"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://squad-64cd5.web.app/og/zaproszenie-v2.jpg"><meta property="og:image:secure_url" content="https://squad-64cd5.web.app/og/zaproszenie-v2.jpg"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:alt" content="SQUAD – zaproszenie na drop"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="website"><meta property="og:site_name" content="SQUAD"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://squad-64cd5.web.app/og/zaproszenie-v2.jpg">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon-192.png"><link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
@@ -721,7 +721,7 @@ async function dropView(code){
     vib(st==="in"?[30,40,30]:20);toast(logged?(st==="out"?t("toOut"):t("toMine")):t("savedG"));
     if(!isHost&&!u.isAnonymous)setHist(code,st);
     if($("#nick").hidden===false){$("#nick").hidden=true;$("#asr").hidden=false;$("#asr b").textContent=n}
-    if(!logged&&st!=="out")setTimeout(()=>installSheet(true),900);
+    setTimeout(()=>installSheet(code,st),1700);
     }finally{busy=false}
   });
   unsubs.push(onSnapshot(collection(ref,"participants"),sn=>{
@@ -1090,13 +1090,14 @@ const askLate=cur=>new Promise(res=>{const s=sheet(`<h2>${t("lateT")}</h2><div c
 /* ---------- INSTALACJA: Android (Sklep Play / instalacja z Chrome), iPhone (ekran początkowy) ---------- */
 const PLAY_URL="https://play.google.com/store/apps/details?id=com.cubemobilegames.squad",PLAY_LIVE=false;
 let deferredInstall=null;addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
-Object.assign(L.pl,{avCredit:"Awatary: „Adventurer” – Lisa Wischofsky, licencja CC BY 4.0 (DiceBear)",insT:"Masz to! Zgarnij SQUAD 📲",insD:"Z aplikacją dostajesz powiadomienia z czatu ekipy i przypomnienie przed startem. Twoje odpowiedzi zostają.",insPlay:"Pobierz ze Sklepu Play",insAdd:"Zainstaluj aplikację",insIos:"Na iPhonie: stuknij Udostępnij ⬆️ na dole Safari, potem „Do ekranu początkowego”.",insLater:"Może później"});
-Object.assign(L.en,{avCredit:"Avatars: “Adventurer” by Lisa Wischofsky, CC BY 4.0 (DiceBear)",insT:"You're in! Get SQUAD 📲",insD:"With the app you get crew chat notifications and a reminder before the start. Your replies stay.",insPlay:"Get it on Google Play",insAdd:"Install the app",insIos:"On iPhone: tap Share ⬆️ at the bottom of Safari, then “Add to Home Screen”.",insLater:"Maybe later"});
-function installSheet(auto){if(auto&&sget("insShown")){return}sset("insShown","1");
-  if(matchMedia("(display-mode: standalone)").matches)return;
+Object.assign(L.pl,{avCredit:"Awatary: „Adventurer” – Lisa Wischofsky, licencja CC BY 4.0 (DiceBear)",insT:"Masz to! Zgarnij SQUAD 📲",insTo:"Szkoda! Następnym razem nie przegap 📲",insD:"Z aplikacją dostajesz powiadomienia z czatu ekipy i przypomnienie przed startem. Twoje odpowiedzi zostają.",insPlay:"Pobierz ze Sklepu Play",insAdd:"Zainstaluj aplikację",insIos:"Na iPhonie: stuknij Udostępnij ⬆️ na dole Safari, potem „Do ekranu początkowego”.",insLater:"Może później"});
+Object.assign(L.en,{avCredit:"Avatars: “Adventurer” by Lisa Wischofsky, CC BY 4.0 (DiceBear)",insT:"You're in! Get SQUAD 📲",insTo:"Too bad! Don't miss the next one 📲",insD:"With the app you get crew chat notifications and a reminder before the start. Your replies stay.",insPlay:"Get it on Google Play",insAdd:"Install the app",insIos:"On iPhone: tap Share ⬆️ at the bottom of Safari, then “Add to Home Screen”.",insLater:"Maybe later"});
+const inApp=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true||document.referrer.indexOf("android-app://")===0||sget("twa")==="1";
+if(document.referrer.indexOf("android-app://")===0)sset("twa","1");
+function installSheet(auto,st){if(inApp())return;if(auto){const k="ins_"+auto;if(sget(k))return;sset(k,"1")}
   const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),android=/Android/.test(navigator.userAgent);
   const btn=android&&PLAY_LIVE?`<button class="cta" id="ip">${sv(SI.dl)}${t("insPlay")}</button>`:deferredInstall?`<button class="cta" id="ia">${sv(SI.dl)}${t("insAdd")}</button>`:"";
-  const s=sheet(`<div class="bbig">🤝</div><h2>${t("insT")}</h2><p class="hint">${t("insD")}</p>${ios?`<p class="tldr" style="text-align:center">${t("insIos")}</p>`:""}${btn}${!ios&&!btn?`<p class="hint">${t("soon")}</p>`:""}<button class="ghost" id="il">${t("insLater")}</button>`);
+  const s=sheet(`<div class="bbig">🤝</div><h2>${t(st==="out"?"insTo":"insT")}</h2><p class="hint">${t("insD")}</p>${ios?`<p class="tldr" style="text-align:center">${t("insIos")}</p>`:""}${btn}${!ios&&!btn?`<p class="hint">${t("soon")}</p>`:""}<button class="ghost" id="il">${t("insLater")}</button>`);
   const ip=s.querySelector("#ip");if(ip)ip.onclick=()=>{s.close();location.href=PLAY_URL};
   const ia=s.querySelector("#ia");if(ia)ia.onclick=async()=>{s.close();try{deferredInstall.prompt();await deferredInstall.userChoice}catch{}deferredInstall=null};
   s.querySelector("#il").onclick=s.close}
