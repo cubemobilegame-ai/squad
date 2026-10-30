@@ -10,7 +10,7 @@ Object.assign(m, {
   iconUrl: "http://localhost:8099/icon-512.png", maskableIconUrl: "http://localhost:8099/icon-maskable-512.png",
   appVersionCode: parseInt(process.env.VERSION_CODE || "1", 10), appVersionName: fs.readFileSync("android/version.txt", "utf8").trim(),
   enableNotifications: true, orientation: "portrait", fallbackType: "customtabs", display: "standalone",
-  splashScreenFadeOutDuration: 300, minSdkVersion: 24, enableSiteSettingsShortcut: false, signingKey: { path: "../upload.jks", alias: "squad" },
+  splashScreenFadeOutDuration: 300, minSdkVersion: 24, enableSiteSettingsShortcut: true, signingKey: { path: "../upload.jks", alias: "squad" },
 });
 if (typeof m.validate === "function") { const err = m.validate(); if (err) { console.error("Błąd manifestu:", err); process.exit(1); } }
 await new TwaGenerator().createTwaProject("build-android", m, new ConsoleLog("squad"));
