@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:B;src:url(/public/fonts/bricolage.woff);font-weight:400 800}
+@font-face{font-family:BC;src:url(/public/fonts/onest-cyr.woff);font-weight:100 900;unicode-range:U+0400-045F,U+0490-0491}
+*{margin:0;box-sizing:border-box}body{width:1080px;height:1920px;overflow:hidden;font-family:B,BC;color:#fff;position:relative;background:#0b0b12}
+.bg{position:absolute;inset:0}
+.noise{position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(255,255,255,.18),transparent 40%),radial-gradient(circle at 85% 70%,rgba(0,0,0,.25),transparent 55%)}
+.hd{position:absolute;left:70px;right:70px;top:110px;text-align:center}
+h1{font-weight:800;font-size:104px;line-height:.98;letter-spacing:-.035em;white-space:pre-line;text-shadow:0 6px 30px rgba(0,0,0,.25)}
+p{margin-top:28px;font-weight:600;font-size:42px;line-height:1.2;opacity:.95}
+.ph{position:absolute;left:50%;top:590px;width:760px;height:1640px;margin-left:-380px;border-radius:110px;background:#0b0b12;padding:22px;box-shadow:0 40px 90px rgba(0,0,0,.45),0 0 0 6px rgba(255,255,255,.18) inset}
+.ph .sc{width:100%;height:100%;border-radius:90px;overflow:hidden;background:#0b0b12 center top/100% auto no-repeat}
+.ph .isl{position:absolute;left:50%;top:44px;width:200px;height:56px;margin-left:-100px;border-radius:30px;background:#000}
+.e{position:absolute;filter:drop-shadow(0 18px 26px rgba(0,0,0,.4))}
+.logo{position:absolute;left:0;right:0;top:44px;text-align:center;font-weight:800;font-size:40px;letter-spacing:-.04em;opacity:.9}
+/* feature graphic */
+body.f{width:1024px;height:500px}
+.f .hd{left:60px;right:auto;top:62px;width:600px;text-align:left}
+.f h1{font-size:68px}.f p{font-size:26px;margin-top:20px}
+.f .logo{left:60px;right:auto;top:470px;font-size:0}
+.pills[hidden]{display:none}.pills{display:flex;gap:12px;margin-top:26px}.pills b{font-size:26px;padding:10px 22px;border-radius:18px;border:3px solid;background:rgba(0,0,0,.25)}
+</style><div class="bg" id="bg"></div><div class="noise"></div><div class="logo">SQUAD✦</div><div class="hd"><h1 id="h"></h1><p id="s"></p><div class="pills" id="pl" hidden><b style="color:#3dff8a">IN!</b><b style="color:#ffd84d">LATE</b><b style="color:#ff6b7a">OUT</b></div></div>
+<div class="ph" id="ph"><div class="sc" id="sc"></div><div class="isl"></div></div>
+<script>
+const q=new URLSearchParams(location.search),T=JSON.parse(decodeURIComponent(q.get('t'))),i=+q.get('i'),F=q.get('f')==='1';
+const G=[["#FF3D7F","#FF8A3D"],["#7C3AED","#FF4F86"],["#0EA5E9","#7C3AED"],["#FF6FAE","#FFB36B"],["#FF3D7F","#7C3AED"],["#10B981","#0EA5E9"]];
+const EM=[[["fire",70,470,150,-12],["pizza",880,520,150,14]],[["hand-l",40,480,150,-20],["boom",900,470,130,0]],[["chat",60,500,140,-8],["party",880,520,140,10]],[["crown",70,480,140,-14],["sparkles",890,500,130,8]],[["phone",60,500,140,-10],["fire",890,500,140,12]],[["camera",60,500,140,-10],["trophy",890,500,140,10]]];
+document.getElementById('h').textContent=T[0];document.getElementById('s').textContent=T[1];
+if(F){document.body.className='f';document.getElementById('bg').style.background='radial-gradient(circle at 0% 0%,rgba(255,79,134,.6),transparent 55%),radial-gradient(circle at 100% 100%,rgba(255,165,61,.45),transparent 55%),#0b0b12';
+ document.getElementById('ph').remove();document.getElementById('pl').hidden=false;
+ [["hand-l",716,130,190,-27,1],["hand-r",808,130,190,-27,0],["boom",793,70,105,0,0],["fire",660,20,90,-12,0],["pizza",900,330,110,14,0],["party",640,330,100,0,0]].forEach(([n,x,y,w,r,m])=>{const e=document.createElement('img');e.className='e';e.src='/public/e/'+n+'.webp';Object.assign(e.style,{left:x+'px',top:y+'px',width:w+'px',transform:(m?'scaleX(-1) ':'')+'rotate('+r+'deg)'});document.body.append(e)})}
+else{const g=G[i-1];document.getElementById('bg').style.background=`linear-gradient(160deg,${g[0]},${g[1]})`;document.getElementById('sc').style.backgroundImage=`url(${q.get('img')})`;
+ EM[i-1].forEach(([n,x,y,w,r])=>{const e=document.createElement('img');e.className='e';e.src='/public/e/'+n+'.webp';Object.assign(e.style,{left:(x-w/2)+'px',top:y+'px',width:w+'px',transform:`rotate(${r}deg)`,zIndex:3});document.body.append(e)})}
+</script>
