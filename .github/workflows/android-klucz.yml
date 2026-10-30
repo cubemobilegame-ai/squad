@@ -1,0 +1,24 @@
+name: Android – klucz podpisu (jednorazowo)
+
+# Uruchom RAZ: Actions → „Android – klucz podpisu (jednorazowo)” → Run workflow.
+# Wcześniej dodaj sekret ANDROID_KEY_PASS (wymyślone hasło, min. 12 znaków).
+on: workflow_dispatch
+
+jobs:
+  key:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - name: Wygeneruj klucz
+        env: { PASS: "${{ secrets.ANDROID_KEY_PASS }}" }
+        run: |
+          if [ ${#PASS} -lt 12 ]; then echo "::error::Najpierw dodaj sekret ANDROID_KEY_PASS (hasło, min. 12 znaków)"; exit 1; fi
+          mkdir out
+          keytool -genkeypair -keystore out/squad-upload.jks -alias squad -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "$PASS" -keypass "$PASS" -dname "CN=Cube Mobile Games, O=Cube Mobile Games, C=PL"
+          base64 -w0 out/squad-upload.jks > out/ANDROID_KEYSTORE_B64.txt
+          keytool -list -v -keystore out/squad-upload.jks -storepass "$PASS" | grep "SHA256:" | sed 's/.*SHA256: //' > out/ANDROID_SHA256.txt
+          echo "Odcisk SHA-256 (wklej jako sekret ANDROID_SHA256):"; cat out/ANDROID_SHA256.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: klucz-podpisu-squad, path: out, retention-days: 1 }

@@ -1,0 +1,48 @@
+name: Firebase – wdrożenie
+
+# Po każdej zmianie w aplikacji wysyła na Firebase: stronę (Hosting), reguły bazy i zdjęć, funkcje w chmurze.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["android/**", "sklep/**", "**.md", ".github/workflows/android*.yml"]
+  workflow_dispatch:
+
+concurrency: { group: firebase, cancel-in-progress: false }
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+
+      - name: Klucz dostępu do Firebase (sekret FIREBASE_SERVICE_ACCOUNT)
+        env: { SA: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" }
+        run: |
+          if [ -z "$SA" ]; then echo "::error::Brak sekretu FIREBASE_SERVICE_ACCOUNT – zobacz instrukcję, krok 6"; exit 1; fi
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+          node -e 'const j=require(process.env.RUNNER_TEMP+"/sa.json");console.log("Projekt:",j.project_id,"| konto:",j.client_email)'
+
+      - name: Linki otwierane w aplikacji (assetlinks.json)
+        env: { FP: "${{ secrets.ANDROID_SHA256 }}" }
+        run: node tools/assetlinks.mjs
+
+      - name: Biblioteki funkcji
+        run: npm install --prefix functions --no-audit --no-fund
+
+      - name: Wdrożenie
+        run: |
+          PROJECT=$(node -e 'console.log(require(process.env.RUNNER_TEMP+"/sa.json").project_id)')
+          npx -y firebase-tools@13 deploy --project "$PROJECT" --non-interactive --force --only hosting,firestore,storage,functions 2>&1 | tee deploy.log
+          test "${PIPESTATUS[0]}" = "0"
+
+      - name: Zgoda na rysowanie zdjęć (CORS)
+        run: node tools/cors.cjs
+
+      - name: Podpowiedź przy błędzie
+        if: failure()
+        run: |
+          echo "::error::Wdrożenie się nie udało. Najczęstsze przyczyny: (1) projekt nie jest na planie Blaze, (2) pierwsze wdrożenie funkcji – Google włącza usługi, kliknij 'Re-run jobs' za 5 minut, (3) konto usługi nie ma roli Właściciel."

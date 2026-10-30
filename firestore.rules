@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function signedIn() { return request.auth != null; }
+    function isGuest() { return request.auth.token.firebase.sign_in_provider == 'anonymous'; }
+    function drop(id) { return get(/databases/$(db)/documents/drops/$(id)).data; }
+    function grp(id) { return get(/databases/$(db)/documents/groups/$(id)).data; }
+    function okNick(n) { return n is string && n.size() >= 1 && n.size() <= 20; }
+    function okText(x) { return x is string && x.size() >= 1 && x.size() <= 500; }
+    // reakcja: zmienia się tylko własny wpis w mapie r (r.<uid>), emoji z listy albo usunięcie
+    function okReact() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['r'])
+        && request.resource.data.get('r', {}).diff(resource.data.get('r', {})).affectedKeys().hasOnly([request.auth.uid])
+        && (!(request.auth.uid in request.resource.data.get('r', {}))
+            || request.resource.data.r[request.auth.uid] in ['🔥', '😂', '👀', '❤️', '👍', '😮']);
+    }
+
+    // profil (ksywka, awatar, odznaki, ustawienia powiadomień) – widoczny tylko dla właściciela
+    match /users/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+      // tokeny powiadomień push (jeden dokument na telefon)
+      match /tokens/{tok} {
+        allow read, write: if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    // DROPY: link działa do startu eventu, wiadomości do 24h po evencie, potem dokument znika
+    match /drops/{code} {
+      allow get: if resource.data.expiresAt > request.time;
+      allow list: if signedIn() && resource.data.hostId == request.auth.uid;
+      allow create: if signedIn() && !isGuest()
+        && request.resource.data.hostId == request.auth.uid
+        && request.resource.data.expiresAt > request.time
+        && request.resource.data.title.size() <= 60;
+      allow update, delete: if signedIn() && resource.data.hostId == request.auth.uid;
+
+      match /participants/{uid} {
+        allow read: if drop(code).expiresAt > request.time;
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && drop(code).startsAt > request.time
+          && request.resource.data.status in ['in', 'late', 'out']
+          && okNick(request.resource.data.nickname);
+        allow delete: if signedIn() && request.auth.uid == uid;
+      }
+
+      // czat dropa: tylko uczestnicy, zero DM
+      match /messages/{m} {
+        allow read: if signedIn() && drop(code).expiresAt > request.time
+          && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid));
+        allow create: if signedIn() && drop(code).expiresAt > request.time
+          && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
+          && request.resource.data.authorId == request.auth.uid
+          && okText(request.resource.data.text);
+        allow update: if signedIn() && drop(code).expiresAt > request.time
+          && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
+          && okReact();
+      }
+
+      // ALBUM WYPADU: po starcie, każdy uczestnik max 3 zdjęcia (id = uid_1..3), znika z dropem
+      match /photos/{pid} {
+        allow read: if signedIn() && drop(code).expiresAt > request.time
+          && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid));
+        allow create: if signedIn() && drop(code).startsAt <= request.time && drop(code).expiresAt > request.time
+          && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
+          && pid in [request.auth.uid + '_1', request.auth.uid + '_2', request.auth.uid + '_3']
+          && request.resource.data.authorId == request.auth.uid;
+        allow delete: if signedIn() && (resource.data.authorId == request.auth.uid || drop(code).hostId == request.auth.uid);
+      }
+    }
+
+    // ZGŁOSZENIA (wiadomość / drop / grupa) – tylko zapis, czyta je moderacja w konsoli
+    match /reports/{r} {
+      allow create: if signedIn() && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.reason in ['hate', 'sex', 'vio', 'danger', 'spam', 'other'];
+    }
+
+    // GRUPY ogólne: stałe ekipy z własnym czatem, wchodzi się linkiem
+    match /groups/{g} {
+      allow get: if true;
+      allow list: if signedIn() && resource.data.ownerId == request.auth.uid;
+      allow create: if signedIn() && !isGuest()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.name.size() <= 40;
+      allow update, delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+
+      match /members/{uid} {
+        allow read: if true;
+        allow create, update: if signedIn() && request.auth.uid == uid && okNick(request.resource.data.nickname);
+        allow delete: if signedIn() && (request.auth.uid == uid || grp(g).ownerId == request.auth.uid);
+      }
+
+      match /messages/{m} {
+        allow read: if signedIn()
+          && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid));
+        allow create: if signedIn()
+          && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
+          && request.resource.data.authorId == request.auth.uid
+          && okText(request.resource.data.text);
+        allow update: if signedIn()
+          && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
+          && okReact();
+      }
+    }
+  }
+}
