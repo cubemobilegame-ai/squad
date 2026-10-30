@@ -247,6 +247,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .mailbox{margin:4px auto 6px;text-align:center;font:800 18px Brico,BricoCyr,system-ui;letter-spacing:-.01em;padding:14px;border-radius:16px;background:rgba(255,255,255,.06);border:1px dashed rgba(var(--accr),.6);user-select:all;word-break:break-all}
 .lb{touch-action:none}
 @media (min-width:740px) and (min-height:700px){body{zoom:1.3}}@media (min-width:1000px) and (min-height:760px){body{zoom:1.4}}
+.pcard{display:flex;align-items:center;gap:12px;margin:12px 0 2px;padding:12px 12px 12px 14px;border-radius:20px;background:linear-gradient(135deg,rgba(var(--accr),.18),rgba(255,165,61,.12));border:1px solid rgba(var(--accr),.45);position:relative}.pcard img{width:42px;height:42px;flex:none}.pcard div{flex:1;min-width:0}.pcard b{display:block;font-size:15px}.pcard small{display:block;color:rgba(255,255,255,.72);font-size:12px;line-height:1.35;margin-top:2px}.pcard .mbtn{flex:none}.pcard .px{position:absolute;top:-8px;right:-6px;width:24px;height:24px;border-radius:50%;border:0;background:#2a2a33;color:#fff;font-size:11px;cursor:pointer}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -892,11 +893,11 @@ function login(){view(`<div class="scr cen deco">${FLOAT}<div class="hi5 sm" ari
   $("#g").onclick=async()=>{vib(15);try{await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){const c=e?.code||"";if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;if(!DEMO&&FB.signInWithRedirect&&/popup|operation-not-supported|web-storage/.test(c))return FB.signInWithRedirect(auth,new GoogleAuthProvider());toast(t("oops")+(e?.message||e))}}}
 
 /* ---------- AWATAR: zapis i synchronizacja ---------- */
-async function syncAvatar(){const u=auth.currentUser;if(!u)return;const av=myAv(),ph=sget("photo")||null;
+async function syncAvatar(){const u=auth.currentUser;if(!u||DEMO&&!u)return;const av=myAv(),ph=sget("photo")||null,nk=sget("nick")||undefined;const NK=nk?{nickname:nk}:{};
   for(const c of new Set([...joined(),...S.items.keys()])){try{const R=await loadDrop(c);if(!R)continue;
-    const p=await getDoc(doc(db,"drops",c,"participants",u.uid));if(p.exists())await setDoc(doc(db,"drops",c,"participants",u.uid),{av,ph},{merge:true});
-    if(R.d.hostId===u.uid)await setDoc(doc(db,"drops",c),{hostAv:av,hostPh:ph},{merge:true})}catch{}}
-  for(const g of new Set([...joinedG(),...S.groups.keys()])){try{const m=await getDoc(doc(db,"groups",g,"members",u.uid));if(m.exists())await setDoc(doc(db,"groups",g,"members",u.uid),{av,ph},{merge:true})}catch{}}}
+    const p=await getDoc(doc(db,"drops",c,"participants",u.uid));if(p.exists())await setDoc(doc(db,"drops",c,"participants",u.uid),{av,ph,...NK},{merge:true});
+    if(R.d.hostId===u.uid)await setDoc(doc(db,"drops",c),{hostAv:av,hostPh:ph,...(nk?{hostNick:nk}:{})},{merge:true})}catch{}}
+  for(const g of new Set([...joinedG(),...S.groups.keys()])){try{const m=await getDoc(doc(db,"groups",g,"members",u.uid));if(m.exists()){await setDoc(doc(db,"groups",g,"members",u.uid),{av,ph,...NK},{merge:true});const G=await getDoc(doc(db,"groups",g));if(nk&&G.exists()&&G.data().ownerId===u.uid)await setDoc(doc(db,"groups",g),{ownerNick:nk},{merge:true})}}catch{}}}
 
 /* ---------- HOME: Zaproszenia / Moje dropy / Odrzucone ---------- */
 const MAIL='<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7.5 12 13l8.5-5.5"/>',STAR='<path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-2.9-5.3 2.9 1.2-6L3.4 9.3l6-.7z"/>',BAN='<circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/>',FLAME='<path d="M12 3c1 3.6 5.5 5.2 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.2 1-3.6 2.2-4.8.2 1.8 1.1 2.8 2.1 3C10 8.6 10.5 5.5 12 3z"/>';
@@ -906,9 +907,9 @@ function home(){
   const u=authed();if(!u)return;const nick=sget("nick");
   view(`<div class="scr"><div class="top"><span class="gi">${I.grp}</span><button class="me" id="me">${avc("",meAv())}<span>${esc(nick).toUpperCase()}</span>${sv('<path d="M9 5l7 7-7 7"/>')}</button></div>
   <h1 class="logo">SQUAD</h1><div class="tick"><div>${t("ticker").repeat(12)}</div></div>
-  <button class="newbtn" id="nd" style="margin-top:14px">${t("newDrop")}</button>
+  ${pushCard()}<button class="newbtn" id="nd" style="margin-top:14px">${t("newDrop")}</button>
   <div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
-  $("#nd").onclick=()=>{vib(15);go("/new")};$("#me").onclick=()=>go("/me");
+  $("#nd").onclick=()=>{vib(15);go("/new")};$("#me").onclick=()=>go("/me");bindPushCard();
   const draw=()=>{
     const all=live().filter(loaded),r=d=>roleOf(d),G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
     const tab=homeTab||(G.inv.length?"inv":"mine");
@@ -943,9 +944,9 @@ function profileView(){
     bindPhoto(changedAv);const r=$("#phr");if(r)r.onclick=()=>{vib(10);const u=auth.currentUser;if(u&&!DEMO)delImg("avatars/"+u.uid+".jpg");sset("photo","");changedAv()}};
   const changedAv=()=>{refresh();syncAvatar();saveProfile()};
   refresh();bindBadges();
-  $("#ps").onclick=()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);saveProfile();vib(15);toast(t("saved"))};
+  $("#ps").onclick=()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);saveProfile();syncAvatar();vib(15);toast(t("saved"))};
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});$("#kmk").onclick=()=>avEditor(changedAv);
-  document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")enablePush(true);b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
+  document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")askPush();b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
   document.querySelectorAll(".lg").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
   $("#hlp").onclick=helpSheet;$("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
   $("#so").onclick=async()=>{vib(15);await signOut(auth);go("/")};
@@ -965,7 +966,7 @@ function onboard(){
   <button class="ghost kmk" id="kmk">${t("avMake")}</button><button class="cta" id="ps">${t("obGo")}</button></div>`);
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));bindPhoto(refresh)};refresh();
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});$("#kmk").onclick=()=>avEditor(refresh);
-  $("#ps").onclick=async()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);sset("avatar",myAv());await saveProfile();enablePush(true);route()};
+  $("#ps").onclick=async()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);sset("avatar",myAv());askPush();await saveProfile();route()};
 }
 
 
@@ -1045,7 +1046,7 @@ async function groupView(code){
 /* ---------- POWIADOMIENIA ---------- */
 function notifView(){
   const u=authed();if(!u)return;const T=nsT();
-  view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:36px">${t("nT")}</h1><div id="nl"></div></div>${nav("n")}`);
+  view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:36px">${t("nT")}</h1>${pushCard().replace('id="pnx"','id="pnx" hidden')}<div id="nl"></div></div>${nav("n")}`);
   const draw=()=>{$("#nl").innerHTML=events().slice(0,30).map(e=>`<div class="chat" onclick="go('/d/${e.d.id}')">${avc("l",avIdx(e.p))}<div><b>${esc(e.p.nickname)} · ${STL(e.p.status)}</b><small>${esc(e.d.title)} · ${t("ago",Math.floor((Date.now()-e.ts)/6e4))}</small></div>${e.ts>T?'<b class="bd bdi">•</b>':""}</div>`).join("")||`<p class="mut">${t("nE")}</p>`;sset("nseen",Date.now());badges()};
   redraw=draw;draw();
 }
@@ -1169,7 +1170,7 @@ async function chatView(code,g){
   const drawM=()=>{const b=$("#msgs");if(!b)return;const atEnd=b.scrollHeight-b.scrollTop-b.clientHeight<80;
     b.innerHTML=(M.length&&!sget("rxHint")?`<p class="rxhint">${t("rxHint")}</p>`:"")+(M.map(m=>{const mm=m.authorId===me();if(!mm&&isBlk(m.authorId))return`<div class="m hid"><div>${t("hiddenMsg")}</div></div>`;
       const pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};
-      return`<div class="m ${mm?"me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${avc("mini",avIdx(pp))}<div class="mb"><div class="bub"><small style="color:${gc(pp)}">${esc(m.nickname)}${mm?" ("+t("you2")+")":""}</small>${esc(m.text)}<time>${hm(m)}</time></div>${rxs(m)}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
+      return`<div class="m ${mm?"me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${avc("mini",avIdx(pp))}<div class="mb"><div class="bub"><small style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}${mm?" ("+t("you2")+")":""}</small>${esc(m.text)}<time>${hm(m)}</time></div>${rxs(m)}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
     if(atEnd||!b.dataset.s){b.scrollTop=b.scrollHeight;b.dataset.s=1}};
   const react=async(id,e,el)=>{const m=M.find(x=>x.id===id);if(!m)return;const cur=(m.r||{})[me()];
     if(cur!==e){flyEmoji(e,el);sfx("react");vib(12)}else vib(6);sset("rxHint","1");
@@ -1522,6 +1523,20 @@ function showStatus(x){let el=document.getElementById("stx");const mode=x&&x.mod
 
 
 Object.assign(L.pl,{fbBtn:"Zaloguj przez Facebooka",fbOff:"Logowanie przez Facebooka jeszcze nie działa – użyj Google",fbExists:"To konto już istnieje – zaloguj się przez Google"});Object.assign(L.en,{fbBtn:"Sign in with Facebook",fbOff:"Facebook sign-in isn't available yet – use Google",fbExists:"This account already exists – sign in with Google"});Object.assign(L.es,{fbBtn:"Entrar con Facebook",fbOff:"El acceso con Facebook aún no está disponible: usa Google",fbExists:"Esta cuenta ya existe: entra con Google"});Object.assign(L.de,{fbBtn:"Mit Facebook anmelden",fbOff:"Facebook-Anmeldung ist noch nicht verfügbar – nutze Google",fbExists:"Dieses Konto gibt es schon – melde dich mit Google an"});Object.assign(L.fr,{fbBtn:"Se connecter avec Facebook",fbOff:"La connexion Facebook n'est pas encore disponible : utilise Google",fbExists:"Ce compte existe déjà : connecte-toi avec Google"});Object.assign(L.it,{fbBtn:"Accedi con Facebook",fbOff:"L'accesso con Facebook non è ancora disponibile: usa Google",fbExists:"Questo account esiste già: accedi con Google"});Object.assign(L.cs,{fbBtn:"Přihlásit přes Facebook",fbOff:"Přihlášení přes Facebook zatím nefunguje – použij Google",fbExists:"Tento účet už existuje – přihlas se přes Google"});Object.assign(L.uk,{fbBtn:"Увійти через Facebook",fbOff:"Вхід через Facebook ще недоступний – скористайся Google",fbExists:"Цей акаунт уже існує – увійди через Google"});
+
+Object.assign(L.pl,{pnT:"Włącz powiadomienia",pnD:"Dowiesz się od razu, gdy ktoś zaprosi cię na drop albo napisze na czacie.",pnBtn:"Włącz",pnIos:"Na iPhonie powiadomienia działają w aplikacji dodanej do ekranu początkowego: w Safari stuknij Udostępnij ⬆️ → „Do ekranu początkowego”, otwórz SQUAD z ikony i włącz powiadomienia."});Object.assign(L.en,{pnT:"Turn on notifications",pnD:"Know right away when someone invites you to a drop or writes in the chat.",pnBtn:"Turn on",pnIos:"On iPhone, notifications work in the app added to your Home Screen: in Safari tap Share ⬆️ → “Add to Home Screen”, open SQUAD from the icon and turn notifications on."});Object.assign(L.es,{pnT:"Activa las notificaciones",pnD:"Entérate al momento cuando alguien te invite a un drop o escriba en el chat.",pnBtn:"Activar",pnIos:"En iPhone, las notificaciones funcionan en la app añadida a la pantalla de inicio: en Safari toca Compartir ⬆️ → «Añadir a pantalla de inicio», abre SQUAD desde el icono y activa las notificaciones."});Object.assign(L.de,{pnT:"Benachrichtigungen aktivieren",pnD:"Erfahre sofort, wenn dich jemand zu einem Drop einlädt oder im Chat schreibt.",pnBtn:"Aktivieren",pnIos:"Auf dem iPhone funktionieren Benachrichtigungen in der App auf dem Home-Bildschirm: Tippe in Safari auf Teilen ⬆️ → „Zum Home-Bildschirm“, öffne SQUAD über das Icon und aktiviere die Benachrichtigungen."});Object.assign(L.fr,{pnT:"Active les notifications",pnD:"Sache tout de suite quand quelqu'un t'invite à un drop ou écrit dans le chat.",pnBtn:"Activer",pnIos:"Sur iPhone, les notifications marchent dans l'appli ajoutée à l'écran d'accueil : dans Safari, appuie sur Partager ⬆️ → « Sur l'écran d'accueil », ouvre SQUAD depuis l'icône et active les notifications."});Object.assign(L.it,{pnT:"Attiva le notifiche",pnD:"Scopri subito quando qualcuno ti invita a un drop o scrive in chat.",pnBtn:"Attiva",pnIos:"Su iPhone le notifiche funzionano nell'app aggiunta alla schermata Home: in Safari tocca Condividi ⬆️ → «Aggiungi alla schermata Home», apri SQUAD dall'icona e attiva le notifiche."});Object.assign(L.cs,{pnT:"Zapni upozornění",pnD:"Hned se dozvíš, když tě někdo pozve na drop nebo napíše do chatu.",pnBtn:"Zapnout",pnIos:"Na iPhonu fungují upozornění v aplikaci přidané na plochu: v Safari klikni na Sdílet ⬆️ → „Přidat na plochu“, otevři SQUAD z ikony a zapni upozornění."});Object.assign(L.uk,{pnT:"Увімкни сповіщення",pnD:"Одразу дізнавайся, коли тебе запрошують на дроп або пишуть у чаті.",pnBtn:"Увімкнути",pnIos:"На iPhone сповіщення працюють у застосунку, доданому на початковий екран: у Safari натисни «Поділитися» ⬆️ → «На початковий екран», відкрий SQUAD з іконки й увімкни сповіщення."});
+/* ---------- PROŚBA O POWIADOMIENIA (musi być od razu w kliknięciu – inaczej iPhone/Chrome ją ignorują) ---------- */
+const pushState=()=>{if(DEMO)return"off";const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  if(!("Notification"in window))return ios&&!st?"ios":"none";return Notification.permission};
+function askPush(){const st=pushState();
+  if(st==="ios"){sheet(`<div class="bbig"><img src="/e/bell.webp" alt="" style="width:84px;height:84px"></div><h2>${t("pnT")}</h2><p class="hint">${t("pnIos")}</p>`);return}
+  if(st==="none"||st==="off")return;if(st==="denied"){toast(t("pushBlocked"));return}
+  if(st==="granted"){enablePush(true);return}
+  try{Notification.requestPermission().then(p=>{sset("pnAsk",String(Date.now()));if(p==="granted")enablePush(true);else if(p==="denied")toast(t("pushBlocked"));if(redraw)redraw()})}catch(e){}}
+const pushCard=()=>{const st=pushState();if(!["default","ios"].includes(st))return"";const last=+sget("pnX")||0;if(Date.now()-last<3*864e5)return"";
+  return`<div class="pcard" id="pcard"><img src="/e/bell.webp" alt=""><div><b>${t("pnT")}</b><small>${t("pnD")}</small></div><button class="mbtn" id="pon">${t("pnBtn")}</button><button class="px" id="pnx" aria-label="✕">✕</button></div>`};
+const bindPushCard=()=>{const b=$("#pon");if(b)b.onclick=()=>{vib(12);askPush();const c=$("#pcard");if(c&&pushState()!=="ios")c.remove()};const x=$("#pnx");if(x)x.onclick=()=>{sset("pnX",String(Date.now()));$("#pcard")?.remove()}};
+
 /* ---------- POMOC I KONTAKT ---------- */
 Object.assign(L.pl,{hlT:"Pomoc i kontakt",hlD:"Coś nie działa albo masz pomysł? Napisz do nas – odpisujemy najszybciej, jak się da.",hlMail:"Napisz maila",hlGm:"Napisz przez Gmail",hlCp:"Kopiuj adres",hlCpd:"Skopiowano adres ✓"});
 Object.assign(L.en,{hlT:"Help & contact",hlD:"Something broken or got an idea? Write to us – we reply as fast as we can.",hlMail:"Send an email",hlGm:"Write via Gmail",hlCp:"Copy address",hlCpd:"Address copied ✓"});
