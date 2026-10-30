@@ -34,6 +34,10 @@ jobs:
           VERSION_CODE=$(( ${{ github.run_number }} + 1 )) node android/generate.mjs 2>&1 | tee -a build.log
           sed -i -E 's/minSdkVersion [0-9]+/minSdkVersion 24/; s/minSdk = [0-9]+/minSdk = 24/' build-android/app/build.gradle* || true
           grep -n -E 'minSdk' build-android/app/build.gradle* || true
+          # R8 zmienia nazwy klas androidbrowserhelper -> crash przy starcie (Component class R.u does not exist). Wyłącz skracanie kodu i zachowaj klasy.
+          sed -i -E 's/minifyEnabled true/minifyEnabled false/; s/isMinifyEnabled = true/isMinifyEnabled = false/; s/shrinkResources true/shrinkResources false/' build-android/app/build.gradle* || true
+          printf '\n-keep class com.google.androidbrowserhelper.** { *; }\n-keep class com.cubemobilegames.squad.** { *; }\n' >> build-android/app/proguard-rules.pro || true
+          grep -n -E 'minify|shrink' build-android/app/build.gradle* || true
           ls build-android
 
       - name: Zbuduj AAB i APK
