@@ -14,5 +14,17 @@ Object.assign(m, {
 });
 if (typeof m.validate === "function") { const err = m.validate(); if (err) { console.error("Błąd manifestu:", err); process.exit(1); } }
 await new TwaGenerator().createTwaProject("build-android", m, new ConsoleLog("squad"));
+
+// Nazwy aplikacji w językach (pod ikoną zostaje krótkie „Squad”, pełna nazwa w ustawieniach i ostatnich aplikacjach)
+const NAMES = { pl: "Squad – wspólne wypady", en: "Squad – hangouts together", es: "Squad – planes en grupo", de: "Squad – gemeinsam unterwegs",
+  fr: "Squad – sorties entre potes", it: "Squad – uscite insieme", cs: "Squad – společné akce", uk: "Squad – спільні зустрічі" };
+const resDir = "build-android/app/src/main/res", base = fs.readFileSync(`${resDir}/values/strings.xml`, "utf8");
+const keys = [...base.matchAll(/<string name="([^"]+)"[^>]*>([^<]*)<\/string>/g)].filter(([, , v]) => v.trim() === app.name).map(([, k]) => k);
+console.log("Klucze nazwy aplikacji:", keys.join(", ") || "(brak)");
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/'/g, "\\'");
+for (const [l, n] of Object.entries(NAMES)) {
+  fs.mkdirSync(`${resDir}/values-${l}`, { recursive: true });
+  fs.writeFileSync(`${resDir}/values-${l}/strings.xml`, `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n${keys.map((k) => `  <string name="${k}">${esc(n)}</string>`).join("\n")}\n</resources>\n`);
+}
 fs.writeFileSync("build-android/twa-manifest.json", JSON.stringify(m.toJson ? m.toJson() : m, null, 2));
 console.log("Projekt Androida gotowy:", app.packageId, m.appVersionName, "(" + m.appVersionCode + ")");
