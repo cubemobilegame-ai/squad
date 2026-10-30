@@ -226,6 +226,12 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:#
 @keyframes flt{50%{translate:0 -10px;rotate:6deg}}
 .emp{display:flex;align-items:center;gap:12px}.emp img{width:46px;height:46px;flex:none}
 @media (prefers-reduced-motion:reduce){.hi5 *,.fl{animation:none!important;opacity:1}.hi5 .bm{opacity:0!important}}
+.kp{display:flex;justify-content:center;margin:2px 0 4px}.kp .av{width:132px;height:132px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.sheet h3{margin:14px 0 8px}.krow{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 6px;scrollbar-width:none}.krow::-webkit-scrollbar{display:none}
+.ksw{flex:none;width:40px;height:40px;border-radius:50%;border:3px solid rgba(255,255,255,.12);cursor:pointer;padding:0;transition:transform .12s}.ksw.on{border-color:#fff;transform:scale(1.1)}
+.kac{background:rgba(255,255,255,.08);color:#fff;font:800 15px Brico,system-ui;display:grid;place-items:center;width:48px;height:48px}.kac img{width:40px;height:40px;object-fit:contain}
+.kst{flex:none;width:60px;height:60px;border-radius:50%;padding:0;border:3px solid transparent;background:none;cursor:pointer}.kst.on{border-color:#FF4F86}.kst .av{width:100%;height:100%}
+.kmk{margin:14px 0 4px}.av img.kv{width:100%;height:100%;object-fit:cover;transform:translateY(5%)}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -431,7 +437,40 @@ const I={home:sv('<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1
 const PIN='<svg width="44" height="54" viewBox="0 0 44 54"><path d="M22 52C8 36 4 29 4 21a18 18 0 0 1 36 0c0 8-4 15-18 31z" fill="#FF4F86"/><circle cx="22" cy="21" r="6" fill="#111"/></svg>';
 
 /* ---- awatary: 24 streetwearowych postaci (8 nakryć × 4 oczy × 3 miny × kolory) ---- */
-const AVN=30,MK='#0b0b12';const avUrl=i=>"/avatars/3d/"+((+i||0)%AVN)+".webp";
+const AVN=30,MK='#0b0b12';
+/* ---- kreator awatarów: fryzura × skóra × kolor włosów × oczy × dodatek × tło (części: Microsoft Fluent Emoji, MIT) ---- */
+const KU=n=>(window.__K&&window.__K[n])||"/avatars/k/"+n;
+const KS=9,KT=5,KH=9,KE=5,KA=8,KB=8,KBOY=5;
+const K_HAIR=["#1c1716","#3b2417","#6b4228","#e6bf72","#c8562a","#ff6fae","#4aa3ff","#8b5cf6","#d9dce6"];
+const K_EYE=[null,"#3d8bff","#2fae6b","#a8702a","#8f9bb3"],K_SKIN=["#f7d7c4","#e8b796","#c68e6b","#9c6646","#5e3b2c"];
+const K_BG=["#ffb3cf","#ffc9a8","#c9b6ff","#a9d8ff","#a8f0d8","#ffe58a","#ff9e8a","#e0b3ff"];
+const K_ACC=["none","glasses","sunglasses","headphone","crown","ribbon","flower","cap"];
+const kEnc=o=>1000+(((((o.s*KT+o.t)*KH+o.h)*KE+o.e)*KA+o.a)*KB+o.b);
+const kDec=v=>{let g=+v-1000;const b=g%KB;g=(g-b)/KB;const a=g%KA;g=(g-a)/KA;const e=g%KE;g=(g-e)/KE;const h=g%KH;g=(g-h)/KH;const t=g%KT;const s=((g-t)/KT)%KS;return{s,t,h,e,a,b}};
+/* 30 gotowców: 10 jasna skóra, 10 ciemna, 10 bardzo ciemna; pół na pół chłopaki / dziewczyny */
+const PRE=[[0,0,0,0,0,3],[5,0,0,2,0,0],[1,0,1,0,1,4],[6,1,3,0,0,1],[2,0,2,3,0,5],[8,0,1,1,5,2],[3,1,4,2,0,6],[7,1,4,2,6,7],[4,1,3,0,3,3],[5,1,5,1,0,4],
+[0,2,0,0,0,1],[6,2,0,3,1,0],[1,3,1,0,7,5],[8,3,0,0,5,3],[2,3,0,3,0,2],[5,2,2,0,2,6],[4,2,6,1,0,4],[7,3,3,0,0,7],[3,2,7,0,1,1],[5,3,8,2,4,5],
+[0,4,0,0,0,6],[6,4,0,0,6,2],[1,4,0,3,0,0],[8,4,5,0,5,4],[2,4,0,0,2,3],[5,4,3,0,0,1],[4,4,7,0,0,5],[7,4,0,0,1,6],[1,4,6,0,0,7],[6,4,2,0,0,3]].map(([s,t,h,e,a,b])=>kEnc({s,t,h,e,a,b}));
+const avCode=v=>{v=+v||0;return v>=1000?v:PRE[((v%AVN)+AVN)%AVN]};
+const avBg=v=>K_BG[kDec(avCode(v)).b];
+const avBoy=v=>kDec(avCode(v)).s<KBOY;
+const gc=p=>p&&p.av!=null?(avBoy(p.av)?"#5db4ff":"#ff6fae"):"#ffc24d";
+const kImg={},kLoad=u=>kImg[u]||(kImg[u]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=u}));
+const kCache=new Map(),BLANK="data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+function genAv(v,bg){v=avCode(v);const key=v+(bg?"b":"");if(kCache.has(key))return kCache.get(key);
+  const p=(async()=>{const o=kDec(v),R=176;const [base,mk,ac]=await Promise.all([kLoad(KU(`${o.s}-${o.t}.webp`)),kLoad(KU(`m${o.s}.png`)),o.a?kLoad(KU(`a${o.a}.webp`)):null]);
+    const c=document.createElement("canvas");c.width=c.height=R;const x=c.getContext("2d",{willReadFrequently:true});if(!base)return BLANK;
+    const m=document.createElement("canvas");m.width=m.height=R;const mx=m.getContext("2d");if(mk)mx.drawImage(mk,0,0,R,R);
+    x.drawImage(base,0,0,R,R);const d=x.getImageData(0,0,R,R),D=d.data,M=mx.getImageData(0,0,R,R).data;
+    const hc=K_HAIR[o.h],H=[1,3,5].map(i=>parseInt(hc.slice(i,i+2),16)),hl=H[0]*.299+H[1]*.587+H[2]*.114,sp=hl<90?110:60,ec=K_EYE[o.e],E=ec&&[1,3,5].map(i=>parseInt(ec.slice(i,i+2),16));
+    for(let i=0;i<D.length;i+=4){const mh=M[i+1]/255;if(mh>0){const sh=Math.min(M[i]/255*1.6,1.6),add=Math.max(sh-1,0)*sp;for(let k=0;k<3;k++){const n=Math.min(255,H[k]*sh+add);D[i+k]=D[i+k]*(1-mh)+n*mh}}
+      const mi=M[i+2]/255;if(E&&mi>0){const l=(D[i]*.299+D[i+1]*.587+D[i+2]*.114)/70,f=Math.max(.45,Math.min(1.35,l));for(let k=0;k<3;k++)D[i+k]=D[i+k]*(1-mi)+Math.min(255,E[k]*f)*mi}}
+    x.putImageData(d,0,0);if(ac)x.drawImage(ac,0,0,R,R);
+    if(bg){const o2=document.createElement("canvas");o2.width=o2.height=R;const y=o2.getContext("2d");y.fillStyle=K_BG[o.b];y.fillRect(0,0,R,R);y.drawImage(c,0,R*.05,R,R);return o2.toDataURL("image/png")}
+    return c.toDataURL("image/png")})();
+  kCache.set(key,p);return p}
+const fillAv=root=>(root||document).querySelectorAll("img[data-g]").forEach(i=>{if(i.dataset.f===i.dataset.g)return;i.dataset.f=i.dataset.g;genAv(+i.dataset.g).then(u=>{if(i.dataset.g==i.dataset.f)i.src=u})});
+new MutationObserver(()=>fillAv()).observe(document.documentElement,{childList:true,subtree:true});
 const HEAD=a=>[`<path d="M18 23a14 13 0 0 1 28 0v3H18z" fill="${a}"/><rect x="17" y="22" width="30" height="5" rx="2.5" fill="#fff" fill-opacity=".4"/><circle cx="32" cy="9" r="3.5" fill="${a}"/>`,
 `<path d="M19 25a13 12 0 0 1 26 0z" fill="${a}"/><path d="M30 25h19q-3 4-9 4H30z" fill="${a}" fill-opacity=".8"/>`,
 `<path d="M18 29v-5a14 14 0 0 1 28 0v5" fill="none" stroke="${a}" stroke-width="3.5"/><rect x="13" y="26" width="8" height="13" rx="4" fill="${a}"/><rect x="43" y="26" width="8" height="13" rx="4" fill="${a}"/>`,
@@ -447,10 +486,10 @@ const EYES=[`<rect x="20" y="28" width="11" height="8" rx="3" fill="${MK}"/><rec
 const MOUTH=[`<path d="M27 40q5 3 10 0" stroke="${MK}" stroke-width="2" fill="none" stroke-linecap="round"/>`,`<path d="M28 40.5h8" stroke="${MK}" stroke-width="2.2" stroke-linecap="round"/>`,`<path d="M27.5 39q4.5 6 9 0z" fill="${MK}"/>`];
 const avSvg=i=>{const f=COLORS[(i*3+(i>>3))%5];let a=COLORS[(i*2+1)%5];if(a===f)a="#fff";
   return`<svg viewBox="0 0 64 64" width="100%" height="100%"><path d="M6 64c2-13 12-17 26-17s24 4 26 17z" fill="#17171f" stroke="${a}" stroke-width="1.5"/><path d="M26 47l6 6 6-6" fill="none" stroke="${a}" stroke-width="1.5"/><rect x="19" y="13" width="26" height="31" rx="13" fill="${f}"/>${HEAD(a)[i%8]}${EYES[(i+(i>>3))%4]}${MOUTH[(i+(i>>2))%3]}<path d="M54 4l1.8 5 5 1.8-5 1.8L54 18l-1.8-5.4-5-1.8 5-1.8z" fill="#fff"/></svg>`};
-const avc=(cls,v)=>typeof v==="string"&&v?`<span class="av ${cls}"><img src="${esc(v)}" alt=""></span>`:`<span class="av ${cls}"><img src="${avUrl(v)}" alt="" loading="lazy"></span>`;
-const myAv=()=>{const v=sget("avatar");return v!==""?+v%AVN:hs(auth.currentUser?.uid||"x")%AVN};
+const avc=(cls,v)=>typeof v==="string"&&v?`<span class="av ${cls}"><img src="${esc(v)}" alt=""></span>`:`<span class="av ${cls}" style="background:${avBg(v)}"><img class="kv" data-g="${avCode(v)}" src="${BLANK}" alt=""></span>`;
+const myAv=()=>{const v=sget("avatar");return v!==""?(+v>=1000?+v:+v%AVN):hs(auth.currentUser?.uid||"x")%AVN};
 const meAv=()=>sget("photo")||myAv();
-const avIdx=p=>p&&p.ph?p.ph:p&&p.av!=null?+p.av%AVN:hs(p?.id||"x")%AVN;
+const avIdx=p=>p&&p.ph?p.ph:p&&p.av!=null?(+p.av>=1000?+p.av:+p.av%AVN):hs(p?.id||"x")%AVN;
 
 let unsubs=[],redraw=null;
 const view=h=>{document.querySelectorAll(".sheetbg,.crop,.lb,.cel,.rxbg").forEach(e=>e.remove());unsubs.forEach(u=>u());unsubs=[];redraw=null;A.innerHTML=h;scrollTo(0,0)};
@@ -560,7 +599,7 @@ function profileView(){
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:34px">${t("profile")}</h1>
   <div class="glass"><div class="phw" id="phw"></div><div class="phl" id="phl"></div><input type="file" id="pf" accept="image/*" hidden>
   <label class="lbl" for="pn">${t("nick")}</label><div class="lr2"><input id="pn" value="${esc(nick)}" maxlength="20" autocomplete="off"><button class="mbtn" id="ps">${t("save")}</button></div>
-  <details class="avd"><summary>${t("avPick")}</summary><div class="avg">${[...Array(AVN)].map((_,i)=>`<button class="ap" data-i="${i}" aria-label="${i+1}">${avc("",i)}</button>`).join("")}</div></details></div>
+  <button class="ghost kmk" id="kmk">${t("avMake")}</button><details class="avd"><summary>${t("avPick")}</summary><div class="avg">${[...Array(AVN)].map((_,i)=>`<button class="ap" data-i="${i}" aria-label="${i+1}">${avc("",i)}</button>`).join("")}</div></details></div>
   ${badgesHtml()}
   <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p></div>
   <div class="sgrp"><h3>${t("lang")}</h3><div class="lgs">${LANGS.map(([c,n])=>`<button class="lg ${c==LANG?"sel":""}" data-l="${c}">${n}</button>`).join("")}</div></div>
@@ -576,7 +615,7 @@ function profileView(){
   const changedAv=()=>{refresh();syncAvatar();saveProfile()};
   refresh();bindBadges();
   $("#ps").onclick=()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);saveProfile();vib(15);toast(t("saved"))};
-  document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});
+  document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});$("#kmk").onclick=()=>avEditor(changedAv);
   document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")enablePush(true);b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
   document.querySelectorAll(".lg").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
   $("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
@@ -594,11 +633,30 @@ function onboard(){
   view(`<div class="scr"><div class="logo bigl" style="font-size:44px;margin-top:20px">SQUAD</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
   <div class="phw" id="phw"></div><input type="file" id="pf" accept="image/*" hidden>
   <input id="pn" placeholder="${t("nick")}" value="${esc(u.displayName?.split(" ")[0]||"")}" maxlength="20" autocomplete="off">
-  <h3>${t("avPick")}</h3><div class="avg">${[...Array(AVN)].map((_,i)=>`<button class="ap" data-i="${i}" aria-label="${i+1}">${avc("",i)}</button>`).join("")}</div><button class="cta" id="ps">${t("obGo")}</button></div>`);
+  <button class="ghost kmk" id="kmk">${t("avMake")}</button><h3>${t("avPick")}</h3><div class="avg">${[...Array(AVN)].map((_,i)=>`<button class="ap" data-i="${i}" aria-label="${i+1}">${avc("",i)}</button>`).join("")}</div><button class="cta" id="ps">${t("obGo")}</button></div>`);
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));bindPhoto(refresh)};refresh();
-  document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});
+  document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});$("#kmk").onclick=()=>avEditor(refresh);
   $("#ps").onclick=async()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}sset("nick",n);sset("avatar",myAv());await saveProfile();enablePush(true);route()};
 }
+
+
+/* ---------- KREATOR AWATARA ---------- */
+Object.assign(L.pl,{avMake:"✨ Stwórz swój awatar",avT:"Twój awatar",kSt:"Fryzura",kSk:"Skóra",kHr:"Kolor włosów",kEy:"Oczy",kAc:"Dodatki",kBg:"Tło",kRnd:"🎲 Losuj",kSave:"Zapisz awatar"});
+Object.assign(L.en,{avMake:"✨ Make your avatar",avT:"Your avatar",kSt:"Hairstyle",kSk:"Skin",kHr:"Hair colour",kEy:"Eyes",kAc:"Extras",kBg:"Background",kRnd:"🎲 Random",kSave:"Save avatar"});
+function avEditor(done){let o=kDec(avCode(myAv()));
+  const sw=(k,arr,fn)=>arr.map((c,i)=>`<button class="ksw ${o[k]===i?"on":""}" data-k="${k}" data-v="${i}" style="background:${fn?fn(c,i):c}" aria-label="${i+1}"></button>`).join("");
+  const draw=()=>{const v=kEnc(o);s.querySelector("#kp").innerHTML=avc("xl",v);
+    s.querySelector("#kst").innerHTML=[...Array(KS)].map((_,i)=>`<button class="kst ${o.s===i?"on":""}" data-k="s" data-v="${i}">${avc("",kEnc({...o,s:i,a:0}))}</button>`).join("");
+    s.querySelector("#ksk").innerHTML=sw("t",K_SKIN);s.querySelector("#khr").innerHTML=sw("h",K_HAIR);
+    s.querySelector("#key").innerHTML=sw("e",K_EYE,c=>c||"#4a2c1d");s.querySelector("#kbg").innerHTML=sw("b",K_BG);
+    s.querySelector("#kac").innerHTML=K_ACC.map((n,i)=>`<button class="ksw kac ${o.a===i?"on":""}" data-k="a" data-v="${i}">${i?`<img src="${KU(`a${i}.webp`)}" alt="">`:"✕"}</button>`).join("");
+    s.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{o={...o,[b.dataset.k]:+b.dataset.v};vib(8);draw()})};
+  const s=sheet(`<h2>${t("avT")}</h2><div class="kp" id="kp"></div>
+  <h3>${t("kSt")}</h3><div class="krow" id="kst"></div><h3>${t("kSk")}</h3><div class="krow" id="ksk"></div><h3>${t("kHr")}</h3><div class="krow" id="khr"></div>
+  <h3>${t("kEy")}</h3><div class="krow" id="key"></div><h3>${t("kAc")}</h3><div class="krow" id="kac"></div><h3>${t("kBg")}</h3><div class="krow" id="kbg"></div>
+  <button class="ghost" id="krnd">${t("kRnd")}</button><button class="cta" id="ksv">${t("kSave")}</button>`);
+  draw();s.querySelector("#krnd").onclick=()=>{const r=n=>Math.floor(Math.random()*n);o={s:r(KS),t:r(KT),h:r(KH),e:Math.random()<.6?0:r(KE),a:Math.random()<.5?0:r(KA),b:r(KB)};vib(12);draw()};
+  s.querySelector("#ksv").onclick=()=>{sset("avatar",kEnc(o));sset("photo","");vib(15);s.close();done&&done()}}
 
 /* ---------- CZATY: grupy ogólne + czaty dropów ---------- */
 function chatsView(){
@@ -614,7 +672,7 @@ function chatsView(){
     await setDoc(doc(db,"groups",code,"members",u.uid),{nickname:nick,av:myAv(),ph:sget("photo")||null,isGuest:false,updatedAt:serverTimestamp()});
     rememberG(code);S.addGroup?.(code,{ownerId:u.uid,ownerNick:nick,name});bump("groups");vib([30,40,30]);go("/g/"+code)};
   const row=(href,c1,c2,icon,title,names,m,n)=>`<div class="chat" onclick="go('${href}')"><div class="cav th" style="background:linear-gradient(135deg,${c1},${c2})">${icon}</div><div><b>[${esc(title)}]</b><small class="nk">${names}</small><small>${m?esc(m.nickname)+": "+esc(m.text):t("noMsg")}</small></div>${bdi(n)}<i>›</i></div>`;
-  const nm=P=>P.slice(0,4).map(p=>esc(p.nickname)).join(", ")+(P.length>4?` +${P.length-4}`:"");
+  const nm=P=>P.slice(0,4).map(p=>`<span style="color:${gc(p)}">${esc(p.nickname)}</span>`).join(", ")+(P.length>4?` +${P.length-4}`:"");
   const draw=()=>{
     $("#gl").innerHTML=[...S.groups.values()].map(g=>{const [c1,c2]=THEMES[hs(g.id)%8];return row("/gc/"+g.id,c1,c2,sv(I.grp.replace(/^<svg[^>]*>|<\/svg>$/g,"")).replace('stroke="currentColor"','stroke="#fff"'),g.name,nm(S.gm[g.id]||[]),(S.ms["g_"+g.id]||[]).slice(-1)[0],unreadOf({id:"g_"+g.id}))}).join("")||`<p class="mut emp"><img src="/e/ghost.webp" alt="">${t("emptyG")}</p>`;
     $("#cl").innerHTML=live().filter(d=>loaded(d)&&["host","in","late"].includes(roleOf(d))).map(d=>{const [c1,c2]=thm(d);return row("/c/"+d.id,c1,c2,ic(d.category,"#fff"),d.title,nm(S.ppl[d.id]||[]),(S.ms[d.id]||[]).slice(-1)[0],unreadOf(d))}).join("")||`<p class="mut emp"><img src="/e/chat.webp" alt="">${t("emptyDc")}</p>`};
@@ -650,7 +708,7 @@ async function groupView(code){
     if(owner)await deleteDoc(ref);else await deleteDoc(doc(ref,"members",me()));
     forgetG(code);S.groups.delete(code);changed();vib([40,30,40]);toast(t(owner?"grDeleted":"grLeft"));go(logged?"/chats":"/g/"+code)};
   unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({id:y.id,...y.data()}));mine=M.find(m=>m.id===me())||null;
-    $("#mem").innerHTML=M.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${nc(p.id)}">${esc(p.nickname)}</b>${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
+    $("#mem").innerHTML=M.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
     $("#jb").hidden=!!mine;$("#oc").hidden=!mine;$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
 }
@@ -782,7 +840,7 @@ async function chatView(code,g){
   const drawM=()=>{const b=$("#msgs");if(!b)return;const atEnd=b.scrollHeight-b.scrollTop-b.clientHeight<80;
     b.innerHTML=(M.length&&!sget("rxHint")?`<p class="rxhint">${t("rxHint")}</p>`:"")+(M.map(m=>{const mm=m.authorId===me();if(!mm&&isBlk(m.authorId))return`<div class="m hid"><div>${t("hiddenMsg")}</div></div>`;
       const pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};
-      return`<div class="m ${mm?"me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${avc("mini",avIdx(pp))}<div class="mb"><div class="bub"><small style="color:${nc(m.authorId)}">${esc(m.nickname)}${mm?" ("+t("you2")+")":""}</small>${esc(m.text)}<time>${hm(m)}</time></div>${rxs(m)}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
+      return`<div class="m ${mm?"me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${avc("mini",avIdx(pp))}<div class="mb"><div class="bub"><small style="color:${gc(pp)}">${esc(m.nickname)}${mm?" ("+t("you2")+")":""}</small>${esc(m.text)}<time>${hm(m)}</time></div>${rxs(m)}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
     if(atEnd||!b.dataset.s){b.scrollTop=b.scrollHeight;b.dataset.s=1}};
   const react=async(id,e,el)=>{const m=M.find(x=>x.id===id);if(!m)return;const cur=(m.r||{})[me()];
     if(cur!==e){flyEmoji(e,el);sfx("react");vib(12)}else vib(6);sset("rxHint","1");
@@ -802,7 +860,7 @@ async function chatView(code,g){
   B.onclick=e=>{const c=e.target.closest(".rxc");if(c&&mine){const el=c.closest(".m");react(el.dataset.i,c.dataset.e,el)}};
   unsubs.push(onSnapshot(collection(ref,pc),sn=>{
     P=sn.docs.map(x=>({id:x.id,...x.data()}));mine=P.find(p=>p.id===me())||null;
-    $("#mem").innerHTML=P.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${nc(p.id)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("");
+    $("#mem").innerHTML=P.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("");
     $("#cnt").textContent=t("members",P.length)+" · "+(g?t("grChH"):t("chH"));
     if(!mine){const f=$("#mf");if(f){f.outerHTML=`<button class="cta" id="jn" style="margin:0">${t(g?"joinG":"joinC")}</button>`;$("#jn").onclick=()=>go((g?"/g/":"/d/")+code)}return}
     drawM();if(on)return;on=true;
@@ -1009,7 +1067,7 @@ async function makeCard(k,o,st={}){await fontsReady();
   const host=(G?o.ownerNick:o.hostNick)||"?",hm=G?(o.M||[]).find(m=>m.id===o.ownerId):null;
   const hv=G?(hm?avIdx(hm):avIdx({id:o.ownerId})):(o.hostPh||(o.hostAv!=null?+o.hostAv:avIdx({id:o.hostId})));
   x.fillStyle="#1d1d29";x.beginPath();x.arc(W/2,346,76,0,PI2);x.fill();
-  await K.pic(typeof hv==="string"?hv:avUrl(hv),W/2-76,270,152,152,true);
+  await K.pic(typeof hv==="string"?hv:await genAv(hv,true),W/2-76,270,152,152,true);
   x.lineWidth=6;x.strokeStyle=pl.fg;x.beginPath();x.arc(W/2,346,76,0,PI2);x.stroke();
   const it=t("inv",host);x.save();if(sty==="retro"){x.shadowColor="rgba(40,0,60,.85)";x.shadowBlur=16;x.shadowOffsetY=3}K.txt(it,W/2,486,K.fitF(it,920,800,46,30),pl.fg);x.restore();
   const cy=540,X0=90,CW=900,pd=60,title=String((G?o.name:o.title)||"").toUpperCase();
