@@ -1534,7 +1534,7 @@ function helpSheet(){const subj=encodeURIComponent("SQUAD "+APP_VER),body=encode
   s.querySelector("#hcp").onclick=async()=>{try{await navigator.clipboard.writeText(MAIL_TO)}catch{const i=document.createElement("input");i.value=MAIL_TO;document.body.append(i);i.select();try{document.execCommand("copy")}catch{}i.remove()}vib(12);toast(t("hlCpd"))}}
 /* ---------- INSTALACJA: Android (Sklep Play / instalacja z Chrome), iPhone (ekran początkowy) ---------- */
 const FLOAT=`<img class="fl f1" src="/e/fire.webp" alt=""><img class="fl f2" src="/e/crown.webp" alt=""><img class="fl f3" src="/e/pizza.webp" alt=""><img class="fl f4" src="/e/cloud.webp" alt="">`;
-const PLAY_URL="https://play.google.com/store/apps/details?id=com.cubemobilegames.squad",PLAY_LIVE=false;
+const PLAY_URL="https://play.google.com/store/apps/details?id=com.cubemobilegames.squad",PLAY_LIVE=true;
 let deferredInstall=null;addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e});
 Object.assign(L.pl,{avCredit:"Awatary i emotki 3D: Microsoft Fluent Emoji (licencja MIT)",insT:"Masz to! Zgarnij SQUAD 📲",insTo:"Szkoda! Następnym razem nie przegap 📲",insD:"Z aplikacją dostajesz powiadomienia z czatu ekipy i przypomnienie przed startem. Twoje odpowiedzi zostają.",insPlay:"Pobierz ze Sklepu Play",insAdd:"Zainstaluj aplikację",insIos:"Na iPhonie: stuknij Udostępnij ⬆️ na dole Safari, potem „Do ekranu początkowego”.",insLater:"Może później"});
 Object.assign(L.en,{avCredit:"3D avatars and emoji: Microsoft Fluent Emoji (MIT licence)",insT:"You're in! Get SQUAD 📲",insTo:"Too bad! Don't miss the next one 📲",insD:"With the app you get crew chat notifications and a reminder before the start. Your replies stay.",insPlay:"Get it on Google Play",insAdd:"Install the app",insIos:"On iPhone: tap Share ⬆️ at the bottom of Safari, then “Add to Home Screen”.",insLater:"Maybe later"});
@@ -1542,9 +1542,9 @@ const inApp=()=>matchMedia("(display-mode: standalone)").matches||navigator.stan
 if(document.referrer.indexOf("android-app://")===0)sset("twa","1");
 function installSheet(auto,st){if(inApp())return;if(auto){const k="ins_"+auto;if(sget(k))return;sset(k,"1")}
   const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),android=/Android/.test(navigator.userAgent);
-  const btn=android&&PLAY_LIVE?`<button class="cta" id="ip">${sv(SI.dl)}${t("insPlay")}</button>`:deferredInstall?`<button class="cta" id="ia">${sv(SI.dl)}${t("insAdd")}</button>`:"";
+  const btn=!ios&&PLAY_LIVE?`<button class="cta" id="ip">${sv(SI.dl)}${t("insPlay")}</button>`:deferredInstall?`<button class="cta" id="ia">${sv(SI.dl)}${t("insAdd")}</button>`:"";
   const s=sheet(`<div class="bbig"><div class="hi5 xs" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><i class="arc a1"></i><i class="arc a2"></i><img class="bm" src="/e/boom.webp" alt=""></div></div><h2>${t(st==="out"?"insTo":"insT")}</h2><p class="hint">${t("insD")}</p>${ios?`<p class="tldr" style="text-align:center">${t("insIos")}</p>`:""}${btn}${!ios&&!btn?`<p class="hint">${t("soon")}</p>`:""}<button class="ghost" id="il">${t("insLater")}</button>`);
-  const ip=s.querySelector("#ip");if(ip)ip.onclick=()=>{s.close();location.href=PLAY_URL};
+  const ip=s.querySelector("#ip");if(ip)ip.onclick=()=>{s.close();android?location.href=PLAY_URL:open(PLAY_URL,"_blank")};
   const ia=s.querySelector("#ia");if(ia)ia.onclick=async()=>{s.close();try{deferredInstall.prompt();await deferredInstall.userChoice}catch{}deferredInstall=null};
   s.querySelector("#il").onclick=s.close}
 
