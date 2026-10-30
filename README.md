@@ -4,15 +4,16 @@ Aplikacja dla młodzieży: dropy (wypady) z odpowiedziami IN / LATE / OUT, tylko
 
 ## Jak to działa
 - `public/` – cała aplikacja (strona + PWA). Trafia na **Firebase Hosting** pod `https://squad-64cd5.web.app`.
-- `functions/` – funkcje w chmurze: powiadomienia push, przypomnienia, podgląd linków, sprzątanie po 24 h.
-- `firestore.rules`, `storage.rules` – zasady dostępu do bazy i zdjęć.
+- `tools/cron.cjs` – automat (GitHub Actions co ok. 10 min): powiadomienia push, przypomnienia, sprzątanie po 24 h. Zastępuje płatne funkcje w chmurze – całość działa na darmowym planie Spark.
+- `firestore.rules` – zasady dostępu do bazy. Zdjęcia (profilowe i album) zapisują się w bazie, skompresowane.
 - `android/` – ustawienia aplikacji na Androida (Trusted Web Activity – aplikacja otwiera stronę SQUAD jak natywna apka, linki `/d/…` otwierają się w aplikacji).
 - `sklep/` – ikona, grafika 1024×500 i zrzuty ekranu do Sklepu Play.
 
 ## Automaty (GitHub Actions)
 | Automat | Kiedy | Co robi |
 |---|---|---|
-| **Firebase – wdrożenie** | każda zmiana w aplikacji | wysyła stronę, reguły i funkcje na Firebase |
+| **Firebase – wdrożenie** | każda zmiana w aplikacji | wysyła stronę i reguły bazy na Firebase |
+| **Automat – powiadomienia i sprzątanie** | co ok. 10 minut | powiadomienia push, przypomnienia, usuwanie dropów po 24 h |
 | **Android – klucz podpisu (jednorazowo)** | ręcznie, raz | tworzy klucz podpisu aplikacji |
 | **Android – AAB i APK** | zmiana w `android/` lub ręcznie | buduje `.aab` (Sklep Play) i `.apk` (telefon) → zakładka **Releases** |
 

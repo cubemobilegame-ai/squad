@@ -6,12 +6,7 @@
       { "source": "/.well-known/assetlinks.json", "headers": [{ "key": "Content-Type", "value": "application/json" }] },
       { "source": "**/@(index.html|sw.js|config.js|manifest.json)", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
     ],
-    "rewrites": [
-      { "source": "/d/**", "function": { "functionId": "og", "region": "europe-west1" } },
-      { "source": "**", "destination": "/index.html" }
-    ]
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
   },
-  "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" },
-  "storage": { "rules": "storage.rules" },
-  "functions": { "source": "functions", "ignore": ["node_modules", ".git"] }
+  "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" }
 }

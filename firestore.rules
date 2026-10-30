@@ -56,14 +56,15 @@ service cloud.firestore {
           && okReact();
       }
 
-      // ALBUM WYPADU: po starcie, każdy uczestnik max 3 zdjęcia (id = uid_1..3), znika z dropem
+      // ALBUM WYPADU: po starcie, każdy uczestnik max 3 zdjęcia (id = uid_1..3, zdjęcie zapisane w dokumencie), znika z dropem
       match /photos/{pid} {
         allow read: if signedIn() && drop(code).expiresAt > request.time
           && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid));
         allow create: if signedIn() && drop(code).startsAt <= request.time && drop(code).expiresAt > request.time
           && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
           && pid in [request.auth.uid + '_1', request.auth.uid + '_2', request.auth.uid + '_3']
-          && request.resource.data.authorId == request.auth.uid;
+          && request.resource.data.authorId == request.auth.uid
+          && request.resource.data.url is string && request.resource.data.url.size() < 400000;
         allow delete: if signedIn() && (resource.data.authorId == request.auth.uid || drop(code).hostId == request.auth.uid);
       }
     }

@@ -224,10 +224,10 @@ try{
   const C=window.SQUAD_CONFIG;if(!C||/PASTE|WKLEJ|PROJECT_ID/.test(C.apiKey)||/[?&]demo\b/.test(location.search))throw 0;
   if(/\.(web\.app|firebaseapp\.com)$/.test(location.hostname))C.authDomain=location.hostname;
   const g="https://www.gstatic.com/firebasejs/10.12.2/";
-  FB=Object.assign({},...await Promise.all(["app","auth","firestore","storage","messaging"].map(n=>import(g+"firebase-"+n+".js").catch(()=>({})))));FB.__c=C;
+  FB=Object.assign({},...await Promise.all(["app","auth","firestore","messaging"].concat(C.storageBucket?["storage"]:[]).map(n=>import(g+"firebase-"+n+".js").catch(()=>({})))));FB.__c=C;
 }catch{DEMO=true;FB=mock()}
 const {updateDoc,deleteField,initializeApp,getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,signOut,onAuthStateChanged,getFirestore,collection,doc,getDoc,setDoc,addDoc,deleteDoc,getDocs,query,where,limit,orderBy,onSnapshot,serverTimestamp,Timestamp}=FB;
-const fbApp=initializeApp(FB.__c),auth=getAuth(fbApp),db=getFirestore(fbApp),stor=!DEMO&&FB.getStorage?FB.getStorage(fbApp):null;
+const fbApp=initializeApp(FB.__c),auth=getAuth(fbApp),db=getFirestore(fbApp),stor=!DEMO&&FB.getStorage&&FB.__c.storageBucket?FB.getStorage(fbApp):null;
 
 /* ---------- i18n: dodasz język = dodasz słownik (np. es) i wpis w LANGS ---------- */
 const LANGS=[["pl","Polski"],["en","English"]];
@@ -700,7 +700,7 @@ async function dropView(code){
     ${PH.length?`<button class="cta" id="col" style="margin-top:4px">${t("alCol")}</button>`:can?"":`<p class="mut">${t("alEmpty")}</p>`}<input type="file" id="af" accept="image/*" hidden>`;
     el.querySelectorAll(".aph").forEach(b=>b.onclick=()=>{vib(8);lightbox(PH,+b.dataset.i,{ref,code})});
     const ad=el.querySelector("#aadd");if(ad){ad.onclick=()=>{vib(8);el.querySelector("#af").click()};el.querySelector("#af").onchange=async e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;
-      const u=await compressImg(f,1080).catch(()=>null);if(!u)return toast(t("phErr"));
+      const u=await (stor?compressImg(f,1080):compressImg(f,900,.7)).catch(()=>null);if(!u)return toast(t("phErr"));
       const used=new Set(my.map(p=>p.id)),id=[1,2,3].map(n=>me()+"_"+n).find(x=>!used.has(x));if(!id)return;
       toast(t("upIng"));const url=await putImg("drops/"+code+"/"+id+".jpg",u).catch(()=>null);if(!url)return toast(t("upErr"));await setDoc(doc(ref,"photos",id),{authorId:me(),nickname:mine.nickname,url,createdAt:serverTimestamp()});bump("photos");sfx("photo");vib(20);toast(t("alAdded"))}}
     const cb=el.querySelector("#col");if(cb)cb.onclick=()=>openCollage({id:code,...d,P},PH)};
@@ -818,7 +818,7 @@ function cropPhoto(file,done){
     zr.oninput=()=>{z=+zr.value;draw()};
     const end=()=>{el.remove();URL.revokeObjectURL(src)};
     el.querySelector("#cx").onclick=end;
-    el.querySelector("#ck").onclick=()=>{const o=document.createElement("canvas");o.width=o.height=400;paint(o.getContext("2d"),400);const d=o.toDataURL("image/jpeg",.85);end();done(d)};
+    el.querySelector("#ck").onclick=()=>{const o=document.createElement("canvas");o.width=o.height=320;paint(o.getContext("2d"),320);const d=o.toDataURL("image/jpeg",.8);end();done(d)};
   }).catch(()=>{URL.revokeObjectURL(src);toast(t("phErr"))})}
 
 /* ---------- TEKSTY NOWYCH FUNKCJI ---------- */
@@ -882,8 +882,8 @@ function bindBadges(){document.querySelectorAll(".bdg").forEach(el=>el.onclick=(
   sheet(`<div class="bbig ${on?"":"lock"}">${b[1]}</div><h2>${t("b_"+b[0])}</h2><p class="hint">${t("bd_"+b[0])}</p><p class="hint" style="color:${on?"#B6FF3B":"rgba(255,255,255,.55)"};font-weight:900">${on?t("bGot"):t("bProg",c,m)}</p>`);if(on)sfx("react")})}
 
 /* ---------- ALBUM: zdjęcia, podgląd pełnoekranowy ---------- */
-const compressImg=(file,max)=>new Promise((ok,no)=>{const u=URL.createObjectURL(file);loadImg(u).then(im=>{const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");
-  c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.8))}).catch(e=>{URL.revokeObjectURL(u);no(e)})});
+const compressImg=(file,max,q=.8)=>new Promise((ok,no)=>{const u=URL.createObjectURL(file);loadImg(u).then(im=>{const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");
+  c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",q))}).catch(e=>{URL.revokeObjectURL(u);no(e)})});
 function lightbox(Lst,i,ctx){const el=document.createElement("div");el.className="lb";document.body.append(el);
   const draw=()=>{const p=Lst[i],own=p.authorId===me();
     el.innerHTML=`<div class="lbt"><span>📸 ${esc(p.nickname)} · ${i+1}/${Lst.length}</span><button class="lbx" aria-label="${t("cancel")}">✕</button></div><img src="${esc(p.url)}" alt=""><div class="lbb">${own?`<button class="ghost danger" id="lbd" style="margin:0">${sv(SI.trash)}${t("alDel")}</button>`:`<button class="lnk rep" id="lbr" style="margin:0 auto">${sv(SI.flag)} ${t("repPhoto")}</button>`}</div>`;

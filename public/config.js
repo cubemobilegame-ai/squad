@@ -6,8 +6,7 @@ self.SQUAD_CONFIG = {
   projectId: "squad-64cd5",
   appId: "1:304109366668:web:91e1a68961e836cf17faa9",
   messagingSenderId: "304109366668",
-  // Storage → u góry nazwa zasobnika, np. squad-64cd5.firebasestorage.app (starsze projekty: squad-64cd5.appspot.com)
-  storageBucket: "squad-64cd5.firebasestorage.app",
-  // Ustawienia projektu → Cloud Messaging → Certyfikaty Web Push → Generuj parę kluczy → skopiuj „Para kluczy”
+  // Ustawienia projektu → Cloud Messaging → Certyfikaty Web Push → Wygeneruj parę kluczy → skopiuj „Para kluczy”
   vapidKey: "WKLEJ_TUTAJ_KLUCZ_VAPID"
+  // Plan darmowy (Spark): zdjęcia zapisują się w bazie Firestore. Po przejściu na Blaze dopisz tu storageBucket, a zdjęcia pójdą do Storage.
 };
