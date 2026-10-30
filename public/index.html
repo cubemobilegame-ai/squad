@@ -7,7 +7,7 @@
 <title>SQUAD – jesteś w tym?</title>
 <meta property="og:title" content="🔥 Zaproszenie na drop – jesteś w tym?">
 <meta property="og:description" content="Ktoś z ekipy zaprasza cię na wypad. Kliknij i odpowiedz IN / LATE / OUT – bez instalowania.">
-<meta property="og:image" content="https://squad-64cd5.web.app/og/zaproszenie-v2.jpg"><meta property="og:image:secure_url" content="https://squad-64cd5.web.app/og/zaproszenie-v2.jpg"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:alt" content="SQUAD – zaproszenie na drop"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="website"><meta property="og:site_name" content="SQUAD"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://squad-64cd5.web.app/og/zaproszenie-v2.jpg">
+<meta property="og:image" content="https://squad-64cd5.web.app/og/zaproszenie-v3.jpg"><meta property="og:image:secure_url" content="https://squad-64cd5.web.app/og/zaproszenie-v3.jpg"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:alt" content="SQUAD – zaproszenie na drop"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="website"><meta property="og:site_name" content="SQUAD"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://squad-64cd5.web.app/og/zaproszenie-v3.jpg">
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="preload" href="/fonts/bricolage.woff" as="font" type="font/woff" crossorigin>
 <link rel="manifest" href="/manifest.json"><link rel="icon" href="/icon-192.png"><link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,7 +32,7 @@ h3{font-size:13px;letter-spacing:.08em;margin:24px 0 12px;color:rgba(255,255,255
 .tick{overflow:hidden;white-space:nowrap;margin:10px -18px 6px;border-block:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}.tick div{display:inline-block;padding:8px 0;animation:mq 34s linear infinite;font:900 10px Brico,system-ui;letter-spacing:.2em;color:var(--acc)}
 .tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.1);margin:10px 0 20px}
 .tabs button{flex:1;background:none;border:0;border-bottom:3px solid transparent;color:rgba(255,255,255,.5);font:900 11px Brico,system-ui;letter-spacing:.03em;padding:12px 0;cursor:pointer}.tabs .on{color:#fff;border-color:var(--acc)}
-.newbtn{display:block;width:100%;border:0;border-radius:18px;padding:17px;color:#0b0b12;cursor:pointer;font:900 22px Brico,system-ui;background:var(--acc);box-shadow:0 5px 0 var(--acc2);transition:transform .12s,box-shadow .12s}
+.newbtn{display:block;width:100%;border:0;border-radius:18px;padding:17px;color:#0b0b12;cursor:pointer;font:800 24px Brico,system-ui;letter-spacing:-.02em;background:var(--acc);box-shadow:0 5px 0 var(--acc2);transition:transform .12s,box-shadow .12s}
 .newbtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--acc2)}.cta:active,.rb:active,.tile:active{transform:scale(.96)}
 .drop{position:relative;z-index:0;border-radius:26px;padding:18px 18px 48px;margin-bottom:30px;background:linear-gradient(135deg,var(--c1,#17c964),var(--c2,#ff8a1f));border:1.5px solid rgba(255,255,255,.35);box-shadow:0 10px 22px rgba(0,0,0,.35);text-shadow:0 1px 4px rgba(0,0,0,.28)}
 .drop[onclick]{cursor:pointer}
@@ -243,6 +243,9 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .stx h1{font-size:44px;line-height:1;margin:8px 0 12px}.stx p{color:rgba(255,255,255,.72);font-size:15px;line-height:1.5;margin:0 0 6px}.stu b{color:#fff}
 .stx .cta{margin-top:24px;width:min(320px,80vw)}.stl{margin-top:26px;font:800 22px Brico,system-ui;letter-spacing:-.04em;opacity:.55}.stl span{color:var(--acc)}
 .fl.spin{animation:spin 6s linear infinite}.fl.spin.r{animation-direction:reverse}@keyframes spin{to{rotate:360deg}}
+.mailbox{margin:4px auto 6px;text-align:center;font:800 18px Brico,system-ui;letter-spacing:-.01em;padding:14px;border-radius:16px;background:rgba(255,255,255,.06);border:1px dashed rgba(var(--accr),.6);user-select:all;word-break:break-all}
+.lb{touch-action:none}
+@media (min-width:740px) and (min-height:700px){body{zoom:1.3}}@media (min-width:1000px) and (min-height:760px){body{zoom:1.4}}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -288,7 +291,7 @@ obT:"Jaką masz ksywkę?",obD:"Ustawiasz ją raz – pokażemy ją we wszystkich
 grT:"Grupy",grHint:"Stałe ekipy z czatem, który nie znika. Znajomych zapraszasz linkiem.",dcT:"Czaty dropów",dcHint:"Każdy drop ma własny czat. Znika razem z dropem – 24 h po starcie.",
 grNew:"+ NOWA GRUPA",grName:"Nazwa grupy (np. Paczka z 3B)",grCreate:"Utwórz grupę",grInv:(o,n)=>o+" zaprasza cię do grupy „"+n+"”",grLink:"Link do grupy – wyślij go ekipie",grJoin:"Dołącz do grupy",grChH:"CZAT GRUPY · ZERO DM · WSZYSCY WIDZĄ WSZYSTKO",emptyG:"Nie masz jeszcze grup. Załóż grupę i wyślij link ekipie.",emptyDc:"Czaty dropów pojawią się, gdy stworzysz drop albo klikniesz IN / LATE.",grMembers:"Ekipa",grInfo:"EKIPA",grLeave:"Opuść grupę",grDel:"Usuń grupę",grLeft:"Opuszczono grupę",grDeleted:"Grupa usunięta",openGC:"Otwórz czat grupy",
 tag:"spontaniczne wypady ze znajomymi w 15 sekund",demoBtn:"Wejdź w tryb demo",gBtn:"Zaloguj się przez Google",accept:"Logując się, akceptujesz",and:"i",privacyAcc:"Politykę prywatności",
-newDrop:"+ NOWY DROP",ticker:"TYLKO CZATY GRUPOWE ✦ ZERO DM ✦ LINK ZNIKA 24 H PO STARCIE ✦ ",gOnly:"TYLKO GRUPOWE · ZERO DM",noMsg:"Brak wiadomości – napisz pierwszą",
+newDrop:"+ Nowy drop",ticker:"TYLKO CZATY GRUPOWE ✦ ZERO DM ✦ LINK ZNIKA 24 H PO STARCIE ✦ ",gOnly:"TYLKO GRUPOWE · ZERO DM",noMsg:"Brak wiadomości – napisz pierwszą",
 nHome:"Start",nNew:"Nowy drop",nNot:"Alerty",nCh:"Czaty",nMe:"Profil",
 what:"Co?",when:"Kiedy?",where:"Gdzie?",today:"DZISIAJ",tomorrow:"JUTRO",tonL:"dziś wieczorem",todL:"dziś",tmrL:"jutro",
 sur:"Miejsce niespodzianka?",surD:"Znajomi zobaczą miejsce dopiero na starcie.",search:"Wpisz miejsce, np. Pizzeria Na Rogu",nick:"Twoja ksywka",nameD:"Nazwa dropa (opcjonalnie)",otherPh:"Co robimy? (np. planszówki, spacer…)",note:"Odpowiedzi zbieramy do startu. Link i czat znikają 24 h po starcie.",send:"Stwórz drop i zbierz ekipę",
@@ -302,7 +305,7 @@ nT:"Powiadomienia",nE:"Cisza. Gdy ktoś odpowie na twój drop, zobaczysz to tuta
 shT:"Udostępnij drop",shTG:"Zaproś do grupy",shSave:"Zapisz obrazek",shMore:"Więcej",imgSaved:"Obrazek zapisany ✓",shGen:"Robię obrazek…",
 shTxt:(ti,pl,wh,u,h)=>`🔥 ${h} zaprasza cię na drop „${ti}”\n📍 ${pl} · 🕒 ${wh}\nJesteś w tym? Kliknij i odpowiedz IN / LATE / OUT 👉 ${u}`,shTxtG:(n,u)=>`Wbijaj do naszej ekipy „${n}” na SQUAD 👉 ${u}`,
 igHint:"Obrazek zapisany, link skopiowany ✓ Wrzuć obrazek na story i dodaj naklejkę „Link”.",msHint:"Link skopiowany ✓ Jeśli Messenger się nie otworzy, wklej link na czacie.",
-imgTag:"TYLKO CZATY GRUPOWE · ZERO DM",imgQ:"JESTEŚ W TYM?",imgQG:"WBIJASZ DO EKIPY?",imgHow:"Kliknij link i odpowiedz",imgHowG:"Kliknij link i dołącz",imgDl:"📲 POBIERZ APKĘ SQUAD",imgNoApp:"albo odpowiedz bez instalowania",
+imgTag:"TYLKO CZATY GRUPOWE · ZERO DM",imgQ:"Jesteś w tym?",imgQG:"Wbijasz do ekipy?",imgHow:"Kliknij link i odpowiedz",imgHowG:"Kliknij link i dołącz",imgDl:"📲 Pobierz apkę SQUAD",imgNoApp:"albo odpowiedz bez instalowania",
 imgIn:n=>n+(n==1?" osoba już wbija":n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?" osoby już wbijają":" osób już wbija"),imgMem:n=>n+(n==1?" osoba w ekipie":n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?" osoby w ekipie":" osób w ekipie"),imgJoin:"DOŁĄCZ",
 sAddPh:"Dodaj zdjęcie",sChPh:"Zmień zdjęcie",sRmPh:"Usuń zdjęcie",phSaved:"Zdjęcie zapisane ✓",phErr:"Nie udało się wczytać zdjęcia",
 cropT:"Dopasuj zdjęcie",cropHint:"Przesuń zdjęcie palcem, a suwakiem je przybliż",cropOk:"Gotowe",cancel:"Anuluj",
@@ -325,7 +328,7 @@ obT:"What's your nickname?",obD:"Set it once – we'll show it in every drop and
 grT:"Groups",grHint:"Standing crews with a chat that never disappears. Invite friends with a link.",dcT:"Drop chats",dcHint:"Every drop has its own chat. It disappears with the drop – 24 h after the start.",
 grNew:"+ NEW GROUP",grName:"Group name (e.g. The 3B crew)",grCreate:"Create group",grInv:(o,n)=>o+" invites you to the group “"+n+"”",grLink:"Group link – send it to your crew",grJoin:"Join the group",grChH:"GROUP CHAT · NO DMS · EVERYONE SEES EVERYTHING",emptyG:"No groups yet. Start one and send the link to your crew.",emptyDc:"Drop chats show up when you create a drop or tap IN / LATE.",grMembers:"Crew",grInfo:"CREW",grLeave:"Leave group",grDel:"Delete group",grLeft:"You left the group",grDeleted:"Group deleted",openGC:"Open group chat",
 tag:"spontaneous hangouts with friends in 15 seconds",demoBtn:"Enter demo mode",gBtn:"Sign in with Google",accept:"By signing in, you accept the",and:"and the",privacyAcc:"Privacy Policy",
-newDrop:"+ NEW DROP",ticker:"GROUP CHATS ONLY ✦ NO DMS ✦ LINK DISAPPEARS 24 H AFTER THE START ✦ ",gOnly:"GROUP ONLY · NO DMS",noMsg:"No messages yet – say hi",
+newDrop:"+ New drop",ticker:"GROUP CHATS ONLY ✦ NO DMS ✦ LINK DISAPPEARS 24 H AFTER THE START ✦ ",gOnly:"GROUP ONLY · NO DMS",noMsg:"No messages yet – say hi",
 nHome:"Home",nNew:"New drop",nNot:"Alerts",nCh:"Chats",nMe:"Profile",
 what:"What?",when:"When?",where:"Where?",today:"TODAY",tomorrow:"TOMORROW",tonL:"tonight",todL:"today",tmrL:"tomorrow",
 sur:"Surprise location?",surD:"Friends will see the place only at the start.",search:"Type a place, e.g. Corner Pizza",nick:"Your nickname",nameD:"Drop name (optional)",otherPh:"What's the plan? (e.g. board games, a walk…)",note:"Replies are open until the start. The link and chat disappear 24 h after the start.",send:"Create drop & gather the crew",
@@ -339,7 +342,7 @@ nT:"Notifications",nE:"Quiet. When someone replies to your drop, you'll see it h
 shT:"Share drop",shTG:"Invite to group",shSave:"Save image",shMore:"More",imgSaved:"Image saved ✓",shGen:"Making your image…",
 shTxt:(ti,pl,wh,u,h)=>`🔥 ${h} invites you to the drop “${ti}”\n📍 ${pl} · 🕒 ${wh}\nAre you in? Tap and reply IN / LATE / OUT 👉 ${u}`,shTxtG:(n,u)=>`Join our crew “${n}” on SQUAD 👉 ${u}`,
 igHint:"Image saved and link copied ✓ Post the image to your story and add a “Link” sticker.",msHint:"Link copied ✓ If Messenger doesn't open, paste the link in your chat.",
-imgTag:"GROUP CHATS ONLY · NO DMS",imgQ:"ARE YOU IN?",imgQG:"JOINING THE CREW?",imgHow:"Tap the link and reply",imgHowG:"Tap the link and join",imgDl:"📲 GET THE SQUAD APP",imgNoApp:"or reply without installing anything",
+imgTag:"GROUP CHATS ONLY · NO DMS",imgQ:"Are you in?",imgQG:"Joining the crew?",imgHow:"Tap the link and reply",imgHowG:"Tap the link and join",imgDl:"📲 Get the SQUAD app",imgNoApp:"or reply without installing anything",
 imgIn:n=>n+(n==1?" person is in":" people are in"),imgMem:n=>n+(n==1?" person in the crew":" people in the crew"),imgJoin:"JOIN",
 sAddPh:"Add photo",sChPh:"Change photo",sRmPh:"Remove photo",phSaved:"Photo saved ✓",phErr:"Couldn't load that photo",
 cropT:"Adjust your photo",cropHint:"Drag to move, use the slider to zoom",cropOk:"Done",cancel:"Cancel",
@@ -616,7 +619,7 @@ function profileView(){
   <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p></div>
   <div class="sgrp"><h3>${t("lang")}</h3><div class="lgs">${LANGS.map(([c,n])=>`<button class="lg ${c==LANG?"sel":""}" data-l="${c}">${n}</button>`).join("")}</div></div>
   <div class="sgrp"><h3>${t("sSafe")}</h3><div class="slist">${row(SI.shield,t("safety"),ch,`onclick="go('/safety')"`)}${row(BAN,t("blocked"),`<em>${blockedL().length||""} ›</em>`,`onclick="go('/blocked')"`)}</div></div>
-  <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),ch,`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),ch,`onclick="go('/privacy')"`)}<a class="srow" href="mailto:${MAIL_TO}?subject=SQUAD">${sv(SI.help)}<span>${t("help")}</span>${ch}</a><div class="srow">${sv(SI.info)}<span>${t("version")}</span><em>${APP_VER}</em></div><a class="srow" href="/e/LICENSE.txt" target="_blank" rel="noopener">${sv(SI.user)}<span>${t("avCredit")}</span><em>›</em></a></div></div>
+  <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),ch,`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),ch,`onclick="go('/privacy')"`)}<button class="srow" id="hlp">${sv(SI.help)}<span>${t("help")}</span>${ch}</button><div class="srow">${sv(SI.info)}<span>${t("version")}</span><em>${APP_VER}</em></div><a class="srow" href="/e/LICENSE.txt" target="_blank" rel="noopener">${sv(SI.user)}<span>${t("avCredit")}</span><em>›</em></a></div></div>
   <button class="more" id="mo">${t("more")} ${sv(SI.down)}</button>
   <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span>${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
@@ -630,7 +633,7 @@ function profileView(){
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});$("#kmk").onclick=()=>avEditor(changedAv);
   document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")enablePush(true);b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
   document.querySelectorAll(".lg").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
-  $("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
+  $("#hlp").onclick=helpSheet;$("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
   $("#so").onclick=async()=>{vib(15);await signOut(auth);go("/")};
   $("#da").onclick=delAccount;
 }
@@ -892,7 +895,13 @@ const loadImg=src=>new Promise((ok,no)=>{const i=new Image();if(/^https?:/.test(
 
 /* ---------- ARKUSZ OD DOŁU ---------- */
 function sheet(h){const bg=document.createElement("div");bg.className="sheetbg";bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${h}</div>`;
-  bg.close=()=>bg.remove();bg.onclick=e=>{if(e.target===bg)bg.close()};document.body.append(bg);return bg}
+  bg.close=()=>bg.remove();bg.onclick=e=>{if(e.target===bg)bg.close()};document.body.append(bg);swipeClose(bg.firstChild,()=>bg.close(),bg);return bg}
+/* przesunięcie w dół zamyka wysuwane okno (gdy jest przewinięte do góry) */
+function swipeClose(el,close,fade){let y0=null,dy=0,t0=0;
+  el.addEventListener("touchstart",e=>{if(e.touches.length!==1||el.scrollTop>0||e.target.closest("input[type=range],.krow,.tiles,.chips"))return;y0=e.touches[0].clientY;dy=0;t0=Date.now();el.style.transition="none"},{passive:true});
+  el.addEventListener("touchmove",e=>{if(y0==null)return;dy=Math.max(0,e.touches[0].clientY-y0);if(dy>0){el.style.transform=`translateY(${dy}px)`;if(fade)fade.style.background=`rgba(5,5,8,${Math.max(.15,.7-dy/600)})`;if(e.cancelable)e.preventDefault()}},{passive:false});
+  el.addEventListener("touchend",()=>{if(y0==null)return;y0=null;const v=dy/Math.max(1,Date.now()-t0);el.style.transition="transform .22s ease";
+    if(dy>110||(dy>40&&v>.5)){el.style.transform="translateY(110%)";vib(8);setTimeout(close,200)}else{el.style.transform="";if(fade)fade.style.background=""}})}
 
 /* ---------- ZDJĘCIE PROFILOWE: wybór + kadrowanie (przesuń / przybliż) ---------- */
 const phHtml=()=>`<button class="phav" data-ph aria-label="${t("sChPh")}">${avc("xl",meAv())}</button><button class="phb" data-ph aria-label="${t("sChPh")}">${sv(SI.cam)}</button>`;
@@ -990,7 +999,7 @@ function lightbox(Lst,i,ctx){const el=document.createElement("div");el.className
     el.querySelector(".lbx").onclick=()=>el.remove();
     const dd=el.querySelector("#lbd");if(dd)dd.onclick=async()=>{await deleteDoc(doc(ctx.ref,"photos",p.id));delImg("drops/"+ctx.code+"/"+p.id+".jpg");el.remove();vib(20);toast(t("alDeleted"))};
     const rr=el.querySelector("#lbr");if(rr)rr.onclick=()=>{el.remove();report({target:"photo",code:ctx.code,photoId:p.id,authorId:p.authorId})}};
-  let sx=null;el.onpointerdown=e=>sx=e.clientX;el.onpointerup=e=>{if(sx==null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>50&&Lst.length>1){i=(i+(dx<0?1:-1)+Lst.length)%Lst.length;vib(6);draw()}};draw()}
+  let sx=null,sy=null;el.onpointerdown=e=>{sx=e.clientX;sy=e.clientY};el.onpointerup=e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(dy>90&&Math.abs(dy)>Math.abs(dx)){vib(8);el.remove();return}if(Math.abs(dx)>50&&Lst.length>1){i=(i+(dx<0?1:-1)+Lst.length)%Lst.length;vib(6);draw()}};draw()}
 
 /* ---------- UDOSTĘPNIANIE: arkusz z podglądem, motywami i naklejkami ---------- */
 const BUB='<path d="M12 4c-4.7 0-8.5 3.3-8.5 7.5 0 2.2 1 4.1 2.7 5.5V20l3-1.6c.9.3 1.8.4 2.8.4 4.7 0 8.5-3.3 8.5-7.5S16.7 4 12 4z"/>';
@@ -1070,48 +1079,43 @@ function stickers(K,pack,extra,spots){const Ls=[...(PACKS[pack]||[])];if(!Ls.len
     x.shadowColor="#fff";x.shadowBlur=0;[[-6,0],[6,0],[0,-6],[0,6],[-4,-4],[4,4],[-4,4],[4,-4]].forEach(([a,b])=>{x.shadowOffsetX=a;x.shadowOffsetY=b;x.fillText(e,0,0)});
     x.shadowColor="rgba(0,0,0,.35)";x.shadowOffsetX=0;x.shadowOffsetY=10;x.shadowBlur=20;x.fillText(e,0,0);x.restore()})}
 
-/* zaproszenie 1080×1920 (story) */
+/* zaproszenie 1080×1920 (story) – prosty, czytelny układ */
 async function makeCard(k,o,st={}){await fontsReady();
   const K=kit(1080,1920),{x,W,H,F}=K,G=k==="g",PI2=Math.PI*2,sty=PAL[st.sty]?st.sty:"neon",pl=PAL[sty];
-  const [c1,c2]=G?THEMES[hs(o.id)%THEMES.length]:thm(o);
+  const [c1,c2]=G?THEMES[hs(o.id)%THEMES.length]:thm(o),cs=getComputedStyle(document.documentElement),cv=n=>(cs.getPropertyValue(n)||"").trim();
+  const A=cv("--acc")||"#FF4F86",g1=cv("--g1")||"#FF3D7F",g2=cv("--g2")||"#FF6A4D",g3=cv("--g3")||"#FFA53D";
   paintBg(K,sty,c1,c2);
-  K.txt("SQUAD",W/2,180,F(900,96),pl.fg,"center",-2);K.txt(t("imgTag"),W/2,236,F(800,24),pl.tag,"center",6);
+  K.txt("SQUAD",W/2,150,F(800,72),pl.fg,"center",-3);
   const host=(G?o.ownerNick:o.hostNick)||"?",hm=G?(o.M||[]).find(m=>m.id===o.ownerId):null;
   const hv=G?(hm?avIdx(hm):avIdx({id:o.ownerId})):(o.hostPh||(o.hostAv!=null?+o.hostAv:avIdx({id:o.hostId})));
-  x.fillStyle="#1d1d29";x.beginPath();x.arc(W/2,346,76,0,PI2);x.fill();
-  await K.pic(typeof hv==="string"?hv:await genAv(hv,true),W/2-76,270,152,152,true);
-  x.lineWidth=6;x.strokeStyle=pl.fg;x.beginPath();x.arc(W/2,346,76,0,PI2);x.stroke();
-  const it=t("inv",host);x.save();if(sty==="retro"){x.shadowColor="rgba(40,0,60,.85)";x.shadowBlur=16;x.shadowOffsetY=3}K.txt(it,W/2,486,K.fitF(it,920,800,46,30),pl.fg);x.restore();
-  const cy=540,X0=90,CW=900,pd=60,title=String((G?o.name:o.title)||"").toUpperCase();
-  let tz=84;x.font=F(900,tz);let tl=K.wrap(title,CW-2*pd,2);if(tl.length>1){tz=72;x.font=F(900,tz);tl=K.wrap(title,CW-2*pd,2)}
+  const it=t("inv",host)+" 👋";x.font=K.fitF(it,700,800,50,30);const iw=x.measureText(it).width,rowW=120+24+iw,rx=(W-rowW)/2;
+  x.fillStyle="#1d1d29";x.beginPath();x.arc(rx+60,290,60,0,PI2);x.fill();
+  await K.pic(typeof hv==="string"?hv:await genAv(hv,true),rx,230,120,120,true);
+  x.lineWidth=5;x.strokeStyle=pl.fg;x.beginPath();x.arc(rx+60,290,60,0,PI2);x.stroke();
+  K.txt(it,rx+144,307,x.font,pl.fg,"left");
+  x.save();x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=40;x.shadowOffsetY=18;
+  await K.pic(G?"/e/handshake.webp":e3(o.category),W/2-150,390,300,300);x.restore();
+  const title=String((G?o.name:o.title)||"");let tz=118;x.font=F(800,tz);let tl=K.wrap(title,940,2);if(tl.length>1){tz=100;x.font=F(800,tz);tl=K.wrap(title,940,2)}
+  let y=790+tz*.2;tl.forEach((l,i)=>K.txt(l,W/2,y+i*tz*1.02,K.fitF(l,960,800,tz,52),pl.fg,"center",-3));y+=(tl.length-1)*tz*1.02;
   const P=o.P||[],ins=P.filter(p=>p.status==="in").length,M=o.M||[];
   const info=G?["👥 "+t("imgMem",Math.max(1,M.length))]:["🕒 "+when(o.startsAt.toMillis()),"📍 "+(o.surprise?t("surP"):o.place)];
-  const extra=G?M.slice(0,5).map(m=>m.nickname).join(", ")+(M.length>5?" +"+(M.length-5):""):(ins?"⚡ "+t("imgIn",ins):"");
-  const t1=cy+186+tz*.95,dv=t1+(tl.length-1)*tz*1.05+40,inf=info.map((_,i)=>dv+64+i*62),lastI=inf[inf.length-1],exy=extra?lastI+82:lastI,CH=exy+50-cy;
-  const grd=()=>{if(pl.card)return pl.card;const g=x.createLinearGradient(X0,cy,X0+CW,cy+CH);g.addColorStop(0,c1);g.addColorStop(1,c2);return g};
-  x.fillStyle=grd();x.globalAlpha=pl.card?.18:.25;K.rr(X0+48,cy+72,CW-96,CH,56);x.fill();x.globalAlpha=pl.card?.35:.45;K.rr(X0+24,cy+36,CW-48,CH,58);x.fill();x.globalAlpha=1;
-  x.save();x.shadowColor="rgba(0,0,0,.45)";x.shadowBlur=40;x.shadowOffsetY=16;K.rr(X0,cy,CW,CH,60);x.fillStyle=grd();x.fill();x.restore();
-  K.rr(X0,cy,CW,CH,60);x.lineWidth=pl.card?8:3;x.strokeStyle=pl.card?c1:"rgba(255,255,255,.4)";x.stroke();
-  await K.pic(G?svgSrc(I.grp.replace(/currentColor/g,"#fff")):e3(o.category),X0+pd,cy+56,120,120);
-  x.save();x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=12;x.shadowOffsetY=2;
-  tl.forEach((l,i)=>K.txt(l,X0+pd,t1+i*tz*1.05,K.fitF(l,CW-2*pd,900,tz,40),"#fff","left",-1));
-  info.forEach((s,i)=>K.txt(s,X0+pd,inf[i],K.fitF(s,CW-2*pd,700,42,26),"#fff","left"));x.restore();
-  x.fillStyle="rgba(255,255,255,.35)";x.fillRect(X0+pd,dv,CW-2*pd,3);
-  if(extra){x.font=F(800,34);const w=Math.min(CW-2*pd,x.measureText(extra).width+56);K.rr(X0+pd,exy-48,w,68,34);x.fillStyle=pl.card?K.rgba(c1,.25):"rgba(10,10,18,.62)";x.fill();K.txt(extra,X0+pd+28,exy-2,K.fitF(extra,w-56,800,34,22),G?"#fff":"#b6ff3b","left")}
-  let y=cy+CH+205;const qg=x.createLinearGradient(X0,0,X0+CW,0);qg.addColorStop(0,"#FF3D7F");qg.addColorStop(.5,"#FF6A4D");qg.addColorStop(1,"#FFA53D");
-  const q=t(G?"imgQG":"imgQ");x.save();if(sty==="retro"){x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=18}K.txt(q,W/2,y,K.fitF(q,CW,900,96,56),pl.q==="grad"?qg:pl.q,"center",-1);x.restore();
-  y+=50;
-  if(G){K.rr(X0,y,CW,140,70);x.fillStyle=pl.pill==="solid"?"#0b0b12":"#FF4F86";x.fill();K.txt(t("imgJoin"),W/2,y+92,F(900,56),pl.pill==="solid"?"#FF4F86":"#0b0b12","center",2)}
+  y+=96;info.forEach((s2,i)=>K.txt(s2,W/2,y+i*68,K.fitF(s2,920,700,48,28),pl.fg));y+=(info.length-1)*68;
+  const extra=G?"":(ins?"⚡ "+t("imgIn",ins):"");
+  if(extra){y+=60;x.font=F(800,36);const w=x.measureText(extra).width+64;K.rr(W/2-w/2,y,w,72,36);x.fillStyle=pl.pill==="light"||pl.card?"rgba(11,11,18,.85)":"rgba(10,10,18,.6)";x.fill();K.txt(extra,W/2,y+49,F(800,36),"#3dff8a");y+=72}
+  y+=170;const qg=x.createLinearGradient(90,0,990,0);qg.addColorStop(0,g1);qg.addColorStop(.5,g2);qg.addColorStop(1,g3);
+  const q=t(G?"imgQG":"imgQ");K.txt(q,W/2,y,K.fitF(q,940,800,104,60),pl.q==="grad"?qg:pl.q,"center",-3);
+  y+=60;const X0=90,CW=900;
+  if(G){K.rr(X0,y,CW,140,70);x.fillStyle=pl.pill==="solid"?"#0b0b12":A;x.fill();K.txt(t("imgJoin"),W/2,y+92,F(800,56),pl.pill==="solid"?A:"#0b0b12","center",1)}
   else{const B=[["IN!","#3dff8a","#0f9e4a"],["LATE","#ffd84d","#b07a00"],["OUT","#ff4d5e","#d61f37"]],bw=(CW-60)/3;
-    B.forEach(([s,c,dk],i)=>{const bx=X0+i*(bw+30);K.rr(bx,y,bw,140,40);
-      if(pl.pill==="solid"){x.fillStyle="#0b0b12";x.fill();K.txt(s,bx+bw/2,y+92,F(900,54),c)}
-      else if(pl.pill==="light"){x.fillStyle="#fff";x.fill();x.lineWidth=6;x.strokeStyle=dk;x.stroke();K.txt(s,bx+bw/2,y+92,F(900,54),dk)}
-      else{x.fillStyle="rgba(10,10,18,.55)";x.fill();x.fillStyle=K.rgba(c,.14);x.fill();x.lineWidth=6;x.strokeStyle=c;x.stroke();K.txt(s,bx+bw/2,y+92,F(900,54),c)}})}
-  y+=140+80;const hw="👆 "+t(G?"imgHowG":"imgHow");K.txt(hw,W/2,y,K.fitF(hw,CW,800,40,28),pl.fg);
-  y+=46;const u2=url2(G,o.id);K.txt(u2,W/2,y,K.fitF(u2,CW,700,32,22),pl.sub);
-  K.rr(W/2-340,H-212,680,108,54);x.fillStyle=pl.dlBg;x.fill();K.txt(t("imgDl"),W/2,H-144,K.fitF(t("imgDl"),620,900,40,26),pl.dlFg,"center",1);
-  K.txt(t("imgNoApp"),W/2,H-52,F(700,30),pl.sub);
-  stickers(K,st.pack,G?"👊":CATE[o.category],[[96,505,-.32,118],[990,540,.26,108],[1000,cy+CH+28,-.18,100],[84,H-158,.22,92],[996,H-160,-.2,92]]);
+    B.forEach(([s2,c,dk],i)=>{const bx=X0+i*(bw+30);K.rr(bx,y,bw,140,40);
+      if(pl.pill==="solid"){x.fillStyle="#0b0b12";x.fill();K.txt(s2,bx+bw/2,y+92,F(800,56),c)}
+      else if(pl.pill==="light"){x.fillStyle="#fff";x.fill();x.lineWidth=6;x.strokeStyle=dk;x.stroke();K.txt(s2,bx+bw/2,y+92,F(800,56),dk)}
+      else{x.fillStyle="rgba(10,10,18,.55)";x.fill();x.fillStyle=K.rgba(c,.14);x.fill();x.lineWidth=6;x.strokeStyle=c;x.stroke();K.txt(s2,bx+bw/2,y+92,F(800,56),c)}})}
+  y+=140+84;const hw="👆 "+t(G?"imgHowG":"imgHow");K.txt(hw,W/2,y,K.fitF(hw,940,800,42,28),pl.fg);
+  y+=52;const u2=url2(G,o.id);K.txt(u2,W/2,y,K.fitF(u2,940,700,34,22),pl.sub);
+  K.rr(W/2-330,H-200,660,100,50);x.fillStyle=pl.dlBg;x.fill();K.txt(t("imgDl"),W/2,H-136,K.fitF(t("imgDl"),600,800,38,24),pl.dlFg,"center",0);
+  K.txt(t("imgNoApp"),W/2,H-48,F(600,30),pl.sub);
+  stickers(K,st.pack,G?"👊":CATE[o.category],[[110,520,-.3,110],[975,560,.26,100]]);
   return K.blob()}
 const url2=(G,id)=>(base()+(G?"/g/":"/d/")+id).replace(/^https?:\/\//,"");
 
@@ -1202,6 +1206,17 @@ function showStatus(x){let el=document.getElementById("stx");const mode=x&&x.mod
   fetch("/status.json",{cache:"no-store"}).then(r=>r.json()).then(x=>{S2.f=x;up()}).catch(()=>{});
   try{onSnapshot(doc(db,"meta","status"),d=>{S2.d=d.exists()?d.data():null;up()},()=>{})}catch{}})();
 
+
+/* ---------- POMOC I KONTAKT ---------- */
+Object.assign(L.pl,{hlT:"Pomoc i kontakt",hlD:"Coś nie działa albo masz pomysł? Napisz do nas – odpisujemy najszybciej, jak się da.",hlMail:"Napisz maila",hlGm:"Napisz przez Gmail",hlCp:"Kopiuj adres",hlCpd:"Skopiowano adres ✓"});
+Object.assign(L.en,{hlT:"Help & contact",hlD:"Something broken or got an idea? Write to us – we reply as fast as we can.",hlMail:"Send an email",hlGm:"Write via Gmail",hlCp:"Copy address",hlCpd:"Address copied ✓"});
+function helpSheet(){const subj=encodeURIComponent("SQUAD "+APP_VER),body=encodeURIComponent("\n\n—\n"+navigator.userAgent);
+  const s=sheet(`<div class="bbig"><img src="/e/chat.webp" alt="" style="width:84px;height:84px"></div><h2>${t("hlT")}</h2><p class="hint">${t("hlD")}</p>
+  <div class="mailbox">${esc(MAIL_TO)}</div>
+  <a class="cta" style="text-align:center;text-decoration:none" href="mailto:${MAIL_TO}?subject=${subj}&body=${body}">${t("hlMail")}</a>
+  <a class="ghost" style="text-align:center;text-decoration:none" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${MAIL_TO}&su=${subj}">${t("hlGm")}</a>
+  <button class="ghost" id="hcp">${t("hlCp")}</button>`);
+  s.querySelector("#hcp").onclick=async()=>{try{await navigator.clipboard.writeText(MAIL_TO)}catch{const i=document.createElement("input");i.value=MAIL_TO;document.body.append(i);i.select();try{document.execCommand("copy")}catch{}i.remove()}vib(12);toast(t("hlCpd"))}}
 /* ---------- INSTALACJA: Android (Sklep Play / instalacja z Chrome), iPhone (ekran początkowy) ---------- */
 const FLOAT=`<img class="fl f1" src="/e/fire.webp" alt=""><img class="fl f2" src="/e/crown.webp" alt=""><img class="fl f3" src="/e/pizza.webp" alt=""><img class="fl f4" src="/e/cloud.webp" alt="">`;
 const PLAY_URL="https://play.google.com/store/apps/details?id=com.cubemobilegames.squad",PLAY_LIVE=false;
