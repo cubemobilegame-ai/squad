@@ -40,6 +40,9 @@ jobs:
             adb exec-out screencap -p > ekran.png || true
       - uses: actions/upload-artifact@v4
         if: always()
-        with: { name: test-android, path: |
+        with:
+          name: test-android
+          retention-days: 3
+          path: |
             *.txt
-            ekran.png, retention-days: 3 }
+            ekran.png
