@@ -233,7 +233,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .ksw{flex:none;width:40px;height:40px;border-radius:50%;border:3px solid rgba(255,255,255,.12);cursor:pointer;padding:0;transition:transform .12s}.ksw.on{border-color:#fff;transform:scale(1.1)}
 .kac{background:rgba(255,255,255,.08);color:#fff;font:800 15px Brico,system-ui;display:grid;place-items:center;width:48px;height:48px}.kac img{width:40px;height:40px;object-fit:contain}
 .kst{flex:none;width:60px;height:60px;border-radius:50%;padding:0;border:3px solid transparent;background:none;cursor:pointer}.kst.on{border-color:var(--acc)}.kst .av{width:100%;height:100%}
-.kmk{margin:14px 0 4px}.av img.kv{width:100%;height:100%;object-fit:cover;transform:translateY(5%)}
+.kmk{margin:14px 0 4px}.av img.kv{display:block;width:82%;height:82%;margin:11% auto 0;object-fit:contain}
 .stx{position:fixed;inset:0;z-index:999;background:radial-gradient(circle at 20% 10%,rgba(var(--accr),.22),transparent 50%),radial-gradient(circle at 90% 90%,rgba(255,165,61,.16),transparent 50%),#0b0b12;display:flex;align-items:center;justify-content:center;padding:24px;overflow:hidden;animation:fd .3s}
 .stx.out{background:radial-gradient(circle at 20% 10%,rgba(255,77,94,.24),transparent 50%),radial-gradient(circle at 90% 90%,rgba(255,165,61,.16),transparent 50%),#0b0b12}
 .stb{position:relative;z-index:1;max-width:380px;text-align:center;display:flex;flex-direction:column;align-items:center}
@@ -477,7 +477,7 @@ function genAv(v,bg){v=avCode(v);const key=v+(bg?"b":"");if(kCache.has(key))retu
     for(let i=0;i<D.length;i+=4){const mh=M[i+1]/255;if(mh>0){const sh=Math.min(M[i]/255*1.6,1.6),add=Math.max(sh-1,0)*sp;for(let k=0;k<3;k++){const n=Math.min(255,H[k]*sh+add);D[i+k]=D[i+k]*(1-mh)+n*mh}}
       const mi=M[i+2]/255;if(E&&mi>0){const l=(D[i]*.299+D[i+1]*.587+D[i+2]*.114)/70,f=Math.max(.45,Math.min(1.35,l));for(let k=0;k<3;k++)D[i+k]=D[i+k]*(1-mi)+Math.min(255,E[k]*f)*mi}}
     x.putImageData(d,0,0);if(ac)x.drawImage(ac,0,0,R,R);
-    if(bg){const o2=document.createElement("canvas");o2.width=o2.height=R;const y=o2.getContext("2d");y.fillStyle=K_BG[o.b];y.fillRect(0,0,R,R);y.drawImage(c,0,R*.05,R,R);return o2.toDataURL("image/png")}
+    if(bg){const o2=document.createElement("canvas");o2.width=o2.height=R;const y=o2.getContext("2d");y.fillStyle=K_BG[o.b];y.fillRect(0,0,R,R);y.drawImage(c,R*.09,R*.13,R*.82,R*.82);return o2.toDataURL("image/png")}
     return c.toDataURL("image/png")})();
   kCache.set(key,p);return p}
 const fillAv=root=>(root||document).querySelectorAll("img[data-g]").forEach(i=>{if(i.dataset.f===i.dataset.g)return;i.dataset.f=i.dataset.g;genAv(+i.dataset.g).then(u=>{if(i.dataset.g==i.dataset.f)i.src=u})});
@@ -661,7 +661,7 @@ function avEditor(done){let o=kDec(avCode(myAv()));
     s.querySelector("#kst").innerHTML=[...Array(KS)].map((_,i)=>`<button class="kst ${o.s===i?"on":""}" data-k="s" data-v="${i}">${avc("",kEnc({...o,s:i,a:0}))}</button>`).join("");
     s.querySelector("#ksk").innerHTML=sw("t",K_SKIN);s.querySelector("#khr").innerHTML=sw("h",K_HAIR);
     s.querySelector("#key").innerHTML=sw("e",K_EYE,c=>c||"#4a2c1d");s.querySelector("#kbg").innerHTML=sw("b",K_BG);
-    s.querySelector("#kac").innerHTML=K_ACC.map((n,i)=>`<button class="ksw kac ${o.a===i?"on":""}" data-k="a" data-v="${i}">${i?`<img src="${KU(`a${i}.webp`)}" alt="">`:"✕"}</button>`).join("");
+    s.querySelector("#kac").innerHTML=K_ACC.map((n,i)=>`<button class="ksw kac ${o.a===i?"on":""}" data-k="a" data-v="${i}">${i?`<img src="${KU(`i${i}.webp`)}" alt="">`:"✕"}</button>`).join("");
     s.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{o={...o,[b.dataset.k]:+b.dataset.v};vib(8);draw()})};
   const s=sheet(`<h2>${t("avT")}</h2><div class="kp" id="kp"></div>
   <h3>${t("kSt")}</h3><div class="krow" id="kst"></div><h3>${t("kSk")}</h3><div class="krow" id="ksk"></div><h3>${t("kHr")}</h3><div class="krow" id="khr"></div>
