@@ -7,6 +7,6 @@ self.SQUAD_CONFIG = {
   appId: "1:304109366668:web:91e1a68961e836cf17faa9",
   messagingSenderId: "304109366668",
   // Ustawienia projektu → Cloud Messaging → Certyfikaty Web Push → Wygeneruj parę kluczy → skopiuj „Para kluczy”
-  vapidKey: "WKLEJ_TUTAJ_KLUCZ_VAPID"
+  vapidKey: "BFiu1P0-7_MRNZNnsJE5trAYTuwdBdmA5VUndlWr2C-0nVDBAXSOu8Rrkm4pWwHJ_QpkyINwU4P6GLtNiwcZIs0"
   // Plan darmowy (Spark): zdjęcia zapisują się w bazie Firestore. Po przejściu na Blaze dopisz tu storageBucket, a zdjęcia pójdą do Storage.
 };
