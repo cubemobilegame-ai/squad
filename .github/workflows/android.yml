@@ -54,8 +54,9 @@ jobs:
             [ -z "$ID" ] && { echo "::warning title=FCM::Nie udało się utworzyć aplikacji Android w Firebase: $(head -c 300 create.json | tr '\n' ' ')"; exit 0; }
           fi
           echo "::notice title=Firebase Android appId::$ID"
-          $FT apps:sdkconfig ANDROID "$ID" --project "$P" --out build-android/app/google-services.json 2>&1 | tail -2 || true
-          [ -s build-android/app/google-services.json ] && node android/fcm.mjs || echo "::warning::Brak google-services.json"
+          $FT apps:sdkconfig ANDROID "$ID" --project "$P" > sdk.txt 2>&1 || true
+          node android/gservices.cjs "$ID"
+          node android/fcm.mjs
 
       - name: Zbuduj AAB i APK
         working-directory: build-android
