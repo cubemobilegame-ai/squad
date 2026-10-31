@@ -86,7 +86,7 @@ async function notify(env, db, uids, kind, build, link) {
     await Promise.all(toks.map(async (t) => {
       const r = await fetch(`https://fcm.googleapis.com/v1/projects/${env.PID}/messages:send`, {
         method: "POST", headers: { Authorization: "Bearer " + (await access(env.SA)), "Content-Type": "application/json" },
-        body: JSON.stringify({ message: { token: t.id, notification: { title, body }, data: { url: link },
+        body: JSON.stringify({ message: { token: t.id, notification: { title, body }, data: { url: link }, ...(t.native ? { android: { priority: "HIGH", notification: { channel_id: "squad", sound: "default", tag: link, default_vibrate_timings: true } } } : {}),
           webpush: { headers: { Urgency: "high", TTL: "86400" }, fcm_options: { link: `https://${env.PID}.web.app${link}` },
             notification: { icon: "/icon-192.png", badge: "/badge-96.png", tag: link, renotify: true, vibrate: [200, 100, 200], silent: false } } } }),
       });

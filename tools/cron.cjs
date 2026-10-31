@@ -52,7 +52,7 @@ async function notify(uids, kind, build, link) {
     if (!u || !u.toks.length || (kind && u.notif && u.notif[kind] === false)) continue;
     const L = TX[u.lang] ? u.lang : "en", [title, body] = build(TX[L], L);
     const r = await admin.messaging().sendEachForMulticast({
-      tokens: u.toks.map((d) => d.id), notification: { title, body }, data: { url: link },
+      tokens: u.toks.map((d) => d.id), notification: { title, body }, data: { url: link }, android: { priority: "high", notification: { channelId: "squad", sound: "default", tag: link, defaultVibrateTimings: true } },
       webpush: { fcmOptions: { link: BASE + link }, notification: { icon: "/icon-192.png", badge: "/badge-96.png", tag: link, renotify: true, vibrate: [200, 100, 200], silent: false }, headers: { Urgency: "high", TTL: "86400" } },
     }).catch((e) => { console.warn("FCM", e.message); return { responses: [] }; });
     r.responses.forEach((x, i) => {
