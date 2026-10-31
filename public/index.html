@@ -1217,7 +1217,7 @@ async function chatView(code,g){
   view(`<div class="scr"><p class="mut">${t("load")}</p></div>`);
   /* szybki start: dane dropa/grupy mamy już z listy (na żywo) – nie czekamy na serwer */
   let R=null;const C0=g?S.groups.get(code):S.items.get(code);
-  if(C0&&(g||!C0.expiresAt||C0.expiresAt.toMillis()>Date.now()))R={ref:doc(db,g?"groups":"drops",code),d:C0};
+  if(C0&&(g||typeof C0.expiresAt?.toMillis==="function"&&C0.expiresAt.toMillis()>Date.now()))R={ref:doc(db,g?"groups":"drops",code),d:C0};
   else if(g){try{const x=await getDoc(doc(db,"groups",code));if(x.exists())R={ref:x.ref,d:x.data()}}catch{}}else R=await loadDrop(code);
   if(!R)return gone(g);
   const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];
