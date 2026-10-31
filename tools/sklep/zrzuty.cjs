@@ -7,7 +7,7 @@ for(const [l,loc] of Object.entries(LOC)){
   const ctx=async()=>{const c=await b.newContext({...devices['iPhone 13'],locale:loc});await c.addInitScript(()=>{try{sessionStorage.setItem('introSeen','1');localStorage.setItem('avatar','5');localStorage.setItem('insShown','1')}catch(e){}});return c};
   const hide=async p=>p.addStyleTag({content:'#demo{display:none!important}.scr{padding-top:calc(16px + env(safe-area-inset-top,0px))!important}'});
   let c=await ctx(),p=await c.newPage();
-  await p.goto(BASE+'/?demo');await p.waitForTimeout(700);await p.click('#demo button:nth-of-type(1)');await p.waitForTimeout(600);await p.click('#ps');await p.waitForTimeout(900);await hide(p);
+  await p.goto(BASE+'/?demo');await p.waitForTimeout(700);await p.click('#demo button:nth-of-type(1)');await p.waitForTimeout(600);await p.check('#age').catch(()=>{});await p.click('#ps');await p.waitForTimeout(900);await hide(p);
   const shot=async n=>{await p.waitForTimeout(900);await p.screenshot({path:`${OUT}/${l}-${n}.png`})};
   await p.evaluate(()=>go('/'));await shot('1');
   await p.evaluate(()=>go('/c/DEMO1'));await p.waitForTimeout(15500);await shot('3');

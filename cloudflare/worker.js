@@ -124,6 +124,20 @@ async function handle(env, uid, b) {
     const ppl = (await db.list(`groups/${b.code}/members`)).filter((p) => p.id !== uid);
     return notify(env, db, ppl.map((p) => p.id), "grp", (T) => T.join(me.nickname, g.name), `/g/${b.code}`, uid);
   }
+  if (b.kind === "report" && typeof b.id === "string" && /^[A-Za-z0-9]{10,40}$/.test(b.id)) {   // zgłoszenie -> e-mail do administratora
+    const r = await db.get(`reports/${b.id}`); if (!r || r.reporterId !== uid || r.mailed) return 0;
+    const R = { hate: "Hejt / nękanie", sex: "Treści seksualne", vio: "Przemoc", danger: "Niebezpieczne / nielegalne", spam: "Spam / oszustwo", other: "Inne" };
+    const T = { message: "wiadomość na czacie", drop: "drop", group: "grupa", photo: "zdjęcie w albumie" };
+    const where = r.code ? (r.chat === "group" || r.target === "group" ? `https://${env.PID}.web.app/g/${r.code}` : `https://${env.PID}.web.app/d/${r.code}`) : "-";
+    const res = await fetch("https://formsubmit.co/ajax/cubemobilegame@gmail.com", { method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json", Origin: `https://${env.PID}.web.app`, Referer: `https://${env.PID}.web.app/` },
+      body: JSON.stringify({ _subject: `SQUAD – nowe zgłoszenie: ${R[r.reason] || r.reason}`, _template: "table", _captcha: "false",
+        "Powód": R[r.reason] || r.reason, "Co zgłoszono": T[r.target] || r.target || "-", "Gdzie": where,
+        "Szczegóły (Firebase)": `https://console.firebase.google.com/project/${env.PID}/firestore/data/~2Freports~2F${b.id}`,
+        "Czas": new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" }) }) });
+    const txt = await res.text().catch(() => ""); env.stats = { to: 1, toks: 0, errs: res.ok ? [] : ["mail " + res.status + " " + txt.slice(0, 120)] };
+    return res.ok ? 1 : 0;
+  }
   if (b.kind === "edit" && isCode(b.code)) {                           // autor zmienił godzinę / miejsce
     const d = await db.get(`drops/${b.code}`); if (!d || d.hostId !== uid) return 0;
     const ppl = (await db.list(`drops/${b.code}/participants`)).filter((p) => p.id !== uid && p.status !== "out");
