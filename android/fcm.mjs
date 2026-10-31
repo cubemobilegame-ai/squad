@@ -71,10 +71,10 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
         waitTok = savedInstanceState == null && sp.getString("fcm", null) == null;
         try {
             FirebaseMessaging.getInstance().getToken().addOnCompleteListener(t -> {
-                if (t.isSuccessful() && t.getResult() != null) sp.edit().putString("fcm", t.getResult()).apply();
+                if (t.isSuccessful() && t.getResult() != null) sp.edit().putString("fcm", t.getResult()).remove("fcmErr").apply(); else sp.edit().putString("fcmErr", String.valueOf(t.getException())).apply();
                 if (waitTok) { waitTok = false; go(); }
             });
-        } catch (Exception e) { waitTok = false; }
+        } catch (Exception e) { waitTok = false; sp.edit().putString("fcmErr", String.valueOf(e)).apply(); }
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
         else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -94,13 +94,21 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
         if (code == 7 && waitPerm) { waitPerm = false; go(); }
     }
 
+    private String ver() { try { return getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Exception e) { return "?"; } }
+
     @Override
     protected Uri getLaunchingUrl() {
         Uri u = super.getLaunchingUrl();
         String path = getIntent() != null ? getIntent().getStringExtra("url") : null;
         if (path != null && path.startsWith("/")) u = Uri.parse("https://${app.host}" + path);
         String tok = getSharedPreferences("squad", MODE_PRIVATE).getString("fcm", null);
-        if (tok != null && u != null) u = u.buildUpon().appendQueryParameter("fcm", tok).build();
+        String err = getSharedPreferences("squad", MODE_PRIVATE).getString("fcmErr", null);
+        if (u != null) {
+            Uri.Builder b = u.buildUpon().appendQueryParameter("av", ver());
+            if (tok != null) b.appendQueryParameter("fcm", tok);
+            else if (err != null) b.appendQueryParameter("fcmerr", err.length() > 150 ? err.substring(0, 150) : err);
+            u = b.build();
+        }
         return u;
     }
 }

@@ -1504,7 +1504,7 @@ Object.assign(L.en,{upIng:"Uploading photo…",upErr:"Couldn't upload the photo.
 const putImg=async(path,dataUrl)=>{if(DEMO||!stor)return dataUrl;const r=FB.ref(stor,path);await FB.uploadString(r,dataUrl,"data_url",{contentType:"image/jpeg",cacheControl:"public,max-age=31536000"});return FB.getDownloadURL(r)};
 const delImg=path=>{if(DEMO||!stor)return;FB.deleteObject(FB.ref(stor,path)).catch(()=>{})};
 let syncT=0;const syncSoon=()=>{clearTimeout(syncT);syncT=setTimeout(saveProfile,2500)};
-async function enablePush(ask){if(DEMO)return;const u=auth.currentUser;if(!u||u.isAnonymous)return;if(sget("natTok")){try{await saveNatTok();if(ask)toast(t("pushOn"))}catch{}return}
+async function enablePush(ask){if(DEMO)return;const u=auth.currentUser;if(!u||u.isAnonymous)return;saveAppInfo();if(sget("natTok")){try{await saveNatTok();if(ask)toast(t("pushOn"))}catch{}return}
   const why=r=>{setDoc(doc(db,"users",u.uid),{pushErr:r+" · "+(matchMedia("(display-mode: standalone)").matches?"aplikacja":"przeglądarka")+" · "+navigator.userAgent.slice(0,90)+" @"+new Date().toISOString()},{merge:true}).catch(()=>{})};
   if(!("Notification"in window))return why("brak Notification (iPhone w Safari – trzeba otworzyć z ikony na ekranie początkowym)");if(!("serviceWorker"in navigator))return why("brak serviceWorker");
   if(!FB.getMessaging){try{Object.assign(FB,await import(window.__fbg+"firebase-messaging.js"))}catch(e){return why("nie wczytano messaging: "+(e?.message||e))}}
@@ -1570,7 +1570,8 @@ const pushNow=b=>{try{const U=FB.__c&&FB.__c.pushUrl,u=auth.currentUser;if(DEMO|
 /* ---------- PROŚBA O POWIADOMIENIA (musi być od razu w kliknięciu – inaczej iPhone/Chrome ją ignorują) ---------- */
 if(/[?&]upd=1/.test(location.search))setTimeout(()=>toast(t("updApk")),1200);
 const reqPerm=()=>Promise.race([Notification.requestPermission(),new Promise(r=>setTimeout(()=>r("timeout"),4000))]).then(p=>{try{const u=auth.currentUser;if(u&&!u.isAnonymous)setDoc(doc(db,"users",u.uid),{pushErr:"requestPermission: "+p+" · "+(isTWA()?"aplikacja":"przeglądarka")+" @"+new Date().toISOString()},{merge:true}).catch(()=>{})}catch{}return p});
-(()=>{try{const q=new URLSearchParams(location.search),f=q.get("fcm");if(f){sset("natTok",f);sset("twa","1");q.delete("fcm");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash)}}catch{}})();
+(()=>{try{const q=new URLSearchParams(location.search),f=q.get("fcm"),av=q.get("av");if(av){sset("appV",av);sset("appFcm",f?"tak":"nie: "+(q.get("fcmerr")||"brak tokenu"));sset("twa","1");q.delete("av");q.delete("fcmerr");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash)}if(f){sset("natTok",f);sset("twa","1");q.delete("fcm");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash)}}catch{}})();
+const saveAppInfo=()=>{const u=auth.currentUser;if(DEMO||!u||u.isAnonymous||!sget("appV"))return;setDoc(doc(db,"users",u.uid),{app:{v:sget("appV"),fcm:sget("appFcm"),at:new Date().toISOString()}},{merge:true}).catch(()=>{})};
 const saveNatTok=async()=>{const u=auth.currentUser,tk=sget("natTok");if(DEMO||!u||u.isAnonymous||!tk)return false;const old=sget("pushTok"),oldU=sget("pushUid");if(old&&oldU&&(oldU!==u.uid||old!==tk))deleteDoc(doc(db,"users",oldU,"tokens",old)).catch(()=>{});
   await setDoc(doc(db,"users",u.uid,"tokens",tk),{at:serverTimestamp(),native:true,ua:"android-app"});sset("pushTok",tk);sset("pushUid",u.uid);setDoc(doc(db,"users",u.uid),{pushErr:null},{merge:true}).catch(()=>{});window.__pushOk=1;return true};
 const isTWA=()=>{try{if(document.referrer.indexOf("android-app://")===0)sset("twa","1")}catch{}return sget("twa")==="1"};

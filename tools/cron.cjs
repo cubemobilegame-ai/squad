@@ -62,7 +62,7 @@ async function notify(uids, kind, build, link) {
     });
   }
 }
-const people = async (path) => (await db.collection(path).get()).docs.filter((p) => !p.data().isGuest);
+const people = async (path) => (await db.collection(path).get()).docs;
 const group = (arr, key) => arr.reduce((m, x) => (m.set(key(x), [...(m.get(key(x)) || []), x]), m), new Map());
 
 const RT = (() => { try { return /pushUrl\s*:\s*"https/.test(require("fs").readFileSync(require("path").join(__dirname, "../public/config.js"), "utf8")); } catch { return false; } })();
@@ -98,7 +98,7 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
     if (lines.length && !RT) await notify([d.hostId], "rsp", (T) => [cut(lines.join(" · "), 90), T.reply(d.title)], `/d/${code}`);
     if (!d.crewNotified) {
       const going = (await ref.collection("participants").get()).docs.filter((p) => p.data().status !== "out");
-      if (going.length >= 5) { await ref.update({ crewNotified: true }); await notify(going.filter((p) => !p.data().isGuest).map((p) => p.id), "rsp", (T) => T.crew(d.title), `/d/${code}`); }
+      if (going.length >= 5) { await ref.update({ crewNotified: true }); await notify(going.map((p) => p.id), "rsp", (T) => T.crew(d.title), `/d/${code}`); }
     }
   }
 

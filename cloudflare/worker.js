@@ -105,7 +105,7 @@ async function handle(env, uid, b) {
     const G = !!b.group, root = G ? `groups/${b.code}` : `drops/${b.code}`;
     const m = await db.get(`${root}/messages/${b.id}`); if (!m || m.authorId !== uid) return 0;
     const chat = await db.get(root); if (!chat) return 0;
-    const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => !p.isGuest && p.id !== uid);
+    const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => p.id !== uid);
     const title = G ? chat.name : chat.title;
     return notify(env, db, ppl.map((p) => p.id), "chat", () => [`[${title}] ${m.nickname}`, cut(m.text)], G ? `/gc/${b.code}` : `/c/${b.code}`);
   }
@@ -117,12 +117,12 @@ async function handle(env, uid, b) {
   }
   if (b.kind === "join" && isCode(b.code)) {                           // nowa osoba w grupie
     const g = await db.get(`groups/${b.code}`), me = await db.get(`groups/${b.code}/members/${uid}`); if (!g || !me) return 0;
-    const ppl = (await db.list(`groups/${b.code}/members`)).filter((p) => !p.isGuest && p.id !== uid);
+    const ppl = (await db.list(`groups/${b.code}/members`)).filter((p) => p.id !== uid);
     return notify(env, db, ppl.map((p) => p.id), "grp", (T) => T.join(me.nickname, g.name), `/g/${b.code}`);
   }
   if (b.kind === "edit" && isCode(b.code)) {                           // autor zmienił godzinę / miejsce
     const d = await db.get(`drops/${b.code}`); if (!d || d.hostId !== uid) return 0;
-    const ppl = (await db.list(`drops/${b.code}/participants`)).filter((p) => !p.isGuest && p.id !== uid && p.status !== "out");
+    const ppl = (await db.list(`drops/${b.code}/participants`)).filter((p) => p.id !== uid && p.status !== "out");
     return notify(env, db, ppl.map((p) => p.id), null, (T) => T.change(d.title, hhmm(d.startsAt), d.surprise ? T.surprise : d.place), `/d/${b.code}`);
   }
   return 0;
