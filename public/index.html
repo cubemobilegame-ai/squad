@@ -890,7 +890,7 @@ function route(){const p=gp(),m=r=>p.match(r),d=m(/^\/d\/(\w+)/),c=m(/^\/c\/(\w+
   else if(p==="/new")newView();else if(p==="/n")notifView();else if(p==="/chats")chatsView();else if(p==="/me")profileView();else if(p==="/blocked")blockedView();
   else if(["/terms","/privacy","/safety"].includes(p))legalView(p.slice(1));else home()}
 let first=true;
-onAuthStateChanged(auth,async()=>{watch();const u=auth.currentUser;if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;await loadProfile(u);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous)setTimeout(()=>enablePush(false),2000)});
+onAuthStateChanged(auth,async()=>{watch();const u=auth.currentUser;if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;await loadProfile(u);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous){setTimeout(()=>enablePush(false),2000);if(!window.__visP){window.__visP=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden&&auth.currentUser&&!auth.currentUser.isAnonymous)enablePush(false)})}}});
 if("serviceWorker"in navigator&&!DEMO)navigator.serviceWorker.register("/sw.js").catch(()=>{});
 document.documentElement.lang=LANG;document.body.insertAdjacentHTML("beforeend",`<div id="rot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>${t("rot")}</span></div>`);
 if(DEMO){document.body.classList.add("demo");A.insertAdjacentHTML("beforebegin",`<div id="demo"><small>${t("dView")}</small><button onclick="__host()">${sv('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}${t("dYou")}<b class="bd" id="bdh" hidden></b></button><button onclick="__friend()">${sv('<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>')}${t("dFr")}</button></div>`);
@@ -960,7 +960,7 @@ function profileView(){
   <label class="lbl" for="pn">${t("nick")}</label><div class="lr2"><input id="pn" value="${esc(nick)}" maxlength="20" autocomplete="off"><button class="mbtn" id="ps">${t("save")}</button></div>
   <button class="ghost kmk" id="kmk">${t("avMake")}</button></div>
   ${badgesHtml()}
-  <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p></div>
+  <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p><button class="ghost" id="ptb" style="margin-top:12px">${t("ptBtn")}</button></div>
   <div class="sgrp"><h3>${t("lang")}</h3><div class="lgs">${LANGS.map(([c,n])=>`<button class="lg ${c==LANG?"sel":""}" data-l="${c}">${n}</button>`).join("")}</div></div>
   <div class="sgrp"><h3>${t("sSafe")}</h3><div class="slist">${row(SI.shield,t("safety"),ch,`onclick="go('/safety')"`)}${row(BAN,t("blocked"),`<em>${blockedL().length||""} ›</em>`,`onclick="go('/blocked')"`)}</div></div>
   <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),ch,`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),ch,`onclick="go('/privacy')"`)}<button class="srow" id="hlp">${sv(SI.help)}<span>${t("help")}</span>${ch}</button><div class="srow">${sv(SI.info)}<span>${t("version")}</span><em>${APP_VER}</em></div><a class="srow" href="/e/LICENSE.txt" target="_blank" rel="noopener">${sv(SI.user)}<span>${t("avCredit")}</span><em>›</em></a></div></div>
@@ -977,7 +977,7 @@ function profileView(){
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});$("#kmk").onclick=()=>avEditor(changedAv);
   document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")askPush();b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
   document.querySelectorAll(".lg").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
-  $("#hlp").onclick=helpSheet;$("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
+  $("#hlp").onclick=helpSheet;$("#ptb").onclick=pushTest;$("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
   $("#so").onclick=async()=>{vib(15);try{const u=auth.currentUser,tk=sget("pushTok");if(u&&tk)await deleteDoc(doc(db,"users",u.uid,"tokens",tk))}catch{}sset("pushTok","");sset("pushUid","");await signOut(auth);go("/")};
   $("#da").onclick=delAccount;
 }
@@ -1506,7 +1506,7 @@ async function enablePush(ask){if(DEMO)return;const u=auth.currentUser;if(!u||u.
     if(p==="denied"&&ask){toast(t("pushBlocked"));return}if(p!=="granted")return;
     const reg=await navigator.serviceWorker.register("/sw.js");await navigator.serviceWorker.ready;
     const msg=FB.getMessaging(fbApp),tok=await FB.getToken(msg,{vapidKey:FB.__c.vapidKey,serviceWorkerRegistration:reg});
-    if(tok){const old=sget("pushTok"),oldU=sget("pushUid");if(old&&oldU&&(oldU!==u.uid||old!==tok))deleteDoc(doc(db,"users",oldU,"tokens",old)).catch(()=>{});await setDoc(doc(db,"users",u.uid,"tokens",tok),{at:serverTimestamp(),ua:navigator.userAgent.slice(0,120)});sset("pushTok",tok);sset("pushUid",u.uid);setDoc(doc(db,"users",u.uid),{pushErr:null},{merge:true}).catch(()=>{});if(ask)toast(t("pushOn"))}
+    if(tok){window.__pushOk=1;const old=sget("pushTok"),oldU=sget("pushUid");if(old&&oldU&&(oldU!==u.uid||old!==tok))deleteDoc(doc(db,"users",oldU,"tokens",old)).catch(()=>{});await setDoc(doc(db,"users",u.uid,"tokens",tok),{at:serverTimestamp(),ua:navigator.userAgent.slice(0,120)});sset("pushTok",tok);sset("pushUid",u.uid);setDoc(doc(db,"users",u.uid),{pushErr:null},{merge:true}).catch(()=>{});if(ask)toast(t("pushOn"))}
     if(!window.__onMsg){window.__onMsg=1;FB.onMessage(msg,m=>{const n=m.notification||{},url=m.data?.url;if(url&&gp()===url)return;toast((n.title?n.title+" – ":"")+(n.body||""));sfx("send");vib([20,40,20])})}
   }catch(e){console.warn("push",e);try{setDoc(doc(db,"users",u.uid),{pushErr:String(e?.code||e?.message||e).slice(0,200)+" @"+new Date().toISOString()},{merge:true})}catch{}}}
 
@@ -1581,6 +1581,16 @@ const pushCard=()=>{const st=pushState();if(!["default","ios"].includes(st))retu
   return`<div class="pcard" id="pcard"><img src="/e/bell.webp" alt=""><div><b>${t("pnT")}</b><small>${t("pnD")}</small></div><button class="mbtn" id="pon">${t("pnBtn")}</button><button class="px" id="pnx" aria-label="✕">✕</button></div>`};
 const bindPushCard=()=>{const b=$("#pon");if(b)b.onclick=()=>{vib(12);askPush();const c=$("#pcard");if(c&&pushState()!=="ios")c.remove()};const x=$("#pnx");if(x)x.onclick=()=>{sset("pnX",String(Date.now()));$("#pcard")?.remove()}};
 
+
+Object.assign(L.pl,{ptBtn:"🔔 Wyślij testowe powiadomienie",ptIng:"Sprawdzam powiadomienia…",ptOk:"Wysłane ✓ – powiadomienie przyjdzie za chwilę",ptFail:"Nie udało się"});Object.assign(L.en,{ptBtn:"🔔 Send a test notification",ptIng:"Checking notifications…",ptOk:"Sent ✓ – the notification will arrive in a moment",ptFail:"Didn't work"});Object.assign(L.es,{ptBtn:"🔔 Enviar notificación de prueba",ptIng:"Comprobando notificaciones…",ptOk:"Enviada ✓ – llegará en un momento",ptFail:"No ha funcionado"});Object.assign(L.de,{ptBtn:"🔔 Test-Benachrichtigung senden",ptIng:"Prüfe Benachrichtigungen…",ptOk:"Gesendet ✓ – kommt gleich an",ptFail:"Hat nicht geklappt"});Object.assign(L.fr,{ptBtn:"🔔 Envoyer une notification test",ptIng:"Vérification des notifications…",ptOk:"Envoyée ✓ – elle arrive dans un instant",ptFail:"Ça n'a pas marché"});Object.assign(L.it,{ptBtn:"🔔 Invia notifica di prova",ptIng:"Controllo le notifiche…",ptOk:"Inviata ✓ – arriva tra un attimo",ptFail:"Non ha funzionato"});Object.assign(L.cs,{ptBtn:"🔔 Poslat testovací upozornění",ptIng:"Kontroluji upozornění…",ptOk:"Odesláno ✓ – za chvíli dorazí",ptFail:"Nepovedlo se"});Object.assign(L.uk,{ptBtn:"🔔 Надіслати тестове сповіщення",ptIng:"Перевіряю сповіщення…",ptOk:"Надіслано ✓ – за мить прийде",ptFail:"Не вдалося"});
+/* test powiadomień z profilu: zapisuje telefon i wysyła powiadomienie do siebie */
+async function pushTest(){vib(12);const st=pushState();if(st==="ios"){askPush();return}
+  if(st==="default"){try{const p=await Notification.requestPermission();if(p!=="granted"){toast(t("pushBlocked"));return}}catch{}}
+  if(st==="denied"){toast(t("pushBlocked"));return}
+  toast(t("ptIng"));window.__pushOk=0;sset("pushTok","");await enablePush(false);
+  if(!window.__pushOk){let w="";try{const d=await getDoc(doc(db,"users",auth.currentUser.uid));w=(d.data()||{}).pushErr||""}catch{}toast(t("ptFail")+(w?": "+w.split(" @")[0]:""));return}
+  try{const U=FB.__c.pushUrl,tk=await auth.currentUser.getIdToken();const r=await (await fetch(U.replace(/\/$/,"")+"/notify",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tk},body:JSON.stringify({kind:"test"})})).json();
+    toast(r.sent?t("ptOk"):t("ptFail")+": "+(r.errs||[]).join(", ").slice(0,140))}catch(e){toast(t("ptFail")+": "+(e?.message||e))}}
 /* ---------- POMOC I KONTAKT ---------- */
 Object.assign(L.pl,{hlT:"Pomoc i kontakt",hlD:"Coś nie działa albo masz pomysł? Napisz do nas – odpisujemy najszybciej, jak się da.",hlMail:"Napisz maila",hlGm:"Napisz przez Gmail",hlCp:"Kopiuj adres",hlCpd:"Skopiowano adres ✓"});
 Object.assign(L.en,{hlT:"Help & contact",hlD:"Something broken or got an idea? Write to us – we reply as fast as we can.",hlMail:"Send an email",hlGm:"Write via Gmail",hlCp:"Copy address",hlCpd:"Address copied ✓"});

@@ -142,6 +142,13 @@ export default {
       const tok = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
       const uid = await verifyIdToken(tok, env.PID);
       const body = await req.json();
+      if (body.kind === "test") {
+        const db = fs(env);
+        const n = await notify(env, db, [uid], null, () => ["🔔 SQUAD – test", "Powiadomienia działają! ✓"], "/me");
+        const r = { sent: n, toks: env.stats.toks, errs: env.stats.errs };
+        ctx.waitUntil(logEv(env, { kind: "test", from: uid.slice(0, 8), sent: n, to: 1, toks: env.stats.toks, errs: env.stats.errs.join(" | ") }));
+        return json(r, 200, cors);
+      }
       ctx.waitUntil(handle(env, uid, body).then((n) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), sent: n || 0, to: env.stats ? env.stats.to : 0, toks: env.stats ? env.stats.toks : 0, errs: env.stats ? env.stats.errs.join(" | ") : "brak odbiorców / odrzucone" })).catch((e) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), err: e.message })));
       return json({ ok: true }, 202, cors);
     } catch (e) { return json({ error: "auth" }, 401, cors); }
