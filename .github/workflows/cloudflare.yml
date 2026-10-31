@@ -1,0 +1,30 @@
+name: Cloudflare – serwer powiadomień
+
+# Wgrywa natychmiastowe powiadomienia (cloudflare/worker.js) na darmowy Cloudflare Workers.
+# Sekrety: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID oraz FIREBASE_SERVICE_ACCOUNT (już jest).
+on:
+  push:
+    branches: [main]
+    paths: ["cloudflare/**", ".github/workflows/cloudflare.yml"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Wgraj worker
+        working-directory: cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "::warning::Brak sekretów CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID – pomijam"; exit 0; fi
+          npx -y wrangler@3 deploy 2>&1 | tee deploy.log
+          printf '%s' "$SA" | npx -y wrangler@3 secret put FIREBASE_SA 2>&1 | tail -2
+          URL=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1)
+          echo "::notice title=Adres serwera powiadomień::$URL"
+          curl -s "$URL" | head -c 200 | sed 's/^/::notice title=Test::/'

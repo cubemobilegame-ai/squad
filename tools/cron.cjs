@@ -65,6 +65,8 @@ async function notify(uids, kind, build, link) {
 const people = async (path) => (await db.collection(path).get()).docs.filter((p) => !p.data().isGuest);
 const group = (arr, key) => arr.reduce((m, x) => (m.set(key(x), [...(m.get(key(x)) || []), x]), m), new Map());
 
+const RT = (() => { try { return /pushUrl\s*:\s*"https/.test(require("fs").readFileSync(require("path").join(__dirname, "../public/config.js"), "utf8")); } catch { return false; } })();
+if (RT) console.log("::notice::Natychmiastowe powiadomienia działają przez Cloudflare – automat wysyła tylko przypomnienia i „ekipa w komplecie”.");
 const errs = [];
 const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(name); console.log(`::warning::${name}: ${String(e.message || e).slice(0, 300)}`); } };
 (async () => {
@@ -74,7 +76,7 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
   let msgs = [], reps = [], joins = [], edits = [], soon = [], old = [];
   console.log("Okno:", since.toDate().toISOString(), "→", until.toDate().toISOString());
 
-  await step("wiadomości", async () => {
+  await step("wiadomości", async () => { if (RT) return;
   // 1a) nowe wiadomości – jedno powiadomienie na czat (ostatnia wiadomość + licznik)
   msgs = (await db.collectionGroup("messages").where("createdAt", ">", since).where("createdAt", "<=", until).get()).docs;
   for (const [chatPath, list] of group(msgs, (d) => d.ref.parent.parent.path)) {
@@ -93,7 +95,7 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
   for (const [dropPath, list] of group(reps, (d) => d.ref.parent.parent.path)) {
     const ref = db.doc(dropPath), d = (await ref.get()).data(); if (!d) continue;
     const code = ref.id, lines = list.filter((p) => p.id !== d.hostId).map((p) => { const x = p.data(); return `${x.nickname}: ${{ in: "IN ⚡", late: `LATE ${x.etaMin || 15} min`, out: "OUT" }[x.status] || x.status}`; });
-    if (lines.length) await notify([d.hostId], "rsp", (T) => [cut(lines.join(" · "), 90), T.reply(d.title)], `/d/${code}`);
+    if (lines.length && !RT) await notify([d.hostId], "rsp", (T) => [cut(lines.join(" · "), 90), T.reply(d.title)], `/d/${code}`);
     if (!d.crewNotified) {
       const going = (await ref.collection("participants").get()).docs.filter((p) => p.data().status !== "out");
       if (going.length >= 5) { await ref.update({ crewNotified: true }); await notify(going.filter((p) => !p.data().isGuest).map((p) => p.id), "rsp", (T) => T.crew(d.title), `/d/${code}`); }
@@ -101,7 +103,7 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
   }
 
   });
-  await step("grupy", async () => {
+  await step("grupy", async () => { if (RT) return;
   // 1c) nowe osoby w grupach
   joins = (await db.collectionGroup("members").where("updatedAt", ">", since).where("updatedAt", "<=", until).get()).docs;
   for (const [gPath, list] of group(joins, (d) => d.ref.parent.parent.path)) {
@@ -112,7 +114,7 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
   }
 
   });
-  await step("zmiany", async () => {
+  await step("zmiany", async () => { if (RT) return;
   // 1d) zmiany w dropach (edycja godziny / miejsca)
   edits = (await db.collection("drops").where("editedAt", ">", since).get()).docs;
   for (const doc of edits) {
