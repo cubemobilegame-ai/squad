@@ -33,6 +33,8 @@ jobs:
           script: |
             APK=$(ls *.apk | head -1); adb install -r "$APK" && echo "::notice::Zainstalowano $APK" || echo "::error::Instalacja nie powiodła się"
             adb logcat -c
+            S=$(adb shell dumpsys package com.cubemobilegames.squad | grep -iE "DelegationService|PushPermActivity|POST_NOTIFICATIONS|TrustedWebActivityService" | sort -u | head -12 | tr "\n" " ")
+            echo "::notice title=Usługi aplikacji::$S"
             adb shell monkey -p com.cubemobilegames.squad -c android.intent.category.LAUNCHER 1
             sleep 8
             adb shell dumpsys activity activities | grep -E "topResumedActivity" | head -2 | sed "s/^/::notice title=Po starcie::/"
