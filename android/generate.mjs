@@ -30,5 +30,47 @@ for (const [l, n] of Object.entries(NAMES)) {
 // Bez ikony na ekranie startowym Androida: czarny splash (aplikacja i tak pokazuje własne intro)
 const black = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAFklEQVR4XmPk5hZiwAeY8MoyMAwTBQAyMQA4OZ42HAAAAABJRU5ErkJggg==", "base64");
 for (const d of fs.readdirSync(resDir)) if (d.startsWith("drawable")) for (const f of fs.readdirSync(`${resDir}/${d}`)) if (/^splash\.(png|webp)$/.test(f)) { fs.writeFileSync(`${resDir}/${d}/${f.replace(/\.webp$/, ".png")}`, black); if (f.endsWith(".webp")) fs.unlinkSync(`${resDir}/${d}/${f}`); console.log("splash wyczyszczony:", d); }
+
+// Android 13+: natywna prośba o powiadomienia przy pierwszym uruchomieniu (systemowe okienko „Zezwolić…?”), potem start aplikacji
+const pkgDir = `build-android/app/src/main/java/${app.packageId.replace(/\./g, "/")}`;
+fs.writeFileSync(`${pkgDir}/LauncherActivity.java`, `package ${app.packageId};
+
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+
+public class LauncherActivity extends com.google.androidbrowserhelper.trusted.LauncherActivity {
+    private static final String PERM = "android.permission.POST_NOTIFICATIONS";
+    private boolean asking = false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        asking = Build.VERSION.SDK_INT >= 33 && savedInstanceState == null
+            && checkSelfPermission(PERM) != PackageManager.PERMISSION_GRANTED
+            && !getSharedPreferences("squad", MODE_PRIVATE).getBoolean("pushAsked", false);
+        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+        else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (asking) {
+            getSharedPreferences("squad", MODE_PRIVATE).edit().putBoolean("pushAsked", true).apply();
+            requestPermissions(new String[]{PERM}, 7);
+        }
+    }
+
+    @Override
+    protected boolean shouldLaunchImmediately() { return !asking; }
+
+    @Override
+    public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
+        super.onRequestPermissionsResult(code, perms, res);
+        if (code == 7 && asking) { asking = false; launchTwa(); }
+    }
+}
+`);
+const mf = "build-android/app/src/main/AndroidManifest.xml";
+let mx = fs.readFileSync(mf, "utf8");
+if (!mx.includes("android.permission.POST_NOTIFICATIONS")) { mx = mx.replace(/<application/, '<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <application'); fs.writeFileSync(mf, mx); }
+console.log("Natywna prośba o powiadomienia: dodana");
 fs.writeFileSync("build-android/twa-manifest.json", JSON.stringify(m.toJson ? m.toJson() : m, null, 2));
 console.log("Projekt Androida gotowy:", app.packageId, m.appVersionName, "(" + m.appVersionCode + ")");

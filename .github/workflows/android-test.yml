@@ -34,7 +34,10 @@ jobs:
             APK=$(ls *.apk | head -1); adb install -r "$APK" && echo "::notice::Zainstalowano $APK" || echo "::error::Instalacja nie powiodła się"
             adb logcat -c
             adb shell monkey -p com.cubemobilegames.squad -c android.intent.category.LAUNCHER 1
-            sleep 25
+            sleep 8
+            adb shell dumpsys activity activities | grep -E "topResumedActivity" | head -2 | sed "s/^/::notice title=Po starcie::/"
+            adb shell pm grant com.cubemobilegames.squad android.permission.POST_NOTIFICATIONS || true
+            sleep 17
             adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -3 | sed 's/^/::notice::Aktywna: /'
             adb logcat -d -b crash > crash.txt || true
             adb logcat -d '*:E' > err.txt || true
