@@ -31,6 +31,10 @@
         "destination": "/grupa.html"
       },
       {
+        "source": "/gc/**",
+        "destination": "/grupa.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

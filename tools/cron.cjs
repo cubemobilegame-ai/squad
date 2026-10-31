@@ -53,7 +53,7 @@ async function notify(uids, kind, build, link) {
     const L = TX[u.lang] ? u.lang : "en", [title, body] = build(TX[L], L);
     const r = await admin.messaging().sendEachForMulticast({
       tokens: u.toks.map((d) => d.id), notification: { title, body }, data: { url: link },
-      webpush: { fcmOptions: { link: BASE + link }, notification: { icon: "/icon-192.png", badge: "/icon-192.png", tag: link, renotify: true } },
+      webpush: { fcmOptions: { link: BASE + link }, notification: { icon: "/icon-192.png", badge: "/badge-96.png", tag: link, renotify: true, vibrate: [200, 100, 200], silent: false }, headers: { Urgency: "high", TTL: "86400" } },
     }).catch((e) => { console.warn("FCM", e.message); return { responses: [] }; });
     r.responses.forEach((x, i) => {
       if (x.success) { sent++; return; }
