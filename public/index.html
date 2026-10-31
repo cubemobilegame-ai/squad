@@ -1149,7 +1149,7 @@ async function dropView(code){
   if(code==="DEMO1"&&!logged)sset("fopen","1");remember(code);if(logged&&!isHost&&!S.items.has(code))S.addItem?.(code,d);
   const closed=()=>Date.now()>=start,hAv=d.hostPh||(d.hostAv!=null?+d.hostAv:avIdx({id:d.hostId}));let wasC=closed();
   view(`<div class="scr">${logged?`<div class="hdr">${bk("/")}</div>`:`<div class="brand">SQUAD</div>`}
-  <div class="inv">${avc("l",hAv)}<span>${t("inv",esc(d.hostNick||"?"))}</span></div>
+  ${isHost?"":`<div class="inv">${avc("l",hAv)}<span>${t("inv",esc(d.hostNick||"?"))}</span></div>`}
   ${isHost?`<div class="lk"><div class="lt">${t("yourLink")}</div><div class="lr"><code>${url}</code><button id="cl">${t("copyShort")}</button></div></div>`:""}<div id="cb"></div>
   <div class="asr" id="asr" ${sget("nick")?"":"hidden"}>${avc("mini",meAv())}<span>${t("asYou")} <b>${esc(sget("nick"))}</b></span><button class="lnk" id="chn">${t("change")}</button></div><input id="nick" placeholder="${t("nick")}…" maxlength="20" value="${esc(sget("nick"))}" ${sget("nick")?"hidden":""}>
   <h3>${t("quick")}</h3><div class="rsp ${closed()?"closed":""}" id="tr"><button class="rb in" data-s="in">${sv(BOLT)}<b>IN!</b></button><button class="rb late" data-s="late">${sv(CLK)}<b>LATE <small>${t("late15")}</small></b></button><button class="rb out" data-s="out">${sv(X)}<b>OUT</b></button></div>
