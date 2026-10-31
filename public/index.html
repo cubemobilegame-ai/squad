@@ -180,7 +180,9 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .m>div.mb{background:none;padding:0;border-radius:0;display:flex;flex-direction:column;min-width:0;align-items:flex-start}
 .m.me>div.mb{background:none;border-radius:0;align-items:flex-end}
 .bub{background:rgba(255,255,255,.1);border-radius:18px 18px 18px 4px;padding:9px 14px;word-break:break-word;transition:transform .15s,box-shadow .15s}
-.m.me .bub{background:rgba(var(--accr),.22);border-radius:18px 18px 4px 18px}
+.m.me .bub{background:linear-gradient(135deg,var(--g1),var(--g2));color:#0b0b10;border-radius:18px 18px 4px 18px;box-shadow:0 3px 10px rgba(var(--accr),.16)}.m.me .bub time{color:rgba(11,11,16,.6)}.m.me .bub a{color:#0b0b10}
+#mf button.fly{animation:sfly .38s cubic-bezier(.3,1.6,.5,1)}@keyframes sfly{0%{transform:scale(1)}35%{transform:scale(.82) rotate(-12deg)}100%{transform:scale(1)}}
+.m.new .bub{animation:mpop .28s cubic-bezier(.3,1.5,.5,1)}@keyframes mpop{from{transform:translateY(10px) scale(.96);opacity:.3}}
 .m.lift .bub{transform:scale(1.04);box-shadow:0 0 0 2px var(--acc)}
 .rx{display:flex;gap:4px;flex-wrap:wrap;margin-top:-8px;padding:0 8px;position:relative}
 .rxc{display:inline-flex;align-items:center;gap:3px;border:2px solid #0b0b12;background:#2a2a3c;border-radius:99px;padding:2px 8px;font-size:13px;color:#fff;cursor:pointer;animation:pop .25s;line-height:1.3}.rxc b{font:900 10px Brico,BricoCyr,system-ui}.rxc b:empty{display:none}.rxc.on{background:#3d4d14;box-shadow:0 0 0 1.5px var(--acc)}
@@ -1213,7 +1215,7 @@ async function chatView(code,g){
   let R=null;if(g){try{const x=await getDoc(doc(db,"groups",code));if(x.exists())R={ref:x.ref,d:x.data()}}catch{}}else R=await loadDrop(code);
   if(!R)return gone(g);
   const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];
-  view(`<div class="scr chs"><div class="chh">${bk(g?"/chats":"/d/"+code,"",1)}<div><h2>[${esc(clean(title))}]</h2><small id="cnt">${g?t("grChH"):t("chH")}</small></div>${g?`<button class="mbtn" onclick="go('/g/${code}')">${t("grInfo")}</button>`:""}</div>
+  view(`<div class="scr chs"><div class="chh">${bk(g?"/chats":"/d/"+code,"",1)}<div><h2>[${esc(clean(title))}]</h2><small id="cnt">${(g?t("grChH"):t("chH")).split(" · ")[0]}</small></div>${g?`<button class="mbtn" onclick="go('/g/${code}')">${t("grInfo")}</button>`:""}</div>
   <div class="mem" id="mem"></div><div id="msgs"></div><form id="mf"><input id="mi" placeholder="${t("chPh")}" maxlength="500" autocomplete="off"><button aria-label="${t("send2")}">➤</button></form></div>`);
   const hm=m=>{const x=m.createdAt?.toMillis?.();if(!x)return"";const q=new Date(x);return pad(q.getHours())+":"+pad(q.getMinutes())};
   const rxs=m=>{const r=m.r||{},c={};Object.values(r).forEach(e=>c[e]=(c[e]||0)+1);const my=r[me()];
@@ -1221,7 +1223,7 @@ async function chatView(code,g){
   const drawM=()=>{const b=$("#msgs");if(!b)return;const atEnd=b.scrollHeight-b.scrollTop-b.clientHeight<80;
     b.innerHTML=(M.length&&!sget("rxHint")?`<p class="rxhint">${t("rxHint")}</p>`:"")+(M.map(m=>{const mm=m.authorId===me();if(!mm&&isBlk(m.authorId))return`<div class="m hid"><div>${t("hiddenMsg")}</div></div>`;
       const pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};
-      return`<div class="m ${mm?"me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${avc("mini",avIdx(pp))}<div class="mb"><div class="bub"><small style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}${mm?" ("+t("you2")+")":""}</small>${esc(clean(m.text))}<time>${hm(m)}</time></div>${rxs(m)}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
+      return`<div class="m ${mm?"me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${mm?"":avc("mini",avIdx(pp))}<div class="mb"><div class="bub">${mm?"":`<small style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}</small>`}${esc(clean(m.text))}<time>${hm(m)}</time></div>${rxs(m)}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
     if(atEnd||!b.dataset.s){b.scrollTop=b.scrollHeight;b.dataset.s=1}};
   const react=async(id,e,el)=>{const m=M.find(x=>x.id===id);if(!m)return;const cur=(m.r||{})[me()];
     if(cur!==e){flyEmoji(e,el);sfx("react");vib(12)}else vib(6);sset("rxHint","1");
@@ -1242,13 +1244,13 @@ async function chatView(code,g){
   unsubs.push(onSnapshot(collection(ref,pc),sn=>{
     P=sn.docs.map(x=>({id:x.id,...x.data()}));mine=P.find(p=>p.id===me())||null;
     $("#mem").innerHTML=P.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("");
-    $("#cnt").textContent=t("members",P.length)+" · "+(g?t("grChH"):t("chH"));
+    $("#cnt").textContent=t("members",P.length)+" · "+(g?t("grChH"):t("chH")).split(" · ")[0];
     if(!mine){const f=$("#mf");if(f){f.outerHTML=`<button class="cta" id="jn" style="margin:0">${t(g?"joinG":"joinC")}</button>`;$("#jn").onclick=()=>go((g?"/g/":"/d/")+code)}return}
     if(!g&&owner!==me()&&!["in","late"].includes(mine.status)){const f=$("#mf");if(f){const started=d.startsAt.toMillis()<=Date.now();f.outerHTML=`<div class="chlock"><p class="hint" style="margin:0 0 10px;text-align:center">${t(started?"chClosed":"chOut")}</p>${started?"":`<button class="cta" id="jn" style="margin:0">${t("chChange")}</button>`}</div>`;const j=$("#jn");if(j)j.onclick=()=>go("/d/"+code)}}
     else if(!$("#mf")&&$(".chlock")){location.reload();return}
     drawM();if(on)return;on=true;
-    unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt"),limit(200)),s=>{M=s.docs.map(x=>({id:x.id,...x.data()}));drawM();sset(key,Date.now());badges()},()=>{}));
-    $("#mf").onsubmit=async e=>{e.preventDefault();const x=$("#mi").value.trim();if(!x)return;$("#mi").value="";sfx("send");vib(10);
+    unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt"),limit(200)),s=>{M=s.docs.map(x=>({id:x.id,...x.data()}));drawM();if(Date.now()-(window.__justSent||0)<1500){const l=[...document.querySelectorAll("#msgs .m.me")].pop();l?.classList.add("new");window.__justSent=0}sset(key,Date.now());badges()},()=>{}));
+    $("#mf").onsubmit=async e=>{e.preventDefault();const x=$("#mi").value.trim();if(!x)return;$("#mi").value="";$("#mi").focus();sfx("send");vib(12);{const b=$("#mf button");b.classList.remove("fly");void b.offsetWidth;b.classList.add("fly")}window.__justSent=Date.now();
       const mr=await addDoc(collection(ref,"messages"),{authorId:me(),nickname:mine.nickname,text:clean(x),createdAt:serverTimestamp()});pushNow({kind:"msg",code,id:mr.id,group:!!g});bump("msgs")};
   },()=>{}));
 }
@@ -1323,7 +1325,7 @@ let AC=null;const ac=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudio
 const tone=(f,t0,d,type="sine",g=.12,f2)=>{const a=ac();if(!a)return;const o=a.createOscillator(),v=a.createGain(),s=a.currentTime+t0;o.type=type;o.frequency.setValueAtTime(f,s);if(f2)o.frequency.exponentialRampToValueAtTime(f2,s+d);
   v.gain.setValueAtTime(0,s);v.gain.linearRampToValueAtTime(g,s+.01);v.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(v).connect(a.destination);o.start(s);o.stop(s+d+.03)};
 const SFX={in:()=>{tone(660,0,.09,"triangle");tone(990,.07,.16,"triangle")},late:()=>{tone(523,0,.1,"triangle",.1);tone(523,.13,.12,"triangle",.07)},out:()=>tone(440,0,.22,"sine",.1,240),
-  send:()=>tone(880,0,.07,"sine",.08,1400),react:()=>tone(1250,0,.08,"triangle",.07,1700),photo:()=>{tone(2200,0,.025,"square",.04);tone(900,.04,.09,"triangle",.07)},
+  send:()=>{tone(520,0,.11,"sine",.16,1250);tone(1560,.075,.07,"triangle",.07,1900)},react:()=>tone(1250,0,.08,"triangle",.07,1700),photo:()=>{tone(2200,0,.025,"square",.04);tone(900,.04,.09,"triangle",.07)},
   badge:()=>[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.08,.25,"triangle",.09)),party:()=>[784,988,1175,1568,1976].forEach((f,i)=>tone(f,i*.06,.2,"square",.035))};
 const sfx=n=>{if(sget("n_snd")==="0")return;try{SFX[n]?.()}catch{}};
 
@@ -1645,7 +1647,7 @@ function calSheet(d,url){vib(10);const st=d.startsAt.toMillis(),en=st+2*36e5,z=x
    <a class="cta" id="cg" style="text-align:center;text-decoration:none" href="${g}" target="_blank" rel="noopener">${t("calG")}</a><button class="ghost" id="ci">${t("calI")}</button>`);
   s.querySelector("#cg").onclick=()=>setTimeout(()=>s.close(),300);
   s.querySelector("#ci").onclick=()=>{const b=new Blob([ics],{type:"text/calendar;charset=utf-8"}),f=new File([b],"squad-drop.ics",{type:"text/calendar"});
-    if(/iPhone|iPad|iPod/.test(navigator.userAgent)){location.href="data:text/calendar;charset=utf-8,"+encodeURIComponent(ics)}
+    if(/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&"ontouchend" in document&&window.SQUAD_CONFIG?.pushUrl){window.open(window.SQUAD_CONFIG.pushUrl.replace(/\/$/,"")+"/ics?"+new URLSearchParams({t:title,s:st,e:en,l:where,d:det,u:url}),"_blank")}
     else{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="squad-drop.ics";document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
     s.close();vib(12)}}
 

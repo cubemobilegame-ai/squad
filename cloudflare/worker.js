@@ -144,12 +144,23 @@ async function avatar(envRaw, uid) {
   } catch { return new Response("", { status: 500 }); }
 }
 
+// "Dodaj do kalendarza" dla iPhone'a (aplikacja z ekranu początkowego nie otwiera plików z pamięci)
+function ics(q) {
+  const s = +q.get("s"), e = +q.get("e") || s + 7200000; if (!s || s < 1.5e12 || s > 4e12) return new Response("bad", { status: 400 });
+  const z = (x) => new Date(x).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""), f = (x, n = 300) => String(x || "").slice(0, n).replace(/[\\;,]/g, (m) => "\\" + m).replace(/[\r\n]+/g, " ");
+  const u = /^https:\/\/[a-z0-9.-]+\/[A-Za-z0-9/_-]*$/.test(q.get("u") || "") ? q.get("u") : "";
+  const body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//SQUAD//PL", "METHOD:PUBLISH", "BEGIN:VEVENT", `UID:${s}-${Math.abs([...(u + q.get("t")).slice(0, 80)].reduce((h, c) => h * 31 + c.charCodeAt(0) | 0, 7))}@squad`, "DTSTAMP:" + z(Date.now()), "DTSTART:" + z(s), "DTEND:" + z(e),
+    "SUMMARY:" + f(q.get("t"), 120), "LOCATION:" + f(q.get("l"), 200), "DESCRIPTION:" + f(q.get("d"), 300), ...(u ? ["URL:" + u] : []), "BEGIN:VALARM", "TRIGGER:-PT30M", "ACTION:DISPLAY", "DESCRIPTION:" + f(q.get("t"), 120), "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  return new Response(body, { headers: { "Content-Type": "text/calendar; charset=utf-8", "Content-Disposition": 'inline; filename="squad-drop.ics"', "Cache-Control": "no-store" } });
+}
+
 export default {
   async fetch(req, envRaw, ctx) {
     const origin = req.headers.get("Origin") || "", allow = ORIGINS.includes(origin) || /^https:\/\/[a-z0-9-]+\.squad-64cd5\.web\.app$/.test(origin);
     const cors = { "Access-Control-Allow-Origin": allow ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Max-Age": "86400" };
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
+    if (req.method === "GET" && url.pathname === "/ics") return ics(url.searchParams);
     if (req.method === "GET" && url.pathname.startsWith("/av/")) return avatar(envRaw, url.pathname.slice(4));
     if (req.method === "GET") return json({ ok: true, app: "squad-push" }, 200, cors);
     if (req.method !== "POST" || url.pathname !== "/notify") return json({ error: "not found" }, 404, cors);
