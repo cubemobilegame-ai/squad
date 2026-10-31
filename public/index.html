@@ -931,7 +931,7 @@ let homeTab="";
 function home(){
   const u=authed();if(!u)return;const nick=sget("nick");
   view(`<div class="scr"><div class="top hd2"><h1 class="logo lg2">SQUAD<span>✦</span></h1><div class="tr"><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button><button class="me" id="me" aria-label="${t("nMe")}">${avc("",meAv())}</button></div></div>
-  <button class="newbtn" id="nd" style="margin-top:14px">${t("newDrop")}</button>
+  <button class="newbtn" id="nd" style="margin-top:26px">${t("newDrop")}</button>
   <div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
   $("#nd").onclick=()=>{vib(15);go("/new")};$("#me").onclick=()=>go("/me");$("#bel").onclick=()=>{vib(8);go("/n")};setTimeout(pushScreen,700);bindPushCard();
   const draw=()=>{
