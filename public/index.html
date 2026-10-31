@@ -105,6 +105,7 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .chpi{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:14.5px;font-weight:600}.chpi span{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--acc);color:#0b0b10;font-size:15px}
 .acts4{display:flex;gap:10px;margin:16px 0 4px}.acts4 button{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font:inherit;cursor:pointer}.acts4 button[hidden]{display:none}.acts4 span{font-size:24px;line-height:1}.acts4 small{font-size:11.5px;font-weight:800;opacity:.8}.acts4 button:active{transform:scale(.95)}
 .lk2{margin-top:12px}
+html:has(.scr.chs),html:has(.scr.chs) body{overflow:hidden;overscroll-behavior:none;height:100%}
 .agec{display:flex;gap:12px;align-items:flex-start;margin:16px 2px 4px;font-size:14px;line-height:1.4;color:var(--mut,#b9b9c6);cursor:pointer}.agec input{width:22px;height:22px;flex:none;margin:0;accent-color:var(--acc)}.agec a{color:var(--acc)}.agec.shake{animation:shk .4s}@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 #mf{display:flex;gap:8px;align-items:center}#mf input{margin:0}#mf button{border:0;border-radius:16px;background:var(--acc);width:58px;height:50px;font-size:20px;font-weight:900;cursor:pointer}
 .back{color:rgba(255,255,255,.6);cursor:pointer;font-size:13px;font-weight:900}.chh .back{font-size:26px}
@@ -316,12 +317,22 @@ input,textarea,select{font-size:16px!important}html{-webkit-text-size-adjust:100
 <script>
 /* ekran ładowania: piątka + pasek (ok. 2 s), potem znika */
 (function(){var S=document.getElementById("spl");if(!S)return;var t0=Date.now();
-window.__splDone=function(){var w=Math.max(0,2000-(Date.now()-t0));setTimeout(function(){S.classList.add("out");setTimeout(function(){S.remove()},400)},w)};
+/* link z powiadomienia / do czatu lub dropa: bez 2-sekundowego intro, od razu treść */
+var deep=location.pathname!=="/"&&location.pathname!=="";if(deep){S.style.transition="opacity .2s"}
+window.__splDone=function(){var w=deep?0:Math.max(0,2000-(Date.now()-t0));setTimeout(function(){S.classList.add("out");setTimeout(function(){S.remove()},400)},w)};
 setTimeout(window.__splDone,0);})();
 </script>
 <script>
 /* wysokość widocznej części ekranu (iPhone z klawiaturą) – czat trzyma pole pisania tuż nad klawiaturą */
-(function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,f=function(){R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(vv.offsetTop)+"px");R.classList.toggle("kb",window.innerHeight-vv.height>120)};vv.addEventListener("resize",f);vv.addEventListener("scroll",f);f()})();
+(function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,
+f=function(){raf=0;var kb=window.innerHeight-vv.height>120,chat=!!document.querySelector(".scr.chs");
+  /* bez klawiatury: pełna wysokość i zero przesunięcia (iOS potrafi zostawić stare offsetTop po schowaniu klawiatury) */
+  if(!kb){R.style.setProperty("--vvh",window.innerHeight+"px");R.style.setProperty("--vvt","0px");if(chat&&(window.scrollY||document.documentElement.scrollTop))window.scrollTo(0,0)}
+  else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px")}
+  R.classList.toggle("kb",kb)},
+q=function(){if(!raf)raf=requestAnimationFrame(f)},later=function(){q();setTimeout(q,120);setTimeout(q,350);setTimeout(q,700)};
+vv.addEventListener("resize",q);vv.addEventListener("scroll",q);window.addEventListener("scroll",q,{passive:true});
+document.addEventListener("focusin",later);document.addEventListener("focusout",later);window.addEventListener("orientationchange",later);f()})();
 </script>
 <script>
 /* automatyczna aktualizacja: gdy na serwerze jest nowsza wersja, aplikacja sama się przeładowuje */
