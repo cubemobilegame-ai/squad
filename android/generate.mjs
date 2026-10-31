@@ -28,7 +28,7 @@ for (const [l, n] of Object.entries(NAMES)) {
 }
 
 // Bez ikony na ekranie startowym Androida: czarny splash (aplikacja i tak pokazuje własne intro)
-const black = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNg4OD4DwABBAEAwS2OUAAAAABJRU5ErkJggg==", "base64");
+const black = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAFklEQVR4XmPk5hZiwAeY8MoyMAwTBQAyMQA4OZ42HAAAAABJRU5ErkJggg==", "base64");
 for (const d of fs.readdirSync(resDir)) if (d.startsWith("drawable")) for (const f of fs.readdirSync(`${resDir}/${d}`)) if (/^splash\.(png|webp)$/.test(f)) { fs.writeFileSync(`${resDir}/${d}/${f.replace(/\.webp$/, ".png")}`, black); if (f.endsWith(".webp")) fs.unlinkSync(`${resDir}/${d}/${f}`); console.log("splash wyczyszczony:", d); }
 fs.writeFileSync("build-android/twa-manifest.json", JSON.stringify(m.toJson ? m.toJson() : m, null, 2));
 console.log("Projekt Androida gotowy:", app.packageId, m.appVersionName, "(" + m.appVersionCode + ")");
