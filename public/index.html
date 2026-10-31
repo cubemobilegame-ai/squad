@@ -98,6 +98,13 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .dbub{padding:6px!important}.dcard{display:flex;gap:10px;align-items:center;text-decoration:none;color:inherit;background:linear-gradient(135deg,rgba(255,46,126,.25),rgba(255,138,61,.25));border:1px solid rgba(255,138,61,.35);border-radius:14px;padding:10px 12px;min-width:200px}.dcard .dci{font-size:26px}.dcard b{display:block;font-size:15px}.dcard small{display:block;font-size:12px;opacity:.75;font-weight:600}.dcard em{display:block;font-style:normal;font-size:12px;font-weight:800;color:#ffb38a;margin-top:2px}
 .m.me .dbub .dcard{color:#fff;background:#14141c;border-color:transparent}.m.me .dbub .dcard small{color:rgba(255,255,255,.7)!important}.dcard small{color:rgba(255,255,255,.75)!important}
 .dgo{display:flex;align-items:center;gap:7px;flex:none;margin-left:auto;border:0;cursor:pointer;padding:6px 14px 6px 6px;border-radius:999px;background:linear-gradient(135deg,#ff2e7e,#ff8a3d);color:#fff;font:inherit;font-weight:900;font-size:13px;letter-spacing:.04em;box-shadow:0 6px 18px rgba(255,80,110,.35)}.dgo .e3{width:30px;height:30px;background:rgba(255,255,255,.22);border-radius:50%;padding:3px}.dgo:active{transform:scale(.95)}
+.chp{margin:14px 0 6px;padding:14px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);cursor:pointer}.chp:active{transform:scale(.99)}
+.chph{display:flex;align-items:center;gap:8px;margin-bottom:10px}.chph b{font-size:15px}.chph em{margin-left:auto;font-style:normal;font-size:12.5px;font-weight:800;color:var(--acc)}.chph .bdi{position:static;display:grid}
+.chpm{display:flex;align-items:flex-end;gap:8px;margin:6px 0}.chpm p{margin:0;padding:8px 12px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,.08);font-size:14px;line-height:1.35;max-width:85%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.chpm.me{justify-content:flex-end}.chpm.me p{background:linear-gradient(135deg,var(--g1),var(--g2));color:#0b0b10;border-radius:16px 16px 4px 16px}.chp0{margin:4px 0 8px;font-size:13.5px}
+.chpi{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:14.5px;font-weight:600}.chpi span{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--acc);color:#0b0b10;font-size:15px}
+.acts4{display:flex;gap:10px;margin:16px 0 4px}.acts4 button{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font:inherit;cursor:pointer}.acts4 button[hidden]{display:none}.acts4 span{font-size:24px;line-height:1}.acts4 small{font-size:11.5px;font-weight:800;opacity:.8}.acts4 button:active{transform:scale(.95)}
+.lk2{margin-top:12px}
 .agec{display:flex;gap:12px;align-items:flex-start;margin:16px 2px 4px;font-size:14px;line-height:1.4;color:var(--mut,#b9b9c6);cursor:pointer}.agec input{width:22px;height:22px;flex:none;margin:0;accent-color:var(--acc)}.agec a{color:var(--acc)}.agec.shake{animation:shk .4s}@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 #mf{display:flex;gap:8px;align-items:center}#mf input{margin:0}#mf button{border:0;border-radius:16px;background:var(--acc);width:58px;height:50px;font-size:20px;font-weight:900;cursor:pointer}
 .back{color:rgba(255,255,255,.6);cursor:pointer;font-size:13px;font-weight:900}.chh .back{font-size:26px}
@@ -456,7 +463,7 @@ mActT:n=>"Mensaje de "+n,repMsg:"Denunciar mensaje",blockU:n=>"Bloquear a "+n,re
 hiddenMsg:"Mensaje de una persona bloqueada",repDrop:"Denunciar este drop",repGroup:"Denunciar este grupo",
 rot:"Pon el móvil en vertical",dView:"VISTA:",dYou:"Tú",dFr:"Amigo con enlace",legal:"Borrador: se revisará antes de publicarlo",
 avMake:"✨ Crea tu avatar",avT:"Tu avatar",kSt:"Peinado",kSk:"Piel",kHr:"Color de pelo",kEy:"Ojos",kAc:"Extras",kBg:"Fondo",kRnd:"🎲 Aleatorio",kSave:"Guardar avatar",
-alT:"Álbum del plan",alLock:"Se abre cuando empieza el drop. Cada persona de la crew puede subir hasta 3 fotos y el álbum desaparece con el drop.",alN:n=>n+(n==1?" foto":" fotos"),alHint:"Cada uno sube hasta 3 fotos. El álbum desaparece con el drop, 24 h después del inicio.",alAdd:"Añadir",alLeft:n=>"te quedan "+n,alCol:"✨ Hacer un collage",alEmpty:"De momento está vacío: aquí la crew sube sus fotos.",alAdded:"Añadida al álbum 📸",alDel:"Eliminar foto",alDeleted:"Foto eliminada",repPhoto:"Denunciar foto",
+alT:"Álbum del plan",alLock:"Se abre cuando empieza el drop. Cada persona de la crew puede subir 1 foto y el álbum desaparece con el drop.",alN:n=>n+(n==1?" foto":" fotos"),alHint:"Cada uno sube 1 foto. El álbum desaparece con el drop, 24 h después del inicio.",alAdd:"Añadir",alLeft:n=>"te quedan "+n,alCol:"✨ Hacer un collage",alEmpty:"De momento está vacío: aquí la crew sube sus fotos.",alAdded:"Añadida al álbum 📸",alDel:"Eliminar foto",alDeleted:"Foto eliminada",repPhoto:"Denunciar foto",
 colT:"Collage del plan",colTxt:ti=>`📸 ${ti} – ¡qué pasada! #SQUAD`,colTag:"📸 ÁLBUM DEL PLAN",colFoot:"el drop desaparece, los recuerdos se quedan",fmt_story:"Historia 9:16",fmt_post:"Post 4:5",
 sty_neon:"Neón",sty_poster:"Póster",sty_retro:"Retro",sty_light:"Claro",pk_none:"Sin stickers",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Fiesta",
 crew5:"¡Crew completa! Se apuntan 5+ personas 🎉",rxHint:"Mantén pulsado un mensaje para reaccionar 🔥",
@@ -507,7 +514,7 @@ mActT:n=>"Nachricht von "+n,repMsg:"Nachricht melden",blockU:n=>n+" blockieren",
 hiddenMsg:"Nachricht einer blockierten Person",repDrop:"Diesen Drop melden",repGroup:"Diese Gruppe melden",
 rot:"Halte dein Handy hochkant",dView:"ANSICHT:",dYou:"Du",dFr:"Freund mit Link",legal:"Entwurf – wird vor der Veröffentlichung geprüft",
 avMake:"✨ Erstell deinen Avatar",avT:"Dein Avatar",kSt:"Frisur",kSk:"Haut",kHr:"Haarfarbe",kEy:"Augen",kAc:"Extras",kBg:"Hintergrund",kRnd:"🎲 Zufall",kSave:"Avatar speichern",
-alT:"Album vom Treffen",alLock:"Öffnet sich zum Start des Drops. Jede Person aus der Crew kann bis zu 3 Fotos hinzufügen, und das Album verschwindet mit dem Drop.",alN:n=>n+(n==1?" Foto":" Fotos"),alHint:"Jede Person fügt bis zu 3 Fotos hinzu. Das Album verschwindet mit dem Drop – 24 Std. nach dem Start.",alAdd:"Hinzufügen",alLeft:n=>"noch "+n,alCol:"✨ Collage erstellen",alEmpty:"Noch leer – hier landen die Fotos der Crew.",alAdded:"Zum Album hinzugefügt 📸",alDel:"Foto löschen",alDeleted:"Foto gelöscht",repPhoto:"Foto melden",
+alT:"Album vom Treffen",alLock:"Öffnet sich zum Start des Drops. Jede Person aus der Crew kann 1 Foto hinzufügen, und das Album verschwindet mit dem Drop.",alN:n=>n+(n==1?" Foto":" Fotos"),alHint:"Jede Person fügt 1 Foto hinzu. Das Album verschwindet mit dem Drop – 24 Std. nach dem Start.",alAdd:"Hinzufügen",alLeft:n=>"noch "+n,alCol:"✨ Collage erstellen",alEmpty:"Noch leer – hier landen die Fotos der Crew.",alAdded:"Zum Album hinzugefügt 📸",alDel:"Foto löschen",alDeleted:"Foto gelöscht",repPhoto:"Foto melden",
 colT:"Collage vom Treffen",colTxt:ti=>`📸 ${ti} – war das geil! #SQUAD`,colTag:"📸 ALBUM VOM TREFFEN",colFoot:"der Drop verschwindet, die Erinnerungen bleiben",fmt_story:"Story 9:16",fmt_post:"Post 4:5",
 sty_neon:"Neon",sty_poster:"Poster",sty_retro:"Retro",sty_light:"Hell",pk_none:"Ohne Sticker",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Party",
 crew5:"Crew komplett! 5+ Leute sind dabei 🎉",rxHint:"Halte eine Nachricht gedrückt, um zu reagieren 🔥",
@@ -558,7 +565,7 @@ mActT:n=>"Message de "+n,repMsg:"Signaler le message",blockU:n=>"Bloquer "+n,rep
 hiddenMsg:"Message d'une personne bloquée",repDrop:"Signaler ce drop",repGroup:"Signaler ce groupe",
 rot:"Tiens ton téléphone à la verticale",dView:"VUE :",dYou:"Toi",dFr:"Pote avec le lien",legal:"Brouillon : sera vérifié avant publication",
 avMake:"✨ Crée ton avatar",avT:"Ton avatar",kSt:"Coiffure",kSk:"Peau",kHr:"Couleur des cheveux",kEy:"Yeux",kAc:"Accessoires",kBg:"Fond",kRnd:"🎲 Au hasard",kSave:"Enregistrer l'avatar",
-alT:"Album de la sortie",alLock:"Il s'ouvre au début du drop. Chaque membre de la team peut ajouter jusqu'à 3 photos, et l'album disparaît avec le drop.",alN:n=>n+(n==1?" photo":" photos"),alHint:"Chacun ajoute jusqu'à 3 photos. L'album disparaît avec le drop, 24 h après le début.",alAdd:"Ajouter",alLeft:n=>"encore "+n,alCol:"✨ Créer un collage",alEmpty:"Vide pour l'instant : la team ajoute ses photos ici.",alAdded:"Ajoutée à l'album 📸",alDel:"Supprimer la photo",alDeleted:"Photo supprimée",repPhoto:"Signaler la photo",
+alT:"Album de la sortie",alLock:"Il s'ouvre au début du drop. Chaque membre de la team peut ajouter 1 photo, et l'album disparaît avec le drop.",alN:n=>n+(n==1?" photo":" photos"),alHint:"Chacun ajoute 1 photo. L'album disparaît avec le drop, 24 h après le début.",alAdd:"Ajouter",alLeft:n=>"encore "+n,alCol:"✨ Créer un collage",alEmpty:"Vide pour l'instant : la team ajoute ses photos ici.",alAdded:"Ajoutée à l'album 📸",alDel:"Supprimer la photo",alDeleted:"Photo supprimée",repPhoto:"Signaler la photo",
 colT:"Collage de la sortie",colTxt:ti=>`📸 ${ti} – trop bien ! #SQUAD`,colTag:"📸 ALBUM DE LA SORTIE",colFoot:"le drop disparaît, les souvenirs restent",fmt_story:"Story 9:16",fmt_post:"Post 4:5",
 sty_neon:"Néon",sty_poster:"Affiche",sty_retro:"Rétro",sty_light:"Clair",pk_none:"Sans stickers",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Fête",
 crew5:"Team au complet ! 5+ personnes viennent 🎉",rxHint:"Appuie longtemps sur un message pour réagir 🔥",
@@ -609,7 +616,7 @@ mActT:n=>"Messaggio di "+n,repMsg:"Segnala messaggio",blockU:n=>"Blocca "+n,repT
 hiddenMsg:"Messaggio di una persona bloccata",repDrop:"Segnala questo drop",repGroup:"Segnala questo gruppo",
 rot:"Tieni il telefono in verticale",dView:"VISTA:",dYou:"Tu",dFr:"Amico con il link",legal:"Bozza: verrà controllata prima della pubblicazione",
 avMake:"✨ Crea il tuo avatar",avT:"Il tuo avatar",kSt:"Acconciatura",kSk:"Pelle",kHr:"Colore capelli",kEy:"Occhi",kAc:"Accessori",kBg:"Sfondo",kRnd:"🎲 A caso",kSave:"Salva avatar",
-alT:"Album dell'uscita",alLock:"Si apre all'inizio del drop. Ognuno della crew può aggiungere fino a 3 foto e l'album sparisce con il drop.",alN:n=>n+(n==1?" foto":" foto"),alHint:"Ognuno aggiunge fino a 3 foto. L'album sparisce con il drop, 24 h dopo l'inizio.",alAdd:"Aggiungi",alLeft:n=>"ancora "+n,alCol:"✨ Crea un collage",alEmpty:"Per ora è vuoto: qui la crew aggiunge le foto.",alAdded:"Aggiunta all'album 📸",alDel:"Elimina foto",alDeleted:"Foto eliminata",repPhoto:"Segnala foto",
+alT:"Album dell'uscita",alLock:"Si apre all'inizio del drop. Ognuno della crew può aggiungere 1 foto e l'album sparisce con il drop.",alN:n=>n+(n==1?" foto":" foto"),alHint:"Ognuno aggiunge 1 foto. L'album sparisce con il drop, 24 h dopo l'inizio.",alAdd:"Aggiungi",alLeft:n=>"ancora "+n,alCol:"✨ Crea un collage",alEmpty:"Per ora è vuoto: qui la crew aggiunge le foto.",alAdded:"Aggiunta all'album 📸",alDel:"Elimina foto",alDeleted:"Foto eliminata",repPhoto:"Segnala foto",
 colT:"Collage dell'uscita",colTxt:ti=>`📸 ${ti} – che serata! #SQUAD`,colTag:"📸 ALBUM DELL'USCITA",colFoot:"il drop sparisce, i ricordi restano",fmt_story:"Storia 9:16",fmt_post:"Post 4:5",
 sty_neon:"Neon",sty_poster:"Poster",sty_retro:"Retrò",sty_light:"Chiaro",pk_none:"Niente sticker",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Festa",
 crew5:"Crew al completo! Ci sono 5+ persone 🎉",rxHint:"Tieni premuto un messaggio per reagire 🔥",
@@ -660,7 +667,7 @@ mActT:n=>"Zpráva od: "+n,repMsg:"Nahlásit zprávu",blockU:n=>"Blokovat: "+n,re
 hiddenMsg:"Zpráva od blokovaného člověka",repDrop:"Nahlásit tento drop",repGroup:"Nahlásit tuto skupinu",
 rot:"Otoč telefon na výšku",dView:"POHLED:",dYou:"Ty",dFr:"Kamarád s odkazem",legal:"Koncept – před zveřejněním se zkontroluje",
 avMake:"✨ Vytvoř si avatara",avT:"Tvůj avatar",kSt:"Účes",kSk:"Pleť",kHr:"Barva vlasů",kEy:"Oči",kAc:"Doplňky",kBg:"Pozadí",kRnd:"🎲 Náhodně",kSave:"Uložit avatara",
-alT:"Album z akce",alLock:"Otevře se se začátkem dropu. Každý z party může přidat až 3 fotky a album zmizí s dropem.",alN:n=>n+(n==1?" fotka":n<5?" fotky":" fotek"),alHint:"Každý přidá až 3 fotky. Album zmizí s dropem – 24 h po začátku.",alAdd:"Přidat",alLeft:n=>"zbývá "+n,alCol:"✨ Udělat koláž",alEmpty:"Zatím prázdno – sem přidává fotky parta.",alAdded:"Přidáno do alba 📸",alDel:"Smazat fotku",alDeleted:"Fotka smazána",repPhoto:"Nahlásit fotku",
+alT:"Album z akce",alLock:"Otevře se se začátkem dropu. Každý z party může přidat 1 fotku a album zmizí s dropem.",alN:n=>n+(n==1?" fotka":n<5?" fotky":" fotek"),alHint:"Každý přidá 1 fotku. Album zmizí s dropem – 24 h po začátku.",alAdd:"Přidat",alLeft:n=>"zbývá "+n,alCol:"✨ Udělat koláž",alEmpty:"Zatím prázdno – sem přidává fotky parta.",alAdded:"Přidáno do alba 📸",alDel:"Smazat fotku",alDeleted:"Fotka smazána",repPhoto:"Nahlásit fotku",
 colT:"Koláž z akce",colTxt:ti=>`📸 ${ti} – to byla jízda! #SQUAD`,colTag:"📸 ALBUM Z AKCE",colFoot:"drop zmizí, vzpomínky zůstanou",fmt_story:"Story 9:16",fmt_post:"Příspěvek 4:5",
 sty_neon:"Neon",sty_poster:"Plakát",sty_retro:"Retro",sty_light:"Světlý",pk_none:"Bez nálepek",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Párty",
 crew5:"Parta je komplet! Jde 5+ lidí 🎉",rxHint:"Podrž zprávu a zareaguj 🔥",
@@ -711,7 +718,7 @@ mActT:n=>"Повідомлення від "+n,repMsg:"Поскаржитися �
 hiddenMsg:"Повідомлення від заблокованої людини",repDrop:"Поскаржитися на дроп",repGroup:"Поскаржитися на групу",
 rot:"Поверни телефон вертикально",dView:"ВИГЛЯД:",dYou:"Ти",dFr:"Друг із посиланням",legal:"Чернетка – буде перевірена перед публікацією",
 avMake:"✨ Створи свій аватар",avT:"Твій аватар",kSt:"Зачіска",kSk:"Шкіра",kHr:"Колір волосся",kEy:"Очі",kAc:"Аксесуари",kBg:"Фон",kRnd:"🎲 Випадково",kSave:"Зберегти аватар",
-alT:"Альбом зустрічі",alLock:"Відкривається на початку дропу. Кожен у компанії може додати до 3 фото, а альбом зникне разом із дропом.",alN:n=>n+" фото",alHint:"Кожен додає до 3 фото. Альбом зникне разом із дропом – через 24 год після початку.",alAdd:"Додати",alLeft:n=>"залишилось "+n,alCol:"✨ Зробити колаж",alEmpty:"Поки порожньо – сюди компанія додає фото.",alAdded:"Додано в альбом 📸",alDel:"Видалити фото",alDeleted:"Фото видалено",repPhoto:"Поскаржитися на фото",
+alT:"Альбом зустрічі",alLock:"Відкривається на початку дропу. Кожен у компанії може додати 1 фото, а альбом зникне разом із дропом.",alN:n=>n+" фото",alHint:"Кожен додає 1 фото. Альбом зникне разом із дропом – через 24 год після початку.",alAdd:"Додати",alLeft:n=>"залишилось "+n,alCol:"✨ Зробити колаж",alEmpty:"Поки порожньо – сюди компанія додає фото.",alAdded:"Додано в альбом 📸",alDel:"Видалити фото",alDeleted:"Фото видалено",repPhoto:"Поскаржитися на фото",
 colT:"Колаж зустрічі",colTxt:ti=>`📸 ${ti} – це було круто! #SQUAD`,colTag:"📸 АЛЬБОМ ЗУСТРІЧІ",colFoot:"дроп зникає, спогади залишаються",fmt_story:"Сторіс 9:16",fmt_post:"Пост 4:5",
 sty_neon:"Неон",sty_poster:"Постер",sty_retro:"Ретро",sty_light:"Світлий",pk_none:"Без стікерів",pk_hype:"🔥 Хайп",pk_chill:"✨ Чіл",pk_party:"🎉 Паті",
 crew5:"Компанія в зборі! Іде 5+ людей 🎉",rxHint:"Утримуй повідомлення, щоб відреагувати 🔥",
@@ -1184,25 +1191,34 @@ async function dropView(code){
   const closed=()=>Date.now()>=start,hAv=d.hostPh||(d.hostAv!=null?+d.hostAv:avIdx({id:d.hostId}));let wasC=closed();
   view(`<div class="scr">${logged?`<div class="hdr">${bk("/")}</div>`:`<div class="brand">SQUAD</div>`}
   ${isHost?"":`<div class="inv">${avc("l",hAv)}<span>${t("inv",esc(d.hostNick||"?"))}</span></div>`}
-  ${isHost?`<div class="lk"><div class="lt">${t("yourLink")}</div><div class="lr"><code>${url}</code><button id="cl">${t("copyShort")}</button></div></div>`:""}<div id="cb"></div>
+  <div id="cb"></div>
   <div id="rpl" ${isHost?"hidden":""}>
   <div class="asr" id="asr" ${sget("nick")?"":"hidden"}>${avc("mini",meAv())}<span>${t("asYou")} <b>${esc(sget("nick"))}</b></span><button class="lnk" id="chn">${t("change")}</button></div><input id="nick" placeholder="${t("nick")}…" maxlength="20" value="${esc(sget("nick"))}" ${sget("nick")?"hidden":""}>
   <h3>${t("quick")}</h3><div class="rsp ${closed()?"closed":""}" id="tr"><button class="rb in" data-s="in">${sv(BOLT)}<b>IN!</b></button><button class="rb late" data-s="late">${sv(CLK)}<b>LATE <small>${t("late15")}</small></b></button><button class="rb out" data-s="out">${sv(X)}<b>OUT</b></button></div>
   ${closed()?`<div class="note">${t("closed")}</div>`:""}</div>${isHost?`<div class="hostn">⭐ ${t("hostIn")}</div>`:""}
-  <button class="cta" id="oc" hidden style="margin-top:16px">${t("openC")}</button>
-  <button class="ghost" id="cal" hidden>📅 ${t("calBtn")}</button>
   <div id="alb"></div>
-  ${isHost&&!closed()?`<button class="ghost" id="edb">✏️ ${t("edBtn")}</button>`:""}
-  ${isHost?`<button class="ghost" id="sh">${sv(SI.share)}${t("share")}</button>`:""}
-  ${logged&&S.groups.size?`<button class="ghost" id="sg">${sv(I.grp.replace(/^<svg[^>]*>|<\/svg>$/g,""))}${t("toGrp")}</button>`:""}
+  <button id="oc" hidden></button><div id="chp" class="chp" hidden></div>
+  <div class="acts4">
+   <button id="cal" hidden><span>📅</span><small>${t("aCal")}</small></button>
+   ${logged&&S.groups.size?`<button id="sg"><span>👥</span><small>${t("aGrp")}</small></button>`:""}
+   ${isHost?`<button id="sh"><span>🔗</span><small>${t("aShare")}</small></button>`:""}
+   ${isHost&&!closed()?`<button id="edb"><span>✏️</span><small>${t("aEdit")}</small></button>`:""}
+  </div>
+  ${isHost?`<div class="lk lk2"><div class="lt">${t("yourLink")}</div><div class="lr"><code>${url}</code><button id="cl">${t("copyShort")}</button></div></div>`:""}
   <h3>${t("whereH")}</h3><div class="map">${!DEMO&&!hidden(d)?`<iframe loading="lazy" src="https://maps.google.com/maps?q=${encodeURIComponent(d.place)}&z=15&output=embed"></iframe>`:`<div class="pin">${PIN}</div>`}<div class="ml">${hidden(d)?t("surShown"):i14(PN)+" "+esc(d.place)}</div></div>
   ${isHost?`<button class="ghost danger" id="dx">${t("del")}</button>`:""}
   ${logged?"":getAppBox()}
   ${isHost?"":`<button class="lnk rep" id="rp">${sv(SI.flag)} ${t("repDrop")}</button>`}</div>`);
-  /* album wypadu: otwiera się na starcie, każdy do 3 zdjęć, znika razem z dropem */
+  /* podgląd czatu dropa: 3 ostatnie wiadomości + pole, które otwiera pełny czat */
+  let chpOn=false,CM=[];
+  const drawChp=()=>{const el=$("#chp");if(!el||el.hidden)return;const un=unreadOf({id:code});
+    el.innerHTML=`<div class="chph"><b>💬 ${t("chpT")}</b>${un?`<span class="bd bdi">${un}</span>`:""}<em>${t("chpAll")} ›</em></div>
+    ${CM.length?CM.map(m=>{const mm=m.authorId===me(),pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};return isBlk(m.authorId)&&!mm?"":`<div class="chpm${mm?" me":""}">${mm?"":avc("mini",avIdx(pp))}<p>${mm?"":`<b style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}</b> `}${m.drop?"🔥 "+esc(clean(m.drop.title||"")):esc(clean(m.text))}</p></div>`}).join(""):`<p class="mut chp0">${t("chpEmpty")}</p>`}
+    <div class="chpi">${t("chPh")}<span>➤</span></div>`;el.onclick=()=>{vib(8);go("/c/"+code)}};
+  /* album wypadu: otwiera się na starcie, każdy 1 zdjęcie, znika razem z dropem */
   const drawAlbum=()=>{const el=$("#alb");if(!el)return;
     if(!closed()){el.innerHTML=`<div class="albl"><b>📸 ${t("alT")}</b><small>${t("alLock")}</small></div>`;return}
-    const my=PH.filter(p=>p.authorId===me()),can=!!mine&&my.length<3;
+    const my=PH.filter(p=>p.authorId===me()),can=!!mine&&my.length<1;
     el.innerHTML=`<div class="sech"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span></div><p class="hint s">${t("alHint")}</p>
     <div class="agrid">${PH.map((p,i)=>`<button class="aph" data-i="${i}" style="--r:${(hs(p.id)%7)-3}deg"><img src="${esc(p.url)}" alt=""><span>${esc(p.nickname)}</span></button>`).join("")}${can?`<button class="aadd" id="aadd">${sv(SI.cam)}<b>${t("alAdd")}</b><small>${t("alLeft",3-my.length)}</small></button>`:""}</div>
     ${PH.length?`<button class="cta" id="col" style="margin-top:4px">${t("alCol")}</button>`:can?"":`<p class="mut">${t("alEmpty")}</p>`}<input type="file" id="af" accept="image/*" hidden>`;
@@ -1235,7 +1251,9 @@ async function dropView(code){
     mine=P.find(p=>p.id===me())||null;
     $("#cb").innerHTML=card({id:code,...d},P,false,logged?(isHost?"host":mine?mine.status:"inv"):null);tick();
     $("#tr").classList.toggle("has",!!mine);document.querySelectorAll(".rb").forEach(b=>b.classList.toggle("sel",mine?.status===b.dataset.s));const lsm=$(".rb.late small");if(lsm)lsm.textContent=t("lateN",mine?.status==="late"&&mine.etaMin?mine.etaMin:15);
-    $("#oc").hidden=!mine;{const c=$("#cal");if(c)c.hidden=!(isHost||(mine&&["in","late"].includes(mine.status)))}drawAlbum();
+    {const can=isHost||(mine&&["in","late"].includes(mine.status));const cp=$("#chp");if(cp){cp.hidden=!can;if(can&&!chpOn){chpOn=true;
+      unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt","desc"),limit(3)),q=>{CM=q.docs.map(x=>({id:x.id,...x.data()})).reverse();drawChp()},()=>{}))}drawChp()}}
+    {const c=$("#cal");if(c)c.hidden=!(isHost||(mine&&["in","late"].includes(mine.status)))}drawAlbum();
     const going=P.filter(p=>p.status!=="out").length;
     if(going>=5&&!sget("cf_"+code)){sset("cf_"+code,"1");setTimeout(()=>{confetti();sfx("party");vib([30,40,30,40,60]);toast(t("crew5"))},300)}
     if(isHost&&going>=5&&!sget("mg_"+code)){sset("mg_"+code,"1");bump("magnet")}
@@ -1361,7 +1379,7 @@ function cropPhoto(file,done){
   }).catch(()=>{URL.revokeObjectURL(src);toast(t("phErr"))})}
 
 /* ---------- TEKSTY NOWYCH FUNKCJI ---------- */
-Object.assign(L.pl,{alT:"Album wypadu",alLock:"Otworzy się na starcie dropa. Każdy z ekipy wrzuci do 3 zdjęć, a album zniknie razem z dropem.",alN:n=>n+" zdj.",alHint:"Każdy wrzuca do 3 zdjęć. Album znika razem z dropem – 24 h po starcie.",alAdd:"Dodaj",alLeft:n=>"jeszcze "+n,alCol:"✨ Zrób kolaż",alEmpty:"Jeszcze pusto – zdjęcia dodają osoby z ekipy.",alAdded:"Dodano do albumu 📸",alDel:"Usuń zdjęcie",alDeleted:"Zdjęcie usunięte",repPhoto:"Zgłoś zdjęcie",
+Object.assign(L.pl,{alT:"Album wypadu",alLock:"Otworzy się na starcie dropa. Każdy z ekipy wrzuci 1 zdjęcie, a album zniknie razem z dropem.",alN:n=>n+" zdj.",alHint:"Każdy wrzuca 1 zdjęcie – najlepsze z wypadu. Album znika razem z dropem – 24 h po starcie.",alAdd:"Dodaj",alLeft:n=>"jeszcze "+n,alCol:"✨ Zrób kolaż",alEmpty:"Jeszcze pusto – zdjęcia dodają osoby z ekipy.",alAdded:"Dodano do albumu 📸",alDel:"Usuń zdjęcie",alDeleted:"Zdjęcie usunięte",repPhoto:"Zgłoś zdjęcie",
 colT:"Kolaż z wypadu",colTxt:ti=>`📸 ${ti} – tak było! #SQUAD`,colTag:"📸 ALBUM WYPADU",colFoot:"drop znika, wspomnienia zostają",fmt_story:"Story 9:16",fmt_post:"Post 4:5",
 sty_neon:"Neon",sty_poster:"Plakat",sty_retro:"Retro",sty_light:"Jasny",pk_none:"Bez naklejek",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Party",
 crew5:"Ekipa w komplecie! 5+ osób wbija 🎉",rxHint:"Przytrzymaj wiadomość, żeby zareagować 🔥",
@@ -1370,7 +1388,7 @@ b_first:"Pierwszy drop",bd_first:"Stwórz swój pierwszy drop",b_firstIn:"Pierws
 b_always:"Zawsze IN",bd_always:"Odpowiedz IN 5 razy i ani razu OUT",b_late:"Wieczne LATE",bd_late:"Odpowiedz LATE 5 razy",b_boss:"Mózg operacji",bd_boss:"Stwórz 5 dropów",
 b_magnet:"Magnes na ekipę",bd_magnet:"Zbierz 5 osób na swój drop",b_crew:"Własna ekipa",bd_crew:"Załóż pierwszą grupę",b_photo:"Paparazzi",bd_photo:"Wrzuć 5 zdjęć do albumów",
 b_chat:"Gaduła",bd_chat:"Napisz 50 wiadomości",b_night:"Po zmroku",bd_night:"Stwórz drop, który startuje po 22:00",b_surprise:"Tajemnica",bd_surprise:"Stwórz drop z miejscem niespodzianką"});
-Object.assign(L.en,{alT:"Hangout album",alLock:"Opens when the drop starts. Everyone in the crew can add up to 3 photos, and the album disappears with the drop.",alN:n=>n+(n==1?" photo":" photos"),alHint:"Everyone adds up to 3 photos. The album disappears with the drop – 24 h after the start.",alAdd:"Add",alLeft:n=>n+" left",alCol:"✨ Make a collage",alEmpty:"Empty for now – people in the crew add photos here.",alAdded:"Added to the album 📸",alDel:"Delete photo",alDeleted:"Photo deleted",repPhoto:"Report photo",
+Object.assign(L.en,{alT:"Hangout album",alLock:"Opens when the drop starts. Everyone in the crew can add 1 photo, and the album disappears with the drop.",alN:n=>n+(n==1?" photo":" photos"),alHint:"Everyone adds 1 photo – their best shot. The album disappears with the drop – 24 h after the start.",alAdd:"Add",alLeft:n=>n+" left",alCol:"✨ Make a collage",alEmpty:"Empty for now – people in the crew add photos here.",alAdded:"Added to the album 📸",alDel:"Delete photo",alDeleted:"Photo deleted",repPhoto:"Report photo",
 colT:"Hangout collage",colTxt:ti=>`📸 ${ti} – what a time! #SQUAD`,colTag:"📸 HANGOUT ALBUM",colFoot:"the drop disappears, the memories stay",fmt_story:"Story 9:16",fmt_post:"Post 4:5",
 sty_neon:"Neon",sty_poster:"Poster",sty_retro:"Retro",sty_light:"Light",pk_none:"No stickers",pk_hype:"🔥 Hype",pk_chill:"✨ Chill",pk_party:"🎉 Party",
 crew5:"Full crew! 5+ people are in 🎉",rxHint:"Press and hold a message to react 🔥",
@@ -1700,6 +1718,7 @@ Object.assign(L.pl,{calBtn:"Dodaj do kalendarza",calG:"Kalendarz Google",calI:"K
 Object.assign(L.pl,{toGrp:"Wyślij do grupy",toGrpD:"Drop pojawi się w czacie grupy, a wszyscy dostaną powiadomienie.",toGrpOk:"Wysłane do grupy 🔥"});Object.assign(L.en,{toGrp:"Send to a group",toGrpD:"The drop shows up in the group chat and everyone gets a notification.",toGrpOk:"Sent to the group 🔥"});Object.assign(L.es,{toGrp:"Enviar a un grupo",toGrpD:"El drop aparecerá en el chat del grupo y todos recibirán una notificación.",toGrpOk:"Enviado al grupo 🔥"});Object.assign(L.de,{toGrp:"An Gruppe senden",toGrpD:"Der Drop erscheint im Gruppenchat und alle bekommen eine Benachrichtigung.",toGrpOk:"An die Gruppe gesendet 🔥"});Object.assign(L.fr,{toGrp:"Envoyer à un groupe",toGrpD:"Le drop apparaît dans le chat du groupe et tout le monde reçoit une notification.",toGrpOk:"Envoyé au groupe 🔥"});Object.assign(L.it,{toGrp:"Invia a un gruppo",toGrpD:"Il drop appare nella chat del gruppo e tutti ricevono una notifica.",toGrpOk:"Inviato al gruppo 🔥"});Object.assign(L.cs,{toGrp:"Poslat do skupiny",toGrpD:"Drop se objeví v chatu skupiny a všichni dostanou upozornění.",toGrpOk:"Odesláno do skupiny 🔥"});Object.assign(L.uk,{toGrp:"Надіслати в групу",toGrpD:"Дроп з'явиться в чаті групи, і всі отримають сповіщення.",toGrpOk:"Надіслано в групу 🔥"});
 Object.assign(L.pl,{err:"Coś poszło nie tak, spróbuj jeszcze raz"});Object.assign(L.en,{err:"Something went wrong, try again"});Object.assign(L.es,{err:"Algo salió mal, inténtalo de nuevo"});Object.assign(L.de,{err:"Etwas ist schiefgelaufen, versuch es nochmal"});Object.assign(L.fr,{err:"Un problème est survenu, réessaie"});Object.assign(L.it,{err:"Qualcosa è andato storto, riprova"});Object.assign(L.cs,{err:"Něco se pokazilo, zkus to znovu"});Object.assign(L.uk,{err:"Щось пішло не так, спробуй ще раз"});
 Object.assign(L.pl,{live2:"trwa"});Object.assign(L.en,{live2:"live"});Object.assign(L.es,{live2:"en curso"});Object.assign(L.de,{live2:"läuft"});Object.assign(L.fr,{live2:"en cours"});Object.assign(L.it,{live2:"in corso"});Object.assign(L.cs,{live2:"probíhá"});Object.assign(L.uk,{live2:"триває"});
+Object.assign(L.pl,{aCal:"Kalendarz",aGrp:"Do grupy",aShare:"Udostępnij",aEdit:"Edytuj",chpT:"Czat dropa",chpAll:"Cały czat",chpEmpty:"Nikt jeszcze nic nie napisał – zacznij 👋"});Object.assign(L.en,{aCal:"Calendar",aGrp:"To group",aShare:"Share",aEdit:"Edit",chpT:"Drop chat",chpAll:"Open chat",chpEmpty:"Nobody's written yet – say hi 👋"});Object.assign(L.es,{aCal:"Calendario",aGrp:"A grupo",aShare:"Compartir",aEdit:"Editar",chpT:"Chat del drop",chpAll:"Abrir chat",chpEmpty:"Nadie ha escrito aún: saluda 👋"});Object.assign(L.de,{aCal:"Kalender",aGrp:"An Gruppe",aShare:"Teilen",aEdit:"Bearbeiten",chpT:"Drop-Chat",chpAll:"Zum Chat",chpEmpty:"Noch hat niemand geschrieben – sag hallo 👋"});Object.assign(L.fr,{aCal:"Agenda",aGrp:"Au groupe",aShare:"Partager",aEdit:"Modifier",chpT:"Chat du drop",chpAll:"Ouvrir le chat",chpEmpty:"Personne n'a encore écrit – lance-toi 👋"});Object.assign(L.it,{aCal:"Calendario",aGrp:"Al gruppo",aShare:"Condividi",aEdit:"Modifica",chpT:"Chat del drop",chpAll:"Apri chat",chpEmpty:"Nessuno ha ancora scritto: saluta 👋"});Object.assign(L.cs,{aCal:"Kalendář",aGrp:"Do skupiny",aShare:"Sdílet",aEdit:"Upravit",chpT:"Chat dropu",chpAll:"Otevřít chat",chpEmpty:"Zatím nikdo nepsal – pozdrav 👋"});Object.assign(L.uk,{aCal:"Календар",aGrp:"У групу",aShare:"Поділитися",aEdit:"Змінити",chpT:"Чат дропу",chpAll:"Відкрити чат",chpEmpty:"Ще ніхто не писав – привітайся 👋"});
 /* ---------- WYŚLIJ DROP DO GRUPY (karta w czacie grupy + powiadomienie) ---------- */
 function sendToGroup(d,code){vib(10);const G=[...S.groups.values()];
   const s=sheet(`<h2>${t("toGrp")}</h2><p class="hint">${t("toGrpD")}</p><div class="acts">${G.map(g=>`<button data-g="${esc(g.id)}">👥 ${esc(clean(g.name))}</button>`).join("")}<button data-g="">${t("cancel")}</button></div>`);
