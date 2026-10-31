@@ -895,7 +895,7 @@ function route(){const p=gp(),m=r=>p.match(r),d=m(/^\/d\/(\w+)/),c=m(/^\/c\/(\w+
   else if(p==="/new")newView();else if(p==="/n")notifView();else if(p==="/chats")chatsView();else if(p==="/me")profileView();else if(p==="/blocked")blockedView();
   else if(["/terms","/privacy","/safety"].includes(p))legalView(p.slice(1));else home()}
 let first=true;
-onAuthStateChanged(auth,async()=>{watch();const u=auth.currentUser;if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;await loadProfile(u);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous){setTimeout(()=>enablePush(false),2000);if(!window.__visP){window.__visP=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden&&auth.currentUser&&!auth.currentUser.isAnonymous)enablePush(false)})}}});
+onAuthStateChanged(auth,async()=>{watch();const u=auth.currentUser;if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;await loadProfile(u);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous){setTimeout(()=>enablePush(false),2000);if(!window.__visP){window.__visP=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden&&auth.currentUser&&!auth.currentUser.isAnonymous){enablePush(false);setTimeout(()=>{if(pushState()==="granted"){document.getElementById("pcard")?.remove();document.getElementById("pscr")?.remove()}},800)}})}}});
 if("serviceWorker"in navigator&&!DEMO)navigator.serviceWorker.register("/sw.js").catch(()=>{});
 document.documentElement.lang=LANG;document.body.insertAdjacentHTML("beforeend",`<div id="rot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>${t("rot")}</span></div>`);
 if(DEMO){document.body.classList.add("demo");A.insertAdjacentHTML("beforebegin",`<div id="demo"><small>${t("dView")}</small><button onclick="__host()">${sv('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}${t("dYou")}<b class="bd" id="bdh" hidden></b></button><button onclick="__friend()">${sv('<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>')}${t("dFr")}</button></div>`);
@@ -1565,16 +1565,17 @@ Object.assign(L.pl,{pnE1:"Nowe wiadomości od ekipy",pnE2:"Zaproszenia na dropy"
 /* natychmiastowe powiadomienia: serwer Cloudflare (adres w config.js → pushUrl) */
 const pushNow=b=>{try{const U=FB.__c&&FB.__c.pushUrl,u=auth.currentUser;if(DEMO||!U||!u)return;u.getIdToken().then(tk=>fetch(U.replace(/\/$/,"")+"/notify",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tk},body:JSON.stringify(b)})).catch(()=>{})}catch{}};
 /* ---------- PROŚBA O POWIADOMIENIA (musi być od razu w kliknięciu – inaczej iPhone/Chrome ją ignorują) ---------- */
-const pushState=()=>{if(DEMO)return/[?&]pushdemo/.test(location.search)?"default":"off";const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isTWA=()=>{try{if(document.referrer.indexOf("android-app://")===0)sset("twa","1")}catch{}return sget("twa")==="1"};
+const pushState=()=>{if(DEMO)return/[?&]pushdemo/.test(location.search)?"default":"off";if(isTWA()&&(!("Notification"in window)||Notification.permission!=="granted"))return"twa";const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
   if(!("Notification"in window))return ios&&!st?"ios":"none";return Notification.permission};
-function askPush(){const st=pushState();
+function askPush(){const st=pushState();if(st==="twa"){sset("pnAsk","twa");location.href="intent://push#Intent;scheme=squadapp;package=com.cubemobilegames.squad;end";return}
   if(st==="ios"){sheet(`<div class="bbig"><img src="/e/bell.webp" alt="" style="width:84px;height:84px"></div><h2>${t("pnT")}</h2><p class="hint">${t("pnIos")}</p>`);return}
   if(st==="none"||st==="off")return;if(st==="denied"){toast(t("pushBlocked"));return}
   if(st==="granted"){enablePush(true);return}
   try{Notification.requestPermission().then(p=>{sset("pnAsk",String(Date.now()));if(p==="granted")enablePush(true);else if(p==="denied")toast(t("pushBlocked"));if(redraw)redraw()})}catch(e){}}
 
 /* pełny ekran: prośba o powiadomienia przy pierwszym uruchomieniu (po zalogowaniu) */
-function pushScreen(){const st=pushState();if(!["default","ios"].includes(st)||sget("pnAsk")||document.getElementById("pscr"))return;
+function pushScreen(){const st=pushState();if(!["default","ios","twa"].includes(st)||(sget("pnAsk")&&st!=="twa")||(st==="twa"&&Date.now()-(+sget("pnX")||0)<3*864e5)||document.getElementById("pscr"))return;
   sset("pnAsk","shown");const el=document.createElement("div");el.className="pscr";el.id="pscr";
   el.innerHTML=`<div class="pbx"><img class="pbell" src="/e/bell.webp" alt=""><h1>${t("pnT")}</h1><p>${st==="ios"?t("pnIos"):t("pnD")}</p>
   <div class="pex"><div><img src="/e/chat.webp" alt=""><span>${t("pnE1")}</span></div><div><img src="/e/party.webp" alt=""><span>${t("pnE2")}</span></div><div><img src="/e/clock.webp" alt=""><span>${t("pnE3")}</span></div></div>
@@ -1582,14 +1583,14 @@ function pushScreen(){const st=pushState();if(!["default","ios"].includes(st)||s
   document.body.append(el);vib(15);
   const y=el.querySelector("#pyes");if(y)y.onclick=()=>{vib(15);askPush();el.remove()};
   el.querySelector("#pno").onclick=()=>{sset("pnX",String(Date.now()));el.remove()}}
-const pushCard=()=>{const st=pushState();if(!["default","ios"].includes(st))return"";const last=+sget("pnX")||0;if(Date.now()-last<3*864e5)return"";
+const pushCard=()=>{const st=pushState();if(!["default","ios","twa"].includes(st))return"";const last=+sget("pnX")||0;if(Date.now()-last<3*864e5)return"";
   return`<div class="pcard" id="pcard"><img src="/e/bell.webp" alt=""><div><b>${t("pnT")}</b><small>${t("pnD")}</small></div><button class="mbtn" id="pon">${t("pnBtn")}</button><button class="px" id="pnx" aria-label="✕">✕</button></div>`};
 const bindPushCard=()=>{const b=$("#pon");if(b)b.onclick=()=>{vib(12);askPush();const c=$("#pcard");if(c&&pushState()!=="ios")c.remove()};const x=$("#pnx");if(x)x.onclick=()=>{sset("pnX",String(Date.now()));$("#pcard")?.remove()}};
 
 
 Object.assign(L.pl,{ptBtn:"🔔 Wyślij testowe powiadomienie",ptIng:"Sprawdzam powiadomienia…",ptOk:"Wysłane ✓ – powiadomienie przyjdzie za chwilę",ptFail:"Nie udało się"});Object.assign(L.en,{ptBtn:"🔔 Send a test notification",ptIng:"Checking notifications…",ptOk:"Sent ✓ – the notification will arrive in a moment",ptFail:"Didn't work"});Object.assign(L.es,{ptBtn:"🔔 Enviar notificación de prueba",ptIng:"Comprobando notificaciones…",ptOk:"Enviada ✓ – llegará en un momento",ptFail:"No ha funcionado"});Object.assign(L.de,{ptBtn:"🔔 Test-Benachrichtigung senden",ptIng:"Prüfe Benachrichtigungen…",ptOk:"Gesendet ✓ – kommt gleich an",ptFail:"Hat nicht geklappt"});Object.assign(L.fr,{ptBtn:"🔔 Envoyer une notification test",ptIng:"Vérification des notifications…",ptOk:"Envoyée ✓ – elle arrive dans un instant",ptFail:"Ça n'a pas marché"});Object.assign(L.it,{ptBtn:"🔔 Invia notifica di prova",ptIng:"Controllo le notifiche…",ptOk:"Inviata ✓ – arriva tra un attimo",ptFail:"Non ha funzionato"});Object.assign(L.cs,{ptBtn:"🔔 Poslat testovací upozornění",ptIng:"Kontroluji upozornění…",ptOk:"Odesláno ✓ – za chvíli dorazí",ptFail:"Nepovedlo se"});Object.assign(L.uk,{ptBtn:"🔔 Надіслати тестове сповіщення",ptIng:"Перевіряю сповіщення…",ptOk:"Надіслано ✓ – за мить прийде",ptFail:"Не вдалося"});
 /* test powiadomień z profilu: zapisuje telefon i wysyła powiadomienie do siebie */
-async function pushTest(){vib(12);const st=pushState();if(st==="ios"){askPush();return}
+async function pushTest(){vib(12);const st=pushState();if(st==="ios"||st==="twa"){askPush();return}
   if(st==="default"){try{const p=await Notification.requestPermission();if(p!=="granted"){toast(t("pushBlocked"));return}}catch{}}
   if(st==="denied"){toast(t("pushBlocked"));return}
   toast(t("ptIng"));window.__pushOk=0;sset("pushTok","");await enablePush(false);

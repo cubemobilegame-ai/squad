@@ -72,5 +72,68 @@ const mf = "build-android/app/src/main/AndroidManifest.xml";
 let mx = fs.readFileSync(mf, "utf8");
 if (!mx.includes("android.permission.POST_NOTIFICATIONS")) { mx = mx.replace(/<application/, '<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <application'); fs.writeFileSync(mf, mx); }
 console.log("Natywna prośba o powiadomienia: dodana");
+// Przycisk „Włącz powiadomienia” na stronie -> squadapp://push -> natywne okienko zgody albo ustawienia powiadomień SQUAD
+fs.writeFileSync(`${pkgDir}/PushPermActivity.java`, `package ${app.packageId};
+
+import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+
+public class PushPermActivity extends Activity {
+    private static final String PERM = "android.permission.POST_NOTIFICATIONS";
+
+    @Override
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(PERM) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{PERM}, 8);
+            return;
+        }
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (nm != null && !nm.areNotificationsEnabled()) openSettings();
+        finish();
+    }
+
+    private void openSettings() {
+        try {
+            Intent i = new Intent("android.settings.APP_NOTIFICATION_SETTINGS");
+            i.putExtra("android.provider.extra.APP_PACKAGE", getPackageName());
+            i.putExtra("app_package", getPackageName());
+            i.putExtra("app_uid", getApplicationInfo().uid);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+        } catch (Exception e) {
+            try {
+                Intent i = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS", android.net.Uri.parse("package:" + getPackageName()));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            } catch (Exception ignored) {}
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int code, String[] perms, int[] res) {
+        super.onRequestPermissionsResult(code, perms, res);
+        boolean ok = res.length > 0 && res[0] == PackageManager.PERMISSION_GRANTED;
+        if (!ok && Build.VERSION.SDK_INT >= 33 && !shouldShowRequestPermissionRationale(PERM)) openSettings();
+        finish();
+    }
+}
+`);
+{ let m2 = fs.readFileSync(mf, "utf8");
+  m2 = m2.replace(/<\/application>/, `    <activity android:name=".PushPermActivity" android:exported="true" android:excludeFromRecents="true" android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="squadapp" android:host="push" />
+            </intent-filter>
+        </activity>
+    </application>`);
+  fs.writeFileSync(mf, m2); console.log("PushPermActivity: dodana"); }
+
 fs.writeFileSync("build-android/twa-manifest.json", JSON.stringify(m.toJson ? m.toJson() : m, null, 2));
 console.log("Projekt Androida gotowy:", app.packageId, m.appVersionName, "(" + m.appVersionCode + ")");
