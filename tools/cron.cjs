@@ -45,7 +45,7 @@ async function user(uid) {
   }
   return users.get(uid);
 }
-let sent = 0;
+let sent = 0, failed = 0;
 async function notify(uids, kind, build, link) {
   for (const uid of [...new Set(uids)].filter(Boolean)) {
     const u = await user(uid);
@@ -56,8 +56,9 @@ async function notify(uids, kind, build, link) {
       webpush: { fcmOptions: { link: BASE + link }, notification: { icon: "/icon-192.png", badge: "/icon-192.png", tag: link, renotify: true } },
     }).catch((e) => { console.warn("FCM", e.message); return { responses: [] }; });
     r.responses.forEach((x, i) => {
-      if (x.success) sent++;
-      else if (/not-registered|invalid-registration|invalid-argument/.test((x.error && x.error.code) || "")) u.toks[i].ref.delete().catch(() => {});
+      if (x.success) { sent++; return; }
+      failed++; console.log("::warning::FCM " + ((x.error && x.error.code) || "") + " " + ((x.error && x.error.message) || "").slice(0, 120));
+      if (/not-registered|invalid-registration|invalid-argument/.test((x.error && x.error.code) || "")) u.toks[i].ref.delete().catch(() => {});
     });
   }
 }
@@ -138,6 +139,8 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
 
   });
   await metaRef.set({ last: until, at: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
+  const tokCount=(await db.collectionGroup("tokens").count().get().catch(()=>null))?.data().count;
+  console.log(`::notice::Wiadomości ${msgs.length} · odpowiedzi ${reps.length} · wysłane push ${sent} · nieudane ${failed} · zapisane telefony (tokeny) ${tokCount ?? "?"}`);
   console.log(`Wiadomości: ${msgs.length}, odpowiedzi: ${reps.length}, dołączenia: ${joins.length}, zmiany: ${edits.length}, przypomnienia: ${soon.length}, usunięte dropy: ${old.length}, wysłane push: ${sent}`);
   if (errs.length === 6) { console.log('::error::Żadna część automatu nie zadziałała'); process.exit(1); }
   process.exit(0);
