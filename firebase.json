@@ -36,6 +36,14 @@
     ],
     "rewrites": [
       {
+        "source": "/delete-account",
+        "destination": "/usun-konto.html"
+      },
+      {
+        "source": "/usun-konto",
+        "destination": "/usun-konto.html"
+      },
+      {
         "source": "/g/**",
         "destination": "/grupa.html"
       },
