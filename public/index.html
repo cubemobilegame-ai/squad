@@ -1496,10 +1496,12 @@ Object.assign(L.en,{upIng:"Uploading photo…",upErr:"Couldn't upload the photo.
 const putImg=async(path,dataUrl)=>{if(DEMO||!stor)return dataUrl;const r=FB.ref(stor,path);await FB.uploadString(r,dataUrl,"data_url",{contentType:"image/jpeg",cacheControl:"public,max-age=31536000"});return FB.getDownloadURL(r)};
 const delImg=path=>{if(DEMO||!stor)return;FB.deleteObject(FB.ref(stor,path)).catch(()=>{})};
 let syncT=0;const syncSoon=()=>{clearTimeout(syncT);syncT=setTimeout(saveProfile,2500)};
-async function enablePush(ask){if(DEMO||!("Notification"in window)||!("serviceWorker"in navigator))return;
-  if(!FB.getMessaging){try{Object.assign(FB,await import(window.__fbg+"firebase-messaging.js"))}catch(e){return}}
-  const u=auth.currentUser;if(!u||u.isAnonymous||!FB.__c.vapidKey||/WKLEJ/.test(FB.__c.vapidKey))return;
-  try{if(FB.isSupported&&!(await FB.isSupported()))return;
+async function enablePush(ask){if(DEMO)return;const u=auth.currentUser;if(!u||u.isAnonymous)return;
+  const why=r=>{setDoc(doc(db,"users",u.uid),{pushErr:r+" · "+(matchMedia("(display-mode: standalone)").matches?"aplikacja":"przeglądarka")+" · "+navigator.userAgent.slice(0,90)+" @"+new Date().toISOString()},{merge:true}).catch(()=>{})};
+  if(!("Notification"in window))return why("brak Notification (iPhone w Safari – trzeba otworzyć z ikony na ekranie początkowym)");if(!("serviceWorker"in navigator))return why("brak serviceWorker");
+  if(!FB.getMessaging){try{Object.assign(FB,await import(window.__fbg+"firebase-messaging.js"))}catch(e){return why("nie wczytano messaging: "+(e?.message||e))}}
+  if(!FB.__c.vapidKey||/WKLEJ/.test(FB.__c.vapidKey))return why("brak vapidKey");
+  try{if(FB.isSupported&&!(await FB.isSupported()))return why("isSupported=false");
     let p=Notification.permission;if(p==="default"&&ask)p=await Notification.requestPermission();if(p!=="granted")setDoc(doc(db,"users",u.uid),{pushErr:"zgoda: "+p+" @"+new Date().toISOString()},{merge:true}).catch(()=>{});
     if(p==="denied"&&ask){toast(t("pushBlocked"));return}if(p!=="granted")return;
     const reg=await navigator.serviceWorker.register("/sw.js");await navigator.serviceWorker.ready;
