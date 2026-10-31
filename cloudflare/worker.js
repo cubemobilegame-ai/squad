@@ -89,7 +89,7 @@ async function notify(env, db, uids, kind, build, link, from) {
     await Promise.all(toks.map(async (t) => {
       const r = await fetch(`https://fcm.googleapis.com/v1/projects/${env.PID}/messages:send`, {
         method: "POST", headers: { Authorization: "Bearer " + (await access(env.SA)), "Content-Type": "application/json" },
-        body: JSON.stringify({ message: { token: t.id, notification: { title, body }, data: { url: link }, ...(t.native ? { android: { priority: "HIGH", notification: { channel_id: "squad", sound: "default", tag: link, default_vibrate_timings: true, color: "#FF4F86", icon: "ic_stat_squad", notification_priority: "PRIORITY_HIGH" } } } : {}),
+        body: JSON.stringify(t.native && verGE(t.v, "1.0.7") ? { message: { token: t.id, data: { title, body, url: link, tag: link, icon }, android: { priority: "HIGH", ttl: "86400s" } } } : { message: { token: t.id, notification: { title, body }, data: { url: link }, ...(t.native ? { android: { priority: "HIGH", notification: { channel_id: "squad", sound: "default", tag: link, default_vibrate_timings: true, color: "#FF4F86", icon: "ic_stat_squad", notification_priority: "PRIORITY_HIGH" } } } : {}),
           webpush: { headers: { Urgency: "high", TTL: "86400" }, fcm_options: { link: `https://${env.PID}.web.app${link}` },
             notification: { icon, badge: `https://${env.PID}.web.app/badge-96.png`, tag: link, renotify: true, vibrate: [200, 100, 200], silent: false, timestamp: Date.now() } } } }),
       });
@@ -99,6 +99,7 @@ async function notify(env, db, uids, kind, build, link, from) {
   }));
   return sent;
 }
+const verGE = (v, min) => { const a = String(v || "0").split(".").map(Number), b = min.split(".").map(Number); for (let i = 0; i < 3; i++) { if ((a[i] || 0) !== b[i]) return (a[i] || 0) > b[i]; } return true; };
 const hhmm = (ms) => new Date(ms).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
 const isCode = (s) => typeof s === "string" && /^[A-Za-z0-9_-]{3,40}$/.test(s);
 

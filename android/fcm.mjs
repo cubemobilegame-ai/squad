@@ -15,7 +15,7 @@ if (rootG) {
 }
 const appG = `${B}/app/build.gradle`;
 let a = fs.readFileSync(appG, "utf8");
-if (!a.includes("firebase-messaging")) a = a.replace(/dependencies\s*\{/, "dependencies {\n    implementation platform('com.google.firebase:firebase-bom:33.5.1')\n    implementation 'com.google.firebase:firebase-messaging'");
+if (!a.includes("firebase-messaging")) a = a.replace(/dependencies\s*\{/, "dependencies {\n    implementation platform('com.google.firebase:firebase-bom:33.5.1')\n    implementation 'com.google.firebase:firebase-messaging'\n    implementation 'androidx.core:core:1.12.0'");
 if (!a.includes("com.google.gms.google-services")) a += "\napply plugin: 'com.google.gms.google-services'\n";
 fs.writeFileSync(appG, a);
 
@@ -113,4 +113,90 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
     }
 }
 `);
+
+// 4) Własna usługa powiadomień: kto napisał + treść + okrągły awatar nadawcy, logo SQUAD w pasku
+fs.writeFileSync(`${pkgDir}/SquadMessagingService.java`, `package ${app.packageId};
+
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.media.RingtoneManager;
+import android.os.Build;
+import androidx.core.app.NotificationCompat;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
+
+public class SquadMessagingService extends FirebaseMessagingService {
+    @Override
+    public void onMessageReceived(RemoteMessage msg) {
+        Map<String, String> d = msg.getData();
+        String title = d.get("title"), body = d.get("body"), url = d.get("url"), tag = d.get("tag"), icon = d.get("icon");
+        if (title == null && msg.getNotification() != null) { title = msg.getNotification().getTitle(); body = msg.getNotification().getBody(); }
+        if (title == null) return;
+        if (tag == null) tag = url != null ? url : "squad";
+        Intent i = new Intent(this, LauncherActivity.class);
+        i.setAction(Intent.ACTION_VIEW);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (url != null) i.putExtra("url", url);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0);
+        PendingIntent pi = PendingIntent.getActivity(this, tag.hashCode(), i, flags);
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this, "squad")
+            .setSmallIcon(R.drawable.ic_stat_squad)
+            .setColor(0xFFFF4F86)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setContentIntent(pi);
+        Bitmap av = round(load(icon));
+        if (av != null) b.setLargeIcon(av);
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (nm != null) nm.notify(tag, 1, b.build());
+    }
+
+    private Bitmap load(String u) {
+        if (u == null || !u.startsWith("https://")) return null;
+        try {
+            HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
+            c.setConnectTimeout(4000); c.setReadTimeout(4000); c.setInstanceFollowRedirects(true);
+            try (InputStream in = c.getInputStream()) { return BitmapFactory.decodeStream(in); }
+        } catch (Exception e) { return null; }
+    }
+
+    private Bitmap round(Bitmap s) {
+        if (s == null) return null;
+        int n = Math.min(s.getWidth(), s.getHeight());
+        Bitmap o = Bitmap.createBitmap(n, n, Bitmap.Config.ARGB_8888);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setShader(new BitmapShader(s, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        new Canvas(o).drawCircle(n / 2f, n / 2f, n / 2f, p);
+        return o;
+    }
+
+    @Override
+    public void onNewToken(String token) {
+        getSharedPreferences("squad", MODE_PRIVATE).edit().putString("fcm", token).apply();
+    }
+}
+`);
+let m2 = fs.readFileSync(mf, "utf8");
+if (!m2.includes("SquadMessagingService")) m2 = m2.replace(/<\/application>/, `    <service android:name=".SquadMessagingService" android:exported="false">
+            <intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT" /></intent-filter>
+        </service>
+    </application>`);
+fs.writeFileSync(mf, m2);
 console.log("Natywne powiadomienia FCM: dodane");
