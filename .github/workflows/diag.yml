@@ -12,4 +12,5 @@ jobs:
           echo "$SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           npm install --prefix tools --no-audit --no-fund >/dev/null
           node tools/backfill-uid.cjs
+          node tools/who.cjs
           node tools/diag.cjs
