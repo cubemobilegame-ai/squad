@@ -83,12 +83,12 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .m.me{align-self:flex-end;flex-direction:row-reverse}.m.me>div{background:rgba(var(--accr),.22);border-radius:18px 18px 4px 18px}
 .chl .chtop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 8px}
 .chf{display:flex;gap:8px;margin:16px 0 8px}.chf button{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:rgba(255,255,255,.75);border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.chf button.on{background:var(--acc);border-color:var(--acc);color:#0b0b10}
-.cr{display:flex;align-items:center;gap:13px;padding:11px 4px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06)}.cr:last-child{border-bottom:0}.cr:active{opacity:.7}
-.cr .cav{width:52px;height:52px;flex:none;border-radius:17px}.crm{flex:1;min-width:0}
+.chrow{display:flex;align-items:center;gap:13px;padding:11px 4px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06)}.chrow:last-child{border-bottom:0}.chrow:active{opacity:.7}
+.chrow .cav{width:52px;height:52px;flex:none;border-radius:17px}.crm{flex:1;min-width:0}
 .cr1{display:flex;align-items:baseline;gap:8px}.cr1 b{flex:1;min-width:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cr1 time{flex:none;font-size:12px;font-weight:700;color:rgba(255,255,255,.45)}
 .cr2{display:flex;align-items:center;gap:7px;margin-top:3px}.cr2 small{flex:1;min-width:0;color:rgba(255,255,255,.55);font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cr2 small em{font-style:normal;color:rgba(255,255,255,.8)}.cr2 small i{font-style:normal;opacity:.7}
-.cr .ctag{flex:none;font-size:10.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}.cr .ctag.d{background:rgba(255,120,60,.16);color:#ffb38a}
-.cr.un .cr1 b{color:#fff}.cr.un .cr2 small{color:#fff}.cr.un .cr1 time{color:var(--acc)}.cr .bdi{position:static;display:grid;flex:none}
+.chrow .ctag{flex:none;font-size:10.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}.chrow .ctag.d{background:rgba(255,120,60,.16);color:#ffb38a}
+.chrow.un .cr1 b{color:#fff}.chrow.un .cr2 small{color:#fff}.chrow.un .cr1 time{color:var(--acc)}.chrow .bdi{position:static;display:grid;flex:none}
 .hostn{margin:14px 0 4px;padding:12px 14px;border-radius:14px;background:rgba(var(--accr),.12);font-weight:800;font-size:14px}
 .dsep{display:flex;justify-content:center;margin:14px 0 8px}.dsep span{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.55);background:rgba(255,255,255,.07);padding:5px 12px;border-radius:999px}
 .m.cont{margin-top:-6px}.avsp{width:26px;flex:none}
@@ -106,6 +106,10 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .acts4{display:flex;gap:10px;margin:16px 0 4px}.acts4 button{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font:inherit;cursor:pointer}.acts4 button[hidden]{display:none}.acts4 span{font-size:24px;line-height:1}.acts4 small{font-size:11.5px;font-weight:800;opacity:.8}.acts4 button:active{transform:scale(.95)}
 .lk2{margin-top:12px}
 html:has(.scr.chs),html:has(.scr.chs) body{overflow:hidden;overscroll-behavior:none;height:100%}
+/* drop: równe odstępy między sekcjami */
+.scr.dv{display:flex;flex-direction:column;gap:18px}.scr.dv>*{margin-top:0!important;margin-bottom:0!important}.scr.dv>*:empty,.scr.dv>[hidden]{display:none!important}
+.scr.dv>.hdr{margin-bottom:6px!important}.scr.dv>#cb{margin-bottom:-8px!important}.scr.dv>h3{margin-bottom:-8px!important}.scr.dv>.brand{margin-bottom:4px!important}
+.scr.dv #rpl>h3{margin:18px 0 10px}.scr.dv #rpl>*:first-child{margin-top:0}.scr.dv .acts4{margin:0}.scr.dv .chp{margin:0}
 .agec{display:flex;gap:12px;align-items:flex-start;margin:16px 2px 4px;font-size:14px;line-height:1.4;color:var(--mut,#b9b9c6);cursor:pointer}.agec input{width:22px;height:22px;flex:none;margin:0;accent-color:var(--acc)}.agec a{color:var(--acc)}.agec.shake{animation:shk .4s}@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 #mf{display:flex;gap:8px;align-items:center}#mf input{margin:0}#mf button{border:0;border-radius:16px;background:var(--acc);width:58px;height:50px;font-size:20px;font-weight:900;cursor:pointer}
 .back{color:rgba(255,255,255,.6);cursor:pointer;font-size:13px;font-weight:900}.chh .back{font-size:26px}
@@ -1102,7 +1106,7 @@ function chatsView(){
     rememberG(code);S.addGroup?.(code,{ownerId:u.uid,ownerNick:nick,name});bump("groups");vib([30,40,30]);go("/g/"+code)};
   const tm=ms=>{if(!ms)return"";const d=new Date(ms),n=new Date(),dd=Math.round((new Date(n).setHours(0,0,0,0)-new Date(d).setHours(0,0,0,0))/864e5);return dd<=0?`${pad(d.getHours())}:${pad(d.getMinutes())}`:dd===1?t("yest"):d.toLocaleDateString(LANG,{day:"numeric",month:"short"})};
   const row=(x)=>{const m=x.m,n=x.n,who=m?(m.authorId===me()?t("you2"):m.nickname):"";
-    return`<div class="cr${n?" un":""}" onclick="go('${x.href}')"><div class="cav th" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
+    return`<div class="chrow${n?" un":""}" onclick="go('${x.href}')"><div class="cav th" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
     <div class="crm"><div class="cr1"><b>${esc(clean(x.title))}</b><time>${tm(x.at)}</time></div>
     <div class="cr2"><span class="ctag ${x.g?"g":"d"}">${x.tag}</span><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div></div>`};
   let F=sget("chf")||"all";
@@ -1200,7 +1204,7 @@ async function dropView(code){
   const {ref,d}=R,start=d.startsAt.toMillis(),url=base()+"/d/"+code,me0=auth.currentUser,logged=me0&&!me0.isAnonymous,isHost=me0?.uid===d.hostId;let mine=null,P=[],PH=[];
   if(code==="DEMO1"&&!logged)sset("fopen","1");remember(code);if(logged&&!isHost&&!S.items.has(code))S.addItem?.(code,d);
   const closed=()=>Date.now()>=start,hAv=d.hostPh||(d.hostAv!=null?+d.hostAv:avIdx({id:d.hostId}));let wasC=closed();
-  view(`<div class="scr">${logged?`<div class="hdr">${bk("/")}</div>`:`<div class="brand">SQUAD</div>`}
+  view(`<div class="scr dv">${logged?`<div class="hdr">${bk("/")}</div>`:`<div class="brand">SQUAD</div>`}
   ${isHost?"":`<div class="inv">${avc("l",hAv)}<span>${t("inv",esc(d.hostNick||"?"))}</span></div>`}
   <div id="cb"></div>
   <div id="rpl" ${isHost?"hidden":""}>
