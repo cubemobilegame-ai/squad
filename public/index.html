@@ -1704,8 +1704,10 @@ Object.assign(L.pl,{live2:"trwa"});Object.assign(L.en,{live2:"live"});Object.ass
 function sendToGroup(d,code){vib(10);const G=[...S.groups.values()];
   const s=sheet(`<h2>${t("toGrp")}</h2><p class="hint">${t("toGrpD")}</p><div class="acts">${G.map(g=>`<button data-g="${esc(g.id)}">👥 ${esc(clean(g.name))}</button>`).join("")}<button data-g="">${t("cancel")}</button></div>`);
   s.querySelectorAll("[data-g]").forEach(b=>b.onclick=async()=>{s.close();const gid=b.dataset.g;if(!gid)return;
-    try{const u=auth.currentUser;const mem=await getDoc(doc(db,"groups",gid,"members",u.uid));if(!mem.exists())throw{code:"brak-członkostwa"};
-      const r=await addDoc(collection(db,"groups",gid,"messages"),{authorId:u.uid,nickname:mem.data().nickname||sget("nick"),text:"🔥 "+String(d.title||"Drop").slice(0,80),
+    try{const u=auth.currentUser;const mem=await getDoc(doc(db,"groups",gid,"members",u.uid));let nk=mem.exists()?mem.data().nickname:sget("nick");
+      /* grupa jest na twojej liście, ale z innego konta (np. Facebook vs Google) – dopisujemy cię do niej tym kontem */
+      if(!mem.exists())await setDoc(doc(db,"groups",gid,"members",u.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
+      const r=await addDoc(collection(db,"groups",gid,"messages"),{authorId:u.uid,nickname:nk||sget("nick"),text:"🔥 "+String(d.title||"Drop").slice(0,80),
         drop:{code,title:String(d.title||"").slice(0,60),at:d.startsAt.toMillis(),place:hidden(d)?"":String(d.place||"").slice(0,60)},createdAt:serverTimestamp()});
       pushNow({kind:"msg",code:gid,id:r.id,group:true});sfx("send");vib([20,30,20]);toast(t("toGrpOk"))}
     catch(e){const c=String(e?.code||e?.message||e).slice(0,120);console.error("toGrp",e);toast(t("err")+" ("+c+")");
