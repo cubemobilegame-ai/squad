@@ -76,7 +76,10 @@ async function logEv(env, o) {
 }
 
 // ---------- wysyłka ----------
-async function notify(env, db, uids, kind, build, link) {
+async function notify(env, db, uids, kind, build, link, from) {
+  // duża ikona = awatar osoby, która napisała (albo logo SQUAD)
+  let icon = `https://${env.PID}.web.app/icon-192.png`;
+  if (from) { const f = await db.get(`users/${from}`); if (f && f.avUrl) icon = f.avUrl; else if (f && f.avImg) icon = `${env.SELF}/av/${from}?v=${f.avV || 0}`; }
   let sent = 0; const st = env.stats = { to: 0, users: 0, toks: 0, errs: [] };
   await Promise.all([...new Set(uids)].filter(Boolean).map(async (uid) => {
     st.to++; const u = await db.get(`users/${uid}`); if (!u) { st.errs.push("brak profilu " + uid.slice(0, 6)); return; }
@@ -86,9 +89,9 @@ async function notify(env, db, uids, kind, build, link) {
     await Promise.all(toks.map(async (t) => {
       const r = await fetch(`https://fcm.googleapis.com/v1/projects/${env.PID}/messages:send`, {
         method: "POST", headers: { Authorization: "Bearer " + (await access(env.SA)), "Content-Type": "application/json" },
-        body: JSON.stringify({ message: { token: t.id, notification: { title, body }, data: { url: link }, ...(t.native ? { android: { priority: "HIGH", notification: { channel_id: "squad", sound: "default", tag: link, default_vibrate_timings: true } } } : {}),
+        body: JSON.stringify({ message: { token: t.id, notification: { title, body }, data: { url: link }, ...(t.native ? { android: { priority: "HIGH", notification: { channel_id: "squad", sound: "default", tag: link, default_vibrate_timings: true, color: "#FF4F86", icon: "ic_stat_squad", notification_priority: "PRIORITY_HIGH" } } } : {}),
           webpush: { headers: { Urgency: "high", TTL: "86400" }, fcm_options: { link: `https://${env.PID}.web.app${link}` },
-            notification: { icon: "/icon-192.png", badge: "/badge-96.png", tag: link, renotify: true, vibrate: [200, 100, 200], silent: false } } } }),
+            notification: { icon, badge: `https://${env.PID}.web.app/badge-96.png`, tag: link, renotify: true, vibrate: [200, 100, 200], silent: false, timestamp: Date.now() } } } }),
       });
       if (r.ok) { sent++; return; }
       const e = await r.text(); st.errs.push("FCM " + r.status + " " + e.slice(0, 160)); if (/UNREGISTERED|NOT_FOUND|INVALID_ARGUMENT/.test(e)) await db.del(`users/${uid}/tokens/${t.id}`);
@@ -107,25 +110,37 @@ async function handle(env, uid, b) {
     const chat = await db.get(root); if (!chat) return 0;
     const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => p.id !== uid);
     const title = G ? chat.name : chat.title;
-    return notify(env, db, ppl.map((p) => p.id), "chat", () => [`[${title}] ${m.nickname}`, cut(m.text)], G ? `/gc/${b.code}` : `/c/${b.code}`);
+    return notify(env, db, ppl.map((p) => p.id), "chat", () => [`${m.nickname} · ${title}`, cut(m.text, 140)], G ? `/gc/${b.code}` : `/c/${b.code}`, uid);
   }
   if (b.kind === "rsp" && isCode(b.code)) {                            // odpowiedź IN / LATE / OUT -> autor dropa
     const d = await db.get(`drops/${b.code}`), p = await db.get(`drops/${b.code}/participants/${uid}`);
     if (!d || !p || d.hostId === uid) return 0;
     const st = p.status === "late" ? `LATE ${p.etaMin || 15} min` : ST[p.status] || p.status;
-    return notify(env, db, [d.hostId], "rsp", (T) => [`${p.nickname}: ${st}`, T.reply(d.title)], `/d/${b.code}`);
+    return notify(env, db, [d.hostId], "rsp", (T) => [`${p.nickname}: ${st}`, T.reply(d.title)], `/d/${b.code}`, uid);
   }
   if (b.kind === "join" && isCode(b.code)) {                           // nowa osoba w grupie
     const g = await db.get(`groups/${b.code}`), me = await db.get(`groups/${b.code}/members/${uid}`); if (!g || !me) return 0;
     const ppl = (await db.list(`groups/${b.code}/members`)).filter((p) => p.id !== uid);
-    return notify(env, db, ppl.map((p) => p.id), "grp", (T) => T.join(me.nickname, g.name), `/g/${b.code}`);
+    return notify(env, db, ppl.map((p) => p.id), "grp", (T) => T.join(me.nickname, g.name), `/g/${b.code}`, uid);
   }
   if (b.kind === "edit" && isCode(b.code)) {                           // autor zmienił godzinę / miejsce
     const d = await db.get(`drops/${b.code}`); if (!d || d.hostId !== uid) return 0;
     const ppl = (await db.list(`drops/${b.code}/participants`)).filter((p) => p.id !== uid && p.status !== "out");
-    return notify(env, db, ppl.map((p) => p.id), null, (T) => T.change(d.title, hhmm(d.startsAt), d.surprise ? T.surprise : d.place), `/d/${b.code}`);
+    return notify(env, db, ppl.map((p) => p.id), null, (T) => T.change(d.title, hhmm(d.startsAt), d.surprise ? T.surprise : d.place), `/d/${b.code}`, uid);
   }
   return 0;
+}
+
+// awatar do powiadomień: /av/<uid> -> PNG zapisany przez aplikację w users/<uid>.avImg
+async function avatar(envRaw, uid) {
+  try {
+    if (!/^[A-Za-z0-9]{10,40}$/.test(uid)) return new Response("", { status: 404 });
+    const SA = JSON.parse(envRaw.FIREBASE_SA), u = await fs({ SA, PID: SA.project_id }).get(`users/${uid}`);
+    const m = u && typeof u.avImg === "string" && u.avImg.match(/^data:(image\/(?:png|jpeg|webp));base64,(.+)$/);
+    if (!m) return Response.redirect(`https://${SA.project_id}.web.app/icon-192.png`, 302);
+    const bin = Uint8Array.from(atob(m[2]), (c) => c.charCodeAt(0));
+    return new Response(bin, { headers: { "Content-Type": m[1], "Cache-Control": "public, max-age=604800" } });
+  } catch { return new Response("", { status: 500 }); }
 }
 
 export default {
@@ -134,10 +149,11 @@ export default {
     const cors = { "Access-Control-Allow-Origin": allow ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Max-Age": "86400" };
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const url = new URL(req.url);
+    if (req.method === "GET" && url.pathname.startsWith("/av/")) return avatar(envRaw, url.pathname.slice(4));
     if (req.method === "GET") return json({ ok: true, app: "squad-push" }, 200, cors);
     if (req.method !== "POST" || url.pathname !== "/notify") return json({ error: "not found" }, 404, cors);
     let env;
-    try { const SA = JSON.parse(envRaw.FIREBASE_SA); env = { SA, PID: SA.project_id }; } catch { return json({ error: "config" }, 500, cors); }
+    try { const SA = JSON.parse(envRaw.FIREBASE_SA); env = { SA, PID: SA.project_id, SELF: url.origin }; } catch { return json({ error: "config" }, 500, cors); }
     try {
       const tok = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
       const uid = await verifyIdToken(tok, env.PID);
