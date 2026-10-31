@@ -67,13 +67,21 @@ function fs(env) {
   };
 }
 
+// ---------- dziennik (Firestore: pushlog) ----------
+async function logEv(env, o) {
+  try {
+    const fields = Object.fromEntries(Object.entries({ ...o, at: new Date().toISOString() }).map(([k, v]) => [k, typeof v === "number" ? { integerValue: String(v) } : { stringValue: String(v ?? "").slice(0, 500) }]));
+    await fetch(`https://firestore.googleapis.com/v1/projects/${env.PID}/databases/(default)/documents/pushlog`, { method: "POST", headers: { Authorization: "Bearer " + (await access(env.SA)), "Content-Type": "application/json" }, body: JSON.stringify({ fields }) });
+  } catch {}
+}
+
 // ---------- wysyłka ----------
 async function notify(env, db, uids, kind, build, link) {
-  let sent = 0;
+  let sent = 0; const st = env.stats = { to: 0, users: 0, toks: 0, errs: [] };
   await Promise.all([...new Set(uids)].filter(Boolean).map(async (uid) => {
-    const u = await db.get(`users/${uid}`); if (!u) return;
-    if (kind && u.notif && u.notif[kind] === false) return;
-    const toks = await db.list(`users/${uid}/tokens`); if (!toks.length) return;
+    st.to++; const u = await db.get(`users/${uid}`); if (!u) { st.errs.push("brak profilu " + uid.slice(0, 6)); return; }
+    if (kind && u.notif && u.notif[kind] === false) { st.errs.push("wyłączone " + uid.slice(0, 6)); return; }
+    const toks = await db.list(`users/${uid}/tokens`); st.users++; if (!toks.length) { st.errs.push("brak tokenu " + uid.slice(0, 6)); return; } st.toks += toks.length;
     const L = TX[u.lang] ? u.lang : "en", [title, body] = build(TX[L], L);
     await Promise.all(toks.map(async (t) => {
       const r = await fetch(`https://fcm.googleapis.com/v1/projects/${env.PID}/messages:send`, {
@@ -83,7 +91,7 @@ async function notify(env, db, uids, kind, build, link) {
             notification: { icon: "/icon-192.png", badge: "/badge-96.png", tag: link, renotify: true, vibrate: [200, 100, 200], silent: false } } } }),
       });
       if (r.ok) { sent++; return; }
-      const e = await r.text(); if (/UNREGISTERED|NOT_FOUND|INVALID_ARGUMENT/.test(e)) await db.del(`users/${uid}/tokens/${t.id}`);
+      const e = await r.text(); st.errs.push("FCM " + r.status + " " + e.slice(0, 160)); if (/UNREGISTERED|NOT_FOUND|INVALID_ARGUMENT/.test(e)) await db.del(`users/${uid}/tokens/${t.id}`);
     }));
   }));
   return sent;
@@ -134,7 +142,7 @@ export default {
       const tok = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
       const uid = await verifyIdToken(tok, env.PID);
       const body = await req.json();
-      ctx.waitUntil(handle(env, uid, body).catch((e) => console.log("handle", e.message)));
+      ctx.waitUntil(handle(env, uid, body).then((n) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), sent: n || 0, to: env.stats ? env.stats.to : 0, toks: env.stats ? env.stats.toks : 0, errs: env.stats ? env.stats.errs.join(" | ") : "brak odbiorców / odrzucone" })).catch((e) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), err: e.message })));
       return json({ ok: true }, 202, cors);
     } catch (e) { return json({ error: "auth" }, 401, cors); }
   },
