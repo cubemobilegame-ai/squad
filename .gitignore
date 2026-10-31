@@ -5,3 +5,4 @@ build-android/
 .firebase/
 firebase-debug.log
 public/grupa.html
+public/build.txt

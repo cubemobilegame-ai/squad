@@ -26,6 +26,11 @@ jobs:
           echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
           node -e 'const j=require(process.env.RUNNER_TEMP+"/sa.json");console.log("Projekt:",j.project_id,"| konto:",j.client_email)'
 
+      - name: Numer wersji (automatyczna aktualizacja w telefonach)
+        run: |
+          B="${GITHUB_SHA::10}"
+          sed -i "s/__BUILD__/$B/" public/index.html
+          echo "$B" > public/build.txt
       - name: Podgląd linku dla zaproszeń do grup (grupa.html)
         run: node tools/og-grupa.mjs
 
@@ -37,3 +42,10 @@ jobs:
         run: |
           PROJECT=$(node -e 'console.log(require(process.env.RUNNER_TEMP+"/sa.json").project_id)')
           npx -y firebase-tools@13 deploy --project "$PROJECT" --non-interactive --force --only hosting,firestore
+
+      - name: Sprawdzenie po wdrożeniu
+        run: |
+          sleep 5
+          echo "::notice title=Wersja na serwerze::$(curl -s https://squad-64cd5.web.app/build.txt)"
+          echo "::notice title=Cache strony /::$(curl -sI https://squad-64cd5.web.app/ | grep -i cache-control | tr -d '\r')"
+          echo "::notice title=Cache /d/test::$(curl -sI https://squad-64cd5.web.app/d/test | grep -i cache-control | tr -d '\r')"
