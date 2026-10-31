@@ -181,7 +181,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .m.me>div.mb{background:none;border-radius:0;align-items:flex-end}
 .bub{background:rgba(255,255,255,.1);border-radius:18px 18px 18px 4px;padding:9px 14px;word-break:break-word;transition:transform .15s,box-shadow .15s}
 .m.me .bub{background:linear-gradient(135deg,var(--g1),var(--g2));color:#0b0b10;border-radius:18px 18px 4px 18px;box-shadow:0 3px 10px rgba(var(--accr),.16)}.m.me .bub time{color:rgba(11,11,16,.6)}.m.me .bub a{color:#0b0b10}
-#mf button.fly{animation:sfly .38s cubic-bezier(.3,1.6,.5,1)}@keyframes sfly{0%{transform:scale(1)}35%{transform:scale(.82) rotate(-12deg)}100%{transform:scale(1)}}
+#mf button.sgo{animation:sfly .38s cubic-bezier(.3,1.6,.5,1)}@keyframes sfly{0%{transform:scale(1)}35%{transform:scale(.82) rotate(-12deg)}100%{transform:scale(1)}}
 .m.new .bub{animation:mpop .28s cubic-bezier(.3,1.5,.5,1)}@keyframes mpop{from{transform:translateY(10px) scale(.96);opacity:.3}}
 .m.lift .bub{transform:scale(1.04);box-shadow:0 0 0 2px var(--acc)}
 .rx{display:flex;gap:4px;flex-wrap:wrap;margin-top:-8px;padding:0 8px;position:relative}
@@ -315,7 +315,10 @@ try{
 }catch{DEMO=true;FB=mock()}
 const {updateDoc,deleteField,initializeApp,getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,signOut,onAuthStateChanged,getFirestore,collection,doc,getDoc,setDoc,addDoc,deleteDoc,getDocs,query,where,limit,orderBy,onSnapshot,serverTimestamp,Timestamp}=FB;
 let guestP=null;const ensureUser=async()=>auth.currentUser||(guestP??=signInAnonymously(auth).then(r=>r.user).finally(()=>{guestP=null}));
-const fbApp=initializeApp(FB.__c),auth=getAuth(fbApp),db=(()=>{if(!DEMO&&FB.initializeFirestore&&FB.persistentLocalCache)try{return FB.initializeFirestore(fbApp,{localCache:FB.persistentLocalCache(FB.persistentMultipleTabManager?{tabManager:FB.persistentMultipleTabManager()}:{})})}catch(e){}return getFirestore(fbApp)})(),stor=!DEMO&&FB.getStorage&&FB.__c.storageBucket?FB.getStorage(fbApp):null;
+const fbApp=initializeApp(FB.__c),auth=getAuth(fbApp),db=(()=>{const IOSX=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&"ontouchend" in document);
+  /* iPhone: pamięć podręczna Firestore w IndexedDB potrafi blokować się na ~minutę (WebKit) – na iOS trzymamy cache w pamięci */
+  if(!DEMO&&IOSX&&FB.initializeFirestore)try{return FB.initializeFirestore(fbApp,{...(FB.memoryLocalCache?{localCache:FB.memoryLocalCache()}:{}),experimentalAutoDetectLongPolling:true})}catch(e){}
+  if(!DEMO&&FB.initializeFirestore&&FB.persistentLocalCache)try{return FB.initializeFirestore(fbApp,{localCache:FB.persistentLocalCache(FB.persistentMultipleTabManager?{tabManager:FB.persistentMultipleTabManager()}:{})})}catch(e){}return getFirestore(fbApp)})(),stor=!DEMO&&FB.getStorage&&FB.__c.storageBucket?FB.getStorage(fbApp):null;
 
 /* ---------- i18n: dodasz język = dodasz słownik (np. es) i wpis w LANGS ---------- */
 const LANGS=[["pl","Polski"],["en","English"],["es","Español"],["de","Deutsch"],["fr","Français"],["it","Italiano"],["cs","Čeština"],["uk","Українська"]];
@@ -1250,7 +1253,7 @@ async function chatView(code,g){
     else if(!$("#mf")&&$(".chlock")){location.reload();return}
     drawM();if(on)return;on=true;
     unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt"),limit(200)),s=>{M=s.docs.map(x=>({id:x.id,...x.data()}));drawM();if(Date.now()-(window.__justSent||0)<1500){const l=[...document.querySelectorAll("#msgs .m.me")].pop();l?.classList.add("new");window.__justSent=0}sset(key,Date.now());badges()},()=>{}));
-    $("#mf").onsubmit=async e=>{e.preventDefault();const x=$("#mi").value.trim();if(!x)return;$("#mi").value="";$("#mi").focus();sfx("send");vib(12);{const b=$("#mf button");b.classList.remove("fly");void b.offsetWidth;b.classList.add("fly")}window.__justSent=Date.now();
+    $("#mf").onsubmit=async e=>{e.preventDefault();const x=$("#mi").value.trim();if(!x)return;$("#mi").value="";$("#mi").focus();sfx("send");vib(12);{const b=$("#mf button");b.classList.remove("sgo");void b.offsetWidth;b.classList.add("sgo")}window.__justSent=Date.now();
       const mr=await addDoc(collection(ref,"messages"),{authorId:me(),nickname:mine.nickname,text:clean(x),createdAt:serverTimestamp()});pushNow({kind:"msg",code,id:mr.id,group:!!g});bump("msgs")};
   },()=>{}));
 }
