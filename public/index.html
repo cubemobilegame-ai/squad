@@ -978,7 +978,7 @@ function profileView(){
   document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")askPush();b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
   document.querySelectorAll(".lg").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
   $("#hlp").onclick=helpSheet;$("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
-  $("#so").onclick=async()=>{vib(15);await signOut(auth);go("/")};
+  $("#so").onclick=async()=>{vib(15);try{const u=auth.currentUser,tk=sget("pushTok");if(u&&tk)await deleteDoc(doc(db,"users",u.uid,"tokens",tk))}catch{}sset("pushTok","");sset("pushUid","");await signOut(auth);go("/")};
   $("#da").onclick=delAccount;
 }
 
@@ -1500,13 +1500,13 @@ async function enablePush(ask){if(DEMO||!("Notification"in window)||!("serviceWo
   if(!FB.getMessaging){try{Object.assign(FB,await import(window.__fbg+"firebase-messaging.js"))}catch(e){return}}
   const u=auth.currentUser;if(!u||u.isAnonymous||!FB.__c.vapidKey||/WKLEJ/.test(FB.__c.vapidKey))return;
   try{if(FB.isSupported&&!(await FB.isSupported()))return;
-    let p=Notification.permission;if(p==="default"&&ask)p=await Notification.requestPermission();
+    let p=Notification.permission;if(p==="default"&&ask)p=await Notification.requestPermission();if(p!=="granted")setDoc(doc(db,"users",u.uid),{pushErr:"zgoda: "+p+" @"+new Date().toISOString()},{merge:true}).catch(()=>{});
     if(p==="denied"&&ask){toast(t("pushBlocked"));return}if(p!=="granted")return;
     const reg=await navigator.serviceWorker.register("/sw.js");await navigator.serviceWorker.ready;
     const msg=FB.getMessaging(fbApp),tok=await FB.getToken(msg,{vapidKey:FB.__c.vapidKey,serviceWorkerRegistration:reg});
-    if(tok&&tok!==sget("pushTok")){await setDoc(doc(db,"users",u.uid,"tokens",tok),{at:serverTimestamp(),ua:navigator.userAgent.slice(0,120)});sset("pushTok",tok);if(ask)toast(t("pushOn"))}
+    if(tok){const old=sget("pushTok"),oldU=sget("pushUid");if(old&&oldU&&(oldU!==u.uid||old!==tok))deleteDoc(doc(db,"users",oldU,"tokens",old)).catch(()=>{});await setDoc(doc(db,"users",u.uid,"tokens",tok),{at:serverTimestamp(),ua:navigator.userAgent.slice(0,120)});sset("pushTok",tok);sset("pushUid",u.uid);setDoc(doc(db,"users",u.uid),{pushErr:null},{merge:true}).catch(()=>{});if(ask)toast(t("pushOn"))}
     if(!window.__onMsg){window.__onMsg=1;FB.onMessage(msg,m=>{const n=m.notification||{},url=m.data?.url;if(url&&gp()===url)return;toast((n.title?n.title+" – ":"")+(n.body||""));sfx("send");vib([20,40,20])})}
-  }catch(e){console.warn("push",e)}}
+  }catch(e){console.warn("push",e);try{setDoc(doc(db,"users",u.uid),{pushErr:String(e?.code||e?.message||e).slice(0,200)+" @"+new Date().toISOString()},{merge:true})}catch{}}}
 
 /* ---------- EDYCJA DROPA (tylko autor, do startu) ---------- */
 function editDrop(code,ref,d){vib(10);const st=new Date(d.startsAt.toMillis());let sur=!!d.surprise,day=Math.max(0,Math.min(1,Math.round((new Date(st).setHours(0,0,0,0)-new Date().setHours(0,0,0,0))/864e5)));
