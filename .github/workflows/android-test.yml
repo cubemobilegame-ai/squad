@@ -37,6 +37,9 @@ jobs:
             sleep 8
             adb shell dumpsys activity activities | grep -E "topResumedActivity" | head -2 | sed "s/^/::notice title=Po starcie::/"
             adb shell pm grant com.cubemobilegames.squad android.permission.POST_NOTIFICATIONS || true
+            adb shell am start -W -a android.intent.action.VIEW -d "squadapp://push" >/dev/null 2>&1 || true
+            sleep 3
+            adb shell dumpsys activity activities | grep -E "topResumedActivity" | head -1 | sed "s/^/::notice title=Po squadapp:\/\/push::/"
             sleep 17
             adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -3 | sed 's/^/::notice::Aktywna: /'
             adb logcat -d -b crash > crash.txt || true
