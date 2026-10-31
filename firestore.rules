@@ -1,6 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
+    // „Moje dropy i grupy” na każdym urządzeniu: czytanie własnych wpisów przez zapytanie po polu uid
+    match /{path=**}/participants/{pid} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+    match /{path=**}/members/{mid} {
+      allow read: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
     function signedIn() { return request.auth != null; }
     function isGuest() { return request.auth.token.firebase.sign_in_provider == 'anonymous'; }
     function drop(id) { return get(/databases/$(db)/documents/drops/$(id)).data; }

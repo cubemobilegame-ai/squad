@@ -880,6 +880,8 @@ function watch(){const u=auth.currentUser;if(!u||u.isAnonymous){if(wUid)stopWatc
     W.push(onSnapshot(query(collection(db,"drops",d.id,"messages"),orderBy("createdAt"),limit(100)),s=>{S.ms[d.id]=s.docs.map(x=>x.data());changed()},()=>{}))});changed()};
   S.addItem=(c,d)=>{S.items.set(c,{id:c,...d});upd()};W.push(onSnapshot(query(collection(db,"drops"),where("hostId","==",u.uid)),s=>{const ids=new Set(s.docs.map(x=>x.id));S.items.forEach((d,k)=>{if(d.__h&&!ids.has(k))S.items.delete(k)});s.docs.forEach(x=>S.items.set(x.id,{id:x.id,__h:1,...x.data()}));upd()},()=>{}));
   joined().forEach(async c=>{const R=await loadDrop(c);if(R&&!S.items.has(c)){S.items.set(c,{id:c,...R.d});upd()}});
+  if(FB.collectionGroup){W.push(onSnapshot(query(FB.collectionGroup(db,"participants"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;if(S.items.has(c))return;const R=await loadDrop(c);if(R&&!S.items.has(c)){remember(c);S.items.set(c,{id:c,...R.d});upd()}})},e=>console.warn("cg drops",e)));
+    W.push(onSnapshot(query(FB.collectionGroup(db,"members"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;if(S.groups.has(c))return;try{const r=await getDoc(doc(db,"groups",c));if(r.exists()&&!S.groups.has(c)){rememberG(c);S.groups.set(c,{id:c,...r.data()});gupd()}}catch{}})},e=>console.warn("cg groups",e)))}
   const gsub=new Set(),gupd=()=>{S.groups.forEach(g=>{if(gsub.has(g.id))return;gsub.add(g.id);
     W.push(onSnapshot(collection(db,"groups",g.id,"members"),x=>{S.gm[g.id]=x.docs.map(y=>({id:y.id,...y.data()}));changed()},()=>{}));
     W.push(onSnapshot(query(collection(db,"groups",g.id,"messages"),orderBy("createdAt"),limit(100)),x=>{S.ms["g_"+g.id]=x.docs.map(y=>y.data());changed()},()=>{}))});changed()};
@@ -929,8 +931,8 @@ const signInSmart=async pr=>{const u=auth.currentUser;if(!DEMO&&u&&u.isAnonymous
         for(const [code] of mig)await deleteDoc(doc(db,"drops",code,"participants",u.uid)).catch(()=>{});
         for(const [code] of migG)await deleteDoc(doc(db,"groups",code,"members",u.uid)).catch(()=>{});
         const r=await FB.signInWithCredential(auth,cr),nu=r.user;
-        for(const [code,dd] of mig)await setDoc(doc(db,"drops",code,"participants",nu.uid),{...dd,isGuest:false,updatedAt:serverTimestamp()}).catch(()=>{});
-        for(const [code,dd] of migG)await setDoc(doc(db,"groups",code,"members",nu.uid),{...dd,isGuest:false,updatedAt:serverTimestamp()}).catch(()=>{});
+        for(const [code,dd] of mig)await setDoc(doc(db,"drops",code,"participants",nu.uid),{...dd,isGuest:false,uid:nu.uid,updatedAt:serverTimestamp()}).catch(()=>{});
+        for(const [code,dd] of migG)await setDoc(doc(db,"groups",code,"members",nu.uid),{...dd,isGuest:false,uid:nu.uid,updatedAt:serverTimestamp()}).catch(()=>{});
         try{await saveProfile()}catch{}return r}}else throw e}}return signInWithPopup(auth,pr)};
 function login(){view(`<div class="scr cen deco">${FLOAT}<div class="hi5 sm" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><i class="arc a1"></i><i class="arc a2"></i><img class="bm" src="/e/boom.webp" alt=""></div><div class="logo bigl">SQUAD</div><p class="mut" style="margin:10px 0 34px">${t("tag")}</p><button class="cta" id="g">${DEMO?t("demoBtn"):t("gBtn")}</button>${DEMO?"":`<button class="ghost" id="fbl"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:-4px;margin-right:8px"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/><path fill="#fff" d="M16.7 15.5l.5-3.5h-3.4V9.8c0-1 .5-1.9 2-1.9h1.5v-3s-1.4-.2-2.7-.2c-2.7 0-4.5 1.7-4.5 4.7V12h-3v3.5h3v8.4a12 12 0 0 0 3.7 0v-8.4z"/></svg>${t("fbBtn")}</button>`}<p class="legal">${t("accept")} <a onclick="go('/terms')">${t("terms")}</a> ${t("and")} <a onclick="go('/privacy')">${t("privacyAcc")}</a>.</p></div>`);
   if($("#fbl"))$("#fbl").onclick=async()=>{vib(15);if(!FB.FacebookAuthProvider)return toast(t("fbOff"));const pr=new FB.FacebookAuthProvider();try{await signInSmart(pr)}catch(e){const c=e?.code||"";if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;if(c==="auth/operation-not-allowed"||c==="auth/invalid-credential")return toast(t("fbOff"));if(c==="auth/account-exists-with-different-credential")return toast(t("fbExists"));if(FB.signInWithRedirect&&/popup|operation-not-supported|web-storage/.test(c))return FB.signInWithRedirect(auth,pr);toast(t("oops")+(e?.message||e))}};
@@ -939,9 +941,9 @@ function login(){view(`<div class="scr cen deco">${FLOAT}<div class="hi5 sm" ari
 /* ---------- AWATAR: zapis i synchronizacja ---------- */
 async function syncAvatar(){const u=auth.currentUser;if(!u||DEMO&&!u)return;const av=myAv(),ph=sget("photo")||null,nk=sget("nick")||undefined;const NK=nk?{nickname:nk}:{};
   for(const c of new Set([...joined(),...S.items.keys()])){try{const R=await loadDrop(c);if(!R)continue;
-    const p=await getDoc(doc(db,"drops",c,"participants",u.uid));if(p.exists())await setDoc(doc(db,"drops",c,"participants",u.uid),{av,ph,...NK},{merge:true});
+    const p=await getDoc(doc(db,"drops",c,"participants",u.uid));if(p.exists())await setDoc(doc(db,"drops",c,"participants",u.uid),{av,ph,uid:u.uid,...NK},{merge:true});
     if(R.d.hostId===u.uid)await setDoc(doc(db,"drops",c),{hostAv:av,hostPh:ph,...(nk?{hostNick:nk}:{})},{merge:true})}catch{}}
-  for(const g of new Set([...joinedG(),...S.groups.keys()])){try{const m=await getDoc(doc(db,"groups",g,"members",u.uid));if(m.exists()){await setDoc(doc(db,"groups",g,"members",u.uid),{av,ph,...NK},{merge:true});const G=await getDoc(doc(db,"groups",g));if(nk&&G.exists()&&G.data().ownerId===u.uid)await setDoc(doc(db,"groups",g),{ownerNick:nk},{merge:true})}}catch{}}}
+  for(const g of new Set([...joinedG(),...S.groups.keys()])){try{const m=await getDoc(doc(db,"groups",g,"members",u.uid));if(m.exists()){await setDoc(doc(db,"groups",g,"members",u.uid),{av,ph,uid:u.uid,...NK},{merge:true});const G=await getDoc(doc(db,"groups",g));if(nk&&G.exists()&&G.data().ownerId===u.uid)await setDoc(doc(db,"groups",g),{ownerNick:nk},{merge:true})}}catch{}}}
 
 /* ---------- HOME: Zaproszenia / Moje dropy / Odrzucone ---------- */
 const MAIL='<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7.5 12 13l8.5-5.5"/>',STAR='<path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-2.9-5.3 2.9 1.2-6L3.4 9.3l6-.7z"/>',BAN='<circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/>',FLAME='<path d="M12 3c1 3.6 5.5 5.2 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.2 1-3.6 2.2-4.8.2 1.8 1.1 2.8 2.1 3C10 8.6 10.5 5.5 12 3z"/>';
@@ -1042,7 +1044,7 @@ function chatsView(){
   $("#gk").onclick=async()=>{const name=$("#gn").value.trim();if(!name){vib([50,30,50]);return toast(t("needGroup"))}
     const code=Math.random().toString(36).slice(2,8).toUpperCase(),nick=sget("nick");
     await setDoc(doc(db,"groups",code),{ownerId:u.uid,ownerNick:nick,name,createdAt:serverTimestamp()});
-    await setDoc(doc(db,"groups",code,"members",u.uid),{nickname:nick,av:myAv(),ph:sget("photo")||null,isGuest:false,updatedAt:serverTimestamp()});
+    await setDoc(doc(db,"groups",code,"members",u.uid),{nickname:nick,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
     rememberG(code);S.addGroup?.(code,{ownerId:u.uid,ownerNick:nick,name});bump("groups");vib([30,40,30]);go("/g/"+code)};
   const row=(href,c1,c2,icon,title,names,m,n)=>`<div class="chat" onclick="go('${href}')"><div class="cav th" style="background:linear-gradient(135deg,${c1},${c2})">${icon}</div><div><b>[${esc(title)}]</b><small class="nk">${names}</small><small>${m?esc(m.nickname)+": "+esc(m.text):t("noMsg")}</small></div>${bdi(n)}<i>›</i></div>`;
   const nm=P=>P.slice(0,4).map(p=>`<span style="color:${gc(p)}">${esc(p.nickname)}</span>`).join(", ")+(P.length>4?` +${P.length-4}`:"");
@@ -1074,7 +1076,7 @@ async function groupView(code){
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#rp"))$("#rp").onclick=()=>report({target:"group",code});
   let jbusy=false;$("#jb").onclick=async()=>{if(jbusy)return;const n=$("#nick").value.trim();if(!n){vib([50,30,50]);$("#nick").hidden=false;$("#nick").focus();return toast(t("needNick"))}
     jbusy=true;const u=(await ensureUser());sset("nick",n);
-    await setDoc(doc(ref,"members",u.uid),{nickname:n,av:myAv(),ph:sget("photo")||null,isGuest:u.isAnonymous,updatedAt:serverTimestamp()});pushNow({kind:"join",code});
+    await setDoc(doc(ref,"members",u.uid),{nickname:n,av:myAv(),ph:sget("photo")||null,isGuest:u.isAnonymous,uid:u.uid,updatedAt:serverTimestamp()});pushNow({kind:"join",code});
     rememberG(code);if(!u.isAnonymous&&!S.groups.has(code))S.addGroup?.(code,g);vib([30,40,30]);jbusy=false;go("/gc/"+code)};
   let arm=0;$("#lv").onclick=async()=>{const lb=owner?t("grDel"):t("grLeave");
     if(!arm){arm=1;$("#lv").textContent=t("delSure");setTimeout(()=>{arm=0;const e=$("#lv");if(e)e.textContent=lb},4000);return}
@@ -1123,7 +1125,7 @@ function newView(){
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
     await setDoc(doc(db,"drops",code),{code,hostId:u.uid,hostNick:nick,hostAv:myAv(),hostPh:sget("photo")||null,category:cat,title:$("#ti").value.trim()||(cat==="other"?cu:t("run",t("c_"+cat))),place,surprise:sur,theme:th,
       startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),createdAt:serverTimestamp()});
-    await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,updatedAt:serverTimestamp()});
+    await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
     remember(code);pendingShare=code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);go("/d/"+code);
   };
 }
@@ -1174,7 +1176,7 @@ async function dropView(code){
     const n=$("#nick").value.trim();if(!n){vib([50,30,50]);$("#nick").hidden=false;$("#nick").focus();return toast(t("needNick"))}
     let eta=15;if(b.dataset.s==="late"){eta=await askLate(mine?.etaMin);if(!eta)return}
     const u=(await ensureUser()),st=b.dataset.s;sset("nick",n);remember(code);sfx(st);
-    await setDoc(doc(ref,"participants",u.uid),{nickname:n,status:st,av:myAv(),ph:sget("photo")||null,...(st==="late"?{etaMin:eta}:{}),isGuest:u.isAnonymous,updatedAt:serverTimestamp()});pushNow({kind:"rsp",code});
+    await setDoc(doc(ref,"participants",u.uid),{nickname:n,status:st,av:myAv(),ph:sget("photo")||null,...(st==="late"?{etaMin:eta}:{}),isGuest:u.isAnonymous,uid:u.uid,updatedAt:serverTimestamp()});pushNow({kind:"rsp",code});
     vib(st==="in"?[30,40,30]:20);toast(logged?(st==="out"?t("toOut"):t("toMine")):t("savedG"));
     if(!isHost&&!u.isAnonymous)setHist(code,st);
     if($("#nick").hidden===false){$("#nick").hidden=true;$("#asr").hidden=false;$("#asr b").textContent=n}
