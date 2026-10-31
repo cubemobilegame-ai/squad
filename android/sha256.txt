@@ -1,0 +1,5 @@
+# Odciski SHA-256 certyfikatów aplikacji (to nie są sekrety – są publiczne w assetlinks.json)
+# klucz przesyłania (nasz)
+F6:7C:74:A9:9C:2E:05:9C:FA:B5:C9:9A:27:E1:59:36:05:12:49:AF:27:39:3D:97:7D:36:3B:15:28:78:D9:DD
+# klucz podpisywania Google Play (z APK pobranego z Play Console)
+BC:C0:68:06:D0:51:B0:19:DA:A4:4A:86:AB:FC:02:35:D3:0E:B9:0E:61:67:F4:41:42:C7:8D:92:6B:7E:FB:30
