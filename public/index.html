@@ -474,6 +474,27 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .sbar i{width:100%!important;animation:none!important;transform:scaleX(0);transform-origin:0 50%;will-change:transform}
 .sslow{margin:14px 0 0;font:600 13px Brico,system-ui;color:rgba(255,255,255,.5);animation:fd .4s}
 .boot .hi5{visibility:hidden}
+
+/* CZAT v2: przyciemnienie dolnej 1/3 obrazka, czarny czat rozmyty na obrazku, przy klawiaturze czat na prawie cały ekran */
+.scr.chs.sk{background:#000}
+.chero::after{background:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 62%,rgba(0,0,0,.45) 80%,rgba(0,0,0,.9) 100%)!important}
+.cpan{background:#000!important;border-radius:0!important;box-shadow:none!important;margin-top:-34px!important;padding-top:6px!important}
+.cpan::before{content:"";position:absolute;left:0;right:0;top:-56px;height:58px;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0),#000);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);-webkit-mask-image:linear-gradient(180deg,transparent,#000 70%);mask-image:linear-gradient(180deg,transparent,#000 70%)}
+.sk .bub{background:#1d1d22}.sk #mf{background:#17171c}.sk .dsep span,.sk .nsep span{background:#141418}
+.sk #mf{margin-bottom:4px}
+/* klawiatura otwarta: obrazek zwija się do cienkiego paska z tytułem */
+.chero{transition:height .25s ease}
+:root.kb .chero{height:calc(60px + env(safe-area-inset-top,0px))!important}
+:root.kb .chero .horb,:root.kb .chero .hem,:root.kb .chero .hpill,:root.kb .chero .htx small{display:none!important}
+:root.kb .chero .hbk{top:calc(9px + env(safe-area-inset-top,0px));width:40px;height:40px}
+:root.kb .chero .htx{left:68px;right:16px;bottom:auto;top:calc(17px + env(safe-area-inset-top,0px))}
+:root.kb .chero .htx h2{margin:0;font-size:18px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:root.kb .chero::after{background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.6))!important}
+:root.kb .cpan{margin-top:0!important}:root.kb .cpan::before{top:-24px;height:26px}
+:root.kb .sk .mem{display:none}
+:root.kb .sk #mf{margin-bottom:8px}
+.chero{height:300px}.chero .htx{bottom:84px}.chero .horb,.chero .hem{top:calc(48px + env(safe-area-inset-top,0px))}
+:root.kb .chero .htx{bottom:auto}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
