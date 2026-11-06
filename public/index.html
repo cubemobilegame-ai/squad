@@ -525,6 +525,13 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .lopts{gap:10px}.lopts .rb{border:1px solid rgba(255,255,255,.08)!important;background:#18181f!important;border-radius:20px;color:#ffd27a!important}.lopts .rb b{font-weight:800}.lopts .rb small{color:rgba(255,255,255,.5);opacity:1}
 .lopts .rb.sel{background:#ffd27a!important;border-color:#ffd27a!important;transform:none}.lopts .rb.sel small{color:rgba(21,21,28,.6)}
 .rsp .rb{padding:11px 6px 10px;gap:6px;border-radius:18px}.rsp .rb .rbi{width:36px;height:36px}.rsp .rb .rbi svg{width:19px;height:19px}.rsp .rb b{font-size:14px}.rsp .rb .rbs{font-size:10.5px;margin-top:-4px}
+
+/* zakładki – wariant B: cienkie ikony, aktywna = pastelowa pigułka w kolorze akcentu, nieaktywne przyciemnione */
+.tabs button{color:rgba(255,255,255,.42)!important}
+.tabs .tsv{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.tabs button.on{color:#15151c!important;box-shadow:none!important;background:linear-gradient(120deg,color-mix(in oklab,var(--g1) 50%,#fff),color-mix(in oklab,var(--g2) 38%,#fff))!important}
+.tabs button.on .n{opacity:.6}.tabs button.on .tsv{transform:scale(1.06)}
+.tabs .bd{box-shadow:0 0 0 2px #0b0b12}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -1275,6 +1282,7 @@ async function syncAvatar(){const u=auth.currentUser;if(!u||DEMO&&!u)return;save
 
 /* ---------- HOME: Zaproszenia / Moje dropy / Odrzucone ---------- */
 const MAIL='<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7.5 12 13l8.5-5.5"/>',STAR='<path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-2.9-5.3 2.9 1.2-6L3.4 9.3l6-.7z"/>',BAN='<circle cx="12" cy="12" r="9"/><path d="M5.7 5.7l12.6 12.6"/>',FLAME='<path d="M12 3c1 3.6 5.5 5.2 5.5 10.2a5.5 5.5 0 0 1-11 0c0-2.2 1-3.6 2.2-4.8.2 1.8 1.1 2.8 2.1 3C10 8.6 10.5 5.5 12 3z"/>';
+const TSV={"inv": "<svg class=\"tsv\" viewBox=\"0 0 24 24\"><path d=\"M4 13.5 6.2 6.3A2 2 0 0 1 8.1 5h7.8a2 2 0 0 1 1.9 1.3L20 13.5V17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z\"/><path d=\"M4 13.5h4.5l1.2 2h4.6l1.2-2H20\"/></svg>", "mine": "<svg class=\"tsv\" viewBox=\"0 0 24 24\"><path d=\"m12 4 2.4 5 5.4.6-4 3.7 1.1 5.4L12 16l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z\"/></svg>", "pub": "<svg class=\"tsv\" viewBox=\"0 0 24 24\"><path d=\"M12 20.5s-6.5-5.6-6.5-10.8a6.5 6.5 0 0 1 13 0c0 5.2-6.5 10.8-6.5 10.8z\"/><circle cx=\"12\" cy=\"9.7\" r=\"2.4\"/></svg>"};
 const RI={host:STAR,inv:MAIL,in:BOLT,late:CLK,out:BAN},TI={inv:MAIL,mine:FLAME,out:BAN},TE={inv:"wave2",mine:"fire",out:"no",pub:"globe"},TK={inv:"tInv",mine:"tMine",out:"tOut",pub:"tPub"};
 let homeTab="";
 function home(){
@@ -1286,7 +1294,7 @@ function home(){
   const draw=()=>{
     const all=live().filter(loaded),r=d=>roleOf(d),G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
     const tab=homeTab||"mine";
-    $("#tb").innerHTML=["inv","mine","pub"].map(k=>`<button class="${k===tab?"on":""}" data-t="${k}"><img class="te" src="/e/${TE[k]}.webp" alt=""><span>${t(TK[k])} <i class="n">${k==="pub"?(PUB.list?PUB.list.length:""):k==="inv"&&G.inv.length?"":G[k].length}</i></span>${k==="inv"&&G.inv.length?`<b class="bd">${G.inv.length}</b>`:""}</button>`).join("");
+    $("#tb").innerHTML=["inv","mine","pub"].map(k=>`<button class="${k===tab?"on":""}" data-t="${k}">${TSV[k]}<span>${t(TK[k])} <i class="n">${k==="pub"?(PUB.list?PUB.list.length:""):k==="inv"&&G.inv.length?"":G[k].length}</i></span>${k==="inv"&&G.inv.length?`<b class="bd">${G.inv.length}</b>`:""}</button>`).join("");
     document.querySelectorAll("#tb button").forEach(b=>b.onclick=()=>{vib(8);homeTab=b.dataset.t;draw()});
     $("#hint").textContent=t("h_"+tab);
     if(tab==="pub"){pubTab($("#list"),draw);tick();return}
