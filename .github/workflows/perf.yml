@@ -1,0 +1,17 @@
+name: Pomiar szybkości zaproszenia
+on:
+  workflow_dispatch:
+    inputs:
+      site: { description: "Adres", default: "https://squad-64cd5.web.app" }
+jobs:
+  perf:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - env: { SA: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}", SITE: "${{ inputs.site }}" }
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          cd tools/perf && npm init -y >/dev/null && npm i --no-audit --no-fund firebase-admin@12 playwright@1.48.2 >/dev/null && npx playwright install --with-deps webkit >/dev/null
+          node run.cjs
