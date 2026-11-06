@@ -35,7 +35,12 @@ service cloud.firestore {
 
     // profil (ksywka, awatar, odznaki, ustawienia powiadomień) – widoczny tylko dla właściciela
     match /users/{uid} {
-      allow read, write: if signedIn() && request.auth.uid == uid;
+      allow read, create, delete: if signedIn() && request.auth.uid == uid;
+      // ksywkę można zmienić raz na 14 dni (pierwsze ustawienie zawsze)
+      allow update: if signedIn() && request.auth.uid == uid && (
+        !('nick' in request.resource.data) || !('nick' in resource.data) || request.resource.data.nick == resource.data.nick
+        || (request.resource.data.get('nickAt', null) == request.time
+            && (!('nickAt' in resource.data) || request.time > resource.data.nickAt + duration.value(14, 'd'))));
       // tokeny powiadomień push (jeden dokument na telefon)
       match /tokens/{tok} {
         allow read, write: if signedIn() && request.auth.uid == uid;
