@@ -464,6 +464,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .fl.f4{right:29%!important;left:auto!important;top:calc(40px + env(safe-area-inset-top,0px))!important}
 .fl.f2{right:8%!important;left:auto!important;top:calc(92px + env(safe-area-inset-top,0px))!important}
 .fl.f3,.fl.f4{animation-delay:-.6s!important}
+.scr.deco .fl.wander{left:0!important;top:0!important;right:auto!important;bottom:auto!important;margin:0!important;animation:none!important;translate:none!important;rotate:none!important;will-change:transform;transform:var(--wt,none)!important}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -1158,7 +1159,24 @@ const signInSmart=async pr=>{const u=auth.currentUser;if(!DEMO&&u&&u.isAnonymous
         for(const [code,dd] of mig)await setDoc(doc(db,"drops",code,"participants",nu.uid),{...dd,isGuest:false,uid:nu.uid,updatedAt:serverTimestamp()}).catch(()=>{});
         for(const [code,dd] of migG)await setDoc(doc(db,"groups",code,"members",nu.uid),{...dd,isGuest:false,uid:nu.uid,updatedAt:serverTimestamp()}).catch(()=>{});
         try{await saveProfile()}catch{}return r}}else throw e}}return signInWithPopup(auth,pr)};
+/* latające emotki na ekranie logowania: powolny, chaotyczny lot w wolnej przestrzeni nad dłońmi */
+function wander(){const box=document.querySelector(".scr.deco");if(!box)return;const els=[...box.querySelectorAll(".fl")];if(!els.length)return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  const br=box.getBoundingClientRect(),S=els[0].offsetWidth||58;
+  const P=els.map(e=>{const r=e.getBoundingClientRect();const a=Math.random()*Math.PI*2;return{e,x:r.left-br.left,y:r.top-br.top,a,v:12+Math.random()*8,ph:Math.random()*6.28,rs:.35+Math.random()*.3}});
+  els.forEach(e=>e.classList.add("wander"));let last=performance.now();
+  const lim=()=>{const h=box.querySelector(".hi5"),top=12+(parseFloat(getComputedStyle(box).getPropertyValue("--sat"))||0),bot=h?h.offsetTop-S*0.35:240;return{x0:6,x1:box.clientWidth-S-6,y0:Math.max(top,10),y1:Math.max(bot-S,top+80)}};
+  const step=t=>{if(!box.isConnected)return;const dt=Math.min(.05,(t-last)/1000);last=t;const L=lim();
+    P.forEach((p,i)=>{p.a+=(Math.random()-.5)*1.6*dt*3;
+      P.forEach((q,j)=>{if(i===j)return;const dx=p.x-q.x,dy=p.y-q.y,d=Math.hypot(dx,dy);if(d<S*1.25&&d>0){const ta=Math.atan2(dy,dx);let df=ta-p.a;df=Math.atan2(Math.sin(df),Math.cos(df));p.a+=df*dt*2}});
+      p.x+=Math.cos(p.a)*p.v*dt;p.y+=Math.sin(p.a)*p.v*dt;
+      if(p.x<L.x0){p.x=L.x0;p.a=Math.PI-p.a}if(p.x>L.x1){p.x=L.x1;p.a=Math.PI-p.a}
+      if(p.y<L.y0){p.y=L.y0;p.a=-p.a}if(p.y>L.y1){p.y=L.y1;p.a=-p.a}
+      p.ph+=dt*p.rs;p.e.style.setProperty("--wt",`translate(${p.x.toFixed(1)}px,${p.y.toFixed(1)}px) rotate(${(Math.sin(p.ph)*12).toFixed(1)}deg)`)});
+    requestAnimationFrame(step)};
+  requestAnimationFrame(step)}
 function login(){view(`<div class="scr cen deco">${FLOAT}<div class="hi5 sm" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><i class="arc a1"></i><i class="arc a2"></i><img class="bm" src="/e/boom.webp" alt=""></div><div class="logo bigl">SQUAD</div><p class="mut" style="margin:10px 0 34px">${t("tag")}</p><button class="cta" id="g">${DEMO?t("demoBtn"):t("gBtn")}</button>${DEMO?"":`<button class="ghost" id="fbl"><svg viewBox="0 0 24 24" width="20" height="20" style="vertical-align:-4px;margin-right:8px"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/><path fill="#fff" d="M16.7 15.5l.5-3.5h-3.4V9.8c0-1 .5-1.9 2-1.9h1.5v-3s-1.4-.2-2.7-.2c-2.7 0-4.5 1.7-4.5 4.7V12h-3v3.5h3v8.4a12 12 0 0 0 3.7 0v-8.4z"/></svg>${t("fbBtn")}</button>`}<p class="legal">${t("accept")} <a onclick="go('/terms')">${t("terms")}</a> ${t("and")} <a onclick="go('/privacy')">${t("privacyAcc")}</a>.</p></div>`);
+  requestAnimationFrame(()=>requestAnimationFrame(wander));
   if($("#fbl"))$("#fbl").onclick=async()=>{vib(15);if(!FB.FacebookAuthProvider)return toast(t("fbOff"));const pr=new FB.FacebookAuthProvider();try{await signInSmart(pr)}catch(e){const c=e?.code||"";if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;if(c==="auth/operation-not-allowed"||c==="auth/invalid-credential")return toast(t("fbOff"));if(c==="auth/account-exists-with-different-credential")return toast(t("fbExists"));if(FB.signInWithRedirect&&/popup|operation-not-supported|web-storage/.test(c))return FB.signInWithRedirect(auth,pr);toast(t("oops")+(e?.message||e))}};
   $("#g").onclick=async()=>{vib(15);try{await signInSmart(new GoogleAuthProvider())}catch(e){const c=e?.code||"";if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;if(!DEMO&&FB.signInWithRedirect&&/popup|operation-not-supported|web-storage/.test(c))return FB.signInWithRedirect(auth,new GoogleAuthProvider());toast(t("oops")+(e?.message||e))}}}
 
