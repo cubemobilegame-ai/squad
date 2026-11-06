@@ -495,6 +495,13 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 :root.kb .sk #mf{margin-bottom:8px}
 .chero{height:300px}.chero .htx{bottom:84px}.chero .horb,.chero .hem{top:calc(48px + env(safe-area-inset-top,0px))}
 :root.kb .chero .htx{bottom:auto}
+
+/* czat v3: bez przyciemnienia obrazka; pasek pisania wyżej (bezpieczny margines iPhone'a + odstęp) */
+.chero::after{display:none!important}
+.htx h2{color:#17171f!important;text-shadow:none!important}.htx small{color:rgba(23,23,31,.75)!important}.htx small.hcnt{color:rgba(23,23,31,.55)!important}
+:root.kb .chero .htx h2{color:#17171f!important}
+.scr.chs.sk{padding-bottom:calc(14px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
+.sk #mf{margin-bottom:6px!important}:root.kb .sk #mf{margin-bottom:6px!important}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
