@@ -11,6 +11,8 @@ Object.assign(m, {
   appVersionCode: parseInt(process.env.VERSION_CODE || "1", 10), appVersionName: fs.readFileSync("android/version.txt", "utf8").trim(),
   enableNotifications: true, orientation: "portrait", fallbackType: "customtabs", display: "standalone",
   splashScreenFadeOutDuration: 0, minSdkVersion: 24, enableSiteSettingsShortcut: true, signingKey: { path: "../upload.jks", alias: "squad" },
+  // lokalizacja dla publicznych dropów: strona używa uprawnienia aplikacji (natywne okienko Androida)
+  features: { ...(m.features || {}), locationDelegation: { enabled: true } },
 });
 if (typeof m.validate === "function") { const err = m.validate(); if (err) { console.error("Błąd manifestu:", err); process.exit(1); } }
 await new TwaGenerator().createTwaProject("build-android", m, new ConsoleLog("squad"));

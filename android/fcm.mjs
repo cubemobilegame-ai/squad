@@ -22,6 +22,8 @@ fs.writeFileSync(appG, a);
 // 2) Manifest: domyślny kanał i kolor powiadomień
 const mf = `${B}/app/src/main/AndroidManifest.xml`;
 let m = fs.readFileSync(mf, "utf8");
+if (!m.includes("ACCESS_COARSE_LOCATION")) m = m.replace(/<application/, '<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <application');
+if (!m.includes("ACCESS_FINE_LOCATION")) m = m.replace(/<application/, '<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <application');
 if (!m.includes("default_notification_channel_id")) m = m.replace(/<application([^>]*)>/, `<application$1>
         <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="squad" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/squadAccent" />
@@ -52,6 +54,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LauncherActivity extends com.google.androidbrowserhelper.trusted.LauncherActivity {
     private static final String PERM = "android.permission.POST_NOTIFICATIONS";
+    private static final String LOC_C = "android.permission.ACCESS_COARSE_LOCATION", LOC_F = "android.permission.ACCESS_FINE_LOCATION";
     private boolean waitPerm = false, waitTok = false, launched = false;
 
     @Override
@@ -65,9 +68,12 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
                 nm.createNotificationChannel(ch);
             }
         }
-        waitPerm = Build.VERSION.SDK_INT >= 33 && savedInstanceState == null
-            && checkSelfPermission(PERM) != PackageManager.PERMISSION_GRANTED
-            && !sp.getBoolean("pushAsked", false);
+        // przy pierwszym uruchomieniu: powiadomienia (Android 13+) i lokalizacja (publiczne dropy w okolicy)
+        java.util.ArrayList<String> need = new java.util.ArrayList<>();
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(PERM) != PackageManager.PERMISSION_GRANTED && !sp.getBoolean("pushAsked", false)) need.add(PERM);
+        if (checkSelfPermission(LOC_C) != PackageManager.PERMISSION_GRANTED && !sp.getBoolean("locAsked", false)) { need.add(LOC_C); need.add(LOC_F); }
+        final String[] ask = need.toArray(new String[0]);
+        waitPerm = savedInstanceState == null && ask.length > 0;
         waitTok = savedInstanceState == null && sp.getString("fcm", null) == null;
         try {
             FirebaseMessaging.getInstance().getToken().addOnCompleteListener(t -> {
@@ -78,7 +84,7 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
         else setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        if (waitPerm) { sp.edit().putBoolean("pushAsked", true).apply(); requestPermissions(new String[]{PERM}, 7); }
+        if (waitPerm) { sp.edit().putBoolean("pushAsked", true).putBoolean("locAsked", true).apply(); requestPermissions(ask, 7); }
         if (waitTok) new Handler(Looper.getMainLooper()).postDelayed(() -> { if (waitTok) { waitTok = false; go(); } }, 2500);
     }
 
