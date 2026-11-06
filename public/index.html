@@ -8,13 +8,13 @@
 <meta property="og:title" content="🔥 Zaproszenie na drop – jesteś w tym?">
 <meta property="og:description" content="Ktoś z ekipy zaprasza cię na wypad. Kliknij i odpowiedz IN / LATE / OUT – bez instalowania.">
 <meta property="og:image" content="https://squad-64cd5.web.app/og/zaproszenie-v3.jpg"><meta property="og:image:secure_url" content="https://squad-64cd5.web.app/og/zaproszenie-v3.jpg"><meta property="og:image:type" content="image/jpeg"><meta property="og:image:alt" content="SQUAD – zaproszenie na drop"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:type" content="website"><meta property="og:site_name" content="SQUAD"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://squad-64cd5.web.app/og/zaproszenie-v3.jpg">
-<link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="preload" href="/fonts/urbanist.woff" as="font" type="font/woff" crossorigin>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="preload" href="/fonts/bricolage.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="/fonts/urbanist.woff" as="font" type="font/woff" crossorigin>
 <link rel="manifest" href="/manifest.json"><link rel="icon" href="/favicon.png"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 :root{--acc:#FF4F86;--accr:255,79,134;--acc2:#a8174f;--g1:#FF3D7F;--g2:#FF6A4D;--g3:#FFA53D}
 :root.boy{--acc:#4DA3FF;--accr:77,163,255;--acc2:#1b5bb5;--g1:#3D6BFF;--g2:#3DA2FF;--g3:#3DDCCB}
-@font-face{font-family:Brico;src:url(/fonts/urbanist.woff) format("woff");font-weight:100 900;font-display:swap}
+@font-face{font-family:Brico;src:url(/fonts/urbanist.woff) format("woff");font-weight:100 900;font-display:swap}@font-face{font-family:SquadW;src:url(/fonts/bricolage.woff) format("woff");font-weight:400 800;font-display:swap}
 @font-face{font-family:BricoCyr;src:url(/fonts/onest-cyr.woff) format("woff");font-weight:100 900;font-display:swap;unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:#0b0b12;color:#fff}
@@ -443,6 +443,18 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .nbp{flex:none;width:50px;height:50px;border-radius:17px;background:#15151c;color:#fff;display:grid;place-items:center;box-shadow:0 8px 18px -8px rgba(0,0,0,.5)}
 .nbt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.nbt b{font:700 21px Brico,BricoCyr,system-ui;letter-spacing:-.02em;line-height:1.1}.nbt small{font:600 13px Brico,BricoCyr,system-ui;color:rgba(21,21,28,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nba{flex:none;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:grid;place-items:center;color:#15151c}
+
+/* napis SQUAD – zawsze oryginalna czcionka logo */
+.bootl,.brand,.logo.bigl,.logo.lg2{font-family:SquadW,Brico,BricoCyr,system-ui!important}
+/* ekran logowania: spójne, symetryczne emotki w rogach */
+.fl.f1,.fl.f2,.fl.f3,.fl.f4{width:64px!important;height:64px!important;opacity:1!important;transform:none!important}
+.fl.f1{left:7%!important;right:auto!important;top:calc(7vh + env(safe-area-inset-top,0px))!important;bottom:auto!important}
+.fl.f2{right:7%!important;left:auto!important;top:calc(7vh + env(safe-area-inset-top,0px))!important;bottom:auto!important}
+.fl.f3{left:7%!important;right:auto!important;bottom:calc(6vh + env(safe-area-inset-bottom,0px))!important;top:auto!important}
+.fl.f4{right:7%!important;left:auto!important;bottom:calc(6vh + env(safe-area-inset-bottom,0px))!important;top:auto!important}
+.deco .fl{position:absolute!important;z-index:0}.scr.deco{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))!important;padding-top:calc(96px + env(safe-area-inset-top,0px))!important;box-sizing:border-box}.deco>*:not(.fl){position:relative;z-index:1}
+.fl.f1,.fl.f2,.fl.f3,.fl.f4{animation:flt2 4.5s ease-in-out infinite!important;animation-delay:0s!important}@keyframes flt2{50%{translate:0 -8px}}
+.fl.f1{margin:-2px 0 0 1px}.fl.f2{margin:-7px 0 0 0}.fl.f3{margin:1px 0 0 -2px}.fl.f4{margin:-1px 0 0 -1px}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
