@@ -502,6 +502,12 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 :root.kb .chero .htx h2{color:#17171f!important}
 .scr.chs.sk{padding-bottom:calc(14px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
 .sk #mf{margin-bottom:6px!important}:root.kb .sk #mf{margin-bottom:6px!important}
+
+/* czat v4: bez rozmycia – czysty czarny panel z zaokrągloną górą nachodzący na obrazek */
+.cpan::before{display:none!important}
+.cpan{margin-top:-28px!important;border-radius:28px 28px 0 0!important;padding-top:14px!important;box-shadow:none!important}
+.chero{height:282px}.chero .htx{bottom:52px}
+:root.kb .cpan{margin-top:-18px!important;border-radius:20px 20px 0 0!important;padding-top:10px!important}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -509,6 +515,20 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 <div class="spl" id="spl"><div class="hi5" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><i class="arc a1"></i><i class="arc a2"></i><img class="bm" src="/e/boom.webp" alt=""></div><div class="bootl">SQUAD</div><div class="sbar"><i></i></div></div>
 <div id="app"><div class="boot"><div class="hi5" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><i class="arc a1"></i><i class="arc a2"></i><img class="bm" src="/e/boom.webp" alt=""></div><div class="bootl">SQUAD</div></div></div>
 <script src="/config.js"></script>
+<script>
+/* zaproszenie /d/KOD: dane dropa pobieramy od razu (REST Firestore), równolegle z ładowaniem aplikacji i Firebase */
+(function(){try{var m=location.pathname.match(/^\/d\/(\w+)/),C=window.SQUAD_CONFIG;if(!m||!C||!C.projectId||/[?&]demo\b/.test(location.search))return;
+var code=m[1],B="https://firestore.googleapis.com/v1/projects/"+C.projectId+"/databases/(default)/documents/drops/"+code,K="key="+encodeURIComponent(C.apiKey);
+var TS=function(ms){return{toMillis:function(){return ms},toDate:function(){return new Date(ms)},seconds:Math.floor(ms/1000),nanoseconds:0}};
+var cv=function(v){if(!v)return null;if("stringValue"in v)return v.stringValue;if("integerValue"in v)return+v.integerValue;if("doubleValue"in v)return v.doubleValue;if("booleanValue"in v)return v.booleanValue;if("nullValue"in v)return null;
+  if("timestampValue"in v)return TS(Date.parse(v.timestampValue));if("mapValue"in v)return ob(v.mapValue.fields||{});if("arrayValue"in v)return(v.arrayValue.values||[]).map(cv);if("geoPointValue"in v)return{latitude:v.geoPointValue.latitude,longitude:v.geoPointValue.longitude};return null};
+var ob=function(f){var o={};for(var k in f)o[k]=cv(f[k]);return o};
+var j=function(u){return fetch(u,{cache:"no-store"}).then(function(r){if(!r.ok)throw r.status;return r.json()})};
+window.__pre={code:code,t:Date.now(),
+  d:j(B+"?"+K).then(function(x){return ob(x.fields||{})}),
+  P:j(B+"/participants?pageSize=300&"+K).then(function(x){return(x.documents||[]).map(function(dc){var o=ob(dc.fields||{});o.id=dc.name.split("/").pop();return o})})};
+window.__pre.d.catch(function(){});window.__pre.P.catch(function(){});}catch(e){}})();
+</script>
 <script>
 /* ekran ładowania: piątka + pasek postępu; znika, gdy pierwszy ekran aplikacji jest gotowy.
    Pasek jedzie animacją CSS (wątek kompozytora) – nie zacina się, nawet gdy telefon mieli JavaScript. */
@@ -1160,7 +1180,7 @@ if(DEMO){document.body.classList.add("demo");A.insertAdjacentHTML("beforebegin",
 window.msgs=()=>{if(gp()==="/"&&$("#gc"))$("#gc").scrollIntoView({behavior:"smooth"});else{go("/");setTimeout(()=>$("#gc")?.scrollIntoView({behavior:"smooth"}),350)}};
 const nav=a=>`<nav>${[["h","/",I.home,"nHome"],["c","/chats",I.chat,"nCh","bdc"],["p","/me",I.user,"nMe"]].map(([k,h,i,l,b])=>`<button class="${a==k?"on":""}" onclick="go('${h}')">${i}<span>${t(l)}</span>${b?`<b class="bd" id="${b}" hidden></b>`:""}</button>`).join("")}</nav>`;
 
-const loadDrop=async code=>{try{const r=doc(db,"drops",code),s=await getDoc(r);if(!s.exists())return null;const d=s.data();return d.expiresAt.toMillis()<=Date.now()?null:{ref:r,d}}catch{return null}};
+const loadDrop=async code=>{const pr=window.__pre;if(pr&&pr.code===code&&Date.now()-pr.t<60000){window.__pre=null;try{const [d,P]=await Promise.all([pr.d,pr.P.catch(()=>null)]);if(d&&d.expiresAt&&d.startsAt){if(P)window.__preP={code,list:P};return d.expiresAt.toMillis()<=Date.now()?null:{ref:doc(db,"drops",code),d}}}catch{}}try{const r=doc(db,"drops",code),s=await getDoc(r);if(!s.exists())return null;const d=s.data();return d.expiresAt.toMillis()<=Date.now()?null:{ref:r,d}}catch{return null}};
 const gone=g=>view(`<div class="scr cen"><h1>${t(g?"expGT":"expT")}</h1><p class="mut">${t(g?"expGD":"expD")}</p><button class="cta" onclick="go('/')">${t("back")}</button></div>`);
 const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
@@ -1560,6 +1580,8 @@ async function dropView(code){
     setTimeout(()=>installSheet(code,st),1700);
     }finally{busy=false}
   });
+  {const pp=window.__preP;if(pp&&pp.code===code){window.__preP=null;P=pp.list.sort((a,b)=>(a.updatedAt?.seconds||9e9)-(b.updatedAt?.seconds||9e9));mine=P.find(p=>p.id===me())||null}
+   try{$("#cb").innerHTML=card({id:code,...d},P,false,logged?(isHost?"host":mine?mine.status:"inv"):null);tick()}catch{}}
   unsubs.push(onSnapshot(collection(ref,"participants"),sn=>{
     P=sn.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.updatedAt?.seconds||9e9)-(b.updatedAt?.seconds||9e9));
     mine=P.find(p=>p.id===me())||null;
