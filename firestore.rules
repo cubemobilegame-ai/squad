@@ -13,6 +13,7 @@ service cloud.firestore {
     function isGuest() { return request.auth.token.firebase.sign_in_provider == 'anonymous'; }
     function drop(id) { return get(/databases/$(db)/documents/drops/$(id)).data; }
     function grp(id) { return get(/databases/$(db)/documents/groups/$(id)).data; }
+    function is16() { return exists(/databases/$(db)/documents/users/$(request.auth.uid)) && get(/databases/$(db)/documents/users/$(request.auth.uid)).data.get('pub16', false) == true; }
     function okNick(n) { return n is string && n.size() >= 1 && n.size() <= 20; }
     function okText(x) { return x is string && x.size() >= 1 && x.size() <= 500; }
     // reakcja: zmienia się tylko własny wpis w mapie r (r.<uid>), emoji z listy albo usunięcie
@@ -44,17 +45,20 @@ service cloud.firestore {
     // DROPY: link działa do startu eventu, wiadomości do 24h po evencie, potem dokument znika
     match /drops/{code} {
       allow get: if resource.data.expiresAt > request.time;
-      allow list: if signedIn() && resource.data.hostId == request.auth.uid;
+      allow list: if signedIn() && (resource.data.hostId == request.auth.uid || resource.data.get('public', false) == true);
       allow create: if signedIn() && !isGuest()
         && request.resource.data.hostId == request.auth.uid
         && request.resource.data.expiresAt > request.time
-        && request.resource.data.title.size() <= 60;
+        && request.resource.data.title.size() <= 60
+        // publiczny drop tylko od osoby, która potwierdziła wiek 16+
+        && (request.resource.data.get('public', false) != true || is16());
       allow update, delete: if signedIn() && resource.data.hostId == request.auth.uid;
 
       match /participants/{uid} {
         allow read: if drop(code).expiresAt > request.time;
         allow create, update: if signedIn() && request.auth.uid == uid
           && drop(code).startsAt > request.time
+          && (drop(code).get('public', false) != true || drop(code).hostId == uid || is16())
           && request.resource.data.status in ['in', 'late', 'out']
           && okNick(request.resource.data.nickname);
         // po starcie: tylko "przeczytane" i "pisze…"
