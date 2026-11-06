@@ -36,6 +36,14 @@
     ],
     "rewrites": [
       {
+        "source": "/child-safety",
+        "destination": "/bezpieczenstwo-dzieci.html"
+      },
+      {
+        "source": "/bezpieczenstwo-dzieci",
+        "destination": "/bezpieczenstwo-dzieci.html"
+      },
+      {
         "source": "/delete-account",
         "destination": "/usun-konto.html"
       },
