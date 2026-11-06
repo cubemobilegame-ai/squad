@@ -1732,9 +1732,15 @@ async function chatView(code,g){
       if(m.poll)return sep+`<div class="m pollm${mm?" me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}><div class="mb">${body}${rxs(m)}${sn}</div></div>`;
       return sep+`<div class="m ${mm?"me":""}${cont?" cont":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${mm?"":last?avc("mini",avIdx(pp)):'<span class="avsp"></span>'}<div class="mb"><div class="bub${m.drop?" dbub":""}">${body}</div>${rxs(m)}${last?`<div class="mmeta">${mm?`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`:`<b>${esc(pp.nickname||m.nickname)}</b>`}<span>${hm(m)}</span></div>`:""}${sn}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
     if(!b.dataset.s){const ns=$("#nsep");if(ns&&ns.offsetTop>b.clientHeight*.6)b.scrollTop=ns.offsetTop-90;else b.scrollTop=b.scrollHeight;b.dataset.s=1;b.dataset.n=M.length}
-    else if(atEnd){b.scrollTop=b.scrollHeight;below=0}else{const add=M.slice(+b.dataset.n||0).filter(x=>x.authorId!==me()).length;below+=add}
+    else if(atEnd||Date.now()-(window.__justSent||0)<4000){b.scrollTop=b.scrollHeight;below=0}else{const add=M.slice(+b.dataset.n||0).filter(x=>x.authorId!==me()).length;below+=add}
     b.dataset.n=M.length;drawDown();drawTyp()};
   const drawDown=()=>{const el=$("#mdn");if(!el)return;el.hidden=below<1;el.querySelector("b").textContent=below};
+  /* czat zawsze przyklejony do najnowszej wiadomości: także gdy dociągają się obrazki, otwiera klawiatura albo zwija grafika u góry */
+  {const b=$("#msgs");if(b){let pin=true;const toEnd=()=>{if(pin)b.scrollTop=b.scrollHeight};
+    b.addEventListener("scroll",()=>{pin=b.scrollHeight-b.scrollTop-b.clientHeight<80},{passive:true});
+    b.addEventListener("load",toEnd,true);
+    if(window.ResizeObserver){const ro=new ResizeObserver(toEnd);ro.observe(b);unsubs.push(()=>ro.disconnect())}
+    window.__chatEnd=()=>{pin=true;b.scrollTop=b.scrollHeight};setTimeout(()=>{if(!$("#nsep"))window.__chatEnd()},350)}}
   /* przeczytane: zapisujemy, do kiedy przeczytałem czat (max raz na 3 s) */
   let rdW=0,rdT=null;const markRead=()=>{if(!mine||document.hidden||!M.length||DEMO)return;const lt=tms(M[M.length-1]);if(lt<=rdW)return;clearTimeout(rdT);rdT=setTimeout(()=>{rdW=Date.now();updateDoc(doc(ref,pc,me()),{readAt:serverTimestamp()}).catch(()=>{})},600)};
   document.addEventListener("visibilitychange",markRead);unsubs.push(()=>document.removeEventListener("visibilitychange",markRead));
@@ -1770,7 +1776,7 @@ async function chatView(code,g){
     $("#mpl").onclick=pollSheet;
     $("#msgs").addEventListener("click",e=>{const v=e.target.closest("[data-pv]"),a=e.target.closest("[data-pa]");if(a){e.stopPropagation();const [id,i]=a.dataset.pa.split(":");return applyPoll(id,+i)}if(v){e.stopPropagation();const [id,i]=v.dataset.pv.split(":");vote(id,+i)}});
     {const b=$("#msgs");if(b)b.addEventListener("scroll",()=>{if(below&&b.scrollHeight-b.scrollTop-b.clientHeight<80){below=0;drawDown()}},{passive:true})}
-    $("#mf").onsubmit=async e=>{e.preventDefault();const x=$("#mi").value.trim();if(!x)return;$("#mi").value="";typing(false);seen0=0;below=0;$("#mi").focus();sfx("send");vib(12);{const b=$("#msb");b.classList.remove("sgo");void b.offsetWidth;b.classList.add("sgo")}window.__justSent=Date.now();
+    $("#mf").onsubmit=async e=>{e.preventDefault();const x=$("#mi").value.trim();if(!x)return;$("#mi").value="";typing(false);seen0=0;below=0;$("#mi").focus();sfx("send");vib(12);{const b=$("#msb");b.classList.remove("sgo");void b.offsetWidth;b.classList.add("sgo")}window.__justSent=Date.now();window.__chatEnd&&window.__chatEnd();
       const mr=await addDoc(collection(ref,"messages"),{authorId:me(),nickname:mine.nickname,text:clean(x),createdAt:serverTimestamp()});pushNow({kind:"msg",code,id:mr.id,group:!!g});bump("msgs")};
   },()=>{}));
 }
