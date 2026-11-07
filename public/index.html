@@ -545,6 +545,18 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .crn{flex:1;min-width:0;display:flex;flex-direction:column}.crn b{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.crn small{font-size:11.5px;color:rgba(255,255,255,.5);font-weight:600}
 .cst{flex:none;font-size:11px;font-weight:800;letter-spacing:.03em;padding:5px 10px;border-radius:99px;color:#15151c}.cst.in{background:#7ff0b4}.cst.late{background:#ffd27a}.cst.out{background:rgba(255,157,176,.85)}
 .iosn{text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:12px 14px;margin:14px 0 4px}.iosn b{display:block;font-size:14px}.iosn small{display:block;margin-top:3px;font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.65)}.iosn .lnk{margin-top:6px;font-size:13px;padding:0}
+
+/* ankieta w czacie: szersza i czytelniejsza */
+.m.pollm{max-width:94%!important;width:94%}.m.pollm .mb{flex:1;min-width:0;width:100%;align-items:stretch!important;max-width:none!important}.m.pollm.me{margin-left:auto}
+.m.pollm .poll{width:100%;box-sizing:border-box;padding:16px 16px 14px;border-radius:22px;background:#17171d;border-color:rgba(255,255,255,.1)}
+.pollm .pq{margin-bottom:12px}.pollm .pq span{font-size:22px}.pollm .pq b{font-size:18px;line-height:1.3}
+.pollm .po{padding:14px 14px;margin:9px 0;font-size:16px;border-radius:16px}.pollm .po .pr .av{width:24px!important;height:24px!important}.pollm .po em{font-size:14px}
+.pollm .pf{font-size:12.5px;margin-top:10px}
+/* okienka (np. tworzenie ankiety) przy otwartej klawiaturze: mieszczą się w widocznej części i dają się przewijać */
+:root.kb .sheetbg{inset:auto 0 auto 0;top:var(--vvt,0px);height:var(--vvh,100dvh)}
+:root.kb .sheet{max-height:calc(var(--vvh,100dvh) - 10px);padding-bottom:14px}
+.sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+:root:has(.sheetbg) .chero{transition:none!important}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -1734,6 +1746,7 @@ async function chatView(code,g){
     s.querySelectorAll("#pk .chip").forEach(c=>c.onclick=()=>{vib(8);setK(c.dataset.k)});setK(k);
     q("#padd").onclick=()=>{const n=s.querySelectorAll(".popt").length;if(n>=5)return;q("#pos").insertAdjacentHTML("beforeend",row());s.querySelectorAll(".popt")[n].focus()};
     q("#pcn").onclick=s.close;
+    s.addEventListener("focusin",e=>{const el=e.target;if(el.tagName!=="INPUT")return;setTimeout(()=>{try{el.scrollIntoView({block:"center",behavior:"smooth"})}catch{}},350)});
     q("#pgo").onclick=async()=>{const qq=q("#pq").value.trim(),o=[...s.querySelectorAll(".popt")].map(x=>x.value.trim()).filter(Boolean);
       if(!qq||o.length<2){vib([50,30,50]);return toast(t("pNeed"))}if([qq,...o].some(isBad)){vib([50,30,50]);return toast(t("noBad"))}
       q("#pgo").disabled=true;try{const r=await addDoc(collection(ref,"messages"),{authorId:me(),nickname:mine.nickname,text:"📊 "+qq.slice(0,80),poll:{q:qq.slice(0,80),k,o:[...new Set(o)].slice(0,6).map(x=>x.slice(0,40))},v:{},createdAt:serverTimestamp()});
@@ -1749,10 +1762,10 @@ async function chatView(code,g){
       if(!nsepDone&&seen0&&!mm&&T>seen0){nsepDone=true;const n=M.filter(x=>x.authorId!==me()&&tms(x)>seen0).length;sep+=`<div class="nsep" id="nsep"><span>${t("newMsgs",n)}</span></div>`;prev=null}
       if(!mm&&isBlk(m.authorId)){prev=null;return sep+`<div class="m hid"><div>${t("hiddenMsg")}</div></div>`}
       const pp=P.find(p=>p.id===m.authorId)||{id:m.authorId},cont=prev&&prev.authorId===m.authorId&&T-tms(prev)<5*60e3;prev=m;const nx=M[mi+1],last=!(nx&&nx.authorId===m.authorId&&tms(nx)-T<5*60e3&&new Date(tms(nx)).toDateString()===dk);
-      const body=m.drop?dropCard(m):m.poll?pollCard(m):esc(clean(m.text));
+      const body=m.drop?dropCard(m):m.poll?pollCard(m):esc(clean(m.text));const isPoll=!!m.poll;
       const sn=m===lm&&seen.length?`<div class="seen ${mm?"r":""}" title="${esc(seen.map(p=>p.nickname).join(", "))}">${seen.slice(0,5).map(p=>avc("mini",avIdx(p))).join("")}${seen.length>5?`<b>+${seen.length-5}</b>`:""}<small>${t("seenBy")}</small></div>`:"";
       if(m.poll)return sep+`<div class="m pollm${mm?" me":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}><div class="mb">${body}${rxs(m)}${sn}</div></div>`;
-      return sep+`<div class="m ${mm?"me":""}${cont?" cont":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${mm?"":last?avc("mini",avIdx(pp)):'<span class="avsp"></span>'}<div class="mb"><div class="bub${m.drop?" dbub":""}">${body}</div>${rxs(m)}${last?`<div class="mmeta">${mm?`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`:`<b>${esc(pp.nickname||m.nickname)}</b>`}<span>${hm(m)}</span></div>`:""}${sn}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
+      return sep+`<div class="m ${mm?"me":""}${cont?" cont":""}" data-i="${esc(m.id)}" ${mm?"":`data-a="${esc(m.authorId)}"`}>${mm?"":last?avc("mini",avIdx(pp)):'<span class="avsp"></span>'}<div class="mb"><div class="bub${m.drop?" dbub":""}${m.poll?" pbub":""}">${body}</div>${rxs(m)}${last?`<div class="mmeta">${mm?`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`:`<b>${esc(pp.nickname||m.nickname)}</b>`}<span>${hm(m)}</span></div>`:""}${sn}</div></div>`}).join("")||`<p class="mut" style="text-align:center">${t("first")}</p>`);
     if(!b.dataset.s){const ns=$("#nsep");if(ns&&ns.offsetTop>b.clientHeight*.6)b.scrollTop=ns.offsetTop-90;else b.scrollTop=b.scrollHeight;b.dataset.s=1;b.dataset.n=M.length}
     else if(atEnd||Date.now()-(window.__justSent||0)<4000){b.scrollTop=b.scrollHeight;below=0}else{const add=M.slice(+b.dataset.n||0).filter(x=>x.authorId!==me()).length;below+=add}
     b.dataset.n=M.length;drawDown();drawTyp()};
