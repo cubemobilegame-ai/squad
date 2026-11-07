@@ -5,14 +5,14 @@
 
 const ORIGINS = ["https://squad-64cd5.web.app", "https://squad-64cd5.firebaseapp.com", "http://localhost:8766"];
 const TX = {
-  pl: { reply: (ti) => `odpowiedzi w dropie „${ti}”`, join: (n, g) => [`👋 ${n} dołącza do ekipy`, `grupa „${g}”`], change: (ti, w, p) => [`✏️ Zmiana w dropie „${ti}”`, `nowy plan: ${w} · ${p}`], surprise: "niespodzianka 🎁" },
-  en: { reply: (ti) => `replies to “${ti}”`, join: (n, g) => [`👋 ${n} joined the crew`, `group “${g}”`], change: (ti, w, p) => [`✏️ “${ti}” has changed`, `new plan: ${w} · ${p}`], surprise: "surprise 🎁" },
-  es: { reply: (ti) => `respuestas en «${ti}»`, join: (n, g) => [`👋 ${n} se une a la crew`, `grupo «${g}»`], change: (ti, w, p) => [`✏️ Cambio en «${ti}»`, `nuevo plan: ${w} · ${p}`], surprise: "sorpresa 🎁" },
-  de: { reply: (ti) => `Antworten zu „${ti}“`, join: (n, g) => [`👋 ${n} ist jetzt in der Crew`, `Gruppe „${g}“`], change: (ti, w, p) => [`✏️ „${ti}“ wurde geändert`, `neuer Plan: ${w} · ${p}`], surprise: "Überraschung 🎁" },
-  fr: { reply: (ti) => `réponses à « ${ti} »`, join: (n, g) => [`👋 ${n} rejoint la team`, `groupe « ${g} »`], change: (ti, w, p) => [`✏️ « ${ti} » a changé`, `nouveau plan : ${w} · ${p}`], surprise: "surprise 🎁" },
-  it: { reply: (ti) => `risposte a «${ti}»`, join: (n, g) => [`👋 ${n} entra nella crew`, `gruppo «${g}»`], change: (ti, w, p) => [`✏️ «${ti}» è cambiato`, `nuovo piano: ${w} · ${p}`], surprise: "sorpresa 🎁" },
-  cs: { reply: (ti) => `odpovědi na „${ti}“`, join: (n, g) => [`👋 ${n} se přidává k partě`, `skupina „${g}“`], change: (ti, w, p) => [`✏️ Změna v „${ti}“`, `nový plán: ${w} · ${p}`], surprise: "překvapení 🎁" },
-  uk: { reply: (ti) => `відповіді на «${ti}»`, join: (n, g) => [`👋 ${n} приєднується до компанії`, `група «${g}»`], change: (ti, w, p) => [`✏️ Зміна в «${ti}»`, `новий план: ${w} · ${p}`], surprise: "сюрприз 🎁" },
+  pl: { remind: (ti, w, p) => [`⏰ Za ok. 30 min: ${ti}`, `start ${w} · ${p}`], reply: (ti) => `odpowiedzi w dropie „${ti}”`, join: (n, g) => [`👋 ${n} dołącza do ekipy`, `grupa „${g}”`], change: (ti, w, p) => [`✏️ Zmiana w dropie „${ti}”`, `nowy plan: ${w} · ${p}`], surprise: "niespodzianka 🎁" },
+  en: { remind: (ti, w, p) => [`⏰ In about 30 min: ${ti}`, `starts ${w} · ${p}`], reply: (ti) => `replies to “${ti}”`, join: (n, g) => [`👋 ${n} joined the crew`, `group “${g}”`], change: (ti, w, p) => [`✏️ “${ti}” has changed`, `new plan: ${w} · ${p}`], surprise: "surprise 🎁" },
+  es: { remind: (ti, w, p) => [`⏰ En unos 30 min: ${ti}`, `empieza ${w} · ${p}`], reply: (ti) => `respuestas en «${ti}»`, join: (n, g) => [`👋 ${n} se une a la crew`, `grupo «${g}»`], change: (ti, w, p) => [`✏️ Cambio en «${ti}»`, `nuevo plan: ${w} · ${p}`], surprise: "sorpresa 🎁" },
+  de: { remind: (ti, w, p) => [`⏰ In ca. 30 Min.: ${ti}`, `Start ${w} · ${p}`], reply: (ti) => `Antworten zu „${ti}“`, join: (n, g) => [`👋 ${n} ist jetzt in der Crew`, `Gruppe „${g}“`], change: (ti, w, p) => [`✏️ „${ti}“ wurde geändert`, `neuer Plan: ${w} · ${p}`], surprise: "Überraschung 🎁" },
+  fr: { remind: (ti, w, p) => [`⏰ Dans 30 min environ : ${ti}`, `début ${w} · ${p}`], reply: (ti) => `réponses à « ${ti} »`, join: (n, g) => [`👋 ${n} rejoint la team`, `groupe « ${g} »`], change: (ti, w, p) => [`✏️ « ${ti} » a changé`, `nouveau plan : ${w} · ${p}`], surprise: "surprise 🎁" },
+  it: { remind: (ti, w, p) => [`⏰ Tra circa 30 min: ${ti}`, `inizio ${w} · ${p}`], reply: (ti) => `risposte a «${ti}»`, join: (n, g) => [`👋 ${n} entra nella crew`, `gruppo «${g}»`], change: (ti, w, p) => [`✏️ «${ti}» è cambiato`, `nuovo piano: ${w} · ${p}`], surprise: "sorpresa 🎁" },
+  cs: { remind: (ti, w, p) => [`⏰ Asi za 30 min: ${ti}`, `začátek ${w} · ${p}`], reply: (ti) => `odpovědi na „${ti}“`, join: (n, g) => [`👋 ${n} se přidává k partě`, `skupina „${g}“`], change: (ti, w, p) => [`✏️ Změna v „${ti}“`, `nový plán: ${w} · ${p}`], surprise: "překvapení 🎁" },
+  uk: { remind: (ti, w, p) => [`⏰ Приблизно за 30 хв: ${ti}`, `початок ${w} · ${p}`], reply: (ti) => `відповіді на «${ti}»`, join: (n, g) => [`👋 ${n} приєднується до компанії`, `група «${g}»`], change: (ti, w, p) => [`✏️ Зміна в «${ti}»`, `новий план: ${w} · ${p}`], surprise: "сюрприз 🎁" },
 };
 const ST = { in: "IN ⚡", out: "OUT" };
 
@@ -168,7 +168,31 @@ function ics(q) {
   return new Response(body, { headers: { "Content-Type": "text/calendar; charset=utf-8", "Content-Disposition": 'inline; filename="squad-drop.ics"', "Cache-Control": "no-store" } });
 }
 
+
+// ---------- przypomnienia ok. 30 min przed startem (Cloudflare Cron co 5 min – GitHub Actions bywa spóźniony o godziny) ----------
+async function reminders(envRaw) {
+  const SA = JSON.parse(envRaw.FIREBASE_SA), env = { SA, PID: SA.project_id, SELF: "https://squad-push.workers.dev" }, db = fs(env);
+  const now = Date.now(), H = { Authorization: "Bearer " + (await access(SA)), "Content-Type": "application/json" };
+  const base = `https://firestore.googleapis.com/v1/projects/${env.PID}/databases/(default)/documents`;
+  const q = { structuredQuery: { from: [{ collectionId: "drops" }], where: { compositeFilter: { op: "AND", filters: [
+    { fieldFilter: { field: { fieldPath: "startsAt" }, op: "GREATER_THAN_OR_EQUAL", value: { timestampValue: new Date(now + 5 * 6e4).toISOString() } } },
+    { fieldFilter: { field: { fieldPath: "startsAt" }, op: "LESS_THAN_OR_EQUAL", value: { timestampValue: new Date(now + 40 * 6e4).toISOString() } } }] } }, limit: 200 } };
+  const rows = await (await fetch(base + ":runQuery", { method: "POST", headers: H, body: JSON.stringify(q) })).json();
+  let n = 0;
+  for (const r of rows || []) {
+    if (!r.document) continue; const id = r.document.name.split("/").pop(), d = obj(r.document.fields);
+    if (d.reminded) continue;
+    // najpierw znacznik (z warunkiem aktualnej wersji dokumentu), żeby nie wysłać dwa razy razem z automatem z GitHuba
+    const up = await fetch(`${base}/drops/${id}?updateMask.fieldPaths=reminded&currentDocument.updateTime=${encodeURIComponent(r.document.updateTime)}`, { method: "PATCH", headers: H, body: JSON.stringify({ fields: { reminded: { booleanValue: true } } }) });
+    if (!up.ok) continue;
+    const to = (await db.list(`drops/${id}/participants`)).filter((p) => p.status === "in" || p.status === "late").map((p) => p.id);
+    n += await notify(env, db, to, "rem", (T) => T.remind(d.title, hhmm(d.startsAt), d.surprise ? T.surprise : d.place), `/d/${id}`);
+  }
+  if (n) await logEv(env, { kind: "rem", sent: n });
+}
+
 export default {
+  async scheduled(ev, envRaw, ctx) { ctx.waitUntil(reminders(envRaw).catch((e) => logEv({ SA: JSON.parse(envRaw.FIREBASE_SA), PID: JSON.parse(envRaw.FIREBASE_SA).project_id }, { kind: "rem", err: e.message }))); },
   async fetch(req, envRaw, ctx) {
     const origin = req.headers.get("Origin") || "", allow = ORIGINS.includes(origin) || /^https:\/\/[a-z0-9-]+\.squad-64cd5\.web\.app$/.test(origin);
     const cors = { "Access-Control-Allow-Origin": allow ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Max-Age": "86400" };

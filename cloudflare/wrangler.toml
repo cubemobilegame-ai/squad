@@ -2,3 +2,7 @@ name = "squad-push"
 main = "worker.js"
 compatibility_date = "2024-09-23"
 workers_dev = true
+
+# przypomnienia 30 min przed startem dropa
+[triggers]
+crons = ["*/5 * * * *"]
