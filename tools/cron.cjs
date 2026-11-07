@@ -1,4 +1,4 @@
-// SQUAD – automat co ok. 10 minut (GitHub Actions), zamiast funkcji w chmurze (plan darmowy Spark).
+// Squad – automat co ok. 10 minut (GitHub Actions), zamiast funkcji w chmurze (plan darmowy Spark).
 // 1) powiadomienia push: nowe wiadomości, odpowiedzi IN/LATE/OUT, nowe osoby w grupie, zmiany w dropie, „ekipa w komplecie”
 // 2) przypomnienie ok. 30 min przed startem  3) sprzątanie dropów 24 h po starcie
 const admin = require("firebase-admin");

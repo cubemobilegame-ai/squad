@@ -33,7 +33,7 @@ fs.mkdirSync(`${B}/app/src/main/res/values`, { recursive: true });
 fs.writeFileSync(`${B}/app/src/main/res/values/squad_colors.xml`, `<?xml version="1.0" encoding="utf-8"?>\n<resources><color name="squadAccent">#FF4F86</color></resources>\n`);
 fs.mkdirSync(`${B}/app/src/main/res/drawable`, { recursive: true });
 fs.writeFileSync(`${B}/app/src/main/res/drawable/ic_stat_squad.xml`, `<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
-  <path android:fillColor="#FFFFFFFF" android:pathData="M7,9.5a3,3 0,1 0,0.01 0zM17,9.5a3,3 0,1 0,0.01 0zM12,7a3.5,3.5 0,1 0,0.01 0zM2,19c0,-3 2.5,-5 5,-5c1.3,0 2.4,0.4 3.2,1.1C10.4,14.4 11.2,14 12,14s1.6,0.4 1.8,1.1C14.6,14.4 15.7,14 17,14c2.5,0 5,2 5,5v1H2z"/>
+  <path android:fillColor="#FFFFFFFF" android:pathData="M12,2Q13.6,10.4 22,12Q13.6,13.6 12,22Q10.4,13.6 2,12Q10.4,10.4 12,2Z"/>
 </vector>\n`);
 
 // 3) LauncherActivity: zgoda (Android 13+), token FCM -> strona, kliknięcie powiadomienia -> właściwy adres
@@ -63,7 +63,7 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             if (nm != null && nm.getNotificationChannel("squad") == null) {
-                NotificationChannel ch = new NotificationChannel("squad", "SQUAD", NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel ch = new NotificationChannel("squad", "Squad", NotificationManager.IMPORTANCE_HIGH);
                 ch.enableVibration(true);
                 nm.createNotificationChannel(ch);
             }
@@ -120,7 +120,7 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
 }
 `);
 
-// 4) Własna usługa powiadomień: kto napisał + treść + okrągły awatar nadawcy, logo SQUAD w pasku
+// 4) Własna usługa powiadomień: kto napisał + treść + okrągły awatar nadawcy, logo Squad w pasku
 fs.writeFileSync(`${pkgDir}/SquadMessagingService.java`, `package ${app.packageId};
 
 import android.app.NotificationManager;

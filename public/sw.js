@@ -1,4 +1,4 @@
-/* SQUAD – service worker: powiadomienia push (Firebase Cloud Messaging) + komunikat bez internetu */
+/* Squad – service worker: powiadomienia push (Firebase Cloud Messaging) + komunikat bez internetu */
 /* kliknięcie w powiadomienie: od razu właściwy czat / drop (ten handler jest przed Firebase, żeby to on decydował) */
 self.addEventListener("notificationclick", (e) => {
   const d = e.notification.data || {}, F = d.FCM_MSG || {};
@@ -22,5 +22,5 @@ self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET" || e.request.mode !== "navigate") return;
-  e.respondWith(fetch(e.request).catch(() => new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="background:#0b0b12;color:#fff;font-family:system-ui;display:grid;place-items:center;height:100vh;margin:0;text-align:center"><div><h1>📡</h1><p>Brak internetu – SQUAD wróci, gdy złapiesz zasięg.</p></div>', { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } })));
+  e.respondWith(fetch(e.request).catch(() => new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><body style="background:#0b0b12;color:#fff;font-family:system-ui;display:grid;place-items:center;height:100vh;margin:0;text-align:center"><div><h1>📡</h1><p>Brak internetu – Squad wróci, gdy złapiesz zasięg.</p></div>', { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } })));
 });

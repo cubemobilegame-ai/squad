@@ -1,4 +1,4 @@
-// SQUAD – natychmiastowe powiadomienia push (Cloudflare Workers, plan darmowy).
+// Squad – natychmiastowe powiadomienia push (Cloudflare Workers, plan darmowy).
 // Aplikacja po wysłaniu wiadomości / odpowiedzi IN-LATE-OUT / dołączeniu do grupy / zmianie dropa woła POST /notify.
 // Worker sprawdza token logowania Firebase, czyta dane z Firestore i wysyła powiadomienia przez Firebase Cloud Messaging.
 // Sekret: FIREBASE_SA (cały plik JSON konta usługi Firebase).
@@ -77,7 +77,7 @@ async function logEv(env, o) {
 
 // ---------- wysyłka ----------
 async function notify(env, db, uids, kind, build, link, from) {
-  // duża ikona = awatar osoby, która napisała (albo logo SQUAD)
+  // duża ikona = awatar osoby, która napisała (albo logo Squad)
   let icon = `https://${env.PID}.web.app/icon-192.png`;
   if (from) { const f = await db.get(`users/${from}`); if (f && f.avUrl) icon = f.avUrl; else if (f && f.avImg) icon = `${env.SELF}/av/${from}?v=${f.avV || 0}`; }
   let sent = 0; const st = env.stats = { to: 0, users: 0, toks: 0, errs: [] };
@@ -131,7 +131,7 @@ async function handle(env, uid, b) {
     const where = r.code ? (r.chat === "group" || r.target === "group" ? `https://${env.PID}.web.app/g/${r.code}` : `https://${env.PID}.web.app/d/${r.code}`) : "-";
     const res = await fetch("https://formsubmit.co/ajax/cubemobilegame@gmail.com", { method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json", Origin: `https://${env.PID}.web.app`, Referer: `https://${env.PID}.web.app/` },
-      body: JSON.stringify({ _subject: `SQUAD – nowe zgłoszenie: ${R[r.reason] || r.reason}`, _template: "table", _captcha: "false",
+      body: JSON.stringify({ _subject: `Squad – nowe zgłoszenie: ${R[r.reason] || r.reason}`, _template: "table", _captcha: "false",
         "Powód": R[r.reason] || r.reason, "Co zgłoszono": T[r.target] || r.target || "-", "Gdzie": where,
         "Szczegóły (Firebase)": `https://console.firebase.google.com/project/${env.PID}/firestore/data/~2Freports~2F${b.id}`,
         "Czas": new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" }) }) });
@@ -163,7 +163,7 @@ function ics(q) {
   const s = +q.get("s"), e = +q.get("e") || s + 7200000; if (!s || s < 1.5e12 || s > 4e12) return new Response("bad", { status: 400 });
   const z = (x) => new Date(x).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""), f = (x, n = 300) => String(x || "").slice(0, n).replace(/[\\;,]/g, (m) => "\\" + m).replace(/[\r\n]+/g, " ");
   const u = /^https:\/\/[a-z0-9.-]+\/[A-Za-z0-9/_-]*$/.test(q.get("u") || "") ? q.get("u") : "";
-  const body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//SQUAD//PL", "METHOD:PUBLISH", "BEGIN:VEVENT", `UID:${s}-${Math.abs([...(u + q.get("t")).slice(0, 80)].reduce((h, c) => h * 31 + c.charCodeAt(0) | 0, 7))}@squad`, "DTSTAMP:" + z(Date.now()), "DTSTART:" + z(s), "DTEND:" + z(e),
+  const body = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Squad//PL", "METHOD:PUBLISH", "BEGIN:VEVENT", `UID:${s}-${Math.abs([...(u + q.get("t")).slice(0, 80)].reduce((h, c) => h * 31 + c.charCodeAt(0) | 0, 7))}@squad`, "DTSTAMP:" + z(Date.now()), "DTSTART:" + z(s), "DTEND:" + z(e),
     "SUMMARY:" + f(q.get("t"), 120), "LOCATION:" + f(q.get("l"), 200), "DESCRIPTION:" + f(q.get("d"), 300), ...(u ? ["URL:" + u] : []), "BEGIN:VALARM", "TRIGGER:-PT30M", "ACTION:DISPLAY", "DESCRIPTION:" + f(q.get("t"), 120), "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
   return new Response(body, { headers: { "Content-Type": "text/calendar; charset=utf-8", "Content-Disposition": 'inline; filename="squad-drop.ics"', "Cache-Control": "no-store" } });
 }
@@ -186,7 +186,7 @@ export default {
       const body = await req.json();
       if (body.kind === "test") {
         const db = fs(env);
-        const n = await notify(env, db, [uid], null, () => ["🔔 SQUAD – test", "Powiadomienia działają! ✓"], "/me");
+        const n = await notify(env, db, [uid], null, () => ["🔔 Squad – test", "Powiadomienia działają! ✓"], "/me");
         const r = { sent: n, toks: env.stats.toks, errs: env.stats.errs };
         ctx.waitUntil(logEv(env, { kind: "test", from: uid.slice(0, 8), sent: n, to: 1, toks: env.stats.toks, errs: env.stats.errs.join(" | ") }));
         return json(r, 200, cors);

@@ -2,10 +2,10 @@
 import fs from "fs";
 let s = fs.readFileSync("public/index.html", "utf8");
 const R = [
-  [/<title>[^<]*<\/title>/, "<title>SQUAD – dołącz do ekipy</title>"],
-  [/(<meta property="og:title" content=")[^"]*/, "$1👋 Zaproszenie do ekipy na SQUAD"],
+  [/<title>[^<]*<\/title>/, "<title>Squad – dołącz do ekipy</title>"],
+  [/(<meta property="og:title" content=")[^"]*/, "$1👋 Zaproszenie do ekipy na Squad"],
   [/(<meta property="og:description" content=")[^"]*/, "$1Twoi znajomi mają stałą ekipę z czatem. Kliknij i dołącz – bez instalowania."],
-  [/zaproszenie-v4\.jpg/g, "zaproszenie-grupa-v2.jpg"],
+  [/zaproszenie-v5\.jpg/g, "zaproszenie-grupa-v3.jpg"],
   [/(<meta property="og:image:alt" content=")[^"]*/, "$1SQUAD – zaproszenie do ekipy"],
 ];
 for (const [a, b] of R) s = s.replace(a, b);
