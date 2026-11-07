@@ -1195,7 +1195,7 @@ const avIdx=p=>p&&p.ph?p.ph:p&&p.av!=null?(+p.av>=1000?+p.av:+p.av%AVN):hs(p?.id
 
 let unsubs=[],redraw=null;
 const setTheme=()=>{try{document.documentElement.classList.toggle("boy",avBoy(myAv()))}catch{}};
-const view=h=>{if(!window.__splV&&window.__splDone){window.__splV=1;requestAnimationFrame(()=>requestAnimationFrame(()=>window.__splDone()))}setTheme();document.querySelectorAll(".sheetbg,.crop,.lb,.cel,.rxbg").forEach(e=>e.remove());unsubs.forEach(u=>u());unsubs=[];redraw=null;A.innerHTML=h;scrollTo(0,0)};
+const view=h=>{if(!window.__splV&&window.__splDone){window.__splV=1;requestAnimationFrame(()=>requestAnimationFrame(()=>window.__splDone()))}setTheme();document.querySelectorAll(".sheetbg,.crop,.lb,.cel,.rxbg").forEach(e=>e.remove());unsubs.forEach(u=>u());unsubs=[];redraw=null;A.innerHTML=h;const rs=window.__rest;window.__rest=null;scrollTo(0,0);if(rs){const f=()=>scrollTo(0,rs);requestAnimationFrame(f);setTimeout(f,60);setTimeout(f,250)}};
 const every=(fn,ms)=>{fn();const id=setInterval(fn,ms);unsubs.push(()=>clearInterval(id))};
 window.toast=m=>{const e=document.createElement("div");e.className="toast";e.textContent=m;document.body.append(e);setTimeout(()=>e.remove(),2400)};
 addEventListener("unhandledrejection",e=>toast(t("oops")+(e.reason?.message||e.reason)));
@@ -1229,8 +1229,10 @@ function watch(){const u=auth.currentUser;if(!u||(u.isAnonymous&&sget("guest")!=
   joinedG().forEach(async c=>{try{const r=await getDoc(doc(db,"groups",c));if(r.exists()&&!S.groups.has(c)){S.groups.set(c,{id:c,...r.data()});gupd()}}catch{}});}
 
 /* ---------- ROUTER ---------- */
-window.go=p=>{DEMO?PATH=p:history.pushState(0,"",p);route()};
-if(!DEMO)addEventListener("popstate",()=>route());
+/* powrót (np. z polityki prywatności do profilu) wraca w to samo miejsce ekranu, a nie na górę */
+const SCR={};
+window.go=p=>{const cur=gp();SCR[cur]=scrollY;window.__rest=(p===window.__from&&SCR[p]!=null)?SCR[p]:null;window.__from=cur;DEMO?PATH=p:history.pushState(0,"",p);route()};
+if(!DEMO)addEventListener("popstate",()=>{const cur=gp();window.__rest=SCR[cur]!=null?SCR[cur]:null;route()});
 const gp=()=>DEMO?PATH:location.pathname;
 function route(){const p=gp(),m=r=>p.match(r),d=m(/^\/d\/(\w+)/),c=m(/^\/c\/(\w+)/),g=m(/^\/g\/(\w+)/),gc=m(/^\/gc\/(\w+)/);
   if(d)dropView(d[1].toUpperCase());else if(c)chatView(c[1].toUpperCase(),0);else if(g)groupView(g[1].toUpperCase());else if(gc)chatView(gc[1].toUpperCase(),1);
