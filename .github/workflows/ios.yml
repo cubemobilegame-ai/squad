@@ -23,6 +23,13 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "20" }
 
+      - name: Xcode 26 (wymagany przez App Store Connect)
+        run: |
+          ls /Applications | grep -i xcode || true
+          X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          [ -z "$X" ] && { echo "::error::Brak Xcode 26 na runnerze"; exit 1; }
+          sudo xcode-select -s "$X/Contents/Developer"; xcodebuild -version
+
       - name: Konfiguracja Firebase (aplikacja iOS)
         env: { SA: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" }
         run: |
