@@ -11,7 +11,7 @@ var ua=navigator.userAgent,play="https://play.google.com/store/apps/details?id="
     app="https://apps.apple.com/app/id"+APPLE_ID,to="/";
 var isIOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
 if(/Android/i.test(ua))to=play;
-else if(isIOS){if(IOS_LIVE)to=app;else{document.getElementById("m").textContent="Squad na iPhone’a będzie dostępny od 29 listopada 2026.";to=null}}
+else if(isIOS){if(IOS_LIVE)to=app;else{document.getElementById("m").textContent="Wersja Squad na iPhone’a będzie dostępna wkrótce.";to=null}}
 else{to=play}
 document.getElementById("l").href=to||"/";
 if(to)location.replace(to);
