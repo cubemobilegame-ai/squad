@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pobierz Squad</title><meta name="robots" content="noindex">
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b0b12;color:#fff;font:600 18px/1.5 Urbanist,system-ui,-apple-system,sans-serif;text-align:center;padding:24px}a{color:#ff7aa0}</style></head>
+<body><div><p id="m">Przekierowuję do sklepu…</p><p><a id="l" href="/">Przejdź na stronę Squad</a></p></div>
+<script>
+// Inteligentne przekierowanie (kod QR / przyciski): Android -> Google Play, iPhone -> App Store (gdy już działa), reszta -> strona.
+var PLAY_ID="com.cubemobilegames.squad",APPLE_ID="6833583410",IOS_LIVE=false;
+var q=new URLSearchParams(location.search),src=(q.get("s")||"web").replace(/[^a-z0-9_]/gi,"").slice(0,20)||"web";
+var ua=navigator.userAgent,play="https://play.google.com/store/apps/details?id="+PLAY_ID+"&referrer="+encodeURIComponent("utm_source=landing&utm_medium="+src+"&utm_campaign=web"),
+    app="https://apps.apple.com/app/id"+APPLE_ID,to="/";
+var isIOS=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+if(/Android/i.test(ua))to=play;
+else if(isIOS){if(IOS_LIVE)to=app;else{document.getElementById("m").textContent="Squad na iPhone’a będzie dostępny od 29 listopada 2026.";to=null}}
+else{to=play}
+document.getElementById("l").href=to||"/";
+if(to)location.replace(to);
+</script></body></html>

@@ -56,7 +56,7 @@ jobs:
       - name: Wdrożenie strony
         run: |
           cat > firebase-landing.json <<J
-          {"hosting":{"site":"$SITE","public":"landing","ignore":["firebase.json"],"headers":[{"source":"**","headers":[{"key":"Cache-Control","value":"no-cache"}]}]}}
+          {"hosting":{"site":"$SITE","public":"landing","ignore":["firebase.json"],"cleanUrls":true,"headers":[{"source":"**","headers":[{"key":"Cache-Control","value":"no-cache"}]}]}}
           J
           npx -y firebase-tools@13 deploy --project "$PROJECT" --config firebase-landing.json --only hosting --non-interactive --force
           echo "::notice title=Adres strony::https://$SITE.web.app"
