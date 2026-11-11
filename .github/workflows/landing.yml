@@ -1,0 +1,62 @@
+name: Strona wizytówkowa – wdrożenie
+
+# Osobna, darmowa strona w Firebase Hosting (w tym samym projekcie), z krótkim adresem *.web.app.
+# NIE dotyka aplikacji ani jej adresu. Wdraża tylko katalog landing/.
+on:
+  push:
+    branches: [main]
+    paths: ["landing/**", ".github/workflows/landing.yml"]
+  workflow_dispatch:
+    inputs:
+      site:
+        description: "Nazwa strony (adres NAZWA.web.app). Puste = pierwsza wolna z listy"
+        required: false
+
+concurrency: { group: landing, cancel-in-progress: false }
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Klucz dostępu do Firebase
+        env: { SA: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" }
+        run: |
+          [ -n "$SA" ] || { echo "::error::Brak sekretu FIREBASE_SERVICE_ACCOUNT"; exit 1; }
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/sa.json" >> "$GITHUB_ENV"
+      - name: Wybierz lub utwórz stronę
+        env: { WANT: "${{ github.event.inputs.site }}" }
+        run: |
+          P=$(node -e 'console.log(require(process.env.RUNNER_TEMP+"/sa.json").project_id)')
+          echo "PROJECT=$P" >> "$GITHUB_ENV"
+          FB="npx -y firebase-tools@13"
+          $FB hosting:sites:list --project "$P" --non-interactive > sites.txt 2>&1 || true
+          cat sites.txt
+          SITE=""
+          if [ -n "$WANT" ]; then
+            CANDS="$WANT"
+          else
+            # jeśli już mamy stronę dodatkową (inną niż domyślna) – użyj jej
+            EXIST=$(grep -oE '[a-z0-9-]+\.web\.app' sites.txt | sed 's/\.web\.app//' | grep -v "^$P$" | head -1 || true)
+            if [ -n "$EXIST" ]; then SITE="$EXIST"; fi
+            CANDS="squadapp getsquad squadcrew squad-crew squadwypad squadrop wbijajsquad"
+          fi
+          if [ -z "$SITE" ]; then
+            for c in $CANDS; do
+              if grep -q "https://$c.web.app" sites.txt; then SITE="$c"; break; fi
+              if $FB hosting:sites:create "$c" --project "$P" --non-interactive > out.txt 2>&1; then SITE="$c"; echo "Utworzono stronę $c"; break; else echo "Nie udało się $c: $(tail -2 out.txt | tr '\n' ' ')"; fi
+            done
+          fi
+          [ -n "$SITE" ] || { echo "::error::Nie udało się utworzyć strony – zobacz log (być może brak uprawnień konta serwisowego albo nazwy zajęte)"; exit 1; }
+          echo "SITE=$SITE" >> "$GITHUB_ENV"
+      - name: Wdrożenie strony
+        run: |
+          cat > firebase-landing.json <<J
+          {"hosting":{"site":"$SITE","public":"landing","ignore":["firebase.json"],"headers":[{"source":"**","headers":[{"key":"Cache-Control","value":"no-cache"}]}]}}
+          J
+          npx -y firebase-tools@13 deploy --project "$PROJECT" --config firebase-landing.json --only hosting --non-interactive --force
+          echo "::notice title=Adres strony::https://$SITE.web.app"

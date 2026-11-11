@@ -4,7 +4,7 @@ name: Firebase – wdrożenie
 on:
   push:
     branches: [main]
-    paths-ignore: ["android/**", "sklep/**", "**.md", ".github/workflows/android*.yml", ".github/workflows/automat.yml", "tools/cron.cjs"]
+    paths-ignore: ["landing/**", ".github/workflows/landing.yml", "android/**", "sklep/**", "**.md", ".github/workflows/android*.yml", ".github/workflows/automat.yml", "tools/cron.cjs"]
   workflow_dispatch:
 
 concurrency: { group: firebase, cancel-in-progress: false }
