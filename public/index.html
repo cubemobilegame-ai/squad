@@ -1531,7 +1531,6 @@ function profileView(){
   <button class="more" id="mo">${t("more")} ${sv(SI.down)}</button>
   <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span>${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
-  $("#obk").onclick=async()=>{vib(8);sset("guest","");const x=auth.currentUser;if(x&&!x.isAnonymous){try{await signOut(auth)}catch{}}login()};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");
     $("#phl").innerHTML=`<button class="lnk" data-ph>${ph?t("sChPh"):t("sAddPh")}</button>${ph?`<button class="lnk" id="phr">${t("sRmPh")}</button>`:""}`;
     document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));
@@ -1574,6 +1573,7 @@ function onboard(){
   <button class="ghost kmk" id="kmk">${t("avMake")}</button>
   <label class="agec" id="agew"><input type="checkbox" id="age"><span>${t("ageOk")}</span></label>
   <button class="cta" id="ps">${t("obGo")}</button></div>`);
+  $("#obk").onclick=async()=>{vib(8);sset("guest","");const x=auth.currentUser;if(x&&!x.isAnonymous){try{await signOut(auth)}catch{}}login()};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));bindPhoto(refresh)};refresh();
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});$("#kmk").onclick=()=>avEditor(refresh);
   $("#ps").onclick=async()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!$("#age")?.checked){vib([50,30,50]);$("#agew")?.classList.add("shake");return toast(t("ageNeed"))}sset("age13","1");sset("nick",n);sset("avatar",myAv());askPush();await saveProfile();route()};
