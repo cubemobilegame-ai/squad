@@ -1531,6 +1531,7 @@ function profileView(){
   <button class="more" id="mo">${t("more")} ${sv(SI.down)}</button>
   <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span>${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
+  $("#obk").onclick=async()=>{vib(8);sset("guest","");const x=auth.currentUser;if(x&&!x.isAnonymous){try{await signOut(auth)}catch{}}login()};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");
     $("#phl").innerHTML=`<button class="lnk" data-ph>${ph?t("sChPh"):t("sAddPh")}</button>${ph?`<button class="lnk" id="phr">${t("sRmPh")}</button>`:""}`;
     document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));
@@ -1567,7 +1568,7 @@ const syncMine=()=>{const u=auth.currentUser;if(!u||DEMO)return;const nk=sget("n
 async function loadProfile(u){try{const x=await getDoc(doc(db,"users",u.uid));if(x.exists()){const d=x.data();if(d.nick)sset("nick",d.nick);if(d.nickAt?.toMillis)sset("nickAt",Math.max(+sget("nickAt")||0,d.nickAt.toMillis()));if(d.av!=null)sset("avatar",d.av);if(d.ph)sset("photo",d.ph);if(d.blocked)sset("blocked",JSON.stringify(d.blocked));if(d.st)sset("st",JSON.stringify(d.st));if(d.hist)sset("hist",JSON.stringify(d.hist));if(d.badges)sset("badges",JSON.stringify(d.badges));const un=(a,b)=>[...new Set([...(a||[]),...(b||[])])].slice(-50);if(d.drops)sset("joined",JSON.stringify(un(d.drops,joined())));if(d.groups)sset("groups",JSON.stringify(un(d.groups,joinedG())));if(d.notif)Object.entries(d.notif).forEach(([k,v])=>sset("n_"+k,v?"1":"0"));if(d.lang&&L[d.lang]){sset("lang",d.lang);LANG=d.lang}}}catch{}}
 function onboard(){
   const u=auth.currentUser;
-  view(`<div class="scr"><div class="logo bigl" style="font-size:44px;margin-top:20px">Squad</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
+  view(`<div class="scr"><button class="lnk" id="obk" style="margin:4px 0 0;padding:6px 0">← ${t("back")}</button><div class="logo bigl" style="font-size:44px;margin-top:8px">Squad</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
   <div class="phw" id="phw"></div><input type="file" id="pf" accept="image/*" hidden>
   <input id="pn" placeholder="${t("nick")}" value="${esc(u.displayName?.split(" ")[0]||"")}" maxlength="20" autocomplete="off">
   <button class="ghost kmk" id="kmk">${t("avMake")}</button>
