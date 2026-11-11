@@ -31,6 +31,12 @@ cid = cfg.get("CLIENT_ID", "")
 if cid:
     rev = ".".join(reversed(cid.split(".")))
     d["CFBundleURLTypes"] = [{"CFBundleURLSchemes": [rev]}]
+fid = cfg.get("FB_APP_ID", ""); tok = os.environ.get("FB_CLIENT_TOKEN", "")
+if not fid or not tok:
+    print("BRAK FB_APP_ID / FB_CLIENT_TOKEN"); sys.exit(1)
+d["FacebookAppID"] = fid; d["FacebookClientToken"] = tok; d["FacebookDisplayName"] = "Squad"
+d["CFBundleURLTypes"] = d.get("CFBundleURLTypes", []) + [{"CFBundleURLSchemes": ["fb" + fid]}]
+d["LSApplicationQueriesSchemes"] = ["fbapi", "fb-messenger-share-api", "fbauth2", "fbshareextension"]
 plistlib.dump(d, open(pp, "wb"))
 
 # entitlements + projekt
@@ -47,7 +53,7 @@ open(px, "w").write(t)
 # Podfile: dodatkowy subspec Google
 pf = os.path.join(A, "Podfile")
 t = open(pf).read()
-line = "  pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'\n"
+line = "  pod 'CapacitorFirebaseAuthentication/Google', :path => '../../node_modules/@capacitor-firebase/authentication'\n  pod 'CapacitorFirebaseAuthentication/Facebook', :path => '../../node_modules/@capacitor-firebase/authentication'\n"
 if "authentication/Google" not in t:
     t = t.replace("def capacitor_pods\n", "def capacitor_pods\n" + line, 1)
 t = re.sub(r"platform :ios, '[0-9.]+'", "platform :ios, '15.0'", t)
