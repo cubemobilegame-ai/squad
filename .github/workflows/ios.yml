@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -115,9 +115,9 @@ jobs:
           mkdir -p "$RUNNER_TEMP/simout" && cp -R "$RUNNER_TEMP/sim/Build/Products/Release-iphonesimulator/App.app" "$RUNNER_TEMP/simout/Squad.app"
           cd "$RUNNER_TEMP/simout" && zip -qr "$GITHUB_WORKSPACE/Squad-simulator.zip" Squad.app
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: Squad-simulator
-          path: Squad-simulator.zip
-          if-no-files-found: ignore
+      - name: Plik symulatora do Releases
+        continue-on-error: true
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: |
+          gh release create "ios-simulator-${{ github.run_number }}" Squad-simulator.zip --repo "$GITHUB_REPOSITORY" \
+            --title "Squad iOS – symulator (build ${{ github.run_number }})" --notes "Kompilacja dla symulatora iOS (Squad.app) – do weryfikacji Meta."
