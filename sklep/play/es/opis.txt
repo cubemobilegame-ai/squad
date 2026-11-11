@@ -1,42 +1,39 @@
 TYTUŁ:
-Squad – planes en grupo
+Squad: planes con amigos
 
 KRÓTKI OPIS:
-Reúne a tu gente en 15 segundos. Un enlace: IN / LATE / OUT.
+Organiza planes con amigos en 15 segundos: un enlace, responde IN, LATE u OUT.
 
 PEŁNY OPIS:
-¿Te apetece pizza, cine o una fiesta en casa, pero organizar a tu gente en cinco chats es un caos? Squad lo resuelve en 15 segundos.
+¿Quieres quedar con tus amigos, pero poner de acuerdo la hora, el sitio y quién viene en cinco chats es un lío? Squad es una app para organizar quedadas con tu grupo: creas una invitación (un "drop"), envías el enlace y ves al instante quién se apunta. Tus amigos responden con un toque, sin instalar nada.
 
 ⚡ CÓMO FUNCIONA
 • Creas un drop: qué, dónde y cuándo
-• Envías el enlace por Messenger, Instagram, WhatsApp o SMS
-• Tus amigos pulsan IN, LATE u OUT, sin instalar la app
-• Ves al momento quién va, quién llega tarde y quién no viene
+• Envías el enlace por mensajería o SMS, o muestras un código QR
+• Tus amigos pulsan IN, LATE u OUT
+• Ves quién viene, quién llega tarde y cuántos minutos, y quién no puede
 
-🎯 CUALQUIER PLAN
-Pizza, deporte, fiesta en casa, discoteca, restaurante, café, cine, juegos, compras, paseos, viajes, ocasiones especiales: elige la categoría y listo. Los drops también pueden repetirse cada semana.
+🎯 CUALQUIER TIPO DE PLAN
+Pizza, deporte, fiesta en casa, discoteca, bar, café, cine, juegos, paseo, viaje, cumpleaños y otras ocasiones. El plan puede repetirse cada semana, cada dos semanas o cada mes.
 
-👀 QUIÉN VA
-Una lista clara: quién está IN, quién llega tarde y cuánto, quién no viene.
+💬 CHAT DE GRUPO PARA TU CREW
+Cada drop tiene su propio chat. Encuestas de "¿adónde vamos?", reacciones, quién ha leído y quién está escribiendo. Sin mensajes privados.
 
-💬 CHAT SOLO PARA TU GENTE
-Cada drop tiene su chat de grupo. Sin mensajes privados. Encuestas «¿adónde vamos?», reacciones, quién ha leído y quién está escribiendo.
+👥 GRUPOS FIJOS Y CONTACTOS
+Crea un grupo con un chat que no desaparece: tu clase, equipo o pandilla del barrio. Invita a amigos a tus contactos y añádelos a drops y grupos con un toque, sin enlaces ni códigos QR.
 
-📍 DROPS PÚBLICOS CERCA
-Únete a planes abiertos a menos de 20 km o crea el tuyo con plazas limitadas. Solo mayores de 16.
+📍 DROPS PÚBLICOS CERCA DE TI
+Únete a quedadas abiertas a menos de 20 km o crea la tuya con plazas limitadas. Solo para mayores de 16.
 
-👥 TUS GRUPOS DE SIEMPRE
-Grupos con un chat que no desaparece: la clase, el equipo, los del barrio. Envía un drop a todo el grupo con un toque o muestra un código QR.
+🔔 AVISOS Y CALENDARIO
+Te avisamos cuando alguien responde o escribe, y recordamos a todo el grupo 30 minutos antes del inicio. Añade el drop a tu calendario con un toque.
 
 📸 ÁLBUM Y COLLAGE
-Todas las fotos del plan en un sitio y un collage listo para tu historia.
-
-🔔 NOTIFICACIONES Y CALENDARIO
-Te enteras cuando alguien responde o escribe. Avisamos a todos antes de empezar. Añade el drop a tu calendario con un toque.
+Cuando empieza el drop se abre un álbum compartido. Las fotos del plan en un solo sitio y un collage listo para tu historia.
 
 🔒 SEGURIDAD
-Sin mensajes privados, denuncias y bloqueos con un toque, filtro de palabrotas y el apodo solo se cambia cada 2 semanas.
+Denuncia y bloquea manteniendo pulsado un mensaje, filtro de palabrotas y enlaces que desaparecen 24 horas después del inicio. Para mayores de 13 años (menores de 16 con permiso de un padre o tutor).
 
-🌍 En español, inglés, polaco, alemán, francés, italiano, checo y ucraniano.
+🌍 Disponible en español, polaco, inglés, alemán, francés, italiano, checo y ucraniano. Gratis.
 
-Reúne a tu gente. Id juntos. Squad ✦
+Reúne a tu gente. Vayan juntos. Squad ✦

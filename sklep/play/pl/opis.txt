@@ -1,42 +1,39 @@
 TYTUŁ:
-Squad – wspólne wypady
+Squad: wypady z ekipą
 
 KRÓTKI OPIS:
-Wypad z ekipą w 15 sekund. Jeden link i odpowiedź IN / LATE / OUT.
+Wypady ze znajomymi w 15 sekund: jeden link, odpowiedź IN, LATE lub OUT.
 
 PEŁNY OPIS:
-Masz ochotę na pizzę, kino albo domówkę, ale zbieranie ekipy na pięciu czatach to dramat? Squad załatwia to w 15 sekund.
+Planujesz wypad ze znajomymi, ale ustalanie godziny, miejsca i tego, kto idzie, na kilku czatach to męka? Squad to aplikacja do organizowania spotkań z ekipą: tworzysz zaproszenie (drop), wysyłasz link i od razu widzisz, kto wbija. Znajomi odpowiadają jednym kliknięciem, bez instalowania aplikacji.
 
 ⚡ JAK TO DZIAŁA
 • Tworzysz drop: co, gdzie i kiedy
-• Wysyłasz link na Messengera, Insta, WhatsAppa albo SMS-em
-• Znajomi klikają IN, LATE albo OUT – bez instalowania aplikacji
-• Od razu widzisz, kto wbija, kto się spóźni i kto odpada
+• Wysyłasz link w komunikatorze, SMS-em albo pokazujesz kod QR
+• Znajomi klikają IN, LATE albo OUT
+• Widzisz listę: kto jest, kto się spóźni i o ile minut, kto odpada
 
-🎯 KAŻDY RODZAJ WYPADU
-Pizza, sport, domówka, klub, knajpa, kawa, kino, gry, galeria, spacer, wyjazd, okazje – wybierz kategorię i gotowe. Drop może też powtarzać się co tydzień.
+🎯 KAŻDY RODZAJ SPOTKANIA
+Pizza, sport, domówka, impreza, klub, knajpa, kawa, kino, gry, spacer, wyjazd, urodziny i inne okazje. Wypad może powtarzać się co tydzień, co dwa tygodnie albo co miesiąc.
 
-👀 KTO JEST W DROPIE
-Czytelna lista: kto jest IN, kto się spóźni i o ile minut, kto odpadł.
+💬 CZAT GRUPOWY DLA EKIPY
+Każdy drop ma własny czat. Ankiety „gdzie idziemy?”, reakcje, informacja kto przeczytał i kto pisze. Bez prywatnych wiadomości.
 
-💬 CZAT TYLKO DLA EKIPY
-Każdy drop ma swój czat grupowy. Zero prywatnych wiadomości. Ankiety „gdzie idziemy?”, reakcje, informacja kto przeczytał i kto pisze.
+👥 STAŁE GRUPY I KONTAKTY
+Załóż grupę z czatem, który nie znika: klasa, drużyna, paczka z osiedla. Zapraszaj znajomych do kontaktów i dodawaj ich do dropów oraz grup jednym stuknięciem, bez linków i kodów QR.
 
 📍 PUBLICZNE DROPY W OKOLICY
-Dołącz do otwartych wypadów do 20 km od ciebie albo stwórz własny z limitem miejsc. Tylko dla osób 16+.
+Dołącz do otwartych spotkań do 20 km od ciebie albo stwórz własne z limitem miejsc. Tylko dla osób 16+.
 
-👥 STAŁE EKIPY
-Grupy z czatem, który nie znika – klasa, drużyna, paczka z osiedla. Drop wyślesz całej grupie jednym kliknięciem albo pokażesz kod QR.
+🔔 PRZYPOMNIENIA I KALENDARZ
+Powiadomimy, gdy ktoś odpowie albo napisze, i przypomnimy całej ekipie 30 minut przed startem. Drop dodasz do kalendarza jednym kliknięciem.
 
 📸 ALBUM I KOLAŻ
-Zdjęcia z wypadu w jednym miejscu i gotowy kolaż na story.
-
-🔔 POWIADOMIENIA I KALENDARZ
-Dowiesz się, gdy ktoś odpowie albo napisze. Przed startem przypomnimy całej ekipie. Drop dodasz do kalendarza jednym kliknięciem.
+Gdy drop się zaczyna, otwiera się wspólny album. Zdjęcia z wypadu w jednym miejscu i gotowy kolaż na relację.
 
 🔒 BEZPIECZEŃSTWO
-Bez prywatnych wiadomości, zgłaszanie i blokowanie jednym kliknięciem, filtr wulgaryzmów, ksywkę zmienisz raz na 2 tygodnie.
+Zgłaszanie i blokowanie jednym przytrzymaniem wiadomości, filtr wulgaryzmów, linki, które znikają 24 godziny po starcie dropa. Z aplikacji korzystają osoby od 13 lat (do 16 lat za zgodą rodzica lub opiekuna).
 
-🌍 Po polsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku.
+🌍 Dostępna po polsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku. Bezpłatna.
 
 Zbierz ekipę. Wbijajcie razem. Squad ✦

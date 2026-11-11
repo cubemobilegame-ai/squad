@@ -1,42 +1,39 @@
 TYTUŁ:
-Squad – sorties entre potes
+Squad: sorties entre amis
 
 KRÓTKI OPIS:
-Réunis ta bande en 15 secondes. Un lien : IN / LATE / OUT.
+Sorties entre amis en 15 secondes : un lien, réponds IN, LATE ou OUT.
 
 PEŁNY OPIS:
-Envie d’une pizza, d’un ciné ou d’une soirée, mais organiser ta bande sur cinq conversations, c’est l’enfer ? Squad règle ça en 15 secondes.
+Tu veux voir tes amis, mais fixer l'heure, le lieu et qui vient sur cinq conversations, c'est la galère ? Squad, c'est l'appli pour organiser des sorties avec ta bande : tu crées une invitation (un « drop »), tu envoies le lien et tu vois tout de suite qui vient. Tes amis répondent d'un tap, sans rien installer.
 
 ⚡ COMMENT ÇA MARCHE
 • Tu crées un drop : quoi, où et quand
-• Tu envoies le lien par Messenger, Instagram, WhatsApp ou SMS
-• Tes potes appuient sur IN, LATE ou OUT – sans installer l’appli
-• Tu vois tout de suite qui vient, qui sera en retard et qui ne vient pas
+• Tu envoies le lien par messagerie ou SMS, ou tu montres un code QR
+• Tes amis touchent IN, LATE ou OUT
+• Tu vois qui vient, qui aura du retard et de combien de minutes, qui ne vient pas
 
-🎯 TOUS LES PLANS
-Pizza, sport, soirée, boîte, resto, café, ciné, jeux vidéo, shopping, balade, virée, occasions spéciales – choisis la catégorie et c’est parti. Un drop peut aussi se répéter chaque semaine.
+🎯 TOUS LES TYPES DE SORTIES
+Pizza, sport, soirée, boîte, bar, café, ciné, jeux, balade, voyage, anniversaire et autres occasions. Une sortie peut se répéter chaque semaine, toutes les deux semaines ou chaque mois.
 
-👀 QUI VIENT
-Une liste claire : qui est IN, qui sera en retard et de combien, qui ne vient pas.
+💬 CHAT DE GROUPE POUR TA BANDE
+Chaque drop a son propre chat. Sondages « on va où ? », réactions, accusés de lecture et indicateur d'écriture. Pas de messages privés.
 
-💬 UN CHAT JUSTE POUR LA BANDE
-Chaque drop a son chat de groupe. Zéro message privé. Sondages « on va où ? », réactions, confirmations de lecture et indicateur de saisie.
+👥 GROUPES FIXES ET CONTACTS
+Crée un groupe avec un chat qui reste : classe, équipe, bande du quartier. Invite tes amis dans tes contacts et ajoute-les aux drops et aux groupes d'un tap, sans liens ni codes QR.
 
-📍 DROPS PUBLICS PRÈS DE TOI
-Rejoins des sorties ouvertes à moins de 20 km ou crée la tienne avec un nombre de places limité. Réservé aux 16 ans et plus.
+📍 DROPS PUBLICS PRÈS DE CHEZ TOI
+Rejoins des rendez-vous ouverts dans un rayon de 20 km ou crée les tiens avec un nombre de places limité. Réservé aux 16 ans et plus.
 
-👥 TES BANDES HABITUELLES
-Des groupes avec un chat qui ne disparaît pas – ta classe, ton équipe, les potes du quartier. Envoie un drop à tout le groupe en un clic ou montre un QR code.
+🔔 RAPPELS ET CALENDRIER
+Tu es prévenu quand quelqu'un répond ou écrit, et toute la bande reçoit un rappel 30 minutes avant le début. Ajoute le drop à ton calendrier en un tap.
 
 📸 ALBUM ET COLLAGE
-Toutes les photos de la sortie au même endroit et un collage prêt pour ta story.
-
-🔔 NOTIFICATIONS ET AGENDA
-Tu sais quand quelqu’un répond ou écrit. On rappelle toute la bande avant le début. Ajoute le drop à ton agenda en un clic.
+Quand le drop commence, un album partagé s'ouvre. Les photos de la sortie au même endroit et un collage prêt pour ta story.
 
 🔒 SÉCURITÉ
-Pas de messages privés, signalement et blocage en un clic, filtre anti-grossièretés, et le pseudo ne change qu’une fois toutes les 2 semaines.
+Signale et bloque en appuyant longuement sur un message, filtre de gros mots et liens qui disparaissent 24 heures après le début. À partir de 13 ans (avant 16 ans, avec l'accord d'un parent ou tuteur).
 
-🌍 En français, anglais, polonais, espagnol, allemand, italien, tchèque et ukrainien.
+🌍 Disponible en français, polonais, anglais, espagnol, allemand, italien, tchèque et ukrainien. Gratuite.
 
-Réunis ta bande. Venez ensemble. Squad ✦
+Réunis ta bande. Pointez ensemble. Squad ✦
