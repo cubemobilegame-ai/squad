@@ -5,7 +5,7 @@ b64 = lambda p: base64.b64encode(open(p, 'rb').read()).decode()
 og = open(SP + '../og2/drop.html').read()
 css = og[og.index('<style>') + 7:og.index('</style>')]
 onest = 'data:font/woff;base64,' + b64(P + 'fonts/onest-cyr.woff')
-css = css.replace('font-family:U;color', 'font-family:U,OC;color') + f'@font-face{{font-family:OC;src:url({onest})}}h1,p,.logo{{font-family:U,OC}}'
+css = css.replace('font-family:U;color', 'font-family:U,OC;color') + f'@font-face{{font-family:OC;src:url({onest})}}h1,p{{font-family:U,OC}}.logo{{font-family:U!important;font-weight:900!important;letter-spacing:-.04em!important}}'
 
 T = {
  'pl': [("Wypad<br>w <em>15 sekund</em>", "Rzuć drop, a ekipa odpowie IN, LATE albo OUT."),
@@ -88,6 +88,6 @@ for l, rows in T.items():
     fg = open(SP + 'feature.html').read()
     fg = fg.replace('Wypady<br>z <em>ekipą</em>', fh).replace('Rzuć drop. Ekipa odpowie<br>w kilka sekund.', fs_)
     fg = fg.replace('Pizza po treningu', ft).replace('DZIŚ · 19:30', fp).replace('4 osoby wbijają', fw).replace('<small>i ty?</small>', f'<small>{fy}</small>')
-    fg = fg.replace('font-family:U;color', 'font-family:U,OC;color').replace('</style>', f'@font-face{{font-family:OC;src:url({onest})}}h1,p,.logo,.t,.who{{font-family:U,OC}}</style>', 1)
+    fg = fg.replace('font-family:U;color', 'font-family:U,OC;color').replace('</style>', f'@font-face{{font-family:OC;src:url({onest})}}h1,p,.t,.who{{font-family:U,OC}}.logo{{font-family:U!important;font-weight:900!important;letter-spacing:-.04em!important}}</style>', 1)
     open(SP + f'html/{l}-grafika-1024x500.html', 'w').write(fg)
 print('ok')
