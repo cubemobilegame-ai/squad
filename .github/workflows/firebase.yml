@@ -33,6 +33,8 @@ jobs:
           echo "$B" > public/build.txt
       - name: Podgląd linku dla zaproszeń do grup (grupa.html)
         run: node tools/og-grupa.mjs
+      - name: Podgląd linku – kontakty
+        run: node tools/og-kontakt.mjs
 
       - name: Linki otwierane w aplikacji (assetlinks.json)
         env: { FP: "${{ secrets.ANDROID_SHA256 }}" }

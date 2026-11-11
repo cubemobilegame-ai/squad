@@ -56,6 +56,10 @@
         "destination": "/grupa.html"
       },
       {
+        "source": "/k/**",
+        "destination": "/kontakt.html"
+      },
+      {
         "source": "/gc/**",
         "destination": "/grupa.html"
       },
