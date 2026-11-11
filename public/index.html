@@ -1447,7 +1447,8 @@ function home(){
   const u=authed();if(!u)return;const nick=sget("nick");
   view(`<div class="scr"><div class="top hd2"><h1 class="logo lg2">Squad<span>✦</span></h1><div class="tr"><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button><button class="me" id="me" aria-label="${t("nMe")}">${avc("",meAv())}</button></div></div>
   <button class="newbtn nb2" id="nd" style="margin-top:26px"><i class="gr"></i><span class="nbp"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="nbt"><b>${t("newDrop").replace(/^\+\s*/,"")}</b><small>${t("ndSub")}</small></span><span class="nba"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></button>
-  <div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
+  ${u.isAnonymous?accBox():""}<div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
+  if($("#acc"))$("#acc").onclick=()=>{vib(10);guestUp("/")};
   $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#me").onclick=()=>go("/me");$("#bel").onclick=()=>{vib(8);go("/n")};setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
   const draw=()=>{
     const all=live().filter(loaded),r=d=>roleOf(d),G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
