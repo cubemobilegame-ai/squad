@@ -9,5 +9,5 @@ crons = ["*/5 * * * *"]
 
 # data i godzina wysyłki e-maila „Squad już działa” do zapisanych na stronie (zmieniasz tu przy przesunięciu premiery)
 [vars]
-LAUNCH_AT = "2026-11-29T10:00:00+01:00"
+LAUNCH_AT = ""  # automatyczny mail premierowy wyłączony – zapisani to lista newslettera
 MAIL_FROM = "cubemobilegame@gmail.com"
