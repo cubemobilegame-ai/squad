@@ -103,3 +103,21 @@ jobs:
           PL
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Squad.xcarchive" -exportPath "$RUNNER_TEMP/export" -exportOptionsPlist "$RUNNER_TEMP/export.plist" $AUTH | tail -n 30
           echo "::notice::Build $BUILD wysłany do App Store Connect (TestFlight)"
+
+      - name: Kompilacja dla symulatora (do weryfikacji Meta)
+        continue-on-error: true
+        run: |
+          cd ios-build/ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/sim" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" EXCLUDED_ARCHS=x86_64 \
+            MARKETING_VERSION=1.0.0 CURRENT_PROJECT_VERSION=1 | tail -n 15
+          mkdir -p "$RUNNER_TEMP/simout" && cp -R "$RUNNER_TEMP/sim/Build/Products/Release-iphonesimulator/App.app" "$RUNNER_TEMP/simout/Squad.app"
+          cd "$RUNNER_TEMP/simout" && zip -qr "$GITHUB_WORKSPACE/Squad-simulator.zip" Squad.app
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Squad-simulator
+          path: Squad-simulator.zip
+          if-no-files-found: ignore
