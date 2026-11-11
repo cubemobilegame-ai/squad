@@ -61,7 +61,7 @@ jobs:
           # ikona 1024 bez kanału alfa
           mkdir -p tmp && sips -z 1024 1024 ../public/icon-512.png --out tmp/i.png >/dev/null && sips -s format jpeg tmp/i.png --out tmp/i.jpg >/dev/null && sips -s format png tmp/i.jpg --out tmp/icon.png >/dev/null
           for f in ios/App/App/Assets.xcassets/AppIcon.appiconset/*.png; do cp tmp/icon.png "$f"; done
-          cd ios/App && pod install
+          cd ios/App && rm -rf Podfile.lock Pods && pod install --repo-update
           ls
 
       - name: Archiwum i wysyłka do TestFlight
