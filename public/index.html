@@ -1731,7 +1731,7 @@ async function dropView(code){
     <div class="chpi">${t("chPh")}<span>➤</span></div>`;el.onclick=()=>{vib(8);go("/c/"+code)}};
   /* album wypadu: otwiera się na starcie, każdy 1 zdjęcie, znika razem z dropem */
   const drawAlbum=()=>{const el=$("#alb");if(!el)return;
-    if(!closed()){el.innerHTML=`<div class="albl"><b>📸 ${t("alT")}</b><small>${t("alLock")}</small></div>`;return}
+    if(!closed()){el.innerHTML="";return}
     const my=PH.filter(p=>p.authorId===me()),can=!!mine&&my.length<1;
     el.innerHTML=`<div class="sech"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span></div><p class="hint s">${t("alHint")}</p>
     <div class="agrid">${PH.map((p,i)=>`<button class="aph" data-i="${i}" style="--r:${(hs(p.id)%7)-3}deg"><img src="${esc(p.url)}" alt=""><span>${esc(p.nickname)}</span></button>`).join("")}${can?`<button class="aadd" id="aadd">${sv(SI.cam)}<b>${t("alAdd")}</b><small>${t("alLeft",3-my.length)}</small></button>`:""}</div>
