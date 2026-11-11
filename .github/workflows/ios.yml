@@ -31,10 +31,10 @@ jobs:
           echo "$SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
           P=$(node -e 'console.log(require(process.env.RUNNER_TEMP+"/sa.json").project_id)')
           FT="npx -y firebase-tools@13"
-          ID=$($FT apps:list IOS --project "$P" --json 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const j=JSON.parse(s);const a=(j.result||[]).find(x=>x.bundleId===process.argv[1]);console.log(a?a.appId:"")}catch{console.log("")}})' "$BUNDLE_ID")
+          ID=$($FT apps:list IOS --project "$P" --json 2>/dev/null | sed -n '/^{/,$p' | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const j=JSON.parse(s);const a=(j.result||[]).find(x=>x.bundleId===process.argv[1]);console.log(a?a.appId:"")}catch{console.log("")}})' "$BUNDLE_ID")
           if [ -z "$ID" ]; then
             $FT apps:create IOS "SQUAD iOS" --bundle-id "$BUNDLE_ID" --project "$P" --json > create.json 2>&1 || true
-            ID=$(node -e 'try{const j=JSON.parse(require("fs").readFileSync("create.json","utf8"));console.log((j.result||{}).appId||"")}catch{console.log("")}')
+            ID=$(grep -o '"appId": *"[^"]*"' create.json | head -1 | sed -E 's/.*: *"([^"]*)"/\1/')
           fi
           [ -z "$ID" ] && { echo "::error::Nie udało się utworzyć aplikacji iOS w Firebase: $(head -c 400 create.json)"; exit 1; }
           echo "Firebase iOS appId: $ID"
