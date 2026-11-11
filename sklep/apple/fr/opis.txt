@@ -1,0 +1,50 @@
+JĘZYK W APP STORE CONNECT: French
+
+NAZWA (≤30):
+Squad: sorties entre amis
+
+PODTYTUŁ (≤30):
+Sorties en 15 secondes
+
+TEKST PROMOCYJNY (≤170):
+Lance un drop, partage le lien et vois qui vient. Tes potes répondent IN, LATE ou OUT d’un clic. Chat de groupe, rappels et album photo.
+
+SŁOWA KLUCZOWE (≤100, po przecinku):
+amis,rencontre,soirée,chat de groupe,invitation,planificateur,bande,événement,calendrier,sondage
+
+CO NOWEGO:
+La première version de Squad pour iPhone. Sorties entre potes, chat de groupe, drops publics à proximité et album photo.
+
+OPIS (≤4000):
+Tu veux voir tes amis, mais fixer l'heure, le lieu et qui vient sur cinq conversations, c'est la galère ? Squad, c'est l'appli pour organiser des sorties avec ta bande : tu crées une invitation (un « drop »), tu envoies le lien et tu vois tout de suite qui vient. Tes amis répondent d'un tap, sans rien installer.
+
+⚡ COMMENT ÇA MARCHE
+• Tu crées un drop : quoi, où et quand
+• Tu envoies le lien par messagerie ou SMS, ou tu montres un code QR
+• Tes amis touchent IN, LATE ou OUT
+• Tu vois qui vient, qui aura du retard et de combien de minutes, qui ne vient pas
+
+🎯 TOUS LES TYPES DE SORTIES
+Pizza, sport, soirée, boîte, bar, café, ciné, jeux, balade, voyage, anniversaire et autres occasions. Une sortie peut se répéter chaque semaine, toutes les deux semaines ou chaque mois.
+
+💬 CHAT DE GROUPE POUR TA BANDE
+Chaque drop a son propre chat. Sondages « on va où ? », réactions, accusés de lecture et indicateur d'écriture. Pas de messages privés.
+
+👥 GROUPES FIXES ET CONTACTS
+Crée un groupe avec un chat qui reste : classe, équipe, bande du quartier. Invite tes amis dans tes contacts et ajoute-les aux drops et aux groupes d'un tap, sans liens ni codes QR.
+
+📍 DROPS PUBLICS PRÈS DE CHEZ TOI
+Rejoins des rendez-vous ouverts dans un rayon de 20 km ou crée les tiens avec un nombre de places limité. Réservé aux 16 ans et plus.
+
+🔔 RAPPELS ET CALENDRIER
+Tu es prévenu quand quelqu'un répond ou écrit, et toute la bande reçoit un rappel 30 minutes avant le début. Ajoute le drop à ton calendrier en un tap.
+
+📸 ALBUM ET COLLAGE
+Quand le drop commence, un album partagé s'ouvre. Les photos de la sortie au même endroit et un collage prêt pour ta story.
+
+🔒 SÉCURITÉ
+Signale et bloque en appuyant longuement sur un message, filtre de gros mots et liens qui disparaissent 24 heures après le début. À partir de 13 ans (avant 16 ans, avec l'accord d'un parent ou tuteur).
+
+🌍 Disponible en français, polonais, anglais, espagnol, allemand, italien, tchèque et ukrainien. Gratuite.
+
+Réunis ta bande. Pointez ensemble. Squad ✦

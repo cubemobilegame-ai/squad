@@ -66,8 +66,8 @@ jobs:
           cp ../ios/capacitor.config.json capacitor.config.json
           npx cap add ios
           FB_CLIENT_TOKEN=d80705974fb58fbaf041eb63a4574336 python3 ../ios/patch.py .. .
-          # ikona 1024 bez kanału alfa
-          mkdir -p tmp && sips -z 1024 1024 ../public/icon-512.png --out tmp/i.png >/dev/null && sips -s format jpeg tmp/i.png --out tmp/i.jpg >/dev/null && sips -s format png tmp/i.jpg --out tmp/icon.png >/dev/null
+          # ikona 1024 (bez kanału alfa) z repozytorium
+          mkdir -p tmp && cp ../sklep/apple/ikona-1024.png tmp/icon.png
           for f in ios/App/App/Assets.xcassets/AppIcon.appiconset/*.png; do cp tmp/icon.png "$f"; done
           cd ios/App && rm -rf Podfile.lock Pods && pod install --repo-update
           ls
