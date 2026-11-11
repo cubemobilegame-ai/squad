@@ -1267,7 +1267,7 @@ function route(){const p=gp(),m=r=>p.match(r),ka=m(/^\/k\/([A-Za-z0-9]{10,40})/)
   else if(p==="/new")newView();else if(p==="/n")notifView();else if(p==="/chats")chatsView();else if(p==="/me")profileView();else if(p==="/k"||ka)contactsView(ka?ka[1]:null);else if(p==="/blocked")blockedView();
   else if(["/terms","/privacy","/safety"].includes(p))legalView(p.slice(1));else home()}
 let first=true;
-onAuthStateChanged(auth,async()=>{window.__splP&&__splP(.85);watch();const u=auth.currentUser;if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;{const lu=sget("lastUid");if(lu&&lu!==u.uid)wipeUser();sset("lastUid",u.uid)}await loadProfile(u);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous){setTimeout(()=>enablePush(false),2000);if(!window.__visP){window.__visP=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden&&auth.currentUser&&!auth.currentUser.isAnonymous){enablePush(false);setTimeout(()=>{if(pushState()==="granted"){document.getElementById("pcard")?.remove();document.getElementById("pscr")?.remove()}},800)}})}}});
+onAuthStateChanged(auth,async()=>{window.__splP&&__splP(.85);watch();const u=auth.currentUser;if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;{const lu=sget("lastUid");if(lu&&lu!==u.uid)wipeUser();sset("lastUid",u.uid)}await Promise.race([loadProfile(u),new Promise(r=>setTimeout(r,4000))]);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous){setTimeout(()=>enablePush(false),2000);if(!window.__visP){window.__visP=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden&&auth.currentUser&&!auth.currentUser.isAnonymous){enablePush(false);setTimeout(()=>{if(pushState()==="granted"){document.getElementById("pcard")?.remove();document.getElementById("pscr")?.remove()}},800)}})}}});
 if("serviceWorker"in navigator&&!DEMO)navigator.serviceWorker.register("/sw.js").catch(()=>{});
 document.documentElement.lang=LANG;document.body.insertAdjacentHTML("beforeend",`<div id="rot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg><span>${t("rot")}</span></div>`);
 if(DEMO){document.body.classList.add("demo");A.insertAdjacentHTML("beforebegin",`<div id="demo"><small>${t("dView")}</small><button onclick="__host()">${sv('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}${t("dYou")}<b class="bd" id="bdh" hidden></b></button><button onclick="__friend()">${sv('<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>')}${t("dFr")}</button></div>`);
@@ -1277,7 +1277,8 @@ if(DEMO){document.body.classList.add("demo");A.insertAdjacentHTML("beforebegin",
 window.msgs=()=>{if(gp()==="/"&&$("#gc"))$("#gc").scrollIntoView({behavior:"smooth"});else{go("/");setTimeout(()=>$("#gc")?.scrollIntoView({behavior:"smooth"}),350)}};
 const nav=a=>`<nav>${[["h","/",I.home,"nHome"],["c","/chats",I.chat,"nCh","bdc"],["k","/k",I.con,"nK","bdk"],["p","/me",I.user,"nMe"]].map(([k,h,i,l,b])=>`<button class="${a==k?"on":""}" onclick="go('${h}')">${i}<span>${t(l)}</span>${b?`<b class="bd" id="${b}" hidden></b>`:""}</button>`).join("")}</nav>`;
 
-const loadDrop=async code=>{const pr=window.__pre;if(pr&&pr.code===code&&Date.now()-pr.t<60000){window.__pre=null;try{const [d,P]=await Promise.all([pr.d,pr.P.catch(()=>null)]);if(d&&d.expiresAt&&d.startsAt){if(P)window.__preP={code,list:P};return d.expiresAt.toMillis()<=Date.now()?null:{ref:doc(db,"drops",code),d}}}catch{}}try{const r=doc(db,"drops",code),s=await getDoc(r);if(!s.exists())return null;const d=s.data();return d.expiresAt.toMillis()<=Date.now()?null:{ref:r,d}}catch{return null}};
+const loadDrop=async code=>{const pr=window.__pre;if(pr&&pr.code===code&&Date.now()-pr.t<60000){window.__pre=null;try{const [d,P]=await Promise.all([pr.d,pr.P.catch(()=>null)]);if(d&&d.expiresAt&&d.startsAt){if(P)window.__preP={code,list:P};return d.expiresAt.toMillis()<=Date.now()?null:{ref:doc(db,"drops",code),d}}}catch{}}try{const r=doc(db,"drops",code),s=await getDocR(r);if(!s.exists())return null;const d=s.data();return d.expiresAt.toMillis()<=Date.now()?null:{ref:r,d}}catch{return null}};
+const getDocR=async r=>{for(let i=0;i<3;i++){try{return await Promise.race([getDoc(r),new Promise((_,j)=>setTimeout(()=>j(new Error("timeout")),i?8000:5000))])}catch(e){if(i===2)throw e}}};
 const gone=g=>view(`<div class="scr cen"><h1>${t(g?"expGT":"expT")}</h1><p class="mut">${t(g?"expGD":"expD")}</p><button class="cta" onclick="go('/')">${t("back")}</button></div>`);
 const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
@@ -1622,7 +1623,7 @@ function chatsView(){
 const getAppBox=()=>`<div class="getapp"><b>${t("getApp")}</b><small>${t("getAppD")}</small><button class="cta" id="dl">${sv(SI.dl)}${t("dlBtn")}</button></div>`;
 async function groupView(code){
   view(`<div class="scr"><p class="mut">${t("load")}</p></div>`);
-  let sn;try{sn=await getDoc(doc(db,"groups",code))}catch{}
+  let sn;try{sn=await getDocR(doc(db,"groups",code))}catch{}
   if(!sn||!sn.exists())return gone(1);
   const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code;let mine=null,M=[];
   view(`<div class="scr">${logged?`<div class="hdr">${bk("/chats")}</div>`:`<div class="brand">Squad</div>`}<div class="inv"><span>${owner?esc(clean(g.name)):t("grInv",esc(g.ownerNick||"?"),esc(clean(g.name)))}</span></div>
@@ -1808,7 +1809,7 @@ async function chatView(code,g){
   /* szybki start: dane dropa/grupy mamy już z listy (na żywo) – nie czekamy na serwer */
   let R=null;const C0=g?S.groups.get(code):S.items.get(code);
   if(C0&&(g||typeof C0.expiresAt?.toMillis==="function"&&C0.expiresAt.toMillis()>Date.now()))R={ref:doc(db,g?"groups":"drops",code),d:C0};
-  else if(g){try{const x=await getDoc(doc(db,"groups",code));if(x.exists())R={ref:x.ref,d:x.data()}}catch{}}else R=await loadDrop(code);
+  else if(g){try{const x=await getDocR(doc(db,"groups",code));if(x.exists())R={ref:x.ref,d:x.data()}}catch{}}else R=await loadDrop(code);
   if(!R)return gone(g);
   const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];
   const [hc1,hc2]=g?THEMES[hs(code)%THEMES.length]:thm({...d,id:code}),hst=!g&&d.startsAt?.toMillis?d.startsAt.toMillis():0;
