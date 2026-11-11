@@ -2271,7 +2271,9 @@ const reqPerm=()=>Promise.race([Notification.requestPermission(),new Promise(r=>
 const saveAppInfo=()=>{const u=auth.currentUser;if(DEMO||!u||u.isAnonymous||!sget("appV"))return;setDoc(doc(db,"users",u.uid),{app:{v:sget("appV"),fcm:sget("appFcm"),at:new Date().toISOString()}},{merge:true}).catch(()=>{})};
 const saveNatTok=async()=>{const u=auth.currentUser,tk=sget("natTok");if(DEMO||!u||u.isAnonymous||!tk)return false;const old=sget("pushTok"),oldU=sget("pushUid");if(old&&oldU&&(oldU!==u.uid||old!==tk))deleteDoc(doc(db,"users",oldU,"tokens",old)).catch(()=>{});
   await setDoc(doc(db,"users",u.uid,"tokens",tk),{at:serverTimestamp(),native:true,ua:IOSAPP?"ios-app":"android-app",...(IOSAPP?{ios:true}:{}),v:sget("appV")||""});sset("pushTok",tk);sset("pushUid",u.uid);setDoc(doc(db,"users",u.uid),{pushErr:null},{merge:true}).catch(()=>{});window.__pushOk=1;return true};
-if(IOSAPP){try{const M=NP("FirebaseMessaging");M&&M.addListener("notificationActionPerformed",e=>{const u=e&&e.notification&&e.notification.data&&e.notification.data.url;if(u&&/^\//.test(u))go(u)});
+if(IOSAPP){try{const M=NP("FirebaseMessaging");let pendGo=null,pgT=0;const flushGo=()=>{if(!pendGo)return;let ok=false;try{ok=!!(auth.currentUser&&typeof window.go==="function"&&document.readyState!=="loading")}catch{}if(ok){const p=pendGo;pendGo=null;clearInterval(pgT);setTimeout(()=>window.go(p),150)}};
+  const wantGo=e=>{try{const d=e&&e.notification&&e.notification.data,u=d&&(d.url||(d.data&&d.data.url));if(u&&/^\//.test(u)){pendGo=u;clearInterval(pgT);let n=0;pgT=setInterval(()=>{flushGo();if(++n>60)clearInterval(pgT)},400);flushGo()}}catch{}};
+  M&&M.addListener("notificationActionPerformed",wantGo);
   const A=NP("App");A&&A.addListener("appUrlOpen",e=>{try{const x=new URL(e.url);if(/^\/(d|c|g|gc|k)\//.test(x.pathname))go(x.pathname+x.search)}catch{}})}catch{}}
 const isTWA=()=>{try{if(document.referrer.indexOf("android-app://")===0)sset("twa","1")}catch{}return sget("twa")==="1"};
 const pushState=()=>{if(DEMO)return/[?&]pushdemo/.test(location.search)?"default":"off";if(sget("natTok"))return"granted";if(isTWA()&&(!("Notification"in window)||Notification.permission==="denied"||window.__twaNo))return"twa";const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
@@ -2392,9 +2394,10 @@ function calSheet(d,url){vib(10);const st=d.startsAt.toMillis(),en=st+2*36e5,z=x
   const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Squad//PL","BEGIN:VEVENT","UID:"+(d.code||Date.now())+"@squad","DTSTAMP:"+z(Date.now()),"DTSTART:"+z(st),"DTEND:"+z(en),"SUMMARY:"+esc2(title),"LOCATION:"+esc2(where),"DESCRIPTION:"+esc2(det),"URL:"+url,"BEGIN:VALARM","TRIGGER:-PT30M","ACTION:DISPLAY","DESCRIPTION:"+esc2(title),"END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
   const s=sheet(`<div class="bbig"><img src="/e/clock.webp" alt="" style="width:80px;height:80px"></div><h2>${t("calBtn")}</h2><p class="hint">${esc(title)} · ${when(st)}</p>
    <a class="cta" id="cg" style="text-align:center;text-decoration:none" href="${g}" target="_blank" rel="noopener">${t("calG")}</a><button class="ghost" id="ci">${t("calI")}</button>`);
-  s.querySelector("#cg").onclick=()=>setTimeout(()=>s.close(),300);
+  s.querySelector("#cg").onclick=e=>{if(IOSAPP){const B=NP("Browser");if(B){e.preventDefault();B.open({url:g}).catch(()=>{location.href=g})}}setTimeout(()=>s.close(),300)};
   s.querySelector("#ci").onclick=()=>{const b=new Blob([ics],{type:"text/calendar;charset=utf-8"}),f=new File([b],"squad-drop.ics",{type:"text/calendar"});
-    if(/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&"ontouchend" in document&&window.SQUAD_CONFIG?.pushUrl){window.open(window.SQUAD_CONFIG.pushUrl.replace(/\/$/,"")+"/ics?"+new URLSearchParams({t:title,s:st,e:en,l:where,d:det,u:url}),"_blank")}
+    if(IOSAPP&&window.SQUAD_CONFIG?.pushUrl){const iu=window.SQUAD_CONFIG.pushUrl.replace(/\/$/,"")+"/ics?"+new URLSearchParams({t:title,s:st,e:en,l:where,d:det,u:url}),B=NP("Browser");B?B.open({url:iu}).catch(()=>{location.href=iu}):location.href=iu}
+    else if(/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)&&"ontouchend" in document&&window.SQUAD_CONFIG?.pushUrl){window.open(window.SQUAD_CONFIG.pushUrl.replace(/\/$/,"")+"/ics?"+new URLSearchParams({t:title,s:st,e:en,l:where,d:det,u:url}),"_blank")}
     else{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="squad-drop.ics";document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
     s.close();vib(12)}}
 

@@ -1,6 +1,7 @@
 import UIKit
 import Capacitor
 import FirebaseCore
+import FBSDKCoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,10 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         o.bundleID = "com.cubemobilegames.squad"
         o.storageBucket = "__STORAGE_BUCKET__"
         FirebaseApp.configure(options: o)
+        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         return true
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        if ApplicationDelegate.shared.application(app, open: url, options: options) { return true }
         return ApplicationDelegateProxy.shared.application(app, open: url, options: options)
     }
 
