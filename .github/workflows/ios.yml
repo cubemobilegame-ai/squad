@@ -74,6 +74,8 @@ jobs:
           mkdir -p ~/.appstoreconnect/private_keys
           KEY=~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
           printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          BUNDLE_ID=$BUNDLE_ID python3 ../../../ios/asc.py "$KEY"
+          set -o pipefail
           AUTH="-allowProvisioningUpdates -authenticationKeyPath $KEY -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID"
           BUILD=$(( ${{ github.run_number }} + 10 ))
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' \
