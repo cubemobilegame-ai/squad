@@ -5,14 +5,14 @@
 
 const ORIGINS = ["https://squad-64cd5.web.app", "https://squad-64cd5.firebaseapp.com", "http://localhost:8766"];
 const TX = {
-  pl: { remind: (ti, w, p) => [`⏰ Za ok. 30 min: ${ti}`, `start ${w} · ${p}`], reply: (ti) => `odpowiedzi w dropie „${ti}”`, join: (n, g) => [`👋 ${n} dołącza do ekipy`, `grupa „${g}”`], change: (ti, w, p) => [`✏️ Zmiana w dropie „${ti}”`, `nowy plan: ${w} · ${p}`], surprise: "niespodzianka 🎁" },
-  en: { remind: (ti, w, p) => [`⏰ In about 30 min: ${ti}`, `starts ${w} · ${p}`], reply: (ti) => `replies to “${ti}”`, join: (n, g) => [`👋 ${n} joined the crew`, `group “${g}”`], change: (ti, w, p) => [`✏️ “${ti}” has changed`, `new plan: ${w} · ${p}`], surprise: "surprise 🎁" },
-  es: { remind: (ti, w, p) => [`⏰ En unos 30 min: ${ti}`, `empieza ${w} · ${p}`], reply: (ti) => `respuestas en «${ti}»`, join: (n, g) => [`👋 ${n} se une a la crew`, `grupo «${g}»`], change: (ti, w, p) => [`✏️ Cambio en «${ti}»`, `nuevo plan: ${w} · ${p}`], surprise: "sorpresa 🎁" },
-  de: { remind: (ti, w, p) => [`⏰ In ca. 30 Min.: ${ti}`, `Start ${w} · ${p}`], reply: (ti) => `Antworten zu „${ti}“`, join: (n, g) => [`👋 ${n} ist jetzt in der Crew`, `Gruppe „${g}“`], change: (ti, w, p) => [`✏️ „${ti}“ wurde geändert`, `neuer Plan: ${w} · ${p}`], surprise: "Überraschung 🎁" },
-  fr: { remind: (ti, w, p) => [`⏰ Dans 30 min environ : ${ti}`, `début ${w} · ${p}`], reply: (ti) => `réponses à « ${ti} »`, join: (n, g) => [`👋 ${n} rejoint la team`, `groupe « ${g} »`], change: (ti, w, p) => [`✏️ « ${ti} » a changé`, `nouveau plan : ${w} · ${p}`], surprise: "surprise 🎁" },
-  it: { remind: (ti, w, p) => [`⏰ Tra circa 30 min: ${ti}`, `inizio ${w} · ${p}`], reply: (ti) => `risposte a «${ti}»`, join: (n, g) => [`👋 ${n} entra nella crew`, `gruppo «${g}»`], change: (ti, w, p) => [`✏️ «${ti}» è cambiato`, `nuovo piano: ${w} · ${p}`], surprise: "sorpresa 🎁" },
-  cs: { remind: (ti, w, p) => [`⏰ Asi za 30 min: ${ti}`, `začátek ${w} · ${p}`], reply: (ti) => `odpovědi na „${ti}“`, join: (n, g) => [`👋 ${n} se přidává k partě`, `skupina „${g}“`], change: (ti, w, p) => [`✏️ Změna v „${ti}“`, `nový plán: ${w} · ${p}`], surprise: "překvapení 🎁" },
-  uk: { remind: (ti, w, p) => [`⏰ Приблизно за 30 хв: ${ti}`, `початок ${w} · ${p}`], reply: (ti) => `відповіді на «${ti}»`, join: (n, g) => [`👋 ${n} приєднується до компанії`, `група «${g}»`], change: (ti, w, p) => [`✏️ Зміна в «${ti}»`, `новий план: ${w} · ${p}`], surprise: "сюрприз 🎁" },
+  pl: { kreq: (n) => [`👋 ${n} chce dodać cię do kontaktów`, "Otwórz Squad, żeby przyjąć"], kacc: (n) => [`🤝 ${n} przyjmuje zaproszenie`, "Jesteście w kontaktach – łatwo zaprosicie się do dropów"], kinv: (n, ti, g) => [`👋 ${n} zaprasza cię ${g ? "do grupy" : "na drop"}`, ti], remind: (ti, w, p) => [`⏰ Za ok. 30 min: ${ti}`, `start ${w} · ${p}`], reply: (ti) => `odpowiedzi w dropie „${ti}”`, join: (n, g) => [`👋 ${n} dołącza do ekipy`, `grupa „${g}”`], change: (ti, w, p) => [`✏️ Zmiana w dropie „${ti}”`, `nowy plan: ${w} · ${p}`], surprise: "niespodzianka 🎁" },
+  en: { kreq: (n) => [`👋 ${n} wants to add you`, "Open Squad to accept"], kacc: (n) => [`🤝 ${n} accepted your request`, "You're contacts now – inviting each other is easy"], kinv: (n, ti, g) => [`👋 ${n} invites you ${g ? "to a group" : "to a drop"}`, ti], remind: (ti, w, p) => [`⏰ In about 30 min: ${ti}`, `starts ${w} · ${p}`], reply: (ti) => `replies to “${ti}”`, join: (n, g) => [`👋 ${n} joined the crew`, `group “${g}”`], change: (ti, w, p) => [`✏️ “${ti}” has changed`, `new plan: ${w} · ${p}`], surprise: "surprise 🎁" },
+  es: { kreq: (n) => [`👋 ${n} quiere añadirte`, "Abre Squad para aceptar"], kacc: (n) => [`🤝 ${n} aceptó tu solicitud`, "Ya sois contactos"], kinv: (n, ti, g) => [`👋 ${n} te invita ${g ? "a un grupo" : "a un drop"}`, ti], remind: (ti, w, p) => [`⏰ En unos 30 min: ${ti}`, `empieza ${w} · ${p}`], reply: (ti) => `respuestas en «${ti}»`, join: (n, g) => [`👋 ${n} se une a la crew`, `grupo «${g}»`], change: (ti, w, p) => [`✏️ Cambio en «${ti}»`, `nuevo plan: ${w} · ${p}`], surprise: "sorpresa 🎁" },
+  de: { kreq: (n) => [`👋 ${n} will dich hinzufügen`, "Öffne Squad zum Annehmen"], kacc: (n) => [`🤝 ${n} hat angenommen`, "Ihr seid jetzt Kontakte"], kinv: (n, ti, g) => [`👋 ${n} lädt dich ${g ? "in eine Gruppe" : "zu einem Drop"} ein`, ti], remind: (ti, w, p) => [`⏰ In ca. 30 Min.: ${ti}`, `Start ${w} · ${p}`], reply: (ti) => `Antworten zu „${ti}“`, join: (n, g) => [`👋 ${n} ist jetzt in der Crew`, `Gruppe „${g}“`], change: (ti, w, p) => [`✏️ „${ti}“ wurde geändert`, `neuer Plan: ${w} · ${p}`], surprise: "Überraschung 🎁" },
+  fr: { kreq: (n) => [`👋 ${n} veut t'ajouter`, "Ouvre Squad pour accepter"], kacc: (n) => [`🤝 ${n} a accepté`, "Vous êtes maintenant contacts"], kinv: (n, ti, g) => [`👋 ${n} t'invite ${g ? "dans un groupe" : "à un drop"}`, ti], remind: (ti, w, p) => [`⏰ Dans 30 min environ : ${ti}`, `début ${w} · ${p}`], reply: (ti) => `réponses à « ${ti} »`, join: (n, g) => [`👋 ${n} rejoint la team`, `groupe « ${g} »`], change: (ti, w, p) => [`✏️ « ${ti} » a changé`, `nouveau plan : ${w} · ${p}`], surprise: "surprise 🎁" },
+  it: { kreq: (n) => [`👋 ${n} vuole aggiungerti`, "Apri Squad per accettare"], kacc: (n) => [`🤝 ${n} ha accettato`, "Ora siete contatti"], kinv: (n, ti, g) => [`👋 ${n} ti invita ${g ? "in un gruppo" : "a un drop"}`, ti], remind: (ti, w, p) => [`⏰ Tra circa 30 min: ${ti}`, `inizio ${w} · ${p}`], reply: (ti) => `risposte a «${ti}»`, join: (n, g) => [`👋 ${n} entra nella crew`, `gruppo «${g}»`], change: (ti, w, p) => [`✏️ «${ti}» è cambiato`, `nuovo piano: ${w} · ${p}`], surprise: "sorpresa 🎁" },
+  cs: { kreq: (n) => [`👋 ${n} si tě chce přidat`, "Otevři Squad a přijmi"], kacc: (n) => [`🤝 ${n} přijal(a) žádost`, "Teď jste v kontaktech"], kinv: (n, ti, g) => [`👋 ${n} tě zve ${g ? "do skupiny" : "na drop"}`, ti], remind: (ti, w, p) => [`⏰ Asi za 30 min: ${ti}`, `začátek ${w} · ${p}`], reply: (ti) => `odpovědi na „${ti}“`, join: (n, g) => [`👋 ${n} se přidává k partě`, `skupina „${g}“`], change: (ti, w, p) => [`✏️ Změna v „${ti}“`, `nový plán: ${w} · ${p}`], surprise: "překvapení 🎁" },
+  uk: { kreq: (n) => [`👋 ${n} хоче додати тебе`, "Відкрий Squad, щоб прийняти"], kacc: (n) => [`🤝 ${n} прийняв(ла) запит`, "Тепер ви в контактах"], kinv: (n, ti, g) => [`👋 ${n} запрошує тебе ${g ? "в групу" : "на дроп"}`, ti], remind: (ti, w, p) => [`⏰ Приблизно за 30 хв: ${ti}`, `початок ${w} · ${p}`], reply: (ti) => `відповіді на «${ti}»`, join: (n, g) => [`👋 ${n} приєднується до компанії`, `група «${g}»`], change: (ti, w, p) => [`✏️ Зміна в «${ti}»`, `новий план: ${w} · ${p}`], surprise: "сюрприз 🎁" },
 };
 const ST = { in: "IN ⚡", out: "OUT" };
 
@@ -137,6 +137,21 @@ async function handle(env, uid, b) {
         "Czas": new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" }) }) });
     const txt = await res.text().catch(() => ""); env.stats = { to: 1, toks: 0, errs: res.ok ? [] : ["mail " + res.status + " " + txt.slice(0, 120)] };
     return res.ok ? 1 : 0;
+  }
+  const isUid = (x) => typeof x === "string" && /^[A-Za-z0-9]{10,40}$/.test(x);
+  if (b.kind === "creq" && isUid(b.to)) {                              // zaproszenie do kontaktów
+    const r = await db.get(`creq/${uid}_${b.to}`); if (!r) return 0;
+    return notify(env, db, [b.to], null, (T) => T.kreq(r.nickname), "/k", uid);
+  }
+  if (b.kind === "cacc" && isUid(b.to)) {                              // przyjęte zaproszenie do kontaktów
+    const c = await db.get(`users/${b.to}/contacts/${uid}`); if (!c) return 0;
+    return notify(env, db, [b.to], null, (T) => T.kacc(c.nickname), "/k", uid);
+  }
+  if (b.kind === "inv" && Array.isArray(b.to) && isCode(b.code) && (b.k === "d" || b.k === "g")) {   // zaproszenie z kontaktów na drop / do grupy
+    const ok = []; let iv = null;
+    for (const x of b.to.slice(0, 50)) { if (!isUid(x)) continue; const i = await db.get(`users/${x}/invites/${b.k}_${b.code}`); if (i && i.from === uid) { ok.push(x); iv = i; } }
+    if (!iv) return 0;
+    return notify(env, db, ok, null, (T) => T.kinv(iv.nickname, iv.title, b.k === "g"), `/${b.k}/${b.code}`, uid);
   }
   if (b.kind === "edit" && isCode(b.code)) {                           // autor zmienił godzinę / miejsce
     const d = await db.get(`drops/${b.code}`); if (!d || d.hostId !== uid) return 0;

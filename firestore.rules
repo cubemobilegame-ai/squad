@@ -45,6 +45,26 @@ service cloud.firestore {
       match /tokens/{tok} {
         allow read, write: if signedIn() && request.auth.uid == uid;
       }
+      // KONTAKTY: obie strony dopisują się sobie nawzajem tylko gdy istnieje zaproszenie (creq/<od>_<do>); bez podglądu profili i DM
+      match /contacts/{cid} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow create: if signedIn() && !isGuest() && okNick(request.resource.data.nickname) && (
+          (request.auth.uid == uid && exists(/databases/$(db)/documents/creq/$(cid + '_' + uid)))
+          || (request.auth.uid == cid && exists(/databases/$(db)/documents/creq/$(uid + '_' + cid))));
+        // właściciel listy albo sam kontakt (tylko swoja ksywka / awatar / zdjęcie)
+        allow update: if signedIn() && okNick(request.resource.data.nickname) && (request.auth.uid == uid
+          || (request.auth.uid == cid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nickname', 'av', 'ph']))));
+        allow delete: if signedIn() && (request.auth.uid == uid || request.auth.uid == cid);
+      }
+      // zaproszenia na drop / do grupy – wysyła tylko ktoś z moich kontaktów
+      match /invites/{iid} {
+        allow read, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update: if signedIn() && !isGuest()
+          && request.resource.data.from == request.auth.uid
+          && exists(/databases/$(db)/documents/users/$(uid)/contacts/$(request.auth.uid))
+          && request.resource.data.kind in ['d', 'g']
+          && iid == request.resource.data.kind + '_' + request.resource.data.code;
+      }
     }
 
     // DROPY: link działa do startu eventu, wiadomości do 24h po evencie, potem dokument znika
@@ -99,6 +119,17 @@ service cloud.firestore {
           && request.resource.data.url is string && request.resource.data.url.size() < 400000;
         allow delete: if signedIn() && (resource.data.authorId == request.auth.uid || drop(code).hostId == request.auth.uid);
       }
+    }
+
+    // ZAPROSZENIA DO KONTAKTÓW: id = <od>_<do>
+    match /creq/{id} {
+      allow read: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
+      allow create: if signedIn() && !isGuest()
+        && request.resource.data.from == request.auth.uid
+        && request.resource.data.to is string && request.resource.data.to != request.auth.uid
+        && id == request.auth.uid + '_' + request.resource.data.to
+        && okNick(request.resource.data.nickname);
+      allow delete: if signedIn() && (resource.data.from == request.auth.uid || resource.data.to == request.auth.uid);
     }
 
     // STATUS aplikacji (przerwa techniczna / awaria) – czytają wszyscy, zmienia tylko konsola / automat
