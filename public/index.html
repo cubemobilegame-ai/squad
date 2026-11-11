@@ -1321,7 +1321,9 @@ const ncred=async pr=>{const A=NP("FirebaseAuthentication");if(!A)throw{code:"au
   try{const id=pr.providerId;
     if(id==="apple.com"){const r=await A.signInWithApple({skipNativeAuth:true,scopes:["email","name"]}),c=r.credential||{};return new FB.OAuthProvider("apple.com").credential({idToken:c.idToken,rawNonce:c.nonce})}
     if(id==="facebook.com"){const r=await A.signInWithFacebook({skipNativeAuth:true}),c=r.credential||{};
-      if(c.accessToken)return FB.FacebookAuthProvider.credential(c.accessToken);return new FB.OAuthProvider("facebook.com").credential({idToken:c.idToken,rawNonce:c.nonce})}
+      const jt=x=>typeof x==="string"&&/^eyJ[\w-]+\.[\w-]+\.[\w-]*$/.test(x),idt=c.idToken||(jt(c.accessToken)?c.accessToken:"");
+      if(idt||c.nonce)return new FB.OAuthProvider("facebook.com").credential({idToken:idt,rawNonce:c.nonce});
+      return FB.FacebookAuthProvider.credential(c.accessToken)}
     const r=await A.signInWithGoogle({skipNativeAuth:true}),c=r.credential||{};return GoogleAuthProvider.credential(c.idToken,c.accessToken)}
   catch(e){if(e&&e.code&&/^auth\//.test(e.code))throw e;const m=String(e?.message||e||"");if(/cancel|1001|12501|dismiss/i.test(m)||/cancel/i.test(String(e?.code||"")))throw{code:"auth/popup-closed-by-user"};throw e}};
 const nlink=async(u,pr)=>{const cr=await ncred(pr);try{return await FB.linkWithCredential(u,cr)}catch(e){try{e.__cr=cr}catch{}throw e}};
