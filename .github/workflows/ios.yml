@@ -1,0 +1,95 @@
+name: iOS – TestFlight
+
+# Buduje aplikację iOS (Capacitor: ładuje SQUAD z Firebase Hosting jak natywną apkę) i wysyła do TestFlight.
+# Wymaga sekretów: ASC_ISSUER_ID, ASC_KEY_ID, ASC_KEY_P8 (+ FIREBASE_SERVICE_ACCOUNT). Zmiany w public/ NIE wymagają nowego builda.
+on:
+  push:
+    branches: [main]
+    paths: ["ios/**", ".github/workflows/ios.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      TEAM_ID: QSZS4P7LQB
+      BUNDLE_ID: com.cubemobilegames.squad
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+
+      - name: Konfiguracja Firebase (aplikacja iOS)
+        env: { SA: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" }
+        run: |
+          mkdir -p ios-build && cd ios-build
+          [ -z "$SA" ] && { echo "::error::Brak FIREBASE_SERVICE_ACCOUNT"; exit 1; }
+          echo "$SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          P=$(node -e 'console.log(require(process.env.RUNNER_TEMP+"/sa.json").project_id)')
+          FT="npx -y firebase-tools@13"
+          ID=$($FT apps:list IOS --project "$P" --json 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const j=JSON.parse(s);const a=(j.result||[]).find(x=>x.bundleId===process.argv[1]);console.log(a?a.appId:"")}catch{console.log("")}})' "$BUNDLE_ID")
+          if [ -z "$ID" ]; then
+            $FT apps:create IOS "SQUAD iOS" --bundle-id "$BUNDLE_ID" --project "$P" --json > create.json 2>&1 || true
+            ID=$(node -e 'try{const j=JSON.parse(require("fs").readFileSync("create.json","utf8"));console.log((j.result||{}).appId||"")}catch{console.log("")}')
+          fi
+          [ -z "$ID" ] && { echo "::error::Nie udało się utworzyć aplikacji iOS w Firebase: $(head -c 400 create.json)"; exit 1; }
+          echo "Firebase iOS appId: $ID"
+          $FT apps:sdkconfig IOS "$ID" --project "$P" > GoogleService-Info.plist
+          python3 - <<'PY'
+          import plistlib, re, json
+          t = open("GoogleService-Info.plist").read()
+          m = re.search(r"<\?xml.*</plist>", t, re.S)
+          d = plistlib.loads(m.group(0).encode())
+          cfg = {"GOOGLE_APP_ID": d["GOOGLE_APP_ID"], "GCM_SENDER_ID": d["GCM_SENDER_ID"], "API_KEY": d["API_KEY"], "PROJECT_ID": d["PROJECT_ID"], "CLIENT_ID": d.get("CLIENT_ID", ""), "STORAGE_BUCKET": d.get("STORAGE_BUCKET", "")}
+          json.dump(cfg, open("fbcfg.json", "w"))
+          print({k: (v[:8] + "…" if v else v) for k, v in cfg.items()})
+          PY
+
+      - name: Projekt Capacitor (iOS)
+        run: |
+          cd ios-build
+          npm init -y >/dev/null
+          npm i --no-audit --no-fund @capacitor/core@7 @capacitor/cli@7 @capacitor/ios@7 @capacitor/app@7 @capacitor-firebase/authentication@7 @capacitor-firebase/messaging@7 firebase@11
+          mkdir -p www && echo '<!doctype html><title>Squad</title>' > www/index.html
+          cp ../ios/capacitor.config.json capacitor.config.json
+          npx cap add ios
+          python3 ../ios/patch.py .. .
+          # ikona 1024 bez kanału alfa
+          mkdir -p tmp && sips -z 1024 1024 ../public/icon-512.png --out tmp/i.png >/dev/null && sips -s format jpeg tmp/i.png --out tmp/i.jpg >/dev/null && sips -s format png tmp/i.jpg --out tmp/icon.png >/dev/null
+          for f in ios/App/App/Assets.xcassets/AppIcon.appiconset/*.png; do cp tmp/icon.png "$f"; done
+          cd ios/App && pod install
+          ls
+
+      - name: Archiwum i wysyłka do TestFlight
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          cd ios-build/ios/App
+          mkdir -p ~/.appstoreconnect/private_keys
+          KEY=~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
+          printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          AUTH="-allowProvisioningUpdates -authenticationKeyPath $KEY -authenticationKeyID $ASC_KEY_ID -authenticationKeyIssuerID $ASC_ISSUER_ID"
+          BUILD=$(( ${{ github.run_number }} + 10 ))
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/Squad.xcarchive" archive $AUTH \
+            DEVELOPMENT_TEAM=$TEAM_ID CODE_SIGN_STYLE=Automatic MARKETING_VERSION=1.0.0 CURRENT_PROJECT_VERSION=$BUILD \
+            | tee "$RUNNER_TEMP/archive.log" | tail -n 40
+          cat > "$RUNNER_TEMP/export.plist" <<PL
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>uploadSymbols</key><true/>
+          </dict></plist>
+          PL
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Squad.xcarchive" -exportPath "$RUNNER_TEMP/export" -exportOptionsPlist "$RUNNER_TEMP/export.plist" $AUTH | tail -n 30
+          echo "::notice::Build $BUILD wysłany do App Store Connect (TestFlight)"
