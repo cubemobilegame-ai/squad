@@ -146,7 +146,7 @@ const step = async (name, fn) => { try { await fn(); } catch (e) { errs.push(nam
     const parts = (await doc.ref.collection("participants").get()).docs, was = parts.filter((p) => p.id !== d.hostId && p.data().status !== "out").map((p) => p.id);
     for (const sub of ["messages", "photos"]) for (const x of (await doc.ref.collection(sub).get()).docs) await db.recursiveDelete(x.ref);
     for (const p of parts) if (p.id !== d.hostId) await p.ref.delete(); else await p.ref.update({ status: "in", readAt: null, typing: null }).catch(() => {});
-    await doc.ref.update({ startsAt: TS.fromDate(next), expiresAt: TS.fromMillis(next.getTime() + 864e5), reminded: false, crewNotified: false, round: (d.round || 1) + 1 });
+    await doc.ref.update({ startsAt: TS.fromDate(next), expiresAt: TS.fromMillis(next.getTime() + 864e5), reminded: false, albumPing: false, crewNotified: false, round: (d.round || 1) + 1 });
     const w = next.toLocaleString("pl-PL", { weekday: "short", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
     await notify([d.hostId, ...was], null, (T) => T.again(d.title, w), `/d/${doc.id}`);
   }
