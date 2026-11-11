@@ -219,8 +219,39 @@ async function reminders(envRaw) {
   if (n) await logEv(env, { kind: "rem", sent: n });
 }
 
+// ---------- e-mail w dniu premiery do osób zapisanych na stronie getsquad.web.app (Brevo; sekret BREVO_KEY) ----------
+const MAIL = {
+  pl: { s: "Squad jest już dostępny! 🎉", h: "Zbierz ekipę. Wbijajcie razem.", p: "Obiecaliśmy, że napiszemy raz, w dniu premiery. Squad już działa – jeden link i odpowiedź IN, LATE albo OUT. Znajomi nie muszą nic instalować.",
+    a: "Pobierz na Androida", w: "Otwórz w przeglądarce (iPhone: Udostępnij → Do ekranu początkowego)", f: "To jedyna wiadomość, jaką od nas dostaniesz – wysłaliśmy ją, bo zapisałeś(-aś) się na getsquad.web.app. Twój adres e-mail usuwamy zaraz po wysyłce. Pytania: cubemobilegame@gmail.com" },
+  en: { s: "Squad is live! 🎉", h: "Get your crew together. Show up together.", p: "We promised to write once, on launch day. Squad is live – one link and an IN, LATE or OUT reply. Friends don’t need to install anything.",
+    a: "Get it on Android", w: "Open in your browser (iPhone: Share → Add to Home Screen)", f: "This is the only message you’ll get from us – you signed up at getsquad.web.app. We delete your e-mail address right after sending. Questions: cubemobilegame@gmail.com" },
+};
+const mailHtml = (T) => `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:28px;background:#0b0b12;color:#fff;border-radius:20px"><div style="font-size:30px;font-weight:900;letter-spacing:-1px">Squad <span style="color:#FF4F86">✦</span></div><h1 style="font-size:24px;margin:22px 0 10px">${T.h}</h1><p style="color:#c8c8d4;line-height:1.55;font-size:16px">${T.p}</p><p style="margin:24px 0 10px"><a href="https://play.google.com/store/apps/details?id=com.cubemobilegames.squad" style="background:#FF4F86;color:#fff;text-decoration:none;padding:14px 22px;border-radius:99px;font-weight:700;display:inline-block">${T.a}</a></p><p style="margin:6px 0 22px"><a href="https://squad-64cd5.web.app" style="color:#ff9bbd;font-size:15px">${T.w}</a></p><p style="color:#8a8a99;font-size:12px;line-height:1.5">${T.f}</p></div>`;
+
+async function launchMail(envRaw) {
+  const at = Date.parse(envRaw.LAUNCH_AT || ""), now = Date.now();
+  if (!envRaw.BREVO_KEY || !at || now < at || now > at + 14 * 864e5) return;           // jeszcze nie czas / brak klucza / okno 14 dni minęło
+  const SA = JSON.parse(envRaw.FIREBASE_SA), PID = SA.project_id, tok = await access(SA);
+  const H = { Authorization: "Bearer " + tok, "Content-Type": "application/json" };
+  const base = `https://firestore.googleapis.com/v1/projects/${PID}/databases/(default)/documents`;
+  const r = await fetch(`${base}/waitlist?pageSize=60`, { headers: H }); if (!r.ok) return;
+  const docs = (await r.json()).documents || []; let ok = 0, bad = 0;
+  for (const d of docs) {
+    const id = d.name.split("/").pop(), v = obj(d.fields); if (v.sent === true || !v.email) continue;
+    // zajmij wpis (warunek aktualnej wersji) – dwa równoległe uruchomienia nie wyślą dwa razy
+    const claim = await fetch(`${base}/waitlist/${id}?updateMask.fieldPaths=sent&currentDocument.updateTime=${encodeURIComponent(d.updateTime)}`, { method: "PATCH", headers: H, body: JSON.stringify({ fields: { sent: { booleanValue: true } } }) });
+    if (!claim.ok) continue;
+    const T = MAIL[v.lang] || MAIL.pl;
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", { method: "POST", headers: { "api-key": envRaw.BREVO_KEY, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ sender: { name: "Squad", email: envRaw.MAIL_FROM || "cubemobilegame@gmail.com" }, to: [{ email: v.email }], replyTo: { email: "cubemobilegame@gmail.com" }, subject: T.s, htmlContent: mailHtml(T) }) });
+    if (res.ok) { ok++; await fetch(`${base}/waitlist/${id}`, { method: "DELETE", headers: H }).catch(() => {}); }   // po wysyłce adres usuwamy
+    else { bad++; await fetch(`${base}/waitlist/${id}?updateMask.fieldPaths=sent`, { method: "PATCH", headers: H, body: JSON.stringify({ fields: { sent: { booleanValue: false } } }) }).catch(() => {}); }
+  }
+  if (ok || bad) await logEv({ SA, PID }, { kind: "launchmail", sent: ok, errs: bad ? bad + " nieudanych (limit Brevo/błąd)" : "" });
+}
+
 export default {
-  async scheduled(ev, envRaw, ctx) { ctx.waitUntil(reminders(envRaw).catch((e) => logEv({ SA: JSON.parse(envRaw.FIREBASE_SA), PID: JSON.parse(envRaw.FIREBASE_SA).project_id }, { kind: "rem", err: e.message }))); },
+  async scheduled(ev, envRaw, ctx) { ctx.waitUntil(launchMail(envRaw).catch(() => {})); ctx.waitUntil(reminders(envRaw).catch((e) => logEv({ SA: JSON.parse(envRaw.FIREBASE_SA), PID: JSON.parse(envRaw.FIREBASE_SA).project_id }, { kind: "rem", err: e.message }))); },
   async fetch(req, envRaw, ctx) {
     const origin = req.headers.get("Origin") || "", allow = ORIGINS.includes(origin) || /^https:\/\/[a-z0-9-]+\.squad-64cd5\.web\.app$/.test(origin);
     const cors = { "Access-Control-Allow-Origin": allow ? origin : ORIGINS[0], "Access-Control-Allow-Methods": "POST, OPTIONS", "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Max-Age": "86400" };

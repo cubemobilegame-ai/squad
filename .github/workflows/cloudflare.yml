@@ -21,10 +21,12 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          BREVO: ${{ secrets.BREVO_API_KEY }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "::warning::Brak sekretów CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID – pomijam"; exit 0; fi
           npx -y wrangler@3 deploy 2>&1 | tee deploy.log
           printf '%s' "$SA" | npx -y wrangler@3 secret put FIREBASE_SA 2>&1 | tail -2
+          if [ -n "$BREVO" ]; then printf '%s' "$BREVO" | npx -y wrangler@3 secret put BREVO_KEY 2>&1 | tail -2; else echo "::notice title=E-mail premierowy::Brak sekretu BREVO_API_KEY – wysyłka maili w dniu premiery nie ruszy"; fi
           URL=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1)
           echo "::notice title=Adres serwera powiadomień::$URL"
           curl -s "$URL" | head -c 200 | sed 's/^/::notice title=Test::/'

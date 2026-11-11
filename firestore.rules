@@ -143,6 +143,17 @@ service cloud.firestore {
         && request.resource.data.reason in ['hate', 'sex', 'vio', 'danger', 'spam', 'other'];
     }
 
+    // LISTA „POWIADOM MNIE O PREMIERZE” (strona getsquad.web.app) – tylko zapis, bez odczytu. Jednorazowy e-mail w dniu startu wysyła serwer.
+    match /waitlist/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['email', 'lang', 'consent', 'at', 'sent'])
+        && request.resource.data.email is string && request.resource.data.email.size() <= 120
+        && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$')
+        && request.resource.data.lang in ['pl', 'en']
+        && request.resource.data.consent == true
+        && request.resource.data.at == request.time
+        && request.resource.data.sent == false;
+    }
+
     // GRUPY ogólne: stałe ekipy z własnym czatem, wchodzi się linkiem
     match /groups/{g} {
       allow get: if true;

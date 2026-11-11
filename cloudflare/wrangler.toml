@@ -6,3 +6,8 @@ workers_dev = true
 # przypomnienia 30 min przed startem dropa
 [triggers]
 crons = ["*/5 * * * *"]
+
+# data i godzina wysyłki e-maila „Squad już działa” do zapisanych na stronie (zmieniasz tu przy przesunięciu premiery)
+[vars]
+LAUNCH_AT = "2026-11-29T10:00:00+01:00"
+MAIL_FROM = "cubemobilegame@gmail.com"
