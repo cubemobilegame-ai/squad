@@ -1334,6 +1334,7 @@ const nlink=async(u,pr)=>{const cr=await ncred(pr);try{return await FB.linkWithC
   try{e.__cr=cr}catch{}throw e}};
 const nsign=async pr=>{const cr=await ncred(pr);try{return await FB.signInWithCredential(auth,cr)}catch(e){if(/invalid-credential/.test(e?.code||"")&&window.__fbAlt){return FB.signInWithCredential(auth,window.__fbAlt)}throw e}};
 const signInSmart=async pr=>{const u=auth.currentUser;if(!DEMO&&u&&u.isAnonymous&&FB.linkWithPopup){try{return await (IOSAPP?nlink(u,pr):FB.linkWithPopup(u,pr))}catch(e){const c=e?.code||"";if(/credential-already-in-use|email-already-in-use|provider-already-linked/.test(c)){const C=pr.providerId==="facebook.com"?FB.FacebookAuthProvider:GoogleAuthProvider,cr=(IOSAPP&&/facebook|apple/.test(pr.providerId))?await ncred(pr):(()=>{for(const K of [FB.OAuthProvider,C]){try{const x=K&&K.credentialFromError&&K.credentialFromError(e);if(x)return x}catch{}}return e.__cr||null})();if(cr&&FB.signInWithCredential){
+        try{sset("oldUids",JSON.stringify([...oldUids(),u.uid].slice(-5)))}catch{}
         const mig=[],migG=[];for(const code of joined()){try{const x=await getDoc(doc(db,"drops",code,"participants",u.uid));if(x.exists())mig.push([code,x.data()])}catch{}}
         for(const code of joinedG()){try{const x=await getDoc(doc(db,"groups",code,"members",u.uid));if(x.exists())migG.push([code,x.data()])}catch{}}
         for(const [code] of mig)await deleteDoc(doc(db,"drops",code,"participants",u.uid)).catch(()=>{});
@@ -1558,7 +1559,7 @@ const saveProfile=async()=>{const u=auth.currentUser;if(!u||u.isAnonymous)return
 /* Google: zawsze pokazuj wybór konta (po wylogowaniu można wejść na inne) */
 const gProv=()=>{const p=new GoogleAuthProvider();try{p.setCustomParameters({prompt:"select_account"})}catch{}return p};
 /* dane profilu w telefonie należą do jednego konta – przy zmianie konta czyścimy je, żeby nie przeszły na nowe */
-const wipeUser=()=>{const keep=/^(lang|twa|locAsk|pnAsk|appV|appFcm|natTok|fopen|rxHint|ins_|firebase|pushTok|pushUid)/;try{Object.keys(localStorage).forEach(k=>{if(!keep.test(k))localStorage.removeItem(k)})}catch{}};
+const wipeUser=()=>{const keep=/^(oldUids|lang|twa|locAsk|pnAsk|appV|appFcm|natTok|fopen|rxHint|ins_|firebase|pushTok|pushUid)/;try{Object.keys(localStorage).forEach(k=>{if(!keep.test(k))localStorage.removeItem(k)})}catch{}};
 /* zmiana ksywki / awatara / zdjęcia: popraw je też w moich aktualnych dropach, grupach i dropach, które organizuję */
 const syncMine=()=>{const u=auth.currentUser;if(!u||DEMO)return;const nk=sget("nick");if(!nk)return;const pay={nickname:nk,av:myAv(),ph:sget("photo")||null},now=Date.now();
   S.items.forEach(d=>{const st=d.startsAt?.toMillis?.()||0;if((S.ppl[d.id]||[]).some(p=>p.id===u.uid))updateDoc(doc(db,"drops",d.id,"participants",u.uid),pay).catch(()=>{});
@@ -1612,7 +1613,7 @@ function chatsView(){
     await setDoc(doc(db,"groups",code,"members",u.uid),{nickname:nick,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
     rememberG(code);S.addGroup?.(code,{ownerId:u.uid,ownerNick:nick,name});bump("groups");vib([30,40,30]);go("/g/"+code)};
   const tm=ms=>{if(!ms)return"";const d=new Date(ms),n=new Date(),dd=Math.round((new Date(n).setHours(0,0,0,0)-new Date(d).setHours(0,0,0,0))/864e5);return dd<=0?`${pad(d.getHours())}:${pad(d.getMinutes())}`:dd===1?t("yest"):d.toLocaleDateString(LANG,{day:"numeric",month:"short"})};
-  const row=(x)=>{const m=x.m,n=x.n,who=m?(m.authorId===me()?t("you2"):m.nickname):"";
+  const row=(x)=>{const m=x.m,n=x.n,who=m?(isMe(m.authorId)?t("you2"):m.nickname):"";
     return`<div class="chrow${n?" un":""}" onclick="go('${x.href}')"><div class="cav th" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
     <div class="crm"><div class="cr1"><b>${esc(clean(x.title))}</b><time>${tm(x.at)}</time></div>
     <div class="cr2"><span class="ctag ${x.g?"g":"d"}">${x.tag}</span><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div><button class="rmore" aria-label="${t("cmMore")}" onclick="event.stopPropagation();chatMenu(${x.g?1:0},'${x.id}')">⋯</button></div>`};
@@ -1629,6 +1630,11 @@ function chatsView(){
 }
 
 /* ---------- GRUPA: link, udostępnianie, ekipa, dołączanie, wyjście ---------- */
+const oldUids=()=>{try{return JSON.parse(sget("oldUids")||"[]")}catch{return[]}},isMe=id=>!!id&&(id===auth.currentUser?.uid||oldUids().includes(id));
+function gChoice(cont){vib(10);const s=sheet(`<h2>${t("gcT")}</h2><p class="hint">${t("gcD")}</p><div class="acts"><button class="cta" id="gcl" style="margin:0">${t("accBtn")}</button><button class="ghost" id="gcg">${t("gcG")}</button><button id="gcx">${t("cancel")}</button></div>`);
+  s.querySelector("#gcl").onclick=()=>{s.close();guestUp(location.pathname)};
+  s.querySelector("#gcg").onclick=()=>{sset("gchoice","1");s.close();cont()};
+  s.querySelector("#gcx").onclick=()=>s.close()}
 const accBox=()=>`<div class="getapp"><b>${t("accT")}</b><small>${t("accD")}</small><button class="cta" id="acc">${t("accBtn")}</button></div>`;
 const accGo=()=>{const u=auth.currentUser;if(u&&u.isAnonymous)guestUp(location.pathname);else login()};
 const inAppNow=()=>IOSAPP||CAPN||(typeof inApp==="function"&&inApp());
@@ -1755,7 +1761,7 @@ async function dropView(code){
   let chpOn=false,CM=[];
   const drawChp=()=>{const el=$("#chp");if(!el||el.hidden)return;const un=unreadOf({id:code});
     el.innerHTML=`<div class="chph"><b>💬 ${t("chpT")}</b>${un?`<span class="bd bdi">${un}</span>`:""}<em>${t("chpAll")} ›</em></div>
-    ${CM.length?CM.map(m=>{const mm=m.authorId===me(),pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};return isBlk(m.authorId)&&!mm?"":`<div class="chpm${mm?" me":""}">${mm?"":avc("mini",avIdx(pp))}<p>${mm?"":`<b style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}</b> `}${m.drop?"🔥 "+esc(clean(m.drop.title||"")):esc(clean(m.text))}</p></div>`}).join(""):`<p class="mut chp0">${t("chpEmpty")}</p>`}
+    ${CM.length?CM.map(m=>{const mm=isMe(m.authorId),pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};return isBlk(m.authorId)&&!mm?"":`<div class="chpm${mm?" me":""}">${mm?"":avc("mini",avIdx(pp))}<p>${mm?"":`<b style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}</b> `}${m.drop?"🔥 "+esc(clean(m.drop.title||"")):esc(clean(m.text))}</p></div>`}).join(""):`<p class="mut chp0">${t("chpEmpty")}</p>`}
     <div class="chpi">${t("chPh")}<span>➤</span></div>`;el.onclick=()=>{vib(8);go("/c/"+code)}};
   /* album wypadu: otwiera się na starcie, każdy 1 zdjęcie, znika razem z dropem */
   const drawAlbum=()=>{const el=$("#alb");if(!el)return;
@@ -1778,6 +1784,7 @@ async function dropView(code){
     await deleteDoc(ref);vib([40,30,40]);toast(t("deleted"));go("/")}}
   let busy=false;document.querySelectorAll(".rb").forEach(b=>b.onclick=async()=>{
     if(closed())return toast(t("closedT"));if(busy)return;
+    if(inAppNow()&&!logged&&!sget("gchoice")&&!isGuestOk())return gChoice(()=>b.click());
     if(d.public&&!isHost&&b.dataset.s!=="out"){if(!pubOk()||sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t(pubOk()?"prNeed":"pubAgeT"));return go("/")}const mineNow=P.find(p=>p.id===me());if(!["in","late"].includes(mineNow?.status)&&taken(P)>=(d.seats||0)){vib([50,30,50]);return toast(t("pubFull"))}}
     busy=true;try{
     const n=$("#nick").value.trim();if(!n){vib([50,30,50]);$("#nick").hidden=false;$("#nick").focus();return toast(t("needNick"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!nickTry(n)){$("#nick").value=sget("nick");return}
@@ -1876,7 +1883,7 @@ async function chatView(code,g){
   const drawM=()=>{const b=$("#msgs");if(!b)return;const atEnd=b.scrollHeight-b.scrollTop-b.clientHeight<80;let lastDay="",prev=null,nsepDone=false;
     const lm=[...M].reverse().find(m=>!isBlk(m.authorId)),lmT=lm?tms(lm):0;
     const seen=lm?P.filter(p=>p.id!==me()&&p.id!==lm.authorId&&(p.readAt?.toMillis?.()||0)>=lmT-1000):[];
-    b.innerHTML=(M.length&&!sget("rxHint")?`<p class="rxhint">${t("rxHint")}</p>`:"")+(M.map((m,mi)=>{const mm=m.authorId===me(),T=tms(m),dk=new Date(T).toDateString();let sep="";
+    b.innerHTML=(M.length&&!sget("rxHint")?`<p class="rxhint">${t("rxHint")}</p>`:"")+(M.map((m,mi)=>{const mm=isMe(m.authorId),T=tms(m),dk=new Date(T).toDateString();let sep="";
       if(dk!==lastDay){sep=`<div class="dsep"><span>${dayL(T)}</span></div>`;lastDay=dk;prev=null}
       if(!nsepDone&&seen0&&!mm&&T>seen0){nsepDone=true;const n=M.filter(x=>x.authorId!==me()&&tms(x)>seen0).length;sep+=`<div class="nsep" id="nsep"><span>${t("newMsgs",n)}</span></div>`;prev=null}
       if(!mm&&isBlk(m.authorId)){prev=null;return sep+`<div class="m hid"><div>${t("hiddenMsg")}</div></div>`}
@@ -1904,7 +1911,7 @@ async function chatView(code,g){
   const react=async(id,e,el)=>{const m=M.find(x=>x.id===id);if(!m)return;const cur=(m.r||{})[me()];
     if(cur!==e){flyEmoji(e,el);sfx("react");vib(12)}else vib(6);sset("rxHint","1");
     try{await updateDoc(doc(ref,"messages",id),{["r."+me()]:cur===e?deleteField():e})}catch{}};
-  const openRx=el=>{const m=M.find(x=>x.id===el.dataset.i);if(!m||!mine)return;vib(15);const own=m.authorId===me(),my=(m.r||{})[me()];
+  const openRx=el=>{const m=M.find(x=>x.id===el.dataset.i);if(!m||!mine)return;vib(15);const own=isMe(m.authorId),my=(m.r||{})[me()];
     const bg=document.createElement("div");bg.className="rxbg";bg.innerHTML=`<div class="rxbar">${RX.map(e=>`<button data-e="${e}" class="${e===my?"on":""}">${e}</button>`).join("")}${own?"":`<button data-more aria-label="${t("repMsg")}">${sv('<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>')}</button>`}</div>`;
     document.body.append(bg);const bar=bg.firstChild,rc=el.querySelector(".bub").getBoundingClientRect(),bw=bar.offsetWidth;
     bar.style.left=Math.max(10,Math.min(innerWidth-bw-10,own?rc.right-bw:rc.left))+"px";let top=rc.top-bar.offsetHeight-10;if(top<70)top=rc.bottom+10;bar.style.top=top+"px";
@@ -2382,6 +2389,8 @@ Object.assign(L.pl,{apBtn:"Zaloguj przez Apple"});Object.assign(L.en,{apBtn:"Sig
 Object.assign(L.pl,{insApp:"Pobierz z App Store"});Object.assign(L.en,{insApp:"Download on the App Store"});for(const k of["es","de","fr","it","cs","uk"])L[k].insApp=L[k].insApp||L.en.insApp;
 Object.assign(L.pl,{accT:"Wchodzisz jako gość",accD:"Załóż konto lub zaloguj się, żeby w pełni korzystać z aplikacji: powiadomienia, historia i ekipy na każdym telefonie.",accBtn:"Zaloguj się / załóż konto"});Object.assign(L.en,{accT:"You're a guest",accD:"Create an account or sign in to get the full app: notifications, history and your crews on every phone.",accBtn:"Sign in / create account"});
 Object.assign(L.es,{accT:"Entras como invitado",accD:"Crea una cuenta o inicia sesión para usar la app al completo: avisos, historial y tus crews en cada móvil.",accBtn:"Iniciar sesión / crear cuenta"});Object.assign(L.de,{accT:"Du bist als Gast hier",accD:"Erstelle ein Konto oder melde dich an, um die App voll zu nutzen: Benachrichtigungen, Verlauf und deine Crews auf jedem Handy.",accBtn:"Anmelden / Konto erstellen"});Object.assign(L.fr,{accT:"Tu es invité",accD:"Crée un compte ou connecte-toi pour profiter pleinement de l'appli : notifications, historique et tes teams sur chaque téléphone.",accBtn:"Se connecter / créer un compte"});Object.assign(L.it,{accT:"Sei un ospite",accD:"Crea un account o accedi per usare l'app al meglio: notifiche, cronologia e le tue crew su ogni telefono.",accBtn:"Accedi / crea account"});Object.assign(L.cs,{accT:"Jsi tu jako host",accD:"Vytvoř si účet nebo se přihlas, abys mohl(a) aplikaci využívat naplno: upozornění, historii a party na každém telefonu.",accBtn:"Přihlásit se / vytvořit účet"});Object.assign(L.uk,{accT:"Ти тут як гість",accD:"Створи акаунт або увійди, щоб користуватися застосунком повністю: сповіщення, історія й компанії на кожному телефоні.",accBtn:"Увійти / створити акаунт"});
+Object.assign(L.pl,{gcT:"Jak chcesz dołączyć?",gcD:"Zaloguj się, a Twoje dropy i czaty będą na każdym telefonie. Albo wejdź jako gość, bez konta. Konto możesz założyć później, a Twój udział zostanie.",gcG:"Kontynuuj jako gość"});Object.assign(L.en,{gcT:"How do you want to join?",gcD:"Sign in to keep your drops and chats on every phone. Or continue as a guest, no account needed. You can create one later and your spot stays.",gcG:"Continue as guest"});
+Object.assign(L.es,{gcT:"¿Cómo quieres unirte?",gcD:"Inicia sesión para tener tus drops y chats en cada móvil. O continúa como invitado, sin cuenta. Puedes crearla luego y tu plaza se mantiene.",gcG:"Continuar como invitado"});Object.assign(L.de,{gcT:"Wie möchtest du beitreten?",gcD:"Melde dich an, um Drops und Chats auf jedem Handy zu haben. Oder weiter als Gast, ohne Konto. Du kannst später eins erstellen, dein Platz bleibt.",gcG:"Als Gast fortfahren"});Object.assign(L.fr,{gcT:"Comment veux-tu rejoindre ?",gcD:"Connecte-toi pour retrouver tes drops et chats sur chaque téléphone. Ou continue en invité, sans compte. Tu pourras en créer un plus tard et ta place reste.",gcG:"Continuer en invité"});Object.assign(L.it,{gcT:"Come vuoi unirti?",gcD:"Accedi per avere drop e chat su ogni telefono. Oppure continua come ospite, senza account. Potrai crearlo dopo e il tuo posto resta.",gcG:"Continua come ospite"});Object.assign(L.cs,{gcT:"Jak se chceš připojit?",gcD:"Přihlas se a měj dropy a chaty na každém telefonu. Nebo pokračuj jako host, bez účtu. Účet můžeš vytvořit později a tvoje místo zůstane.",gcG:"Pokračovat jako host"});Object.assign(L.uk,{gcT:"Як хочеш приєднатися?",gcD:"Увійди, щоб мати дропи й чати на кожному телефоні. Або продовж як гість, без акаунта. Акаунт можна створити пізніше, а твоє місце залишиться.",gcG:"Продовжити як гість"});
 /* ---------- WYŚLIJ DROP DO GRUPY (karta w czacie grupy + powiadomienie) ---------- */
 /* jeden przycisk „Zaproś” zamiast kilku ikon: kontakty / grupa / link i obrazek */
 function inviteSheet(d,code,P,isHost){vib(8);const row=(ic,l,sub,id)=>`<button class="srow irow" id="${id}">${sv(ic)}<span><b>${l}</b><small>${sub}</small></span><em>›</em></button>`;
