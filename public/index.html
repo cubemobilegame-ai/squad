@@ -1558,7 +1558,7 @@ function pubMap(el,safe){
     w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmfs" id="pmfs" aria-label="Fullscreen">${PVI.fs}</button><button class="pmme" id="pmme" aria-label="${t("pmMy")}">${PVI.loc}</button><button class="pmbk" id="pmbk" aria-label="${t("back")}" hidden>${PVI.bk}</button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
     const fs=on=>{{const cd=w.querySelector("#pmcard");if(cd)cd.hidden=true}w.classList.toggle("fs",on);document.documentElement.classList.toggle("pmlock",on);w.querySelector("#pmbk").hidden=!on;w.querySelector("#pmfs").hidden=on;if(!on)w.style.top="";setTimeout(()=>{try{P.map&&P.map.invalidateSize()}catch{}},60);vib(8)};P.fs=fs;
     w.querySelector("#pmfs").onclick=()=>fs(true);w.querySelector("#pmbk").onclick=()=>fs(false);
-    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.fitBounds(window.L.latLng(p.la,p.lo).toBounds(30000))}catch(e){if(PUB.pos&&P.map&&e&&e.code!==1)P.map.fitBounds(window.L.latLng(PUB.pos.la,PUB.pos.lo).toBounds(30000));else toast(t(e&&e.code===1?"pubLocDeny":"pmGeoErr")+" ["+(e&&(e.code??e.message))+"]")}};
+    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;pmFit(P,p)}catch(e){if(PUB.pos&&P.map&&e&&e.code!==1)pmFit(P,PUB.pos);else toast(t(e&&e.code===1?"pubLocDeny":"pmGeoErr")+" ["+(e&&(e.code??e.message))+"]")}};
 }
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
@@ -1574,12 +1574,13 @@ function pubMap(el,safe){
       P.map.addLayer(P.cl);
       P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>{if(P.wrap&&P.wrap.isConnected)pubMapLoad(P,hint)},350)});
       P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true});
-      const fit=p=>{if(P.fit||!P.map)return;P.fit=1;P.map.fitBounds(window.L.latLng(p.la,p.lo).toBounds(30000))};
+      const fit=p=>{if(P.fit||!P.map)return;P.fit=1;pmFit(P,p)};
       if(PUB.pos)fit(PUB.pos);else getPos().then(p=>{PUB.pos=p;fit(p)}).catch(()=>{})}
     else setTimeout(()=>P.map.invalidateSize(),30);
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
 const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${av||ic(d.category)}</div>${hasAv?`<i class="pmb">${ic(d.category)}</i>`:""}</div>`})};
+function pmFit(P,p){const m=P.map;if(!m)return;const sz=m.getSize(),px=Math.max(sz.x,sz.y,200),mpp=30000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp);m.setView([p.la,p.lo],Math.max(8,Math.min(17,z)),{animate:true})}
 async function pubMapLoad(P,hint){try{await pubMapLoad0(P,hint)}catch(e){console.warn("map",e)}}
 async function pubMapLoad0(P,hint){const m=P.map;if(!m)return;
   const b=m.getBounds().pad(.1);let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());if(cs.length>120)cs=cs.slice(0,120);
