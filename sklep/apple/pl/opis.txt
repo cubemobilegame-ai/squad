@@ -18,33 +18,33 @@ Pierwsza wersja Squad na iPhone’a. Wypady z ekipą, czat grupowy, publiczne dr
 OPIS (≤4000):
 Planujesz wypad ze znajomymi, ale ustalanie godziny, miejsca i tego, kto idzie, na kilku czatach to męka? Squad to aplikacja do organizowania spotkań z ekipą: tworzysz zaproszenie (drop), wysyłasz link i od razu widzisz, kto wbija. Znajomi odpowiadają jednym kliknięciem, bez instalowania aplikacji.
 
-⚡ JAK TO DZIAŁA
+JAK TO DZIAŁA
 • Tworzysz drop: co, gdzie i kiedy
 • Wysyłasz link w komunikatorze, SMS-em albo pokazujesz kod QR
 • Znajomi klikają IN, LATE albo OUT
 • Widzisz listę: kto jest, kto się spóźni i o ile minut, kto odpada
 
-🎯 KAŻDY RODZAJ SPOTKANIA
+KAŻDY RODZAJ SPOTKANIA
 Pizza, sport, domówka, impreza, klub, knajpa, kawa, kino, gry, spacer, wyjazd, urodziny i inne okazje. Wypad może powtarzać się co tydzień, co dwa tygodnie albo co miesiąc.
 
-💬 CZAT GRUPOWY DLA EKIPY
+CZAT GRUPOWY DLA EKIPY
 Każdy drop ma własny czat. Ankiety „gdzie idziemy?”, reakcje, informacja kto przeczytał i kto pisze. Bez prywatnych wiadomości.
 
-👥 STAŁE GRUPY I KONTAKTY
+STAŁE GRUPY I KONTAKTY
 Załóż grupę z czatem, który nie znika: klasa, drużyna, paczka z osiedla. Zapraszaj znajomych do kontaktów i dodawaj ich do dropów oraz grup jednym stuknięciem, bez linków i kodów QR.
 
-📍 PUBLICZNE DROPY W OKOLICY
+PUBLICZNE DROPY W OKOLICY
 Dołącz do otwartych spotkań do 20 km od ciebie albo stwórz własne z limitem miejsc. Tylko dla osób 16+.
 
-🔔 PRZYPOMNIENIA I KALENDARZ
+PRZYPOMNIENIA I KALENDARZ
 Powiadomimy, gdy ktoś odpowie albo napisze, i przypomnimy całej ekipie 30 minut przed startem. Drop dodasz do kalendarza jednym kliknięciem.
 
-📸 ALBUM I KOLAŻ
+ALBUM I KOLAŻ
 Gdy drop się zaczyna, otwiera się wspólny album. Zdjęcia z wypadu w jednym miejscu i gotowy kolaż na relację.
 
-🔒 BEZPIECZEŃSTWO
+BEZPIECZEŃSTWO
 Zgłaszanie i blokowanie jednym przytrzymaniem wiadomości, filtr wulgaryzmów, linki, które znikają 24 godziny po starcie dropa. Z aplikacji korzystają osoby od 13 lat (do 16 lat za zgodą rodzica lub opiekuna).
 
-🌍 Dostępna po polsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku. Bezpłatna.
+Dostępna po polsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku. Bezpłatna.
 
-Zbierz ekipę. Wbijajcie razem. Squad ✦
+Zbierz ekipę. Wbijajcie razem. Squad
