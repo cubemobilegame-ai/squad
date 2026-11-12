@@ -60,6 +60,16 @@ public class LauncherActivity extends com.google.androidbrowserhelper.trusted.La
         }
     }
 
+    // Id instalacji: SharedPreferences znikają przy odinstalowaniu, więc strona wie, że to nowa instalacja i wylogowuje starą sesję
+    @Override
+    protected android.net.Uri getLaunchingUrl() {
+        android.net.Uri u = super.getLaunchingUrl();
+        android.content.SharedPreferences p = getSharedPreferences("squad", MODE_PRIVATE);
+        String id = p.getString("installId", null);
+        if (id == null) { id = java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 12); p.edit().putString("installId", id).apply(); }
+        return u.buildUpon().appendQueryParameter("inst", id).build();
+    }
+
     @Override
     protected boolean shouldLaunchImmediately() { return !asking; }
 
