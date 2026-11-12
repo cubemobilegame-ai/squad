@@ -1524,7 +1524,7 @@ function pubTab(el,redraw){
     $("#byok").onclick=()=>{const v=+$("#by").value;if(!v){vib([50,30,50]);return toast(t("pubYear"))}const ok=y-v>=16;sset("pub16",ok?"1":"no");if(ok)sset("pubU18",y-v<18?"1":"0");
       const u=auth.currentUser;if(u&&!DEMO)setDoc(doc(db,"users",u.uid),{pub16:ok},{merge:true}).catch(()=>{});vib(ok?[20,30,20]:[50,30,50]);redraw()};return}
   if(sget("pubRules")!=="1"){el.innerHTML=pubRulesHtml();bindPubRules(redraw);return}
-  const safe=`<div class="pubs">🛡️ ${t("pubSafe")} <a href="#" onclick="event.preventDefault();showPubRules()">${t("prSee")}</a></div>`+pvToggle();
+  const safe=pvToggle()+`<div class="pubs">🛡️ ${t("pubSafe")} <a href="#" onclick="event.preventDefault();showPubRules()">${t("prSee")}</a></div>`;
   el.onclick=e=>{const b=e.target.closest&&e.target.closest(".pvt button");if(b){vib(8);sset("pubv",b.dataset.pv);redraw()}};
   if(pvMode()==="map")return pubMap(el,safe);
   if(PUB.err&&!PUB.list){el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t(PUB.err==="deny"?"pubLocDeny":"pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;$("#pgo").onclick=()=>{PUB.err=null;PUB.pos=null;el.innerHTML=`<p class="mut">${t("load")}</p>`;loadPub().then(redraw)};return}
