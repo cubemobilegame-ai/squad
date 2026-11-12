@@ -1342,7 +1342,7 @@ const signInSmart=async pr=>{const u=auth.currentUser;if(!DEMO&&u&&u.isAnonymous
         const r=await FB.signInWithCredential(auth,cr),nu=r.user;
         for(const [code,dd] of mig)await setDoc(doc(db,"drops",code,"participants",nu.uid),{...dd,isGuest:false,uid:nu.uid,updatedAt:serverTimestamp()}).catch(()=>{});
         for(const [code,dd] of migG)await setDoc(doc(db,"groups",code,"members",nu.uid),{...dd,isGuest:false,uid:nu.uid,updatedAt:serverTimestamp()}).catch(()=>{});
-        try{await saveProfile()}catch{}return r}}else throw e}}return IOSAPP?nsign(pr):signInWithPopup(auth,pr)};
+        try{const had=await getDoc(doc(db,"users",nu.uid));if(had.exists())await loadProfile(nu);else await saveProfile()}catch{}return r}}else throw e}}return IOSAPP?nsign(pr):signInWithPopup(auth,pr)};
 /* latające emotki na ekranie logowania: powolny, chaotyczny lot w wolnej przestrzeni nad dłońmi */
 function wander(){const box=document.querySelector(".scr.deco");if(!box)return;const els=[...box.querySelectorAll(".fl")];if(!els.length)return;
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
