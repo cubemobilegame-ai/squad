@@ -1,0 +1,9 @@
+{
+  "name": "capacitor-squad-widget",
+  "version": "1.0.0",
+  "description": "Squad: dane dla widżetu iOS (App Group)",
+  "main": "index.js",
+  "files": ["ios/", "CapacitorSquadWidget.podspec"],
+  "capacitor": { "ios": { "src": "ios" } },
+  "peerDependencies": { "@capacitor/core": ">=7.0.0" }
+}

@@ -50,6 +50,22 @@ for cap, settings in [("PUSH_NOTIFICATIONS", None), ("ASSOCIATED_DOMAINS", None)
             "relationships": {"bundleId": {"data": {"type": "bundleIds", "id": bid}}}}})
     print(cap, "->", "ok" if "_err" not in r else (r["_err"], r["_body"][:200]))
 
+# widżet: osobny App ID + App Groups na obu identyfikatorach
+WID = BID + ".widget"
+r = api("GET", f"/v1/bundleIds?filter[identifier]={WID}&filter[platform]=IOS")
+wl = [x for x in r.get("data", []) if x["attributes"]["identifier"] == WID] if "_err" not in r else []
+if not wl:
+    r = api("POST", "/v1/bundleIds", {"data": {"type": "bundleIds", "attributes": {"identifier": WID, "name": "Squad Widget", "platform": "IOS"}}})
+    print("widget bundleId:", "ok" if "_err" not in r else (r["_err"], r["_body"][:200]))
+    wbid = r["data"]["id"] if "_err" not in r else None
+else:
+    wbid = wl[0]["id"]
+for tid in [bid, wbid]:
+    if not tid: continue
+    r = api("POST", "/v1/bundleIdCapabilities", {"data": {"type": "bundleIdCapabilities", "attributes": {"capabilityType": "APP_GROUPS"},
+            "relationships": {"bundleId": {"data": {"type": "bundleIds", "id": tid}}}}})
+    print("APP_GROUPS", tid, "->", "ok" if "_err" not in r else (r["_err"], r["_body"][:200]))
+
 r = api("GET", "/v1/devices?filter[platform]=IOS&limit=5")
 n = len(r.get("data", [])) if "_err" not in r else -1
 print("zarejestrowane urządzenia:", n)
