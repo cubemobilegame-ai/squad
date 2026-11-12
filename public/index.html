@@ -1857,7 +1857,7 @@ async function dropView(code){
   <div class="acts4">
    ${logged&&(isHost||d.public)?`<button id="inv" class="pri">${I.con}<small>${t("aInv")}</small></button>`:""}
    <button id="cal" hidden>${PI.cal}<small>${t("aCal")}</small></button>
-   ${isHost&&!closed()?`<button id="edb">${sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>')}<small>${t("aEdit")}</small></button>`:""}
+   ${isHost&&!closed()&&!d.public?`<button id="mkp">${sv('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.600 2.700 2.600 15.300 0 18M12 3c-2.600 2.700-2.600 15.300 0 18"/>')}<small>${t("mkPubB")}</small></button>`:""}${isHost&&!closed()?`<button id="edb">${sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>')}<small>${t("aEdit")}</small></button>`:""}
   </div>
   ${isHost?`<div class="lk lk2"><div class="lt">${t("yourLink")}</div><div class="lr"><code>${url}</code><button id="cl">${t("copyShort")}</button></div></div>`:""}
   <h3>${t("whereH")}</h3><div class="map">${!DEMO&&!hidden(d)?`<iframe loading="lazy" src="https://maps.google.com/maps?q=${encodeURIComponent(d.place)}&z=15&output=embed"></iframe>`:`<div class="pin">${PIN}</div>`}<div class="ml">${hidden(d)?t("surShown"):i14(PN)+" "+esc(d.place)}</div></div>
@@ -1886,7 +1886,7 @@ async function dropView(code){
   every(()=>{if(closed()!==wasC){wasC=closed();drawAlbum()}},1000);every(tick,1000);
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#acc"))$("#acc").onclick=accGo;if($("#rp"))$("#rp").onclick=()=>report({target:"drop",code});
   $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);if(isHost)$("#cl").onclick=()=>cpLink(code);$("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};
-  if($("#edb"))$("#edb").onclick=()=>editDrop(code,ref,d);
+  if($("#edb"))$("#edb").onclick=()=>editDrop(code,ref,d);if($("#mkp"))$("#mkp").onclick=()=>makePublic(code,ref,d,P);
   if(isHost){let arm=0;$("#dx").onclick=async()=>{if(!arm){arm=1;$("#dx").textContent=t("delSure");setTimeout(()=>{arm=0;$("#dx")&&($("#dx").textContent=t("del"))},4000);return}
     await deleteDoc(ref);vib([40,30,40]);toast(t("deleted"));go("/")}}
   let busy=false;document.querySelectorAll(".rb").forEach(b=>b.onclick=async()=>{
@@ -2539,6 +2539,28 @@ Object.assign(L.fr,{cmMute:"Mettre le chat en sourdine",cmUnmute:"Réactiver les
 Object.assign(L.it,{cmMute:"Silenzia chat",cmUnmute:"Attiva le notifiche",cmMuted:"Chat silenziata",cmUnm:"Notifiche attivate",cmRep:"Segnala",cmClr:"Svuota chat solo per me",cmClrD:"I messaggi spariscono solo per te. Gli altri li vedono ancora.",cmCleared:"Chat svuotata"});
 Object.assign(L.cs,{cmMute:"Ztlumit chat",cmUnmute:"Zapnout upozornění",cmMuted:"Chat ztlumen",cmUnm:"Upozornění zapnuta",cmRep:"Nahlásit",cmClr:"Vyčistit chat jen u mě",cmClrD:"Zprávy zmizí jen tobě. Ostatní je dál vidí.",cmCleared:"Chat vyčištěn"});
 Object.assign(L.uk,{cmMute:"Вимкнути звук чату",cmUnmute:"Увімкнути сповіщення",cmMuted:"Чат без звуку",cmUnm:"Сповіщення увімкнено",cmRep:"Поскаржитись",cmClr:"Очистити чат у мене",cmClrD:"Повідомлення зникнуть лише в тебе. Інші їх бачать.",cmCleared:"Чат очищено"});
+/* prywatny drop -> publiczny (jednokierunkowo, do startu) */
+function makePublic(code,ref,d,P){vib(10);
+  if(!pubOk()||sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}
+  const taken=(P||[]).filter(p=>p.status==="in"||p.status==="late").length;let seats=Math.max(8,taken);
+  const q=sheet(`<h2>🌍 ${t("mkPubT")}</h2><p class="hint">${t("pubMkD")}</p><p class="hint" style="margin-top:6px">${t("mkPubN")}</p>
+   <h3>${t("seats")}</h3><div class="chips" id="mks">${[4,6,8,10,15,20,30].filter(n=>n>=taken).map(n=>`<button class="chip ${n===seats?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
+   <button class="cta" id="mkg" style="margin-top:16px">${t("mkPubB")}</button>`);
+  q.querySelectorAll("#mks .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;q.querySelectorAll("#mks .chip").forEach(x=>x.classList.toggle("on",x===c))});
+  q.querySelector("#mkg").onclick=async()=>{const b=q.querySelector("#mkg");b.disabled=true;
+    try{const po=PUB.pos||await getPos();PUB.pos=po;
+      await updateDoc(ref,{public:true,seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5),hostAv:myAv(),hostPh:sget("photo")||null});
+      PUB.at=0;q.close();vib([30,40,30]);toast(t("mkPubOk"));go("/d/"+code)}
+    catch(e){b.disabled=false;vib([50,30,50]);toast(t(e&&e.code===1?"pubLocDeny":"pubNeedLoc"))}}}
+const mkpT={pl:["Zrób publiczny","Zrób drop publiczny","Po zmianie nie da się wrócić do prywatnego. Obecni uczestnicy i link zostają.","Drop jest teraz publiczny 🌍"],
+ en:["Make public","Make this drop public","You can't switch back to private afterwards. Current guests and the link stay.","The drop is public now 🌍"],
+ es:["Hacer público","Hacer público este drop","Después no se puede volver a privado. Los invitados actuales y el enlace se mantienen.","El drop ya es público 🌍"],
+ de:["Öffentlich machen","Diesen Drop öffentlich machen","Danach ist kein Zurück zu privat möglich. Aktuelle Gäste und der Link bleiben.","Der Drop ist jetzt öffentlich 🌍"],
+ fr:["Rendre public","Rendre ce drop public","Impossible de revenir en privé ensuite. Les invités actuels et le lien restent.","Le drop est maintenant public 🌍"],
+ it:["Rendi pubblico","Rendi pubblico questo drop","Dopo non si può tornare a privato. Gli ospiti attuali e il link restano.","Il drop ora è pubblico 🌍"],
+ cs:["Zveřejnit","Zveřejnit tento drop","Zpět na soukromý to pak nejde. Stávající hosté i odkaz zůstanou.","Drop je teď veřejný 🌍"],
+ uk:["Зробити публічним","Зробити цей дроп публічним","Повернути приватність потім не можна. Поточні гості й посилання лишаються.","Дроп тепер публічний 🌍"]};
+for(const k in mkpT){const v=mkpT[k];Object.assign(L[k],{mkPubB:v[0],mkPubT:v[1],mkPubN:v[2],mkPubOk:v[3]})}
 /* ---------- WYŚLIJ DROP DO GRUPY (karta w czacie grupy + powiadomienie) ---------- */
 /* jeden przycisk „Zaproś” zamiast kilku ikon: kontakty / grupa / link i obrazek */
 function inviteSheet(d,code,P,isHost){vib(8);const row=(ic,l,sub,id)=>`<button class="srow irow" id="${id}">${sv(ic)}<span><b>${l}</b><small>${sub}</small></span><em>›</em></button>`;
