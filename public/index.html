@@ -1897,7 +1897,8 @@ async function dropView(code){
     const n=$("#nick").value.trim();if(!n){vib([50,30,50]);$("#nick").hidden=false;$("#nick").focus();return toast(t("needNick"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!nickTry(n)){$("#nick").value=sget("nick");return}
     let eta=15;if(b.dataset.s==="late"){eta=await askLate(mine?.etaMin);if(!eta)return}
     const u=(await ensureUser()),st=b.dataset.s;sset("nick",n);remember(code);sfx(st);
-    await setDoc(doc(ref,"participants",u.uid),{nickname:n,status:st,av:myAv(),ph:sget("photo")||null,...(st==="late"?{etaMin:eta}:{}),isGuest:u.isAnonymous,uid:u.uid,updatedAt:serverTimestamp()});pushNow({kind:"rsp",code});if(!u.isAnonymous)deleteDoc(doc(db,"users",u.uid,"invites","d_"+code)).catch(()=>{});if(u.isAnonymous){sset("guest","1");carryUrl(code,st)}
+    const prevSt=mine?mine.status:null;
+    await setDoc(doc(ref,"participants",u.uid),{nickname:n,status:st,av:myAv(),ph:sget("photo")||null,...(st==="late"?{etaMin:eta}:{}),isGuest:u.isAnonymous,uid:u.uid,updatedAt:serverTimestamp()});pushNow({kind:"rsp",code,prev:prevSt});if(!u.isAnonymous)deleteDoc(doc(db,"users",u.uid,"invites","d_"+code)).catch(()=>{});if(u.isAnonymous){sset("guest","1");carryUrl(code,st)}
     vib(st==="in"?[30,40,30]:20);toast(logged?(st==="out"?t("toOut"):t("toMine")):t("savedG"));
     if(!isHost&&!u.isAnonymous)setHist(code,st);
     if($("#nick").hidden===false){$("#nick").hidden=true;$("#asr").hidden=false;$("#asr b").textContent=n}
