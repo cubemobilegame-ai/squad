@@ -128,7 +128,7 @@ html:has(.scr.chs),html:has(.scr.chs) body{overflow:hidden;overscroll-behavior:n
 .popt{margin-bottom:8px}
 .pubg{text-align:center;padding:26px 18px;margin:8px 0;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pubg img{width:72px;height:72px}.pubg h3{margin:10px 0 6px;font-size:19px;text-transform:none;letter-spacing:0;color:#fff}.pubg p{margin:0 0 6px;color:rgba(255,255,255,.65);font-size:14.5px;line-height:1.45}.pubg select{width:100%;margin-top:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.07) url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%278%27%3E%3Cpath d=%27M1 1l5 5 5-5%27 stroke=%27%23fff%27 stroke-width=%272%27 fill=%27none%27/%3E%3C/svg%3E") no-repeat right 16px center;color:#fff;border:1.5px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 16px;font:700 16px Brico,BricoCyr,system-ui}.pubg select option{color:#000}.pubg .lbl{text-align:left}
 .pvt{display:flex;gap:6px;margin:0 0 10px}.pvt button{flex:1;padding:10px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);font:800 13px/1 inherit;cursor:pointer}.pvt button.on{background:rgba(var(--accr),.2);border-color:var(--acc);color:#fff}
-.pmw{position:relative}.pms{display:flex;gap:6px;margin-bottom:8px}.pms input{flex:1;min-width:0;margin:0}.pms button{width:46px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:18px;cursor:pointer;color:#fff}
+.pmw{position:relative}.pmme{position:absolute;left:10px;top:10px;z-index:5;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(20,20,28,.9);font-size:19px;cursor:pointer;color:#fff}.pmm .pmt{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.92) saturate(.7)}
 .pmm{height:calc(100dvh - 330px);min-height:380px;border-radius:20px;overflow:hidden;position:relative;z-index:0;isolation:isolate;background:#0b0b12;border:1px solid rgba(255,255,255,.1)}
 .pmm .leaflet-container{background:#0b0b12;font:inherit}.pmm .leaflet-control-attribution{font-size:9px;background:rgba(0,0,0,.5);color:#aaa}.pmm .leaflet-control-attribution a{color:#ccc}
 .pmh{position:absolute;left:12px;right:12px;top:62px;z-index:4;text-align:center;font-size:12.5px;font-weight:800;padding:9px 12px;border-radius:14px;background:rgba(20,20,28,.88);border:1px solid rgba(255,255,255,.12);pointer-events:none}
@@ -1545,11 +1545,8 @@ const cellsBox=(s,w,n,e)=>{const dla=180/1024,dlo=360/1024,S=new Set(),cl=(v,m)=
 function pubMap(el,safe){
   const P=PUB.M||(PUB.M={items:new Map(),mk:new Map(),loaded:new Map(),map:null,wrap:null,cl:null,tm:0});
   if(!P.wrap){const w=P.wrap=document.createElement("div");w.className="pmw";
-    w.innerHTML=`<div class="pms"><input id="pmq" placeholder="${t("pmSearch")}" autocomplete="off" enterkeyhint="search"><button id="pmgo" aria-label="${t("pmSearch")}">🔍</button><button id="pmme" aria-label="${t("pmMy")}">📍</button></div><div class="pmm" id="pmap"></div><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
-    const q=s=>w.querySelector(s),go_=async()=>{const v=q("#pmq").value.trim();if(!v||!P.map)return;vib(8);q("#pmq").blur();
-      try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(v));const j=await r.json();if(j&&j[0])P.map.setView([+j[0].lat,+j[0].lon],12);else toast(t("pmNoPlace"))}catch{toast(t("pmErr"))}};
-    q("#pmgo").onclick=go_;q("#pmq").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go_()}};
-    q("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.setView([p.la,p.lo],12)}catch{toast(t("pubLocDeny"))}}}
+    w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmme" id="pmme" aria-label="${t("pmMy")}">📍</button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
+    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.fitBounds(window.L.latLng(p.la,p.lo).toBounds(30000))}catch{toast(t("pubLocDeny"))}}}
   if(el.contains(P.wrap))return;
   el.innerHTML=safe;el.append(P.wrap);
   const w=P.wrap,hint=m=>{const h=w.querySelector("#pmh");if(!h)return;h.hidden=!m;h.textContent=m||""};
@@ -1557,11 +1554,13 @@ function pubMap(el,safe){
     if(!P.map){const c=PUB.pos||{la:52.23,lo:21.01};
       P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomControl:false,attributionControl:true});
       window.L.control.zoom({position:"bottomright"}).addTo(P.map);
-      window.L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:19,attribution:"© OpenStreetMap © CARTO"}).addTo(P.map);
+      window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,className:"pmt",attribution:"© OpenStreetMap"}).addTo(P.map);
       P.cl=window.L.markerClusterGroup({maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
       P.map.addLayer(P.cl);
       P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>pubMapLoad(P,hint),350)});
-      P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true})}
+      P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true});
+      const fit=p=>{if(P.fit||!P.map)return;P.fit=1;P.map.fitBounds(window.L.latLng(p.la,p.lo).toBounds(30000))};
+      if(PUB.pos)fit(PUB.pos);else getPos().then(p=>{PUB.pos=p;fit(p)}).catch(()=>{})}
     else setTimeout(()=>P.map.invalidateSize(),30);
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
 const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
