@@ -27,6 +27,7 @@ d["NSCalendarsUsageDescription"] = "Squad dodaje wydarzenia z dropów do Twojego
 d["NSCalendarsFullAccessUsageDescription"] = "Squad dodaje wydarzenia z dropów do Twojego kalendarza."
 d["NSCalendarsWriteOnlyAccessUsageDescription"] = "Squad dodaje wydarzenia z dropów do Twojego kalendarza."
 d["NSLocationWhenInUseUsageDescription"] = "Lokalizacja pokazuje publiczne dropy w Twojej okolicy."
+d["NSLocationAlwaysAndWhenInUseUsageDescription"] = "Lokalizacja pokazuje publiczne dropy w Twojej okolicy."
 d["UIRequiredDeviceCapabilities"] = ["arm64"]
 d["UISupportedInterfaceOrientations"] = ["UIInterfaceOrientationPortrait"]
 d["UISupportedInterfaceOrientations~ipad"] = ["UIInterfaceOrientationPortrait", "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight", "UIInterfaceOrientationPortraitUpsideDown"]
