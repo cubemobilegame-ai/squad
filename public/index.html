@@ -127,7 +127,7 @@ html:has(.scr.chs),html:has(.scr.chs) body{overflow:hidden;overscroll-behavior:n
 .pf{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55)}.pset{width:100%;margin-top:4px;border:0;border-radius:12px;padding:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0b0b10;font:900 13px Brico,BricoCyr,system-ui;cursor:pointer}
 .popt{margin-bottom:8px}
 .pubg{text-align:center;padding:26px 18px;margin:8px 0;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pubg img{width:72px;height:72px}.pubg h3{margin:10px 0 6px;font-size:19px;text-transform:none;letter-spacing:0;color:#fff}.pubg p{margin:0 0 6px;color:rgba(255,255,255,.65);font-size:14.5px;line-height:1.45}.pubg select{width:100%;margin-top:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.07) url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%278%27%3E%3Cpath d=%27M1 1l5 5 5-5%27 stroke=%27%23fff%27 stroke-width=%272%27 fill=%27none%27/%3E%3C/svg%3E") no-repeat right 16px center;color:#fff;border:1.5px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 16px;font:700 16px Brico,BricoCyr,system-ui}.pubg select option{color:#000}.pubg .lbl{text-align:left}
-.pvt{display:flex;gap:4px;margin:0 0 10px;padding:4px;border-radius:99px;background:#15151e;border:1px solid rgba(255,255,255,.12)}.pvt button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 8px;border-radius:99px;border:0;background:none;color:rgba(255,255,255,.65);font:800 13px/1 inherit;cursor:pointer}.pvt button.on{background:var(--acc);color:#fff;box-shadow:0 4px 14px rgba(var(--accr),.35)}.pvt button svg{flex:none}
+.tabs.pvt{margin:0 0 12px!important}.tabs.pvt button span{font-size:11px}
 .pmw{position:relative;border-radius:22px;overflow:hidden;z-index:0;isolation:isolate;background:#e5e3df;border:1px solid rgba(255,255,255,.12);--st:0px}.pmw.fs{position:fixed;inset:0;z-index:80;border-radius:0;border:0;height:auto!important;--st:env(safe-area-inset-top,0px)}
 .pmm{position:absolute;inset:0;z-index:0;isolation:isolate;background:#e5e3df}
 .pmm .leaflet-container{background:#e5e3df;font:inherit}.pmm .leaflet-control-attribution{font-size:9px;background:rgba(255,255,255,.7);color:#555}.pmm .leaflet-control-attribution a{color:#444}
@@ -1476,7 +1476,7 @@ function home(){
     $("#tb").innerHTML=["inv","mine","pub"].map(k=>`<button class="${k===tab?"on":""}" data-t="${k}">${TSV[k]}<span>${t(TK[k])} <i class="n">${k==="pub"?(PUB.list?PUB.list.length:""):k==="inv"&&G.inv.length?"":G[k].length}</i></span>${k==="inv"&&(G.inv.length+S.ginv.length)?`<b class="bd">${G.inv.length+S.ginv.length}</b>`:""}</button>`).join("");
     document.querySelectorAll("#tb button").forEach(b=>b.onclick=()=>{vib(8);homeTab=b.dataset.t;draw()});
     document.documentElement.classList.remove("pmlock");
-    $("#hint").textContent=t("h_"+tab);
+    $("#hint").textContent=tab==="pub"?"":t("h_"+tab);$("#hint").hidden=tab==="pub";
     if(tab==="pub"){pubTab($("#list"),draw);tick();return}
     const GI=tab==="inv"?S.ginv.map(i=>`<div class="ginv">${avc("mini",avIdx({id:i.from,av:i.av,ph:i.ph}))}<div class="gi"><small>${t("kGInv",esc(i.nickname||"?"))}</small><b>👥 ${esc(clean(i.title||""))}</b></div><button class="mbtn" data-gv="${esc(i.code)}">${t("kSee")}</button><button class="kx" data-gx="${esc(i.id)}">✕</button></div>`).join(""):"";
     $("#list").innerHTML=GI+G[tab].map(d=>postCard(d,S.ppl[d.id]||[],r(d))).join("")||(tab==="mine"?`<div class="how">${[1,2,3].map(i=>`<div><b>${i}</b><span>${t("how"+i)}</span></div>`).join("")}</div>`:`<p class="mut">${t(tab==="inv"?"eInv":"eOut")}</p>`);
@@ -1497,7 +1497,7 @@ async function loadPub(){if(PUB.busy)return;PUB.busy=true;try{
   if(!PUB.pos)PUB.pos=await getPos();
   if(DEMO){PUB.list=demoPub(PUB.pos)}else{
   const q=await getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",cells(PUB.pos.la,PUB.pos.lo))));
-  const now=Date.now();let L=q.docs.map(x=>({id:x.id,...x.data()})).filter(d=>d.startsAt?.toMillis?.()>now&&d.geo).map(d=>({...d,km:kmTo(PUB.pos,d.geo)})).filter(d=>d.km<=20&&!isBlk(d.hostId));
+  const now=Date.now();let L=q.docs.map(x=>({id:x.id,...x.data()})).filter(d=>d.startsAt?.toMillis?.()>now&&d.geo).map(d=>({...d,km:kmTo(PUB.pos,d.geo)})).filter(d=>d.km<=15&&!isBlk(d.hostId));
   await Promise.all(L.map(async d=>{try{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({id:x.id,...x.data()}))}catch{d.P=[]}}));
   PUB.list=L.sort((a,b)=>a.startsAt.toMillis()-b.startsAt.toMillis())}
   /* własnych dropów nie pokazujemy w Publicznych – są w Moich dropach */
@@ -1537,7 +1537,7 @@ function pubTab(el,redraw){
 /* ---------- MAPA PUBLICZNYCH DROPÓW (Leaflet + OpenStreetMap/CARTO, grupowanie znaczników) ---------- */
 const pvMode=()=>sget("pubv")==="map"?"map":"list";
 const PVI={bk:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',loc:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',fs:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',list:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',map:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>'};
-const pvToggle=()=>`<div class="pvt"><button data-pv="list" class="${pvMode()==="list"?"on":""}">${PVI.list}<span>${t("pvList")}</span></button><button data-pv="map" class="${pvMode()==="map"?"on":""}">${PVI.map}<span>${t("pvMap")}</span></button></div>`;
+const pvToggle=()=>`<div class="tabs pvt"><button data-pv="list" class="${pvMode()==="list"?"on":""}">${PVI.list}<span>${t("pvList")}</span></button><button data-pv="map" class="${pvMode()==="map"?"on":""}">${PVI.map}<span>${t("pvMap")}</span></button></div>`;
 const LL={p:null};
 const loadLeaflet=()=>window.L&&window.L.markerClusterGroup?Promise.resolve():LL.p||(LL.p=new Promise((ok,no)=>{const B="https://cdnjs.cloudflare.com/ajax/libs/";
   const css=h=>{const l=document.createElement("link");l.rel="stylesheet";l.href=h;document.head.append(l)};
@@ -1552,7 +1552,7 @@ function pubMap(el,safe){
     w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmfs" id="pmfs" aria-label="Fullscreen">${PVI.fs}</button><button class="pmme" id="pmme" aria-label="${t("pmMy")}">${PVI.loc}</button><button class="pmbk" id="pmbk" aria-label="${t("back")}" hidden>${PVI.bk}</button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
     const fs=on=>{w.classList.toggle("fs",on);document.documentElement.classList.toggle("pmlock",on);w.querySelector("#pmbk").hidden=!on;w.querySelector("#pmfs").hidden=on;if(!on)w.style.top="";setTimeout(()=>{try{P.map&&P.map.invalidateSize()}catch{}},60);vib(8)};P.fs=fs;
     w.querySelector("#pmfs").onclick=()=>fs(true);w.querySelector("#pmbk").onclick=()=>fs(false);
-    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.fitBounds(window.L.latLng(p.la,p.lo).toBounds(30000))}catch{toast(t("pubLocDeny"))}};
+    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.fitBounds(window.L.circle([p.la,p.lo],{radius:15000}).getBounds())}catch{toast(t("pubLocDeny"))}};
 }
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
@@ -1561,14 +1561,14 @@ function pubMap(el,safe){
   const hint=m=>{const h=w.querySelector("#pmh");if(!h)return;h.hidden=!m;h.textContent=m||""};
   loadLeaflet().then(()=>{
     if(!P.map){const c=PUB.pos||{la:52.23,lo:21.01};
-      P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomControl:false,attributionControl:true});
+      P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomSnap:.25,zoomControl:false,attributionControl:true});
       window.L.control.zoom({position:"bottomright"}).addTo(P.map);
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(P.map);
       P.cl=window.L.markerClusterGroup({maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
       P.map.addLayer(P.cl);
       P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>pubMapLoad(P,hint),350)});
       P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true});
-      const fit=p=>{if(P.fit||!P.map)return;P.fit=1;P.map.fitBounds(window.L.latLng(p.la,p.lo).toBounds(30000))};
+      const fit=p=>{if(P.fit||!P.map)return;P.fit=1;P.map.fitBounds(window.L.circle([p.la,p.lo],{radius:15000}).getBounds())};
       if(PUB.pos)fit(PUB.pos);else getPos().then(p=>{PUB.pos=p;fit(p)}).catch(()=>{})}
     else setTimeout(()=>P.map.invalidateSize(),30);
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
