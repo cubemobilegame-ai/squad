@@ -1492,7 +1492,8 @@ const kmTo=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.la-a.la),dn=r(b.lo-a.l
 const cells=(la,lo)=>[...new Set([-.2,0,.2].flatMap(dy=>[-.3,0,.3].map(dx=>geohash(la+dy,lo+dx/Math.max(.2,Math.cos(la*Math.PI/180))*.7,4))))];
 const PUB={list:null,at:0,pos:null,busy:false};
 const pubOk=()=>sget("pub16")==="1";
-const getPos=()=>new Promise((ok,no)=>{if(!navigator.geolocation)return no(new Error("geo"));navigator.geolocation.getCurrentPosition(p=>ok({la:Math.round(p.coords.latitude*100)/100,lo:Math.round(p.coords.longitude*100)/100}),no,{enableHighAccuracy:false,timeout:12000,maximumAge:6e5})});
+const getPos=()=>{const one=hi=>new Promise((ok,no)=>{if(!navigator.geolocation)return no(new Error("geo"));navigator.geolocation.getCurrentPosition(p=>ok({la:Math.round(p.coords.latitude*100)/100,lo:Math.round(p.coords.longitude*100)/100}),no,{enableHighAccuracy:hi,timeout:hi?15000:8000,maximumAge:hi?0:6e5})});
+  return one(false).catch(e=>{if(e&&e.code===1)throw e;return one(true)})};
 async function loadPub(){if(PUB.busy)return;PUB.busy=true;try{
   if(!PUB.pos)PUB.pos=await getPos();
   if(DEMO){PUB.list=demoPub(PUB.pos)}else{
@@ -1552,7 +1553,7 @@ function pubMap(el,safe){
     w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmfs" id="pmfs" aria-label="Fullscreen">${PVI.fs}</button><button class="pmme" id="pmme" aria-label="${t("pmMy")}">${PVI.loc}</button><button class="pmbk" id="pmbk" aria-label="${t("back")}" hidden>${PVI.bk}</button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
     const fs=on=>{w.classList.toggle("fs",on);document.documentElement.classList.toggle("pmlock",on);w.querySelector("#pmbk").hidden=!on;w.querySelector("#pmfs").hidden=on;if(!on)w.style.top="";setTimeout(()=>{try{P.map&&P.map.invalidateSize()}catch{}},60);vib(8)};P.fs=fs;
     w.querySelector("#pmfs").onclick=()=>fs(true);w.querySelector("#pmbk").onclick=()=>fs(false);
-    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.fitBounds(window.L.circle([p.la,p.lo],{radius:15000}).getBounds())}catch{toast(t("pubLocDeny"))}};
+    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.fitBounds(window.L.circle([p.la,p.lo],{radius:15000}).getBounds())}catch(e){if(PUB.pos&&P.map&&e&&e.code!==1)P.map.fitBounds(window.L.circle([PUB.pos.la,PUB.pos.lo],{radius:15000}).getBounds());else toast(t(e&&e.code===1?"pubLocDeny":"pmGeoErr"))}};
 }
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
@@ -2487,14 +2488,14 @@ Object.assign(L.fr,{loT:"Se déconnecter ?",loD:"Tu seras déconnecté de cet ap
 Object.assign(L.it,{loT:"Uscire?",loD:"Verrai disconnesso da questo dispositivo. Account e dati restano al sicuro: al prossimo accesso ritrovi tutto.",loY:"Esci"});
 Object.assign(L.cs,{loT:"Odhlásit se?",loD:"Budeš odhlášen na tomto zařízení. Účet i data zůstanou – po přihlášení je vše zpět.",loY:"Odhlásit se"});
 Object.assign(L.uk,{loT:"Вийти?",loD:"Ти вийдеш з акаунта на цьому пристрої. Акаунт і дані збережуться – після входу все повернеться.",loY:"Вийти"});
-Object.assign(L.pl,{pvList:"Lista",pvMap:"Mapa",pmSearch:"Szukaj miasta lub miejsca…",pmMy:"Moja lokalizacja",pmNo:"Brak dropów w tej lokalizacji",pmNoPlace:"Nie znaleziono miejsca",pmErr:"Nie udało się wczytać mapy. Sprawdź internet."});
-Object.assign(L.en,{pvList:"List",pvMap:"Map",pmSearch:"Search a city or place…",pmMy:"My location",pmNo:"No drops in this location",pmNoPlace:"Place not found",pmErr:"Couldn't load the map. Check your connection."});
-Object.assign(L.es,{pvList:"Lista",pvMap:"Mapa",pmSearch:"Busca una ciudad o lugar…",pmMy:"Mi ubicación",pmNo:"No hay drops en esta ubicación",pmNoPlace:"Lugar no encontrado",pmErr:"No se pudo cargar el mapa. Revisa tu conexión."});
-Object.assign(L.de,{pvList:"Liste",pvMap:"Karte",pmSearch:"Stadt oder Ort suchen…",pmMy:"Mein Standort",pmNo:"Keine Drops an diesem Ort",pmNoPlace:"Ort nicht gefunden",pmErr:"Karte konnte nicht geladen werden. Prüfe deine Verbindung."});
-Object.assign(L.fr,{pvList:"Liste",pvMap:"Carte",pmSearch:"Chercher une ville ou un lieu…",pmMy:"Ma position",pmNo:"Aucun drop à cet endroit",pmNoPlace:"Lieu introuvable",pmErr:"Impossible de charger la carte. Vérifie ta connexion."});
-Object.assign(L.it,{pvList:"Elenco",pvMap:"Mappa",pmSearch:"Cerca una città o un luogo…",pmMy:"La mia posizione",pmNo:"Nessun drop in questa posizione",pmNoPlace:"Luogo non trovato",pmErr:"Impossibile caricare la mappa. Controlla la connessione."});
-Object.assign(L.cs,{pvList:"Seznam",pvMap:"Mapa",pmSearch:"Hledej město nebo místo…",pmMy:"Moje poloha",pmNo:"Na tomto místě nejsou žádné dropy",pmNoPlace:"Místo nenalezeno",pmErr:"Mapu se nepodařilo načíst. Zkontroluj připojení."});
-Object.assign(L.uk,{pvList:"Список",pvMap:"Мапа",pmSearch:"Шукай місто або місце…",pmMy:"Моя локація",pmNo:"У цій локації немає дропів",pmNoPlace:"Місце не знайдено",pmErr:"Не вдалося завантажити мапу. Перевір інтернет."});
+Object.assign(L.pl,{pmGeoErr:"Nie udało się ustalić lokalizacji. Spróbuj za chwilę.",pvList:"Lista",pvMap:"Mapa",pmSearch:"Szukaj miasta lub miejsca…",pmMy:"Moja lokalizacja",pmNo:"Brak dropów w tej lokalizacji",pmNoPlace:"Nie znaleziono miejsca",pmErr:"Nie udało się wczytać mapy. Sprawdź internet."});
+Object.assign(L.en,{pmGeoErr:"Couldn't get your location. Try again in a moment.",pvList:"List",pvMap:"Map",pmSearch:"Search a city or place…",pmMy:"My location",pmNo:"No drops in this location",pmNoPlace:"Place not found",pmErr:"Couldn't load the map. Check your connection."});
+Object.assign(L.es,{pmGeoErr:"No se pudo obtener tu ubicación. Inténtalo de nuevo en un momento.",pvList:"Lista",pvMap:"Mapa",pmSearch:"Busca una ciudad o lugar…",pmMy:"Mi ubicación",pmNo:"No hay drops en esta ubicación",pmNoPlace:"Lugar no encontrado",pmErr:"No se pudo cargar el mapa. Revisa tu conexión."});
+Object.assign(L.de,{pmGeoErr:"Standort konnte nicht ermittelt werden. Versuch es gleich nochmal.",pvList:"Liste",pvMap:"Karte",pmSearch:"Stadt oder Ort suchen…",pmMy:"Mein Standort",pmNo:"Keine Drops an diesem Ort",pmNoPlace:"Ort nicht gefunden",pmErr:"Karte konnte nicht geladen werden. Prüfe deine Verbindung."});
+Object.assign(L.fr,{pmGeoErr:"Impossible d'obtenir ta position. Réessaie dans un instant.",pvList:"Liste",pvMap:"Carte",pmSearch:"Chercher une ville ou un lieu…",pmMy:"Ma position",pmNo:"Aucun drop à cet endroit",pmNoPlace:"Lieu introuvable",pmErr:"Impossible de charger la carte. Vérifie ta connexion."});
+Object.assign(L.it,{pmGeoErr:"Impossibile ottenere la posizione. Riprova tra un attimo.",pvList:"Elenco",pvMap:"Mappa",pmSearch:"Cerca una città o un luogo…",pmMy:"La mia posizione",pmNo:"Nessun drop in questa posizione",pmNoPlace:"Luogo non trovato",pmErr:"Impossibile caricare la mappa. Controlla la connessione."});
+Object.assign(L.cs,{pmGeoErr:"Polohu se nepodařilo zjistit. Zkus to za chvíli.",pvList:"Seznam",pvMap:"Mapa",pmSearch:"Hledej město nebo místo…",pmMy:"Moje poloha",pmNo:"Na tomto místě nejsou žádné dropy",pmNoPlace:"Místo nenalezeno",pmErr:"Mapu se nepodařilo načíst. Zkontroluj připojení."});
+Object.assign(L.uk,{pmGeoErr:"Не вдалося визначити локацію. Спробуй за мить.",pvList:"Список",pvMap:"Мапа",pmSearch:"Шукай місто або місце…",pmMy:"Моя локація",pmNo:"У цій локації немає дропів",pmNoPlace:"Місце не знайдено",pmErr:"Не вдалося завантажити мапу. Перевір інтернет."});
 /* ---------- WYŚLIJ DROP DO GRUPY (karta w czacie grupy + powiadomienie) ---------- */
 /* jeden przycisk „Zaproś” zamiast kilku ikon: kontakty / grupa / link i obrazek */
 function inviteSheet(d,code,P,isHost){vib(8);const row=(ic,l,sub,id)=>`<button class="srow irow" id="${id}">${sv(ic)}<span><b>${l}</b><small>${sub}</small></span><em>›</em></button>`;
