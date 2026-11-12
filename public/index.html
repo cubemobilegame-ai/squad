@@ -127,6 +127,15 @@ html:has(.scr.chs),html:has(.scr.chs) body{overflow:hidden;overscroll-behavior:n
 .pf{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55)}.pset{width:100%;margin-top:4px;border:0;border-radius:12px;padding:11px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#0b0b10;font:900 13px Brico,BricoCyr,system-ui;cursor:pointer}
 .popt{margin-bottom:8px}
 .pubg{text-align:center;padding:26px 18px;margin:8px 0;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.pubg img{width:72px;height:72px}.pubg h3{margin:10px 0 6px;font-size:19px;text-transform:none;letter-spacing:0;color:#fff}.pubg p{margin:0 0 6px;color:rgba(255,255,255,.65);font-size:14.5px;line-height:1.45}.pubg select{width:100%;margin-top:4px;-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.07) url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%278%27%3E%3Cpath d=%27M1 1l5 5 5-5%27 stroke=%27%23fff%27 stroke-width=%272%27 fill=%27none%27/%3E%3C/svg%3E") no-repeat right 16px center;color:#fff;border:1.5px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 16px;font:700 16px Brico,BricoCyr,system-ui}.pubg select option{color:#000}.pubg .lbl{text-align:left}
+.pvt{display:flex;gap:6px;margin:0 0 10px}.pvt button{flex:1;padding:10px 8px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);font:800 13px/1 inherit;cursor:pointer}.pvt button.on{background:rgba(var(--accr),.2);border-color:var(--acc);color:#fff}
+.pmw{position:relative}.pms{display:flex;gap:6px;margin-bottom:8px}.pms input{flex:1;min-width:0;margin:0}.pms button{width:46px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:18px;cursor:pointer;color:#fff}
+.pmm{height:calc(100dvh - 330px);min-height:380px;border-radius:20px;overflow:hidden;position:relative;z-index:0;isolation:isolate;background:#0b0b12;border:1px solid rgba(255,255,255,.1)}
+.pmm .leaflet-container{background:#0b0b12;font:inherit}.pmm .leaflet-control-attribution{font-size:9px;background:rgba(0,0,0,.5);color:#aaa}.pmm .leaflet-control-attribution a{color:#ccc}
+.pmh{position:absolute;left:12px;right:12px;top:62px;z-index:4;text-align:center;font-size:12.5px;font-weight:800;padding:9px 12px;border-radius:14px;background:rgba(20,20,28,.88);border:1px solid rgba(255,255,255,.12);pointer-events:none}
+.pmcard{position:absolute;left:0;right:0;bottom:8px;z-index:6}.pmcard .pc{margin:0 8px;box-shadow:0 10px 34px rgba(0,0,0,.6)}.pmx{position:absolute;right:16px;top:8px;z-index:7;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:14px;cursor:pointer}
+.pmk{position:relative;width:46px;height:54px}.pmk .pmi{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.55);display:grid;place-items:center;overflow:hidden}.pmk .pmi .av{width:100%;height:100%;display:block;border-radius:50%;overflow:hidden}.pmk .pmi .av img{width:100%;height:100%;object-fit:cover}.pmk .pmi>.e3{width:68%;height:68%;object-fit:contain}
+.pmk::after{content:"";position:absolute;left:50%;bottom:2px;margin-left:-6px;border:6px solid transparent;border-top:9px solid #fff;border-bottom:0}.pmk .pmb{position:absolute;right:-4px;bottom:8px;width:21px;height:21px;border-radius:50%;background:#22222f;border:2px solid #fff;display:grid;place-items:center}.pmk .pmb .e3{width:14px;height:14px}
+.pmc{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--g1,#ff4f86),var(--g2,#ff9a3d));border:3px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.55);color:#fff;font-weight:900;font-size:16px}
 .pubs{font-size:12.5px;line-height:1.4;font-weight:700;color:rgba(255,255,255,.7);background:rgba(93,180,255,.1);border:1px solid rgba(93,180,255,.25);border-radius:14px;padding:10px 12px;margin:4px 0 14px}
 .pubw{margin-bottom:18px}.pubm{display:flex;gap:8px;margin:-4px 6px 0;font-size:12.5px;font-weight:800}.pubm span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.07)}.pubm .full{background:rgba(255,59,92,.18);color:#ff8fa3}
 .seatl{padding:12px 14px;border-radius:14px;background:rgba(93,180,255,.12);font-weight:800;font-size:14px}.seatl.full{background:rgba(255,59,92,.15);color:#ff8fa3}
@@ -1512,7 +1521,9 @@ function pubTab(el,redraw){
     $("#byok").onclick=()=>{const v=+$("#by").value;if(!v){vib([50,30,50]);return toast(t("pubYear"))}const ok=y-v>=16;sset("pub16",ok?"1":"no");if(ok)sset("pubU18",y-v<18?"1":"0");
       const u=auth.currentUser;if(u&&!DEMO)setDoc(doc(db,"users",u.uid),{pub16:ok},{merge:true}).catch(()=>{});vib(ok?[20,30,20]:[50,30,50]);redraw()};return}
   if(sget("pubRules")!=="1"){el.innerHTML=pubRulesHtml();bindPubRules(redraw);return}
-  const safe=`<div class="pubs">🛡️ ${t("pubSafe")} <a href="#" onclick="event.preventDefault();showPubRules()">${t("prSee")}</a></div>`;
+  const safe=`<div class="pubs">🛡️ ${t("pubSafe")} <a href="#" onclick="event.preventDefault();showPubRules()">${t("prSee")}</a></div>`+pvToggle();
+  el.onclick=e=>{const b=e.target.closest&&e.target.closest(".pvt button");if(b){vib(8);sset("pubv",b.dataset.pv);redraw()}};
+  if(pvMode()==="map")return pubMap(el,safe);
   if(PUB.err&&!PUB.list){el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t(PUB.err==="deny"?"pubLocDeny":"pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;$("#pgo").onclick=()=>{PUB.err=null;PUB.pos=null;el.innerHTML=`<p class="mut">${t("load")}</p>`;loadPub().then(redraw)};return}
   if(!PUB.list||Date.now()-PUB.at>60e3){if(!PUB.list)el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t("pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;
     const go_=()=>{el.innerHTML=safe+`<p class="mut" style="text-align:center;margin:30px 0">📍 ${t("pubSearch")}</p>`;loadPub().then(()=>{if(homeTab==="pub")redraw()})};
@@ -1520,6 +1531,61 @@ function pubTab(el,redraw){
   el.innerHTML=safe+(PUB.list.length?PUB.list.map(d=>{const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=d.hostId===me()?"host":((d.P||[]).find(p=>p.id===me())?.status||"inv");
     return postCard(d,d.P||[],role,{km:d.km,seats:d.seats,free})}).join("")
     :`<div class="pubg"><img src="/e/ghost.webp" alt=""><h3>${t("pubEmptyT")}</h3><p>${t("pubEmptyD")}</p><button class="cta" onclick="go('/new')">${t("newDrop")}</button></div>`)}
+/* ---------- MAPA PUBLICZNYCH DROPÓW (Leaflet + OpenStreetMap/CARTO, grupowanie znaczników) ---------- */
+const pvMode=()=>sget("pubv")==="map"?"map":"list";
+const pvToggle=()=>`<div class="pvt"><button data-pv="list" class="${pvMode()==="list"?"on":""}">☰ ${t("pvList")}</button><button data-pv="map" class="${pvMode()==="map"?"on":""}">🗺️ ${t("pvMap")}</button></div>`;
+const LL={p:null};
+const loadLeaflet=()=>window.L&&window.L.markerClusterGroup?Promise.resolve():LL.p||(LL.p=new Promise((ok,no)=>{const B="https://cdnjs.cloudflare.com/ajax/libs/";
+  const css=h=>{const l=document.createElement("link");l.rel="stylesheet";l.href=h;document.head.append(l)};
+  const js=u=>new Promise((r,j)=>{const e=document.createElement("script");e.src=u;e.onload=r;e.onerror=()=>j(new Error("leaflet"));document.head.append(e)});
+  css(B+"leaflet/1.9.4/leaflet.css");css(B+"leaflet.markercluster/1.5.3/MarkerCluster.css");
+  js(B+"leaflet/1.9.4/leaflet.js").then(()=>js(B+"leaflet.markercluster/1.5.3/leaflet.markercluster.js")).then(ok,e=>{LL.p=null;no(e)})}));
+/* komórki geohash (precyzja 4: 0.3516° × 0.1758°) pokrywające prostokąt widoku */
+const cellsBox=(s,w,n,e)=>{const dla=180/1024,dlo=360/1024,S=new Set(),cl=(v,m)=>Math.max(-m,Math.min(m,v));for(let la=Math.floor(s/dla)*dla+dla/2;la<n+dla;la+=dla)for(let lo=Math.floor(w/dlo)*dlo+dlo/2;lo<e+dlo;lo+=dlo)S.add(geohash(cl(la,89.9),cl(lo,179.9),4));return[...S]};
+function pubMap(el,safe){
+  const P=PUB.M||(PUB.M={items:new Map(),mk:new Map(),loaded:new Map(),map:null,wrap:null,cl:null,tm:0});
+  if(!P.wrap){const w=P.wrap=document.createElement("div");w.className="pmw";
+    w.innerHTML=`<div class="pms"><input id="pmq" placeholder="${t("pmSearch")}" autocomplete="off" enterkeyhint="search"><button id="pmgo" aria-label="${t("pmSearch")}">🔍</button><button id="pmme" aria-label="${t("pmMy")}">📍</button></div><div class="pmm" id="pmap"></div><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
+    const q=s=>w.querySelector(s),go_=async()=>{const v=q("#pmq").value.trim();if(!v||!P.map)return;vib(8);q("#pmq").blur();
+      try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&q="+encodeURIComponent(v));const j=await r.json();if(j&&j[0])P.map.setView([+j[0].lat,+j[0].lon],12);else toast(t("pmNoPlace"))}catch{toast(t("pmErr"))}};
+    q("#pmgo").onclick=go_;q("#pmq").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go_()}};
+    q("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.map&&P.map.setView([p.la,p.lo],12)}catch{toast(t("pubLocDeny"))}}}
+  if(el.contains(P.wrap))return;
+  el.innerHTML=safe;el.append(P.wrap);
+  const w=P.wrap,hint=m=>{const h=w.querySelector("#pmh");if(!h)return;h.hidden=!m;h.textContent=m||""};
+  loadLeaflet().then(()=>{
+    if(!P.map){const c=PUB.pos||{la:52.23,lo:21.01};
+      P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomControl:false,attributionControl:true});
+      window.L.control.zoom({position:"bottomright"}).addTo(P.map);
+      window.L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:19,attribution:"© OpenStreetMap © CARTO"}).addTo(P.map);
+      P.cl=window.L.markerClusterGroup({maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
+      P.map.addLayer(P.cl);
+      P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>pubMapLoad(P,hint),350)});
+      P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true})}
+    else setTimeout(()=>P.map.invalidateSize(),30);
+    pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
+const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
+  return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${av||ic(d.category)}</div>${hasAv?`<i class="pmb">${ic(d.category)}</i>`:""}</div>`})};
+async function pubMapLoad(P,hint){const m=P.map;if(!m)return;
+  const b=m.getBounds().pad(.1);let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());if(cs.length>120)cs=cs.slice(0,120);
+  const now=Date.now(),need=cs.filter(c=>!(P.loaded.get(c)>now-120e3));
+  try{
+    if(DEMO){if(!P.items.size){const c=m.getCenter(),L0=demoPub({la:c.lat,lo:c.lng});L0.forEach((d,i)=>{const a=i*2.4;P.items.set(d.id,{...d,geo:{la:c.lat+Math.sin(a)*.05*(1+i%3),lo:c.lng+Math.cos(a)*.09*(1+i%2)}})})}}
+    else if(need.length){
+      const ch=[];for(let i=0;i<need.length;i+=30)ch.push(need.slice(i,i+30));
+      const rs=await Promise.all(ch.map(c=>getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",c)))));
+      need.forEach(c=>P.loaded.set(c,now));
+      rs.forEach(q=>q.docs.forEach(x=>{const d={id:x.id,...x.data()};if(d.geo)P.items.set(d.id,d)}))}
+  }catch(e){hint(t("pmErr"));return}
+  const vis=[...P.items.values()].filter(d=>d.startsAt?.toMillis?.()>now&&d.geo&&d.hostId!==me()&&!isBlk(d.hostId));
+  vis.forEach(d=>{if(P.mk.has(d.id))return;const k=window.L.marker([d.geo.la,d.geo.lo],{icon:pubMapIcon(d)});k.on("click",()=>pubMapCard(P,d));P.mk.set(d.id,k);P.cl.addLayer(k)});
+  const ids=new Set(vis.map(d=>d.id));P.mk.forEach((k,id)=>{if(!ids.has(id)){P.cl.removeLayer(k);P.mk.delete(id)}});
+  const inV=vis.filter(d=>m.getBounds().contains([d.geo.la,d.geo.lo])).length;hint(inV?"":t("pmNo"))}
+async function pubMapCard(P,d){const c=P.wrap.querySelector("#pmcard");if(!c)return;vib(8);
+  if(!d.P){try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({id:x.id,...x.data()}))}}catch{d.P=[]}}
+  const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=(d.P.find(p=>p.id===me())?.status)||"inv",km=PUB.pos?kmTo(PUB.pos,d.geo):null;
+  c.innerHTML=`<button class="pmx" aria-label="${t("close")}">✕</button>`+postCard(d,d.P,role,{km,seats:d.seats,free});c.hidden=false;c.querySelector(".pmx").onclick=e=>{e.stopPropagation();c.hidden=true};
+  try{P.map.panTo([d.geo.la,d.geo.lo],{animate:true})}catch{}tick()}
 const demoPub=pos=>{const n=Date.now(),mk=(id,ti,cat,km,h,seats,tk)=>({id,code:id,title:ti,category:cat,place:"",hostId:"h_"+id,hostNick:["Kuba","Ola","Wiktor"][tk%3],hostAv:1003+tk,public:true,seats,theme:tk,km,startsAt:Timestamp.fromMillis(n+h*36e5),expiresAt:Timestamp.fromMillis(n+(h+24)*36e5),P:[...Array(tk)].map((_,i)=>({id:"p"+i+id,nickname:["Ola","Bartek","Aga","Tymek","Maja"][i%5],status:"in",av:1000+i}))});
   return[mk("PUB1","Kosz 3 na 3 – brakuje ludzi","basket",2.4,2,6,4),mk("PUB2","Skate jam pod mostem","skate",5.8,4,10,3),mk("PUB3","Planszówki w kawiarni","gaming",11.2,26,8,8)]};
 
@@ -2412,6 +2478,14 @@ Object.assign(L.fr,{loT:"Se déconnecter ?",loD:"Tu seras déconnecté de cet ap
 Object.assign(L.it,{loT:"Uscire?",loD:"Verrai disconnesso da questo dispositivo. Account e dati restano al sicuro: al prossimo accesso ritrovi tutto.",loY:"Esci"});
 Object.assign(L.cs,{loT:"Odhlásit se?",loD:"Budeš odhlášen na tomto zařízení. Účet i data zůstanou – po přihlášení je vše zpět.",loY:"Odhlásit se"});
 Object.assign(L.uk,{loT:"Вийти?",loD:"Ти вийдеш з акаунта на цьому пристрої. Акаунт і дані збережуться – після входу все повернеться.",loY:"Вийти"});
+Object.assign(L.pl,{pvList:"Lista",pvMap:"Mapa",pmSearch:"Szukaj miasta lub miejsca…",pmMy:"Moja lokalizacja",pmNo:"Brak publicznych dropów w tym obszarze. Przesuń mapę albo wpisz miasto.",pmNoPlace:"Nie znaleziono miejsca",pmErr:"Nie udało się wczytać mapy. Sprawdź internet."});
+Object.assign(L.en,{pvList:"List",pvMap:"Map",pmSearch:"Search a city or place…",pmMy:"My location",pmNo:"No public drops in this area. Move the map or search a city.",pmNoPlace:"Place not found",pmErr:"Couldn't load the map. Check your connection."});
+Object.assign(L.es,{pvList:"Lista",pvMap:"Mapa",pmSearch:"Busca una ciudad o lugar…",pmMy:"Mi ubicación",pmNo:"No hay drops públicos en esta zona. Mueve el mapa o busca una ciudad.",pmNoPlace:"Lugar no encontrado",pmErr:"No se pudo cargar el mapa. Revisa tu conexión."});
+Object.assign(L.de,{pvList:"Liste",pvMap:"Karte",pmSearch:"Stadt oder Ort suchen…",pmMy:"Mein Standort",pmNo:"Keine öffentlichen Drops in diesem Gebiet. Verschiebe die Karte oder suche eine Stadt.",pmNoPlace:"Ort nicht gefunden",pmErr:"Karte konnte nicht geladen werden. Prüfe deine Verbindung."});
+Object.assign(L.fr,{pvList:"Liste",pvMap:"Carte",pmSearch:"Chercher une ville ou un lieu…",pmMy:"Ma position",pmNo:"Aucun drop public dans cette zone. Déplace la carte ou cherche une ville.",pmNoPlace:"Lieu introuvable",pmErr:"Impossible de charger la carte. Vérifie ta connexion."});
+Object.assign(L.it,{pvList:"Elenco",pvMap:"Mappa",pmSearch:"Cerca una città o un luogo…",pmMy:"La mia posizione",pmNo:"Nessun drop pubblico in quest'area. Sposta la mappa o cerca una città.",pmNoPlace:"Luogo non trovato",pmErr:"Impossibile caricare la mappa. Controlla la connessione."});
+Object.assign(L.cs,{pvList:"Seznam",pvMap:"Mapa",pmSearch:"Hledej město nebo místo…",pmMy:"Moje poloha",pmNo:"V této oblasti nejsou žádné veřejné dropy. Posuň mapu nebo vyhledej město.",pmNoPlace:"Místo nenalezeno",pmErr:"Mapu se nepodařilo načíst. Zkontroluj připojení."});
+Object.assign(L.uk,{pvList:"Список",pvMap:"Мапа",pmSearch:"Шукай місто або місце…",pmMy:"Моя локація",pmNo:"У цій зоні немає публічних дропів. Посунь мапу або знайди місто.",pmNoPlace:"Місце не знайдено",pmErr:"Не вдалося завантажити мапу. Перевір інтернет."});
 /* ---------- WYŚLIJ DROP DO GRUPY (karta w czacie grupy + powiadomienie) ---------- */
 /* jeden przycisk „Zaproś” zamiast kilku ikon: kontakty / grupa / link i obrazek */
 function inviteSheet(d,code,P,isHost){vib(8);const row=(ic,l,sub,id)=>`<button class="srow irow" id="${id}">${sv(ic)}<span><b>${l}</b><small>${sub}</small></span><em>›</em></button>`;
