@@ -1916,7 +1916,9 @@ async function chatView(code,g){
   const openRx=el=>{const m=M.find(x=>x.id===el.dataset.i);if(!m||!mine)return;vib(15);const own=isMe(m.authorId),my=(m.r||{})[me()];
     const bg=document.createElement("div");bg.className="rxbg";bg.innerHTML=`<div class="rxbar">${RX.map(e=>`<button data-e="${e}" class="${e===my?"on":""}">${e}</button>`).join("")}${own?"":`<button data-more aria-label="${t("repMsg")}">${sv('<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>')}</button>`}</div>`;
     document.body.append(bg);const bar=bg.firstChild,rc=el.querySelector(".bub").getBoundingClientRect(),bw=bar.offsetWidth;
-    bar.style.left=Math.max(10,Math.min(innerWidth-bw-10,own?rc.right-bw:rc.left))+"px";let top=rc.top-bar.offsetHeight-10;if(top<70)top=rc.bottom+10;bar.style.top=top+"px";
+    const vv=window.visualViewport,vt=vv?vv.offsetTop:0,vh=vv?vv.height:innerHeight,vl=vv?vv.offsetLeft:0,vw=vv?vv.width:innerWidth,bh=bar.offsetHeight||56,ok=rc.height>8&&rc.width>8&&rc.bottom>0&&rc.top<vt+vh;
+    let X=ok?(own?rc.right-bw:rc.left):(lpXY?lpXY[0]-bw/2:(vw-bw)/2),top=ok?rc.top-bh-10:(lpXY?lpXY[1]-bh-30:vt+vh/2-bh);if(ok&&top<vt+70)top=rc.bottom+10;
+    top=Math.max(vt+60,Math.min(vt+vh-bh-24,top));X=Math.max(vl+10,Math.min(vl+vw-bw-10,X));bar.style.left=X+"px";bar.style.top=top+"px";
     el.classList.add("lift");const close=()=>{bg.remove();el.classList.remove("lift")};
     bg.onclick=e=>{const b=e.target.closest("button");close();if(!b)return;if(b.hasAttribute("data-more"))msgActions(m,P,{target:"message",chat:g?"group":"drop",code},drawM);else react(m.id,b.dataset.e,el)}};
   const B=$("#msgs");let lp=null,lpXY=null;
