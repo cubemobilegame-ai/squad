@@ -1228,7 +1228,7 @@ const setTheme=()=>{try{document.documentElement.classList.toggle("boy",avBoy(my
 const view=h=>{document.documentElement.classList.remove("pmlock");if(!window.__splV&&window.__splDone){window.__splV=1;requestAnimationFrame(()=>requestAnimationFrame(()=>window.__splDone()))}setTheme();document.querySelectorAll(".sheetbg,.crop,.lb,.cel,.rxbg").forEach(e=>e.remove());unsubs.forEach(u=>u());unsubs=[];redraw=null;A.innerHTML=h;const rs=window.__rest;window.__rest=null;scrollTo(0,0);if(rs){const f=()=>scrollTo(0,rs);requestAnimationFrame(f);setTimeout(f,60);setTimeout(f,250)}};
 const every=(fn,ms)=>{fn();const id=setInterval(fn,ms);unsubs.push(()=>clearInterval(id))};
 window.toast=m=>{const e=document.createElement("div");e.className="toast";e.textContent=m;document.body.append(e);setTimeout(()=>e.remove(),2400)};
-addEventListener("unhandledrejection",e=>toast(t("oops")+(e.reason?.message||e.reason)));
+addEventListener("unhandledrejection",e=>{const m=String(e.reason?.message||e.reason||"");if(/_map|layerPointToLatLng|leaflet/i.test(m))return;toast(t("oops")+m)});
 const tick=()=>document.querySelectorAll(".tm").forEach(e=>{const n=Date.now(),s=+e.dataset.t,x=+e.dataset.x;e.classList.toggle("live",n>=s&&n<x);e.textContent=n<s?t("tmL",left(s-n)):n<x?t("tmLive",left(x-n)):t("tmGone")});
 
 /* ---------- STAN GLOBALNY (czaty, odpowiedzi) + ODZNAKI ---------- */
@@ -1570,9 +1570,9 @@ function pubMap(el,safe){
       P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomSnap:.25,zoomControl:false,attributionControl:true});
       window.L.control.zoom({position:"bottomright"}).addTo(P.map);
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(P.map);
-      P.cl=window.L.markerClusterGroup({maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
+      P.cl=window.L.markerClusterGroup({animate:false,animateAddingMarkers:false,maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
       P.map.addLayer(P.cl);
-      P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>pubMapLoad(P,hint),350)});
+      P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>{if(P.wrap&&P.wrap.isConnected)pubMapLoad(P,hint)},350)});
       P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true});
       const fit=p=>{if(P.fit||!P.map)return;P.fit=1;P.map.fitBounds(window.L.circle([p.la,p.lo],{radius:15000}).getBounds())};
       if(PUB.pos)fit(PUB.pos);else getPos().then(p=>{PUB.pos=p;fit(p)}).catch(()=>{})}
@@ -1580,7 +1580,8 @@ function pubMap(el,safe){
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
 const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${av||ic(d.category)}</div>${hasAv?`<i class="pmb">${ic(d.category)}</i>`:""}</div>`})};
-async function pubMapLoad(P,hint){const m=P.map;if(!m)return;
+async function pubMapLoad(P,hint){try{await pubMapLoad0(P,hint)}catch(e){console.warn("map",e)}}
+async function pubMapLoad0(P,hint){const m=P.map;if(!m)return;
   const b=m.getBounds().pad(.1);let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());if(cs.length>120)cs=cs.slice(0,120);
   const now=Date.now(),need=cs.filter(c=>!(P.loaded.get(c)>now-120e3));
   try{
@@ -1595,7 +1596,8 @@ async function pubMapLoad(P,hint){const m=P.map;if(!m)return;
   vis.forEach(d=>{if(P.mk.has(d.id))return;const k=window.L.marker([d.geo.la,d.geo.lo],{icon:pubMapIcon(d)});k.on("click",()=>pubMapCard(P,d));P.mk.set(d.id,k);P.cl.addLayer(k)});
   const ids=new Set(vis.map(d=>d.id));P.mk.forEach((k,id)=>{if(!ids.has(id)){P.cl.removeLayer(k);P.mk.delete(id)}});
   const inV=vis.filter(d=>m.getBounds().contains([d.geo.la,d.geo.lo])).length;hint(inV?"":t("pmNo"))}
-async function pubMapCard(P,d){const c=P.wrap.querySelector("#pmcard");if(!c)return;vib(8);
+async function pubMapCard(P,d){try{await pubMapCard0(P,d)}catch(e){console.warn("card",e)}}
+async function pubMapCard0(P,d){const c=P.wrap.querySelector("#pmcard");if(!c)return;vib(8);
   if(!d.P){try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({id:x.id,...x.data()}))}}catch{d.P=[]}}
   const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=(d.P.find(p=>p.id===me())?.status)||"inv",km=PUB.pos?kmTo(PUB.pos,d.geo):null;
   const [c1,c2]=thm(d),st=d.startsAt.toMillis(),ins=(d.P||[]).filter(p=>p.status==="in").length,pl=plc(d);
