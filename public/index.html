@@ -2615,7 +2615,7 @@ const wxPt=d=>{const g=d.geo||{},la=g.la??g.latitude??g.lat??g._lat,lo=g.lo??g.l
   for(const ch of h){const v=B.indexOf(ch);if(v<0)return null;for(let b=4;b>=0;b--){const bit=(v>>b)&1,r=e?o:a,m=(r[0]+r[1])/2;bit?r[0]=m:r[1]=m;e=!e}}
   return{la:(a[0]+a[1])/2,lo:(o[0]+o[1])/2}};
 let WXT0=0;async function loadWx(d,code,isHost,ref){clearTimeout(WXT0);WXT0=setTimeout(()=>{if(location.pathname==="/d/"+code)loadWx(d,code,isHost,ref)},36e5);WXS=null;wxApply();if(hidden(d))return;
-  const st=d.startsAt.toMillis(),now=Date.now();if(st+8*36e5<now)return;
+  const st=d.startsAt.toMillis(),now=Date.now();if((d.expiresAt&&d.expiresAt.toMillis?d.expiresAt.toMillis():st+24*36e5)<now)return;
   const X=WXT[LANG]||WXT.en;
   if(st-now>7*864e5){WXS={fx:"",em:"🌤️",t:null,lab:X.soon};wxApply();return}
   const gp=wxPt(d);let c=gp||(d.wx&&d.wx.p===d.place?{la:d.wx.la,lo:d.wx.lo}:null);
