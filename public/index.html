@@ -515,7 +515,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .htx h2{color:#17171f!important;text-shadow:none!important}.htx small{color:rgba(23,23,31,.75)!important}.htx small.hcnt{color:rgba(23,23,31,.55)!important}
 :root.kb .chero .htx h2{color:#17171f!important}
 .scr.chs.sk{padding-bottom:calc(14px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
-.sk #mf{margin-bottom:6px!important}:root.kb .sk #mf{margin-bottom:6px!important}
+.sk #mf{margin-bottom:6px!important}:root.kb .sk #mf{margin-bottom:3px!important}:root.kb .scr.chs{padding-bottom:3px!important}
 
 /* czat v4: bez rozmycia – czysty czarny panel z zaokrągloną górą nachodzący na obrazek */
 .cpan::before{display:none!important}
@@ -624,7 +624,7 @@ setTimeout(function(){window.__splDone()},20000);})();
 <script>
 /* wysokość widocznej części ekranu (iPhone z klawiaturą) – czat trzyma pole pisania tuż nad klawiaturą */
 (function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,
-f=function(){raf=0;var kb=window.innerHeight-vv.height>120,chat=!!document.querySelector(".scr.chs");
+f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")),kb=window.innerHeight-vv.height>120||foc;
   /* bez klawiatury: pełna wysokość i zero przesunięcia (iOS potrafi zostawić stare offsetTop po schowaniu klawiatury) */
   if(!kb){R.style.setProperty("--vvh",window.innerHeight+"px");R.style.setProperty("--vvt","0px");if(chat&&(window.scrollY||document.documentElement.scrollTop))window.scrollTo(0,0)}
   else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px")}
