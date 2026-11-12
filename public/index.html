@@ -1580,7 +1580,7 @@ function pubMap(el,safe){
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
 const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${av||ic(d.category)}</div>${hasAv?`<i class="pmb">${ic(d.category)}</i>`:""}</div>`})};
-function pmFit(P,p){const m=P.map;if(!m)return;const sz=m.getSize(),px=Math.max(sz.x,sz.y,200),mpp=30000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp);m.setView([p.la,p.lo],Math.max(8,Math.min(17,z)),{animate:true})}
+function pmFit(P,p){const m=P.map;if(!m)return;const sz=m.getSize(),px=Math.max(sz.x,sz.y,200),mpp=22000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp);m.setView([p.la,p.lo],Math.max(8,Math.min(17,z)),{animate:true})}
 async function pubMapLoad(P,hint){try{await pubMapLoad0(P,hint)}catch(e){console.warn("map",e)}}
 async function pubMapLoad0(P,hint){const m=P.map;if(!m)return;
   const b=m.getBounds().pad(.1);let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());if(cs.length>120)cs=cs.slice(0,120);
