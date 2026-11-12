@@ -84,6 +84,7 @@ service cloud.firestore {
         allow create, update: if signedIn() && request.auth.uid == uid
           && drop(code).startsAt > request.time
           && (drop(code).get('public', false) != true || drop(code).hostId == uid || is16())
+          && !('id' in request.resource.data)
           && request.resource.data.status in ['in', 'late', 'out']
           && okNick(request.resource.data.nickname);
         // po starcie: tylko "przeczytane", "pisze…" i aktualna ksywka / awatar / zdjęcie
@@ -102,6 +103,7 @@ service cloud.firestore {
           && (drop(code).hostId == request.auth.uid
               || get(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid)).data.status in ['in', 'late'])
           && request.resource.data.authorId == request.auth.uid
+          && !('r' in request.resource.data) && request.resource.data.get('v', {}).size() == 0
           && okText(request.resource.data.text);
         allow update: if signedIn() && drop(code).expiresAt > request.time
           && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
@@ -165,16 +167,19 @@ service cloud.firestore {
 
       match /members/{uid} {
         allow read: if true;
-        allow create, update: if signedIn() && request.auth.uid == uid && okNick(request.resource.data.nickname);
+        allow create, update: if signedIn() && request.auth.uid == uid && okNick(request.resource.data.nickname)
+          && !('id' in request.resource.data) && exists(/databases/$(db)/documents/groups/$(g));
         allow delete: if signedIn() && (request.auth.uid == uid || grp(g).ownerId == request.auth.uid);
       }
 
       match /messages/{m} {
-        allow read: if signedIn()
+        allow delete: if signedIn() && grp(g).ownerId == request.auth.uid;
+        allow read: if signedIn() && exists(/databases/$(db)/documents/groups/$(g))
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid));
-        allow create: if signedIn()
+        allow create: if signedIn() && exists(/databases/$(db)/documents/groups/$(g))
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
           && request.resource.data.authorId == request.auth.uid
+          && !('r' in request.resource.data) && request.resource.data.get('v', {}).size() == 0
           && okText(request.resource.data.text);
         allow update: if signedIn()
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))

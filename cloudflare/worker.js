@@ -61,8 +61,8 @@ function fs(env) {
   const base = `https://firestore.googleapis.com/v1/projects/${env.PID}/databases/(default)/documents/`;
   const H = async () => ({ Authorization: "Bearer " + (await access(env.SA)) });
   return {
-    get: async (path) => { const r = await fetch(base + path, { headers: await H() }); if (!r.ok) return null; const d = await r.json(); return { id: d.name.split("/").pop(), ...obj(d.fields) }; },
-    list: async (path) => { const r = await fetch(base + path + "?pageSize=300", { headers: await H() }); if (!r.ok) return []; const d = await r.json(); return (d.documents || []).map((x) => ({ id: x.name.split("/").pop(), ...obj(x.fields) })); },
+    get: async (path) => { const r = await fetch(base + path, { headers: await H() }); if (!r.ok) return null; const d = await r.json(); return { ...obj(d.fields), id: d.name.split("/").pop() }; },
+    list: async (path) => { const r = await fetch(base + path + "?pageSize=300", { headers: await H() }); if (!r.ok) return []; const d = await r.json(); return (d.documents || []).map((x) => ({ ...obj(x.fields), id: x.name.split("/").pop() })); },
     del: async (path) => { await fetch(base + path, { method: "DELETE", headers: await H() }).catch(() => {}); },
   };
 }
