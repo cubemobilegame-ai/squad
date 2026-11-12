@@ -144,8 +144,8 @@ html.pmlock,html.pmlock body{overflow:hidden;overscroll-behavior:none}.pmcard{po
 .wxfx.fx-s i:nth-child(1){inset:-10%;background:radial-gradient(circle,rgba(255,255,255,.95) 0 2.5px,rgba(255,255,255,.35) 3.5px,transparent 5px) 0 0/58px 58px;--h:58px;opacity:.6;filter:blur(.6px);animation:wxr 14s linear infinite,wxs 6s ease-in-out infinite alternate}
 .wxfx.fx-s i:nth-child(2){inset:-10%;background:radial-gradient(circle,rgba(255,255,255,.9) 0 1.6px,rgba(255,255,255,.3) 2.4px,transparent 3.6px) 21px 13px/37px 37px;--h:37px;opacity:.5;animation:wxr 9s linear infinite,wxs 4.5s ease-in-out -2s infinite alternate}
 .wxfx.fx-s i:nth-child(3){inset:-10%;background:radial-gradient(circle,rgba(255,255,255,.8) 0 4px,rgba(255,255,255,.25) 5.5px,transparent 8px) 9px 30px/97px 97px;--h:97px;opacity:.35;filter:blur(1.5px);animation:wxr 22s linear infinite,wxs 8s ease-in-out -4s infinite alternate}
-.wxfx.fx-c i:nth-child(1),.wxfx.fx-p i:nth-child(1){top:-120px;right:-120px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,246,190,.85) 0 18%,rgba(255,222,120,.45) 40%,transparent 70%);animation:wxg 4s ease-in-out infinite alternate}
-.wxfx.fx-c i:nth-child(2),.wxfx.fx-p i:nth-child(2){top:-200px;right:-200px;width:400px;height:400px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.5) 0 6deg,transparent 6deg 20deg);-webkit-mask:radial-gradient(circle,transparent 10%,#000 24%,transparent 72%);mask:radial-gradient(circle,transparent 10%,#000 24%,transparent 72%);animation:wxo 45s linear infinite}
+.wxfx.fx-c i:nth-child(1),.wxfx.fx-p i:nth-child(1){top:-170px;right:-170px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(255,244,190,.55) 0%,rgba(255,226,140,.32) 30%,rgba(255,220,130,.12) 55%,transparent 72%);filter:blur(14px);animation:wxg 6s ease-in-out infinite alternate}
+.wxfx.fx-c i:nth-child(2),.wxfx.fx-p i:nth-child(2){top:-260px;right:-260px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(255,236,170,.28) 0%,rgba(255,236,170,.10) 45%,transparent 70%);filter:blur(24px);animation:wxg 9s ease-in-out -3s infinite alternate}
 .wxfx.fx-p i:nth-child(3),.wxfx.fx-o i:nth-child(1),.wxfx.fx-o i:nth-child(3){top:16%;left:-50%;width:55%;height:38px;border-radius:99px;background:rgba(255,255,255,.6);filter:blur(11px);animation:wxc 24s linear infinite}
 .wxfx.fx-o i:nth-child(3){top:46%;width:70%;animation-duration:34s;animation-delay:-12s;opacity:.7}
 .wxfx.fx-o{background:rgba(70,80,100,.10)}
@@ -2586,7 +2586,7 @@ let WXS=null;
 function wxApply(){const c=document.querySelector("#cb .drop");if(!c)return;c.querySelectorAll(".wxfx,.wxp").forEach(e=>e.remove());const s=WXS;if(!s)return;
   c.insertAdjacentHTML("afterbegin",`<div class="wxfx ${s.fx}" aria-hidden="true"><i></i><i></i><i></i></div>`);
   c.insertAdjacentHTML("beforeend",`<div class="wxp"><span class="e">${s.em}</span>${s.t!=null?`<b>${s.t}°</b>`:""}<small>${s.lab}</small></div>`)}
-async function loadWx(d,code,isHost,ref){WXS=null;wxApply();if(hidden(d))return;
+let WXT0=0;async function loadWx(d,code,isHost,ref){clearTimeout(WXT0);WXT0=setTimeout(()=>{if(location.pathname==="/d/"+code)loadWx(d,code,isHost,ref)},36e5);WXS=null;wxApply();if(hidden(d))return;
   const st=d.startsAt.toMillis(),now=Date.now();if(st+8*36e5<now)return;
   const X=WXT[LANG]||WXT.en;
   if(st-now>7*864e5){WXS={fx:"",em:"🌤️",t:null,lab:X.soon};wxApply();return}
@@ -2596,7 +2596,7 @@ async function loadWx(d,code,isHost,ref){WXS=null;wxApply();if(hidden(d))return;
     if(c&&isHost&&!DEMO)updateDoc(ref,{wx:{la:+(+c.la).toFixed(3),lo:+(+c.lo).toFixed(3),p:d.place}}).catch(()=>{})}
   if(!c)return;
   try{const key="wx_"+code+"_"+st;let j=null;
-    try{const o=JSON.parse(sessionStorage.getItem(key)||"null");if(o&&Date.now()-o.t<18e5)j=o.j}catch{}
+    try{const o=JSON.parse(sessionStorage.getItem(key)||"null");if(o&&Date.now()-o.t<36e5)j=o.j}catch{}
     if(!j){const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.la}&longitude=${c.lo}&hourly=temperature_2m,weather_code,precipitation_probability&timezone=auto&forecast_days=9`);j=await r.json();try{sessionStorage.setItem(key,JSON.stringify({t:Date.now(),j}))}catch{}}
     const at=Math.max(st,now),loc=new Date(at+(j.utc_offset_seconds||0)*1000).toISOString().slice(0,13)+":00",i=j.hourly.time.indexOf(loc);if(i<0)return;
     const T=Math.round(j.hourly.temperature_2m[i]),k=wxKind(j.hourly.weather_code[i]),pp=j.hourly.precipitation_probability&&j.hourly.precipitation_probability[i],h=+loc.slice(11,13),night=h>=21||h<6;
