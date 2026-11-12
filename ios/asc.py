@@ -73,10 +73,13 @@ if n == 0:
     r = api("POST", "/v1/devices", {"data": {"type": "devices", "attributes": {"name": "Squad CI", "platform": "IOS", "udid": "00008110-001A2B3C4D5E6F70"}}})
     print("rejestracja urządzenia:", "ok" if "_err" not in r else (r["_err"], r["_body"][:300]))
 
-# diagnostyka certyfikatów (tylko odczyt)
+# sprzątanie: certyfikaty DEVELOPMENT utworzone przez CI ("Created via API") – bez klucza prywatnego są bezużyteczne,
+# a limit kont (10) blokuje podpisywanie nowych profili. Certyfikaty dystrybucyjne nie są ruszane.
 r = api("GET", "/v1/certificates?limit=200")
 if "_err" in r: print("certyfikaty:", r)
 else:
     for c in r["data"]:
         at = c["attributes"]
-        print("CERT", at.get("certificateType"), "|", at.get("name"), "|", at.get("displayName"), "|", at.get("expirationDate"), "|", c["id"])
+        if at.get("certificateType") == "DEVELOPMENT" and (at.get("displayName") or "") == "Created via API":
+            d = api("DELETE", "/v1/certificates/" + c["id"])
+            print("odwołano certyfikat DEVELOPMENT", c["id"], "ok" if "_err" not in d else (d["_err"], d["_body"][:120]))
