@@ -1161,7 +1161,7 @@ const PIN='<svg width="44" height="54" viewBox="0 0 44 54"><path d="M22 52C8 36 
 const AVN=30,MK='#0b0b12';
 /* ---- kreator awatarów: fryzura × skóra × kolor włosów × oczy × dodatek × tło (części: Microsoft Fluent Emoji, MIT) ---- */
 const KU=n=>(window.__K&&window.__K[n])||"/avatars/k/"+n;
-const KS=9,KT=5,KH=9,KE=5,KA=8,KB=8,KBOY=5;
+const KS=10,KT=5,KH=9,KE=5,KA=8,KB=8,KBOY=5;
 const K_HAIR=["#1c1716","#3b2417","#6b4228","#e6bf72","#c8562a","#ff6fae","#4aa3ff","#8b5cf6","#d9dce6"];
 const K_EYE=[null,"#3d8bff","#2fae6b","#a8702a","#8f9bb3"],K_SKIN=["#f7d7c4","#e8b796","#c68e6b","#9c6646","#5e3b2c"];
 const K_BG=["#ffb3cf","#ffc9a8","#c9b6ff","#a9d8ff","#a8f0d8","#ffe58a","#ff9e8a","#e0b3ff"];
@@ -1174,7 +1174,7 @@ const PRE=[[0,0,0,0,0,3],[5,0,0,2,0,0],[1,0,1,0,1,4],[6,1,3,0,0,1],[2,0,2,3,0,5]
 [0,4,0,0,0,6],[6,4,0,0,6,2],[1,4,0,3,0,0],[8,4,5,0,5,4],[2,4,0,0,2,3],[5,4,3,0,0,1],[4,4,7,0,0,5],[7,4,0,0,1,6],[1,4,6,0,0,7],[6,4,2,0,0,3]].map(([s,t,h,e,a,b])=>kEnc({s,t,h,e,a,b}));
 const avCode=v=>{v=+v||0;return v>=1000?v:PRE[((v%AVN)+AVN)%AVN]};
 const avBg=v=>K_BG[kDec(avCode(v)).b];
-const avBoy=v=>kDec(avCode(v)).s<KBOY;
+const avBoy=v=>{const s=kDec(avCode(v)).s;return s<KBOY||s===9};
 const gc=p=>p&&p.av!=null?(avBoy(p.av)?"#5db4ff":"#ff6fae"):"#ffc24d";
 const kImg={},kLoad=u=>kImg[u]||(kImg[u]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=u}));
 const kCache=new Map(),BLANK="data:image/gif;base64,R0lGODlhAQABAAAAACw=";
