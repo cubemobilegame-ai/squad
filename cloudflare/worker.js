@@ -267,6 +267,7 @@ export default {
     const url = new URL(req.url);
     if (req.method === "GET" && url.pathname === "/ics") return ics(url.searchParams);
     if (req.method === "GET" && url.pathname.startsWith("/av/")) return avatar(envRaw, url.pathname.slice(4));
+    if (req.method === "GET" && url.pathname === "/geo") { const c = req.cf || {}; return json(c.latitude ? { la: +c.latitude, lo: +c.longitude } : {}, 200, cors); }
     if (req.method === "GET") return json({ ok: true, app: "squad-push" }, 200, cors);
     if (req.method !== "POST" || url.pathname !== "/notify") return json({ error: "not found" }, 404, cors);
     let env;

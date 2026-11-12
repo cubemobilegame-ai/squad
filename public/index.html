@@ -2596,6 +2596,7 @@ let WXT0=0;async function loadWx(d,code,isHost,ref){clearTimeout(WXT0);WXT0=setT
     if(!c&&PUB.pos)c={la:PUB.pos.la,lo:PUB.pos.lo};
     if(!c){let ok=isHost;try{if(!ok&&navigator.permissions){ok=(await navigator.permissions.query({name:"geolocation"})).state==="granted"}}catch{}
       if(ok){try{c=await getPos()}catch{}}}
+    if(!c){try{const U=FB.__c&&FB.__c.pushUrl;if(U){const g=await (await fetch(U.replace(/\/$/,"")+"/geo")).json();if(g&&g.la!=null)c=g}}catch{}}
     if(c&&isHost&&!DEMO)updateDoc(ref,{wx:{la:+(+c.la).toFixed(3),lo:+(+c.lo).toFixed(3),p:d.place}}).catch(()=>{})}
   if(!c)return;
   try{const key="wx_"+code+"_"+st;let j=null;
