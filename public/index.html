@@ -1670,6 +1670,7 @@ async function groupView(code){
   unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({id:y.id,...y.data()}));mine=M.find(m=>m.id===me())||null;
     $("#mem").innerHTML=M.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
     $("#jb").hidden=!!mine;$("#oc").hidden=!mine;$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;
+    if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
 }
 
