@@ -72,3 +72,11 @@ print("zarejestrowane urządzenia:", n)
 if n == 0:
     r = api("POST", "/v1/devices", {"data": {"type": "devices", "attributes": {"name": "Squad CI", "platform": "IOS", "udid": "00008110-001A2B3C4D5E6F70"}}})
     print("rejestracja urządzenia:", "ok" if "_err" not in r else (r["_err"], r["_body"][:300]))
+
+# diagnostyka certyfikatów (tylko odczyt)
+r = api("GET", "/v1/certificates?limit=200")
+if "_err" in r: print("certyfikaty:", r)
+else:
+    for c in r["data"]:
+        at = c["attributes"]
+        print("CERT", at.get("certificateType"), "|", at.get("name"), "|", at.get("displayName"), "|", at.get("expirationDate"), "|", c["id"])
