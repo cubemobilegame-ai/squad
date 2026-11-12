@@ -1341,7 +1341,7 @@ const gp=()=>DEMO?PATH:location.pathname;
 function route(){const p=gp(),m=r=>p.match(r),ka=m(/^\/k\/([A-Za-z0-9]{10,40})/),d=m(/^\/d\/(\w+)/),c=m(/^\/c\/(\w+)/),g=m(/^\/g\/(\w+)/),gc=m(/^\/gc\/(\w+)/);
   if(d)dropView(d[1].toUpperCase());else if(c)chatView(c[1].toUpperCase(),0);else if(g)groupView(g[1].toUpperCase());else if(gc)chatView(gc[1].toUpperCase(),1);
   else if(p==="/new")newView();else if(p==="/n")notifView();else if(p==="/chats")chatsView();else if(p==="/me")profileView();else if(p==="/k"||ka)contactsView(ka?ka[1]:null);else if(p==="/blocked")blockedView();
-  else if(["/terms","/privacy","/safety"].includes(p))legalView(p.slice(1));else home()}
+  else if(["/terms","/privacy","/safety"].includes(p))legalView(p.slice(1));else if(p==="/support"||p==="/help")supportView();else home()}
 let first=true;
 /* Android (TWA): aplikacja dopisuje do adresu ?inst=<losowy id instalacji> (SharedPreferences znikają przy odinstalowaniu). Inny id niż zapamiętany = nowa instalacja => wylogowanie. */
 try{const u=new URL(location.href),id=u.searchParams.get("inst");if(id){u.searchParams.delete("inst");history.replaceState(null,"",u.pathname+u.search+u.hash);const old=localStorage.getItem("instId");localStorage.setItem("instId",id);if(old&&old!==id)window.__fresh=true}}catch{}
@@ -2759,6 +2759,10 @@ function blockedView(){const u=authed();if(!u)return;
 function legalView(k){const ql=new URLSearchParams(location.search).get("lang"),LG=LEGAL[ql]?ql:LANG,D=(LEGAL[LG]||LEGAL.en)[k],u=auth.currentUser,back=u&&!u.isAnonymous&&sget("nick")?"/me":"/";
   view(`<div class="scr doc"><div class="hdr">${bk(back)}</div><h1 class="logo" style="font-size:30px">${D.t}</h1><div class="tldr">${D.tl}</div>${D.s.map(([h,p])=>`<h4>${h}</h4><p>${p}</p>`).join("")}${D.u?`<p style="margin-top:22px;font-size:12px;opacity:.6">${D.u}</p>`:""}</div>`)}
 
+function supportView(){const ql=new URLSearchParams(location.search).get("lang"),X=L[ql]&&L[ql].hlT?L[ql]:(L[LANG]&&L[LANG].hlT?L[LANG]:L.en),subj=encodeURIComponent("Squad support");
+  view(`<div class="scr doc"><div class="hdr">${bk("/")}</div><div class="bbig"><img src="/e/chat.webp" alt="" style="width:84px;height:84px"></div><h1 class="logo" style="font-size:30px">${X.hlT}</h1><div class="tldr">${X.hlD}</div><div class="mailbox">${esc(MAIL_TO)}</div>
+  <a class="cta" style="text-align:center;text-decoration:none" href="mailto:${MAIL_TO}?subject=${subj}">${X.hlMail}</a>
+  <a class="ghost" style="text-align:center;text-decoration:none;margin-top:10px" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${MAIL_TO}&su=${subj}">${X.hlGm}</a></div>`)}
 /* ---------- USUWANIE KONTA (schowane w „Więcej opcji konta”) ---------- */
 function delAccount(){vib(15);
   const s=sheet(`<h2>${t("delAccT")}</h2><p class="hint">${t("delAccD")}</p><label class="lbl" for="dw">${t("delType")}</label><input id="dw" autocomplete="off" autocapitalize="characters"><button class="cta dng" id="dgo" disabled>${t("delGo")}</button><button class="ghost" id="dcn">${t("cancel")}</button>`);
