@@ -76,7 +76,7 @@ async function logEv(env, o) {
 }
 
 // ---------- wysyłka ----------
-async function notify(env, db, uids, kind, build, link, from) {
+async function notify(env, db, uids, kind, build, link, from, muteKey) {
   // duża ikona = awatar osoby, która napisała (albo logo Squad)
   let icon = `https://${env.PID}.web.app/icon-192.png`;
   if (from) { const f = await db.get(`users/${from}`); if (f && f.avUrl) icon = f.avUrl; else if (f && f.avImg) icon = `${env.SELF}/av/${from}?v=${f.avV || 0}`; }
@@ -84,6 +84,7 @@ async function notify(env, db, uids, kind, build, link, from) {
   await Promise.all([...new Set(uids)].filter(Boolean).map(async (uid) => {
     st.to++; const u = await db.get(`users/${uid}`); if (!u) { st.errs.push("brak profilu " + uid.slice(0, 6)); return; }
     if (kind && u.notif && u.notif[kind] === false) { st.errs.push("wyłączone " + uid.slice(0, 6)); return; }
+    if (muteKey && u.muted && u.muted[muteKey]) { st.errs.push("wyciszony czat " + uid.slice(0, 6)); return; }
     const toks = await db.list(`users/${uid}/tokens`); st.users++; if (!toks.length) { st.errs.push("brak tokenu " + uid.slice(0, 6)); return; } st.toks += toks.length;
     const L = TX[u.lang] ? u.lang : "en", [title, body] = build(TX[L], L);
     await Promise.all(toks.map(async (t) => {
@@ -111,7 +112,7 @@ async function handle(env, uid, b) {
     const chat = await db.get(root); if (!chat) return 0;
     const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => p.id !== uid);
     const title = G ? chat.name : chat.title;
-    return notify(env, db, ppl.map((p) => p.id), "chat", () => [`${m.nickname} · ${title}`, cut(m.text, 140)], G ? `/gc/${b.code}` : `/c/${b.code}`, uid);
+    return notify(env, db, ppl.map((p) => p.id), "chat", () => [`${m.nickname} · ${title}`, cut(m.text, 140)], G ? `/gc/${b.code}` : `/c/${b.code}`, uid, (G ? "g_" : "") + b.code);
   }
   if (b.kind === "rsp" && isCode(b.code)) {                            // odpowiedź IN / LATE / OUT -> autor dropa
     const d = await db.get(`drops/${b.code}`), p = await db.get(`drops/${b.code}/participants/${uid}`);
