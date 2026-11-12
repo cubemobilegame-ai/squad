@@ -1707,7 +1707,7 @@ function chatsView(){
   const row=(x)=>{const m=x.m,n=x.n,who=m?(isMe(m.authorId)?t("you2"):m.nickname):"";
     return`<div class="chrow${n?" un":""}" onclick="go('${x.href}')"><div class="cav th" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
     <div class="crm"><div class="cr1"><b>${esc(clean(x.title))}${isMuted((x.g?"g_":"")+x.id)?" 🔕":""}</b><time>${tm(x.at)}</time></div>
-    <div class="cr2"><span class="ctag ${x.g?"g":"d"}">${x.tag}</span><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div><button class="rmore" aria-label="${t("cmMore")}" onclick="event.stopPropagation();chatMenu(${x.g?1:0},'${x.id}')">⋯</button></div>`};
+    <div class="cr2"><span class="ctag ${x.g?"g":"d"}">${x.tag}</span><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div></div>`};
   let F=sget("chf")||"all";
   const draw=()=>{
     const G=[...S.groups.values()].map(g=>{const [c1,c2]=THEMES[hs(g.id)%8],m=(S.ms["g_"+g.id]||[]).slice(-1)[0];return{g:1,id:g.id,href:"/gc/"+g.id,c1,c2,icon:sv(I.grp.replace(/^<svg[^>]*>|<\/svg>$/g,"")).replace('stroke="currentColor"','stroke="#fff"'),title:g.name,m,n:unreadOf({id:"g_"+g.id}),tag:t("tagG"),at:m?.createdAt?.toMillis?.()||(m?Date.now():g.createdAt?.toMillis?.()||0)}});
@@ -1925,7 +1925,7 @@ async function chatView(code,g){
   const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];
   const [hc1,hc2]=g?THEMES[hs(code)%THEMES.length]:thm({...d,id:code}),hst=!g&&d.startsAt?.toMillis?d.startsAt.toMillis():0;
   view(`<div class="scr chs sk" style="--c1:${hc1};--c2:${hc2}"><div class="chero" ${g?`onclick="go('/g/${code}')"`:`onclick="go('/d/${code}')"`}><i class="gr"></i>
-    <button class="hbk" onclick="event.stopPropagation();go('${g?"/chats":"/d/"+code}')" aria-label="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="hbk" onclick="event.stopPropagation();go('/chats')" aria-label="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button class="hmo" onclick="event.stopPropagation();chatMenu(${g?1:0},'${code}')" aria-label="${t("cmMore")}">⋯</button>
     <div class="horb"></div><img class="hem" src="${g?"/e/handshake.webp":e3(d.category)}" style="${eo(g?"/e/handshake.webp":e3(d.category))}" alt="">
     <div class="htx">${hst?`<span class="tm hpill" data-t="${hst}" data-x="${d.expiresAt.toMillis()}"></span>`:`<span class="hpill">${t("grInfo")}</span>`}<h2>${esc(clean(title))}</h2>${g?"":`<small><span class="nw">🕒 ${when(hst)}</span>${plc(d)?` · <span class="nw">📍 ${esc(plc(d))}</span>`:""}</small>`}<small id="cnt" class="hcnt"></small></div></div>
