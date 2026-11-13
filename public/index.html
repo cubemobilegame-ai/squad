@@ -98,7 +98,7 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .dbub{padding:6px!important}.dcard{display:flex;gap:10px;align-items:center;text-decoration:none;color:inherit;background:linear-gradient(135deg,rgba(255,46,126,.25),rgba(255,138,61,.25));border:1px solid rgba(255,138,61,.35);border-radius:14px;padding:10px 12px;min-width:200px}.dcard .dci{font-size:26px}.dcard b{display:block;font-size:15px}.dcard small{display:block;font-size:12px;opacity:.75;font-weight:600}.dcard em{display:block;font-style:normal;font-size:12px;font-weight:800;color:#ffb38a;margin-top:2px}
 .m.me .dbub .dcard{color:#fff;background:#14141c;border-color:transparent}.m.me .dbub .dcard small{color:rgba(255,255,255,.7)!important}.dcard small{color:rgba(255,255,255,.75)!important}
 .dgo{display:flex;align-items:center;gap:7px;flex:none;margin-left:auto;border:0;cursor:pointer;padding:6px 14px 6px 6px;border-radius:999px;background:linear-gradient(135deg,#ff2e7e,#ff8a3d);color:#fff;font:inherit;font-weight:900;font-size:13px;letter-spacing:.04em;box-shadow:0 6px 18px rgba(255,80,110,.35)}.dgo .e3{width:30px;height:30px;background:rgba(255,255,255,.22);border-radius:50%;padding:3px}.dgo:active{transform:scale(.95)}
-.chp{margin:14px 0 6px;padding:14px;border-radius:20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);cursor:pointer}.chp:active{transform:scale(.99)}
+.chp{display:flex;align-items:center;gap:12px;box-sizing:border-box;min-height:60px;margin:14px 0 6px;padding:10px 16px;border-radius:99px;background:#262632;border:0;cursor:pointer}.chp:active{opacity:.8}.chp .chi{font-size:20px;flex:none}.chp .cht{flex:1;min-width:0}.chp .cht b{display:block;font:900 13px Brico,BricoCyr,system-ui;letter-spacing:.04em;text-transform:uppercase}.chp .cht small{display:block;margin-top:2px;font-size:13px;color:rgba(255,255,255,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chp .cht em{font-style:normal;font-weight:800;color:rgba(255,255,255,.8)}.chp .chv{font-style:normal;font-size:22px;color:rgba(255,255,255,.5);flex:none}.chp .bdi{position:static}
 .chph{display:flex;align-items:center;gap:8px;margin-bottom:10px}.chph b{font-size:15px}.chph em{margin-left:auto;font-style:normal;font-size:12.5px;font-weight:800;color:var(--acc)}.chph .bdi{position:static;display:grid}
 .chpm{display:flex;align-items:flex-end;gap:8px;margin:6px 0}.chpm p{margin:0;padding:8px 12px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,.08);font-size:14px;line-height:1.35;max-width:85%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .chpm.me{justify-content:flex-end}.chpm.me p{background:linear-gradient(135deg,var(--g1),var(--g2));color:#0b0b10;border-radius:16px 16px 4px 16px}.chp0{margin:4px 0 8px;font-size:13.5px}
@@ -1924,7 +1924,6 @@ async function dropView(code){
    <button id="cal" hidden>${PI.cal}<small>${t("aCal")}</small></button>
    ${isHost&&!closed()&&!d.public?`<button id="mkp">${sv('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.600 2.700 2.600 15.300 0 18M12 3c-2.600 2.700-2.600 15.300 0 18"/>')}<small>${t("mkPubB")}</small></button>`:""}${isHost&&!closed()?`<button id="edb">${sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>')}<small>${t("aEdit")}</small></button>`:""}
   </div>
-  ${isHost?`<div class="lk lk2"><div class="lt">${t("yourLink")}</div><div class="lr"><code>${url}</code><button id="cl">${t("copyShort")}</button></div></div>`:""}
   <h3>${t("whereH")}</h3><div class="map">${!DEMO&&!hidden(d)?`<iframe loading="lazy" src="https://maps.google.com/maps?q=${encodeURIComponent(d.place)}&z=15&output=embed"></iframe>`:`<div class="pin">${PIN}</div>`}<div class="ml">${hidden(d)?t("surShown"):i14(PN)+" "+esc(d.place)}</div></div>
   ${isHost?`<button class="ghost danger" id="dx">${t("del")}</button>`:""}
   ${logged?"":getAppBox()}
@@ -1932,9 +1931,8 @@ async function dropView(code){
   /* podgląd czatu dropa: 3 ostatnie wiadomości + pole, które otwiera pełny czat */
   let chpOn=false,CM=[];
   const drawChp=()=>{const el=$("#chp");if(!el||el.hidden)return;const un=unreadOf({id:code});
-    el.innerHTML=`<div class="chph"><b>💬 ${t("chpT")}</b>${un?`<span class="bd bdi">${un}</span>`:""}<em>${t("chpAll")} ›</em></div>
-    ${CM.length?CM.map(m=>{const mm=isMe(m.authorId),pp=P.find(p=>p.id===m.authorId)||{id:m.authorId};return isBlk(m.authorId)&&!mm?"":`<div class="chpm${mm?" me":""}">${mm?"":avc("mini",avIdx(pp))}<p>${mm?"":`<b style="color:${gc(pp)}">${esc(pp.nickname||m.nickname)}</b> `}${m.drop?"🔥 "+esc(clean(m.drop.title||"")):esc(clean(m.text))}</p></div>`}).join(""):`<p class="mut chp0">${t("chpEmpty")}</p>`}
-    <div class="chpi">${t("chPh")}<span>➤</span></div>`;el.onclick=()=>{vib(8);go("/c/"+code)}};
+    const lm=[...CM].reverse().find(m=>!isBlk(m.authorId)||isMe(m.authorId)),lp=lm&&(P.find(p=>p.id===lm.authorId)||{});
+    el.innerHTML=`<span class="chi">💬</span><div class="cht"><b>${t("chpT")}</b><small>${lm?(isMe(lm.authorId)?"":`<em>${esc(lp.nickname||lm.nickname||"")}:</em> `)+(lm.drop?"🔥 "+esc(clean(lm.drop.title||"")):esc(clean(lm.text||""))):t("chpEmpty")}</small></div>${un?`<span class="bd bdi">${un}</span>`:""}<i class="chv">›</i>`;el.onclick=()=>{vib(8);go("/c/"+code)}};
   /* album wypadu: otwiera się na starcie, każdy 1 zdjęcie, znika razem z dropem */
   const drawAlbum=()=>{const el=$("#alb");if(!el)return;
     if(!closed()){el.innerHTML="";return}
@@ -1950,7 +1948,7 @@ async function dropView(code){
     const cb=el.querySelector("#col");if(cb)cb.onclick=()=>openCollage({...d,id:code,P},PH);const rb=el.querySelector("#rnd");if(rb)rb.onclick=()=>{vib(12);openCollage({...d,id:code,P},[PH[Math.floor(Math.random()*PH.length)]])}};
   every(()=>{if(closed()!==wasC){wasC=closed();drawAlbum()}},1000);every(tick,1000);
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#acc"))$("#acc").onclick=accGo;if($("#rp"))$("#rp").onclick=()=>report({target:"drop",code});
-  $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);if(isHost)$("#cl").onclick=()=>cpLink(code);$("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};
+  $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);$("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};
   if($("#edb"))$("#edb").onclick=()=>editDrop(code,ref,d);if($("#mkp"))$("#mkp").onclick=()=>makePublic(code,ref,d,P);try{loadWx(d,code,isHost,ref)}catch{}
   if(isHost){let arm=0;$("#dx").onclick=async()=>{if(!arm){arm=1;$("#dx").textContent=t("delSure");setTimeout(()=>{arm=0;$("#dx")&&($("#dx").textContent=t("del"))},4000);return}
     await deleteDoc(ref);vib([40,30,40]);toast(t("deleted"));go("/")}}
