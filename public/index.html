@@ -111,7 +111,7 @@ html:has(.scr.chs),html:has(.scr.chs) body{overflow:hidden;overscroll-behavior:n
 .scr.dv>.hdr{margin-bottom:6px!important}.scr.dv>#cb{margin-bottom:-8px!important}.scr.dv>h3{margin-bottom:-8px!important}.scr.dv>.brand{margin-bottom:4px!important}
 .scr.dv #rpl>h3{margin:18px 0 10px}.scr.dv #rpl>*:first-child{margin-top:0}.scr.dv .acts4{margin:0}.scr.dv .chp{margin:0}
 .cpw{display:flex;gap:6px;align-items:center}.cpq{padding:6px 9px!important;display:grid;place-items:center}
-.qbtn{display:flex;align-items:center;justify-content:center;gap:10px;box-sizing:border-box;width:100%;height:52px;margin-top:10px;padding:0 18px;border:0;border-radius:99px;background:#262632;color:#fff;font:900 13px Brico,BricoCyr,system-ui;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.qbtn svg{width:20px;height:20px;flex:none}.qbtn:active{opacity:.8}.qrav{position:absolute;left:50%;top:50%;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:#fff;padding:4px;box-sizing:border-box;box-shadow:0 2px 8px rgba(0,0,0,.25);overflow:hidden}.qrav>*{width:100%!important;height:100%!important;border-radius:50%;display:block}.qrbox{background:#fff;border-radius:22px;padding:14px;width:min(280px,72vw);margin:6px auto 4px;box-shadow:0 12px 40px rgba(0,0,0,.35)}.qrbox svg{display:block;width:100%;height:auto}.qrn{text-align:center;font-weight:900;font-size:17px;margin:8px 0 14px}
+.qbtn{display:flex;align-items:center;justify-content:center;gap:10px;box-sizing:border-box;width:100%;height:52px;margin-top:10px;padding:0 18px;border:0;border-radius:99px;background:#262632;color:#fff;font:900 13px Brico,BricoCyr,system-ui;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}.qbtn.pri{background:linear-gradient(90deg,var(--g1),var(--g2) 50%,var(--g3));color:#0b0b12;box-shadow:0 4px 0 rgba(0,0,0,.4)}.qbtn svg{width:20px;height:20px;flex:none}.qbtn:active{opacity:.8}.qrav{position:absolute;left:50%;top:50%;width:22%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:#fff;padding:4px;box-sizing:border-box;box-shadow:0 2px 8px rgba(0,0,0,.25);overflow:hidden}.qrav>*{width:100%!important;height:100%!important;border-radius:50%;display:block}.qrbox{background:#fff;border-radius:22px;padding:14px;width:min(280px,72vw);margin:6px auto 4px;box-shadow:0 12px 40px rgba(0,0,0,.35)}.qrbox svg{display:block;width:100%;height:auto}.qrn{text-align:center;font-weight:900;font-size:17px;margin:8px 0 14px}
 .rpi{font-size:.6em;margin-left:8px;vertical-align:middle;opacity:.9}
 .dpb{position:relative;overflow:hidden}.dpb input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;-webkit-appearance:none;appearance:none}
 #edd{flex:1;min-width:0}
@@ -1488,9 +1488,9 @@ const syncCon=(av,ph,nk)=>{const u=auth.currentUser;if(!u||u.isAnonymous)return;
 function conShare(){const u=auth.currentUser;if(!u)return;const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||""),txt=t("kLinkTxt",url);vib(10);
   if(navigator.share)navigator.share({text:txt}).catch(()=>{});else{try{navigator.clipboard.writeText(txt)}catch{}toast(t("copied"))}}
 window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"");let svg="";
-  try{const Q=await loadQR(),q=Q(0,"H");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
-  const s=sheet(`<h2>${t("qcT")}</h2><p class="hint">${t("qcD")}</p><div class="qrbox" style="position:relative">${svg}<div class="qrav">${avc("",meAv())}</div></div><p class="qrn">${esc(clean(sget("nick")||""))}</p>
-    <button class="qbtn" id="qsh">${sv(SI.share)}${t("kLink")}</button><button class="qbtn" id="qcl">${t("close")}</button>`);
+  try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
+  const s=sheet(`<h2>${t("qcT")}</h2><p class="hint">${t("qcD")}</p><div class="qrbox">${svg}</div><p class="qrn">${esc(clean(sget("nick")||""))}</p>
+    <button class="qbtn pri" id="qsh">${sv(SI.share)}${t("kLink")}</button><button class="qbtn" id="qcl">${t("close")}</button>`);
   s.querySelector("#qsh").onclick=()=>{s.close();conShare()};s.querySelector("#qcl").onclick=s.close};
 function contactsView(add){
   const u=authed();if(!u)return;
@@ -1536,11 +1536,11 @@ const RI={host:STAR,inv:MAIL,in:BOLT,late:CLK,out:BAN},TI={inv:MAIL,mine:FLAME,o
 let homeTab="";
 function home(){
   const u=authed();if(!u)return;const nick=sget("nick");
-  view(`<div class="scr"><div class="top hd2"><h1 class="logo lg2">Squad<span>✦</span></h1><div class="tr"><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button><button class="me" id="me" aria-label="${t("nMe")}">${avc("",meAv())}</button></div></div>
+  view(`<div class="scr"><div class="top hd2"><h1 class="logo lg2">Squad<span>✦</span></h1><div class="tr"><button class="bell" id="qrh" aria-label="QR">${QRI.replace('width="15" height="15"','width="22" height="22"')}</button><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button><button class="me" id="me" aria-label="${t("nMe")}">${avc("",meAv())}</button></div></div>
   <button class="newbtn nb2" id="nd" style="margin-top:26px"><i class="gr"></i><span class="nbp"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="nbt"><b>${t("newDrop").replace(/^\+\s*/,"")}</b><small>${t("ndSub")}</small></span><span class="nba"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></button>
   ${u.isAnonymous?accBox():""}<div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
   if($("#acc"))$("#acc").onclick=()=>{vib(10);guestUp("/")};
-  $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#me").onclick=()=>go("/me");$("#bel").onclick=()=>{vib(8);go("/n")};setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
+  $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#me").onclick=()=>go("/me");$("#bel").onclick=()=>{vib(8);go("/n")};$("#qrh").onclick=()=>qrContact();setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
   const draw=()=>{
     const all=live().filter(loaded),r=d=>roleOf(d),G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
     const tab=homeTab||"mine";
@@ -2254,7 +2254,7 @@ let qrLib=null;const loadQR=()=>qrLib||(qrLib=new Promise((ok,no)=>{if(window.qr
 window.qrDrop=async(c,title)=>{vib(10);const d=S.items.get(c)||(typeof PUB!=="undefined"&&((PUB.items&&PUB.items.get&&PUB.items.get(c))||(PUB.list||[]).find(x=>x.id===c)))||{},url=base()+"/d/"+c;let svg="";
   try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
   const s=sheet(`<h2>${t("qrT")}</h2><p class="hint">${t("qrD")}</p><div class="qrbox">${svg}</div><p class="qrn">${esc(clean(d.title||title||""))}</p>
-    <button class="qbtn" id="qsh">${sv(SI.share)}${t("share")}</button><button class="qbtn" id="qcl">${t("close")}</button>`);
+    <button class="qbtn pri" id="qsh">${sv(SI.share)}${t("share")}</button><button class="qbtn" id="qcl">${t("close")}</button>`);
   s.querySelector("#qsh").onclick=()=>{s.close();shareDrop(c)};s.querySelector("#qcl").onclick=s.close};
 window.shareDrop=c=>{const d=S.items.get(c)||(typeof PUB!=="undefined"&&((PUB.items&&PUB.items.get&&PUB.items.get(c))||(PUB.list||[]).find(x=>x.id===c)));if(d)openShare("d",{...d,P:S.ppl[c]||[]})};
 function openShare(k,o){const G=k==="g",url=base()+(G?"/g/":"/d/")+o.id;
