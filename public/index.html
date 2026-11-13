@@ -2715,13 +2715,13 @@ const WXT={
  cs:{c:"Jasno",p:"Polojasno",o:"Zataženo",f:"Mlha",d:"Mrholení",r:"Déšť",s:"Sníh",t:"Bouřka",soon:"Předpověď se objeví brzy",now:"Teď"},
  uk:{c:"Ясно",p:"Мінлива хмарність",o:"Хмарно",f:"Туман",d:"Мряка",r:"Дощ",s:"Сніг",t:"Гроза",soon:"Прогноз з’явиться незабаром",now:"Зараз"}};
 const wxKind=c=>c===0?"c":c<=2?"p":c===3?"o":c<=48?"f":c<=57?"d":c<=67?"r":c<=77?"s":c<=82?"r":c<=86?"s":"t";
-const placeGeo=async(place,near)=>{place=String(place||"").trim();if(!place)return null;const K="pg3:"+place.toLowerCase();try{const c=JSON.parse(localStorage.getItem(K)||"null");if(c&&c.la!=null)return c}catch{}
+const placeGeo=async(place,near)=>{place=String(place||"").trim();if(!place)return null;const K="pg4:"+place.toLowerCase();try{const c=JSON.parse(localStorage.getItem(K)||"null");if(c&&c.la!=null)return c}catch{}
   const CC={pl:"pl",cs:"cz",de:"de,at,ch",fr:"fr,be,ch",it:"it",es:"es",uk:"ua"}[LANG]||"",keep=r=>{try{localStorage.setItem(K,JSON.stringify(r))}catch{}return r};
   const nm=async(q,extra)=>{const j=await (await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&addressdetails=0&accept-language="+LANG+"&q="+encodeURIComponent(q)+extra)).json();return j&&j[0]?{la:+j[0].lat,lo:+j[0].lon,ap:(+j[0].place_rank||30)<26?1:0}:null};
   /* najpierw pełny tekst, potem jego części (od końca: miasto/ulica) – część daje tylko przybliżoną lokalizację; poza krajem języka aplikacji nie zgadujemy (stąd bywał Chicago) */
-  const parts=place.split(/[,;|–—]|\s-\s/).map(x=>x.trim()).filter(Boolean),qs=[place,...parts.slice().reverse().filter(x=>x!==place)];
+  const parts=place.split(/[,;|–—]|\s-\s/).map(x=>x.trim()).filter(Boolean),qs=[place,...parts.slice(1).map((_,k)=>parts.slice(k+1).join(", ")).filter(x=>x!==place),...parts.slice().reverse().filter(x=>x!==place)].filter((x,i,a)=>a.indexOf(x)===i);
   const tries=[];if(near&&near.la!=null)tries.push("&bounded=1&viewbox="+[near.lo-1,near.la+.7,near.lo+1,near.la-.7].join(","));if(CC)tries.push("&countrycodes="+CC);else tries.push("");
-  for(let i=0;i<qs.length;i++)for(const ex of tries){try{const r=await nm(qs[i],ex);if(r)return keep(i?{...r,ap:1}:r)}catch(e){console.warn("nominatim",e)}}
+  for(let i=0;i<qs.length;i++)for(const ex of tries){try{const r=await nm(qs[i],ex);if(r){if(i&&r.ap===0&&/\d/.test(place)&&!/\d/.test(qs[i]))r.ap=1;return keep(r)}}catch(e){console.warn("nominatim",e)}}
   if(!CC){try{let u="https://photon.komoot.io/api/?limit=1&lang=en&q="+encodeURIComponent(place);if(near&&near.la!=null)u+="&lat="+near.la+"&lon="+near.lo;
     const j=await (await fetch(u)).json(),c=j&&j.features&&j.features[0]&&j.features[0].geometry&&j.features[0].geometry.coordinates;if(c){const ty=String(j.features[0].properties&&j.features[0].properties.type||"");return keep({la:+c[1],lo:+c[0],ap:/^(country|state|county|city|district|locality|borough|town|village)$/.test(ty)?1:0})}}catch(e){console.warn("photon",e)}}
   return null};
