@@ -1302,12 +1302,13 @@ const tick=()=>document.querySelectorAll(".tm").forEach(e=>{const n=Date.now(),s
 /* ---------- STAN GLOBALNY (czaty, odpowiedzi) + ODZNAKI ---------- */
 const S={items:new Map(),ppl:{},ms:{},groups:new Map(),gm:{},con:new Map(),creqIn:[],creqOut:[],ginv:[]};let W=[],wUid=null;
 const me=()=>auth.currentUser?.uid,myRead=c=>{const L=c.startsWith("g_")?S.gm?.[c.slice(2)]:S.ppl?.[c];const x=(L||[]).find(p=>p.id===me());return x?.readAt?.toMillis?.()||0},seenT=c=>Math.max(+sget("seen_"+c)||0,myRead(c));
+const dnT=id=>+sget("dn_"+id)||0;
 const nsT=()=>{let v=+sget("nseen");if(!v){v=DEMO?Date.now()-6*6e4:Date.now();sset("nseen",v)}return v};
 const unreadOf=d=>(S.ms[d.id]||[]).filter(m=>m.authorId!==me()&&(m.createdAt?.toMillis?.()||0)>seenT(d.id)).length;
 const events=()=>{const a=[];S.items.forEach(d=>(S.ppl[d.id]||[]).forEach(p=>{const ts=p.updatedAt?.toMillis?.()||0;if(p.id!==me()&&ts)a.push({p,d,ts})}));return a.sort((x,y)=>y.ts-x.ts)};
 const setBd=(id,n)=>{const e=$(id);if(e){e.hidden=!n;e.textContent=n>99?"99+":n}};
 const bdi=n=>n>0?`<b class="bd bdi">${n}</b>`:"";
-function badges(){const c=[...S.items.values()].reduce((a,d)=>a+unreadOf(d),0)+[...S.groups.values()].reduce((a,g)=>a+unreadOf({id:"g_"+g.id}),0),T=nsT(),n=events().filter(e=>e.ts>T).length;setBd("#bdc",c);setBd("#bdn",n);setBd("#bdk",S.creqIn.filter(r=>!isBlk(r.from)).length);try{if(!DEMO&&navigator.setAppBadge){c?navigator.setAppBadge(c):navigator.clearAppBadge()}}catch{}if(DEMO)demoBd()}
+function badges(){const c=[...S.items.values()].reduce((a,d)=>a+unreadOf(d),0)+[...S.groups.values()].reduce((a,g)=>a+unreadOf({id:"g_"+g.id}),0),T=nsT(),n=events().filter(e=>e.ts>T&&e.ts>dnT(e.d.id)).length;setBd("#bdc",c);setBd("#bdn",n);setBd("#bdk",S.creqIn.filter(r=>!isBlk(r.from)).length);try{if(!DEMO&&navigator.setAppBadge){c?navigator.setAppBadge(c):navigator.clearAppBadge()}}catch{}if(DEMO)demoBd()}
 function demoBd(){const u=auth.currentUser,host=u&&!u.isAnonymous;setBd("#bdh",host?0:FB.__hb())}
 const changed=()=>{badges();redraw?.();try{widgetSync()}catch{}};
 function stopWatch(){W.forEach(u=>u());W=[];S.items=new Map();S.ppl={};S.ms={};S.groups=new Map();S.gm={};S.con=new Map();S.creqIn=[];S.creqOut=[];S.ginv=[];wUid=null}
@@ -1858,7 +1859,7 @@ async function groupView(code){
 function notifView(){
   const u=authed();if(!u)return;const T=nsT();
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:36px">${t("nT")}</h1>${pushCard().replace('id="pnx"','id="pnx" hidden')}<div id="nl"></div></div>${nav("n")}`);
-  const draw=()=>{$("#nl").innerHTML=events().slice(0,30).map(e=>`<div class="chat" onclick="go('/d/${e.d.id}')">${avc("l",avIdx(e.p))}<div><b>${esc(e.p.nickname)} · ${STL(e.p.status)}</b><small>🔥 ${esc(clean(e.d.title))}</small><small>${e.d.startsAt?.toMillis?"🕒 "+when(e.d.startsAt.toMillis()):""}${e.d.place?" · 📍 "+esc(clean(e.d.place)):""}${e.p.status==="late"&&e.p.etaMin?" · +"+e.p.etaMin+" min":""}</small><small style="opacity:.6">${t("ago",Math.floor((Date.now()-e.ts)/6e4))}</small></div>${e.ts>T?'<b class="bd bdi">•</b>':""}</div>`).join("")||`<p class="mut">${t("nE")}</p>`;sset("nseen",Date.now());badges()};
+  const draw=()=>{$("#nl").innerHTML=events().slice(0,30).map(e=>`<div class="chat" onclick="go('/d/${e.d.id}')">${avc("l",avIdx(e.p))}<div><b>${esc(e.p.nickname)} · ${STL(e.p.status)}</b><small>🔥 ${esc(clean(e.d.title))}</small><small>${e.d.startsAt?.toMillis?"🕒 "+when(e.d.startsAt.toMillis()):""}${e.d.place?" · 📍 "+esc(clean(e.d.place)):""}${e.p.status==="late"&&e.p.etaMin?" · +"+e.p.etaMin+" min":""}</small><small style="opacity:.6">${t("ago",Math.floor((Date.now()-e.ts)/6e4))}</small></div>${e.ts>T&&e.ts>dnT(e.d.id)?'<b class="bd bdi">•</b>':""}</div>`).join("")||`<p class="mut">${t("nE")}</p>`;sset("nseen",Date.now());badges()};
   redraw=draw;draw();
 }
 
@@ -1934,6 +1935,7 @@ function newView(){
 /* ---------- DROP / ZAPROSZENIE ---------- */
 let pendingShare=null;
 async function dropView(code){
+  sset("dn_"+code,Date.now());try{badges()}catch{}
   view(`<div class="scr"><p class="mut">${t("load")}</p></div>`);
   const R=await loadDrop(code);if(!R)return gone();
   const {ref,d}=R,start=d.startsAt.toMillis(),url=base()+"/d/"+code,me0=auth.currentUser,logged=me0&&!me0.isAnonymous,isHost=me0?.uid===d.hostId;let mine=null,P=[],PH=[];
