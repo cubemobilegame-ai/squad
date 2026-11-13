@@ -32,6 +32,17 @@ jobs:
           sed -i "s/__BUILD__/$B/" public/index.html
           sed -i "s/__BUILDN__/${GITHUB_RUN_NUMBER}/" public/index.html
           echo "$B" > public/build.txt
+      - name: Leaflet z własnego serwera (bez zależności od CDN)
+        continue-on-error: true
+        run: |
+          set -e
+          D="$RUNNER_TEMP/lf"; mkdir -p "$D/l" "$D/m" public/js/leaflet
+          (cd "$D" && npm pack leaflet@1.9.4 leaflet.markercluster@1.5.3 --silent >/dev/null)
+          tar xzf "$D/leaflet-1.9.4.tgz" -C "$D/l"; tar xzf "$D/leaflet.markercluster-1.5.3.tgz" -C "$D/m"
+          cp "$D/l/package/dist/leaflet.js" "$D/l/package/dist/leaflet.css" public/js/leaflet/
+          cp -r "$D/l/package/dist/images" public/js/leaflet/images
+          cp "$D/m/package/dist/leaflet.markercluster.js" "$D/m/package/dist/MarkerCluster.css" "$D/m/package/dist/MarkerCluster.Default.css" public/js/leaflet/
+          ls -la public/js/leaflet
       - name: Podgląd linku dla zaproszeń do grup (grupa.html)
         run: node tools/og-grupa.mjs
       - name: Podgląd linku – kontakty
