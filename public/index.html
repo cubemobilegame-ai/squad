@@ -1922,11 +1922,12 @@ function newView(){
     let pg=null;if(pub&&pubOk()){try{const po=PUB.pos||await getPos();PUB.pos=po;pg={public:true,seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5)}}catch{vib([50,30,50]);return toast(t("pubNeedLoc"))}}
     $("#go").disabled=true;sset("nick",nick);
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
+    const isPubDrop=!!pg;
     if(!DEMO&&cmPt&&cmPt.q===place)pg={...(pg||{}),pt:{la:cmPt.la,lo:cmPt.lo,ap:cmPt.ap?1:0}};
     await setDoc(doc(db,"drops",code),{code,hostId:u.uid,hostNick:nick,hostAv:myAv(),hostPh:sget("photo")||null,category:cat,title:$("#ti").value.trim()||(cat==="other"?cu:cat==="occ"?t("occDef"):t("run",t("c_"+cat))),place,surprise:sur,theme:th,repeat:rep==="no"?null:rep,...(pg||{}),
       startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),createdAt:serverTimestamp()});
     await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
-    remember(code);if(pg)PUB.at=0;pendingShare=pg?null:code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);go("/d/"+code);
+    remember(code);if(isPubDrop)PUB.at=0;pendingShare=isPubDrop?null:code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);go("/d/"+code);
   };
 }
 
