@@ -1487,12 +1487,17 @@ async function conDel(uid){const u=auth.currentUser;if(!u)return;await deleteDoc
 const syncCon=(av,ph,nk)=>{const u=auth.currentUser;if(!u||u.isAnonymous)return;S.con.forEach((c,k)=>setDoc(doc(db,"users",k,"contacts",u.uid),{av,ph,...(nk?{nickname:nk}:{})},{merge:true}).catch(()=>{}))};
 function conShare(){const u=auth.currentUser;if(!u)return;const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||""),txt=t("kLinkTxt",url);vib(10);
   if(navigator.share)navigator.share({text:txt}).catch(()=>{});else{try{navigator.clipboard.writeText(txt)}catch{}toast(t("copied"))}}
+window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"");let svg="";
+  try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
+  const s=sheet(`<h2>${t("qcT")}</h2><p class="hint">${t("qcD")}</p><div class="qrbox">${svg}</div><p class="qrn">${esc(clean(sget("nick")||""))}</p>
+    <button class="cta" id="qsh">${sv(SI.share)}${t("kLink")}</button><button class="ghost" id="qcl">${t("close")}</button>`);
+  s.querySelector("#qsh").onclick=()=>{s.close();conShare()};s.querySelector("#qcl").onclick=s.close};
 function contactsView(add){
   const u=authed();if(!u)return;
   if(u.isAnonymous){view(`<div class="scr"><h1 class="logo" style="font-size:34px">${t("nK")}</h1><p class="hint">${t("kH")}</p><div class="gcard"><b>${t("guCardT")}</b><small>${t("kGuest")}</small><button class="cta" onclick="guestUp('/k')" style="margin:12px 0 0">${t("guCardB")}</button></div></div>${nav("k")}`);return}
   view(`<div class="scr"><h1 class="logo" style="font-size:34px">${t("nK")}</h1><p class="hint kh">${t("kH")}</p>
-  <button class="kshb" id="ksh"><i>${sv(SI.share)}</i><span><b>${t("kLink")}</b><small>${t("kLinkD")}</small></span></button><div id="kl"></div></div>${nav("k")}`);
-  $("#ksh").onclick=conShare;
+  <button class="kshb" id="ksh" style="margin-bottom:10px"><i>${sv(SI.share)}</i><span><b>${t("kLink")}</b><small>${t("kLinkD")}</small></span></button><button class="kshb" id="kqr"><i>${QRI}</i><span><b>${t("qcB")}</b><small>${t("qcBD")}</small></span></button><div id="kl"></div></div>${nav("k")}`);
+  $("#ksh").onclick=conShare;$("#kqr").onclick=()=>qrContact();
   const draw=()=>{const el=$("#kl");if(!el)return;
     const inc=S.creqIn.filter(r=>!isBlk(r.from)),out=S.creqOut,C=conList(),known=new Map();
     S.items.forEach((d,c)=>(S.ppl[c]||[]).forEach(p=>known.set(p.id,p)));S.groups.forEach((g,c)=>(S.gm[c]||[]).forEach(p=>known.set(p.id,p)));
@@ -1531,11 +1536,11 @@ const RI={host:STAR,inv:MAIL,in:BOLT,late:CLK,out:BAN},TI={inv:MAIL,mine:FLAME,o
 let homeTab="";
 function home(){
   const u=authed();if(!u)return;const nick=sget("nick");
-  view(`<div class="scr"><div class="top hd2"><h1 class="logo lg2">Squad<span>✦</span></h1><div class="tr"><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button><button class="me" id="me" aria-label="${t("nMe")}">${avc("",meAv())}</button></div></div>
+  view(`<div class="scr"><div class="top hd2"><h1 class="logo lg2">Squad<span>✦</span></h1><div class="tr"><button class="bell" id="qrh" aria-label="QR">${QRI.replace('width="15" height="15"','width="22" height="22"')}</button><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button><button class="me" id="me" aria-label="${t("nMe")}">${avc("",meAv())}</button></div></div>
   <button class="newbtn nb2" id="nd" style="margin-top:26px"><i class="gr"></i><span class="nbp"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="nbt"><b>${t("newDrop").replace(/^\+\s*/,"")}</b><small>${t("ndSub")}</small></span><span class="nba"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></button>
   ${u.isAnonymous?accBox():""}<div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
   if($("#acc"))$("#acc").onclick=()=>{vib(10);guestUp("/")};
-  $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#me").onclick=()=>go("/me");$("#bel").onclick=()=>{vib(8);go("/n")};setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
+  $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#me").onclick=()=>go("/me");$("#bel").onclick=()=>{vib(8);go("/n")};$("#qrh").onclick=()=>qrContact();setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
   const draw=()=>{
     const all=live().filter(loaded),r=d=>roleOf(d),G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
     const tab=homeTab||"mine";
@@ -2755,6 +2760,14 @@ Object.assign(L.fr,{"cmLvD": "Toi seul quittes le groupe – les autres peuvent 
 Object.assign(L.it,{"cmLvD": "Esci solo tu dal gruppo: gli altri possono continuare a scrivere.", "cmDelD": "Il gruppo viene eliminato per tutti: nessuno potrà più scrivere e la chat sparisce."});
 Object.assign(L.cs,{"cmLvD": "Skupinu opouštíš jen ty – ostatní v ní mohou dál psát.", "cmDelD": "Skupina se smaže pro všechny: nikdo už v ní nemůže psát a chat zmizí."});
 Object.assign(L.uk,{"cmLvD": "З групи виходиш лише ти – решта може й далі писати.", "cmDelD": "Групу буде видалено для всіх: ніхто більше не зможе писати, а чат зникне."});
+Object.assign(L.pl,{"qcT": "Twój kod do kontaktów", "qcD": "Niech ktoś zeskanuje ten kod aparatem – otworzy się Squad (lub strona) i wyśle Ci prośbę o dodanie do kontaktów.", "qcB": "Mój kod QR", "qcBD": "Ktoś skanuje i dodaje Cię do kontaktów"});
+Object.assign(L.en,{"qcT": "Your contact code", "qcD": "Ask someone to scan this code with their camera – Squad (or the web page) opens and they can send you a contact request.", "qcB": "My QR code", "qcBD": "Someone scans it and adds you as a contact"});
+Object.assign(L.es,{"qcT": "Tu código de contacto", "qcD": "Pide a alguien que escanee este código con la cámara: se abre Squad (o la web) y te envía una solicitud de contacto.", "qcB": "Mi código QR", "qcBD": "Alguien lo escanea y te añade como contacto"});
+Object.assign(L.de,{"qcT": "Dein Kontakt-Code", "qcD": "Lass jemanden diesen Code mit der Kamera scannen – Squad (oder die Webseite) öffnet sich und eine Kontaktanfrage geht an dich.", "qcB": "Mein QR-Code", "qcBD": "Jemand scannt ihn und fügt dich als Kontakt hinzu"});
+Object.assign(L.fr,{"qcT": "Ton code de contact", "qcD": "Demande à quelqu'un de scanner ce code avec son appareil photo : Squad (ou la page web) s'ouvre et t'envoie une demande de contact.", "qcB": "Mon code QR", "qcBD": "Quelqu'un le scanne et t'ajoute comme contact"});
+Object.assign(L.it,{"qcT": "Il tuo codice contatto", "qcD": "Chiedi a qualcuno di scansionare il codice con la fotocamera: si apre Squad (o la pagina web) e ti invia una richiesta di contatto.", "qcB": "Il mio codice QR", "qcBD": "Qualcuno lo scansiona e ti aggiunge ai contatti"});
+Object.assign(L.cs,{"qcT": "Tvůj kód pro kontakty", "qcD": "Nech někoho naskenovat kód fotoaparátem – otevře se Squad (nebo web) a pošle ti žádost o kontakt.", "qcB": "Můj QR kód", "qcBD": "Někdo ho naskenuje a přidá si tě do kontaktů"});
+Object.assign(L.uk,{"qcT": "Твій код для контактів", "qcD": "Нехай хтось відскановує цей код камерою – відкриється Squad (або сайт) і надішле тобі запит на контакт.", "qcB": "Мій QR-код", "qcBD": "Хтось сканує й додає тебе до контактів"});
 const RXOK=["🔥","😂","👀","❤️","👍","😮"];
 const isBad=x=>{BADRX.lastIndex=0;return BADRX.test(String(x||""))};
 const clean=x=>String(x??"").replace(BADRX,w=>w[0]+"*".repeat(Math.max(2,w.length-1)));
