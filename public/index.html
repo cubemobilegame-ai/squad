@@ -2946,7 +2946,8 @@ function blockedView(){const u=authed();if(!u)return;
 
 /* ---------- REGULAMIN / PRYWATNOŚĆ / BEZPIECZEŃSTWO (dostępne też bez logowania) ---------- */
 function legalView(k){const ql=new URLSearchParams(location.search).get("lang"),LG=LEGAL[ql]?ql:LANG,D=(LEGAL[LG]||LEGAL.en)[k]||LEGAL.en[k],u=auth.currentUser,back=u&&!u.isAnonymous&&sget("nick")?"/me":"/";
-  view(`<div class="scr doc"><div class="hdr">${bk(back)}</div><h1 class="logo" style="font-size:30px">${D.t}</h1><div class="tldr">${D.tl}</div>${D.s.map(([h,p])=>`<h4>${h}</h4><p>${p}</p>`).join("")}${D.u?`<p style="margin-top:22px;font-size:12px;opacity:.6">${D.u}</p>`:""}</div>`)}
+  const rt=new URLSearchParams(location.search).get("ret")||"",site=/^https:\/\/getsquad\.web\.app(\/|$)/.test(rt)?rt:/^https:\/\/getsquad\.web\.app(\/|$)/.test(document.referrer)?document.referrer:"";
+  view(`<div class="scr doc"><div class="hdr">${site?`<button class="bk" onclick="location.href='${site}'" aria-label="${t("back")}">${sv('<path d="M15 5l-7 7 7 7"/>')}<span>${LANG==="pl"?"Wróć do strony":"Back to site"}</span></button>`:bk(back)}</div><h1 class="logo" style="font-size:30px">${D.t}</h1><div class="tldr">${D.tl}</div>${D.s.map(([h,p])=>`<h4>${h}</h4><p>${p}</p>`).join("")}${D.u?`<p style="margin-top:22px;font-size:12px;opacity:.6">${D.u}</p>`:""}</div>`)}
 
 function supportView(){const ql=new URLSearchParams(location.search).get("lang"),X=L[ql]&&L[ql].hlT?L[ql]:(L[LANG]&&L[LANG].hlT?L[LANG]:L.en),subj=encodeURIComponent("Squad support");
   view(`<div class="scr doc"><div class="hdr">${bk("/")}</div><div class="hlp"><img class="hli" src="/e/help3d.svg" alt=""><h1 class="logo" style="font-size:30px;margin:0">${X.hlT}</h1><div class="tldr" style="margin:0">${X.hlD}</div>${contactRows(subj,"")}</div></div>`);const hb=document.getElementById("hcp");if(hb)hb.onclick=copyMail}
