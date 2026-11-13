@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0b0b12"><meta name="color-scheme" content="light dark">
 <title>Squad ✦ Wypady z ekipą</title>
 <meta name="description" content="Wypad z ekipą w 15 sekund. Jeden link i odpowiedź IN / LATE / OUT.">
 <meta property="og:title" content="Squad – wypady z ekipą"><meta property="og:description" content="Wypad z ekipą w 15 sekund. Jeden link i odpowiedź IN / LATE / OUT."><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image"><meta property="og:image" content="https://getsquad.web.app/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://getsquad.web.app/"><meta name="twitter:image" content="https://getsquad.web.app/og.jpg">
@@ -75,7 +75,7 @@ a:focus-visible{outline:2px solid var(--pk);outline-offset:3px}
 body{position:relative}
 main,footer{position:relative;z-index:1}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 90%,transparent);border-bottom:1px solid color-mix(in srgb,var(--tx) 7%,transparent)}
+header{position:fixed;top:0;left:0;right:0;z-index:40;padding-top:env(safe-area-inset-top,0px);background:#0b0b12;color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}html{background:#0b0b12}body{padding-top:calc(72px + env(safe-area-inset-top,0px))}header .logo{color:#fff}header nav a{color:#c9c9d6}header nav a:hover,header nav a.on{color:#fff}header .lg{background:#1b1b26;color:#fff;border-color:#2b2b3a}
 .orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;transform:translate3d(0,var(--y,0px),0)}
 .o1{width:440px;height:440px;background:#ff4f8b;top:360px;left:-170px;opacity:.26}
 .o2{width:500px;height:500px;background:#6a7bff;top:1000px;right:-220px;opacity:.24}
@@ -347,10 +347,10 @@ background:radial-gradient(80% 70% at 0% 100%,color-mix(in oklab,var(--c2) 55%,#
 .wxk{position:absolute!important;left:28px;bottom:22px;margin:0;font-weight:900;font-size:clamp(30px,6vw,52px);letter-spacing:-.04em;line-height:1;color:#17171f}
 .wxdots{display:flex;gap:8px;justify-content:center}.wxdots i{width:8px;height:8px;border-radius:99px;background:rgba(40,30,60,.2);transition:width .4s,background .4s}.wxdots i.on{width:26px;background:#ff4f86}
 @media (prefers-reduced-motion:reduce){.wxfx,.wxfx *{animation:none!important}}
-.ads{padding-top:120px}.adc{max-width:760px;margin:0 auto}.adx{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:26px 0 14px}.adx div{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:18px}.adx b{display:block;font-size:17px;letter-spacing:-.02em;margin-bottom:6px}.adx span{display:block;font-size:14.5px;color:var(--mu);line-height:1.45}.adn{font-size:14px;color:var(--mu);margin:0 0 22px}
+.ads{max-width:820px}.ads .upd{font-size:17px;max-width:560px}.adc{max-width:760px;margin:0 auto}.adx{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:26px 0 14px}.adx div{background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:18px}.adx b{display:block;font-size:17px;letter-spacing:-.02em;margin-bottom:6px}.adx span{display:block;font-size:14.5px;color:var(--mu);line-height:1.45}.adn{font-size:14px;color:var(--mu);margin:0 0 22px}
 .adf{display:flex;flex-direction:column;gap:12px}.adf .r2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.adf input:not([type=checkbox]),.adf select,.adf textarea{width:100%;box-sizing:border-box;padding:16px 22px;border-radius:99px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;min-width:0}.adf textarea{border-radius:24px;resize:vertical}.adf select{appearance:none;-webkit-appearance:none}
 .adb{align-self:flex-start;border:0;cursor:pointer;padding:17px 34px;border-radius:99px;background:var(--g);color:#1a1016;font:inherit;font-weight:800}.adb[disabled]{opacity:.6}.ads-st{margin:0;font-weight:700;min-height:1.4em}
-@media (max-width:620px){.adf .r2{grid-template-columns:1fr}.ads{padding-top:84px}}
+@media (max-width:620px){.adf .r2{grid-template-columns:1fr}}
 html,body{overflow-x:clip;max-width:100%}.hx{overflow-x:clip}
 </style>
 </head>
@@ -418,9 +418,9 @@ html,body{overflow-x:clip;max-width:100%}.hx{overflow-x:clip}
 
 <div class="pop" id="pop" hidden role="dialog" aria-modal="true" aria-labelledby="ppt"><div class="ppb"><button type="button" class="ppx" id="ppc" aria-label="Zamknij">×</button><div class="ppe">🎉</div><h3 id="ppt" data-en="Newsletter">Newsletter</h3><p data-en="News about Squad, now and then. Leave your e-mail.">Nowości o Squad, od czasu do czasu. Zostaw e-mail.</p><form class="wl" id="wl2"><input class="em" type="email" required placeholder="twoj@email.pl" autocomplete="email" aria-label="E-mail"><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"><button type="submit" data-en="Subscribe">Zapisz się</button><label class="cons"><input type="checkbox" class="cs" required><span class="pl">Akceptuję <a href="https://squad-64cd5.web.app/terms" target="_blank" rel="noopener">Regulamin</a> i <a href="https://squad-64cd5.web.app/privacy" target="_blank" rel="noopener">Politykę prywatności</a> oraz zgadzam się na otrzymywanie od Cube Mobile Games newslettera z nowościami o Squad. Mogę zrezygnować w każdej chwili, pisząc na cubemobilegame@gmail.com.</span><span class="en">I accept the <a href="https://squad-64cd5.web.app/terms" target="_blank" rel="noopener">Terms</a> and <a href="https://squad-64cd5.web.app/privacy" target="_blank" rel="noopener">Privacy Policy</a> and agree to receive a newsletter with Squad news from Cube Mobile Games. I can unsubscribe any time by writing to cubemobilegame@gmail.com.</span></label></form><p class="soon wmsg" style="margin-top:10px"></p></div></div>
 </main>
-<section id="reklama" class="ads"><div class="w"><div class="adc">
-<h2 data-en="Advertise with Squad">Reklama w Squad</h2>
-<p class="sub" data-en="We are open to advertising partnerships. On our terms, but with respect for unique ad formats. Tell us what you have in mind.">Rozważymy współpracę reklamową. Na naszych warunkach, ale z poszanowaniem unikalnych form reklamy. Napisz, co masz na myśli.</p>
+<div class="page" id="reklama"><div class="w doc ads"><div class="adc">
+<h1 data-en="Advertise with Squad">Reklama w Squad</h1>
+<p class="upd" data-en="We are open to advertising partnerships. On our terms, but with respect for unique ad formats. Tell us what you have in mind.">Rozważymy współpracę reklamową. Na naszych warunkach, ale z poszanowaniem unikalnych form reklamy. Napisz, co masz na myśli.</p>
 <div class="adx"><div><b data-en="Partner drops">Partnerskie dropy</b><span data-en="Your place or event as a drop that crews actually join.">Twoje miejsce lub wydarzenie jako drop, do którego ekipy naprawdę dołączają.</span></div><div><b data-en="Sponsored categories">Sponsorowane kategorie</b><span data-en="A category or theme that fits your brand and our community.">Kategoria lub motyw, który pasuje do Twojej marki i naszej społeczności.</span></div><div><b data-en="Your own idea">Własny pomysł</b><span data-en="Surprise us. The best formats are the ones nobody has done yet.">Zaskocz nas. Najlepsze formaty to te, których jeszcze nikt nie zrobił.</span></div></div>
 <p class="adn" data-en="Squad is used by young people too, so we don't accept ads for alcohol, gambling or adult content, and we keep every ad clearly marked.">W Squad są też młodzi ludzie, dlatego nie przyjmujemy reklam alkoholu, hazardu ani treści dla dorosłych, a każda reklama jest wyraźnie oznaczona.</p>
 <form class="adf" id="adf"><div class="r2"><input name="name" required maxlength="80" data-pp="Imię i nazwisko" data-pe="Your name" placeholder="Imię i nazwisko" autocomplete="name"><input name="company" maxlength="80" data-pp="Firma / marka" data-pe="Company / brand" placeholder="Firma / marka" autocomplete="organization"></div>
@@ -430,10 +430,10 @@ html,body{overflow-x:clip;max-width:100%}.hx{overflow-x:clip}
 <input class="hp" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
 <label class="cons"><input type="checkbox" required><span data-en="I agree to be contacted about this inquiry. Details in the Privacy Policy.">Zgadzam się na kontakt w sprawie tego zapytania. Szczegóły w Polityce prywatności.</span></label>
 <button type="submit" class="adb" data-en="Send inquiry">Wyślij zapytanie</button><p class="ads-st" id="ads-st" role="status"></p></form>
-</div></div></section>
+</div></div></div>
 <footer><div class="w">
 <div><a class="logo" href="#home" style="font-size:22px">Squad<svg viewBox="0 0 24 24"><path d="M12 0c.8 6.6 4.6 10.8 12 12-7.400 1.200-11.200 5.400-12 12-.8-6.600-4.600-10.800-12-12C7.400 10.800 11.200 6.600 12 0z"/></svg></a><div style="margin-top:6px">© 2026 Squad. Wszystkie prawa zastrzeżone.</div></div>
-<nav><a href="https://squad-64cd5.web.app/privacy">Prywatność</a><a href="https://squad-64cd5.web.app/terms">Regulamin</a><a href="https://squad-64cd5.web.app/safety">Bezpieczeństwo</a><a href="#kontakt">Kontakt</a></nav>
+<nav><a href="https://squad-64cd5.web.app/privacy">Prywatność</a><a href="https://squad-64cd5.web.app/terms">Regulamin</a><a href="https://squad-64cd5.web.app/safety">Bezpieczeństwo</a><a href="#reklama" data-en="Advertise">Reklama</a><a href="#kontakt">Kontakt</a></nav>
 </div></footer>
 <script>
 function route(){var h=(location.hash||'#home').slice(1);if(!document.getElementById(h))h='home';
