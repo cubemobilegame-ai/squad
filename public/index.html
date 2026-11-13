@@ -192,7 +192,7 @@ html.pmlock,html.pmlock body{overflow:hidden;overscroll-behavior:none}.pmcard{po
 .pmc{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--g1,#ff4f86),var(--g2,#ff9a3d));border:3px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.55);color:#fff;font-weight:900;font-size:16px}
 .pubs{font-size:12.5px;line-height:1.4;font-weight:700;color:rgba(255,255,255,.7);background:rgba(93,180,255,.1);border:1px solid rgba(93,180,255,.25);border-radius:14px;padding:10px 12px;margin:4px 0 14px}
 .pubw{margin-bottom:18px}.pubm{display:flex;gap:8px;margin:-4px 6px 0;font-size:12.5px;font-weight:800}.pubm span{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.07)}.pubm .full{background:rgba(255,59,92,.18);color:#ff8fa3}
-.seatl{padding:12px 14px;border-radius:14px;background:rgba(93,180,255,.12);font-weight:800;font-size:14px}.seatl.full{background:rgba(255,59,92,.15);color:#ff8fa3}
+.seatl{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:14px;background:rgba(255,255,255,.9);color:#0b0b12;font-weight:800;font-size:13.5px}.seatl[hidden]{display:none}.seatl svg{flex:none}.seatl.full{background:rgba(255,143,163,.92);color:#3a0a14}
 .pubr{padding:22px 18px;margin:8px 0;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)}.pubr>img{display:block;width:64px;height:64px;margin:0 auto}.pubr h3{text-align:center;margin:10px 0 6px;font-size:20px;text-transform:none;letter-spacing:0;color:#fff}.prl{text-align:center;color:rgba(255,255,255,.7);font-size:14.5px;margin:0 0 14px;line-height:1.45}
 .pubr ol,.prs{list-style:none;padding:0;margin:0 0 14px}.pubr li,.prs li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07)}.pubr li span,.prs li span{font-size:22px;line-height:1.2}.pubr li p,.prs li p{margin:0;font-size:14.5px;line-height:1.45;color:rgba(255,255,255,.85)}
 .pru18{background:rgba(255,184,0,.12);border:1px solid rgba(255,184,0,.35);color:#ffd36b;border-radius:14px;padding:11px 13px;font-size:14px;font-weight:700;line-height:1.4;margin-bottom:10px}.pubs a{color:var(--acc);font-weight:800}
@@ -1943,11 +1943,11 @@ async function dropView(code){
   ${isHost?"":`<div class="inv" id="invb">${avc("l",hAv)}<span>${t("inv",esc(d.hostNick||"?"))}</span></div>`}
   <div id="cb"></div>
   <div id="crew" class="crew"></div>
+  <div id="seatl" hidden></div>
   <div id="rpl" ${isHost?"hidden":""}>
   <div class="asr" id="asr" ${sget("nick")?"":"hidden"}>${avc("mini",meAv())}<span>${t("asYou")} <b>${esc(sget("nick"))}</b></span><button class="lnk" id="chn">${t("change")}</button></div><input id="nick" placeholder="${t("nick")}…" maxlength="20" value="${esc(sget("nick"))}" ${sget("nick")?"hidden":""}>
   <h3>${t("quick")}</h3><div class="rsp ${closed()?"closed":""}" id="tr"><button class="rb in" data-s="in"><i class="rbi"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i><b>IN</b><small class="rbs">${t("subIn")}</small></button><button class="rb late" data-s="late"><i class="rbi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></i><b>LATE</b><small class="rbs rbl">+15 min</small></button><button class="rb out" data-s="out"><i class="rbi"><svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17"/></svg></i><b>OUT</b><small class="rbs">${t("subOut")}</small></button></div>
-  ${closed()?`<div class="note">${t("closed")}</div>`:""}</div>${isHost?`<div class="hostn">⭐ ${t("hostIn")}</div>`:""}
-  <div id="seatl" hidden></div>
+  ${closed()?`<div class="note">${t("closed")}</div>`:""}</div>
   <div id="alb"></div>
   <button id="oc" hidden></button><div id="chp" class="chp" hidden></div>
   <div class="acts4">
@@ -2017,7 +2017,7 @@ async function dropView(code){
     mine=P.find(p=>p.id===me())||null;
     {const cy=window.__carry;if(cy&&cy.code===code){window.__carry=null;try{history.replaceState(history.state,"","/d/"+code)}catch{}
       if(!mine&&["in","late","out"].includes(cy.s)&&!d.public&&!closed()&&cy.o!==me())(async()=>{try{const u=await ensureUser();remember(code);await setDoc(doc(ref,"participants",u.uid),{nickname:sget("nick"),status:cy.s,av:myAv(),ph:null,isGuest:u.isAnonymous,uid:u.uid,prev:cy.o||null,updatedAt:serverTimestamp()});if(u.isAnonymous)sset("guest","1");toast(t("carryOk"))}catch{}})()}}
-    if(d.public){const el=$("#seatl"),tk=taken(P),free=Math.max(0,(d.seats||0)-tk);if(el){el.hidden=false;el.className="seatl"+(free?"":" full");el.innerHTML=`🌍 ${t("pubTag")} · 🎟️ ${free?t("pubFree",free,d.seats):t("pubFull")}`}}
+    if(d.public){const el=$("#seatl"),tk=taken(P),free=Math.max(0,(d.seats||0)-tk);if(el){el.hidden=false;el.className="seatl"+(free?"":" full");el.innerHTML=`<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg><span>${t("pubTag")} · ${free?t("pubFree",free,d.seats):t("pubFull")}</span>`}}
     $("#cb").innerHTML=card({...d,id:code},P,false,logged?(isHost?"host":mine?mine.status:"inv"):null);tick();{const ib=$("#invb");if(ib)ib.style.display=mine&&(mine.status==="in"||mine.status==="late")?"none":""}try{wxApply()}catch{}{const cr=$("#crew");if(cr)cr.innerHTML=crewHtml(d,P)};
     $("#tr").classList.toggle("has",!!mine);document.querySelectorAll(".rb").forEach(b=>b.classList.toggle("sel",mine?.status===b.dataset.s));const lsm=$("#tr .rbl");if(lsm)lsm.textContent="+"+(mine?.status==="late"&&mine.etaMin?mine.etaMin:15)+" min";
     {const can=isHost||(mine&&["in","late"].includes(mine.status));const cp=$("#chp");if(cp){cp.hidden=!can;if(can&&!chpOn){chpOn=true;
