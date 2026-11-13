@@ -1935,13 +1935,13 @@ async function dropView(code){
     const my=PH.filter(p=>p.authorId===me()),can=!!mine&&my.length<1;
     el.innerHTML=`<div class="sech"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span></div><p class="hint s">${t("alHint")}</p>
     <div class="agrid">${PH.map((p,i)=>`<button class="aph" data-i="${i}" style="--r:${(hs(p.id)%7)-3}deg"><div class="phw"><i style="background-image:url('${esc(p.url)}')"></i><img src="${esc(p.url)}" alt=""></div><span>${esc(p.nickname)}</span></button>`).join("")}${can?`<button class="aadd" id="aadd">${sv(SI.cam)}<b>${t("alAdd")}</b><small>${t("alLeft",3-my.length)}</small></button>`:""}</div>
-    ${PH.length?`<button class="cta" id="col" style="margin-top:4px">${t("alCol")}</button>`:can?"":`<p class="mut">${t("alEmpty")}</p>`}<input type="file" id="af" accept="image/*" hidden>`;
+    ${can?`<p class="hint s">${t("alNote")}</p>`:""}${PH.length?`<button class="cta" id="col" style="margin-top:4px">${t("alCol")}</button>`:can?"":`<p class="mut">${t("alEmpty")}</p>`}${PH.length>1?`<button class="ghost" id="rnd" style="margin-top:8px">${t("alRnd")}</button>`:""}<input type="file" id="af" accept="image/*" hidden>`;
     el.querySelectorAll(".aph").forEach(b=>b.onclick=()=>{vib(8);lightbox(PH,+b.dataset.i,{ref,code})});
     const ad=el.querySelector("#aadd");if(ad){ad.onclick=()=>{vib(8);el.querySelector("#af").click()};el.querySelector("#af").onchange=async e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;
       const u=await (stor?compressImg(f,1080):compressImg(f,900,.7)).catch(()=>null);if(!u)return toast(t("phErr"));
       const used=new Set(my.map(p=>p.id)),id=[1,2,3].map(n=>me()+"_"+n).find(x=>!used.has(x));if(!id)return;
       toast(t("upIng"));const url=await putImg("drops/"+code+"/"+id+".jpg",u).catch(()=>null);if(!url)return toast(t("upErr"));await setDoc(doc(ref,"photos",id),{authorId:me(),nickname:mine.nickname,url,createdAt:serverTimestamp()});bump("photos");sset("albd_"+code,"1");sfx("photo");vib(20);toast(t("alAdded"))}}
-    const cb=el.querySelector("#col");if(cb)cb.onclick=()=>openCollage({...d,id:code,P},PH)};
+    const cb=el.querySelector("#col");if(cb)cb.onclick=()=>openCollage({...d,id:code,P},PH);const rb=el.querySelector("#rnd");if(rb)rb.onclick=()=>{vib(12);openCollage({...d,id:code,P},[PH[Math.floor(Math.random()*PH.length)]])}};
   every(()=>{if(closed()!==wasC){wasC=closed();drawAlbum()}},1000);every(tick,1000);
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#acc"))$("#acc").onclick=accGo;if($("#rp"))$("#rp").onclick=()=>report({target:"drop",code});
   $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);if(isHost)$("#cl").onclick=()=>cpLink(code);$("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};
@@ -2727,6 +2727,14 @@ const BAD=["kurw","chuj","huj","pierdol","pierdal","jeba","jebi","jebać","jebac
 "kurv","píč","pič","hovno","prdel","čurák","curak","mrdk","šuk","zmrd",
 "хуй","хуе","пизд","бляд","блят","єба","еба","ёб","сучар","сучк","мудак","підар","підор","наху","охуе","поху","заеб","уеб"];
 const BADRX=new RegExp("(?<![\\p{L}])("+BAD.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")[\\p{L}]*","giu");
+Object.assign(L.pl,{"alNote": "💡 Najlepiej wspólne zdjęcie całej ekipy – appka może wylosować jedno jako zdjęcie dropa.", "alRnd": "🎲 Wylosuj zdjęcie dropa"});
+Object.assign(L.en,{"alNote": "💡 Best is one group photo with everyone – the app can pick one at random as the drop photo.", "alRnd": "🎲 Pick a random drop photo"});
+Object.assign(L.es,{"alNote": "💡 Lo mejor es una foto de todo el grupo: la app puede elegir una al azar como foto del drop.", "alRnd": "🎲 Elegir foto del drop al azar"});
+Object.assign(L.de,{"alNote": "💡 Am besten ein Foto von der ganzen Crew – die App kann eines zufällig als Drop-Foto auswählen.", "alRnd": "🎲 Zufälliges Drop-Foto wählen"});
+Object.assign(L.fr,{"alNote": "💡 Le mieux : une photo de toute la bande – l'appli peut en tirer une au hasard comme photo du drop.", "alRnd": "🎲 Tirer la photo du drop au hasard"});
+Object.assign(L.it,{"alNote": "💡 Meglio una foto di tutta la crew – l'app può sceglierne una a caso come foto del drop.", "alRnd": "🎲 Scegli a caso la foto del drop"});
+Object.assign(L.cs,{"alNote": "💡 Nejlepší je společná fotka celé party – appka jednu náhodně vybere jako fotku dropu.", "alRnd": "🎲 Náhodně vybrat fotku dropu"});
+Object.assign(L.uk,{"alNote": "💡 Найкраще – спільне фото всієї компанії: застосунок може випадково обрати одне як фото дропу.", "alRnd": "🎲 Випадкове фото дропу"});
 const RXOK=["🔥","😂","👀","❤️","👍","😮"];
 const isBad=x=>{BADRX.lastIndex=0;return BADRX.test(String(x||""))};
 const clean=x=>String(x??"").replace(BADRX,w=>w[0]+"*".repeat(Math.max(2,w.length-1)));
