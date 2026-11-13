@@ -513,7 +513,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .ppk .ppo{position:absolute;left:14px;right:14px;width:auto;box-sizing:border-box;margin:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:1002;height:56px;border:0;border-radius:18px;background:#0b0b12;color:#fff;font:800 15px Brico,BricoCyr,system-ui;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.4)}.ppk .ppo:active{transform:scale(.98)}
 .newbtn.nb2.sm{padding:9px 11px;gap:11px;border-radius:20px}.newbtn.nb2.sm .nbp{width:40px;height:40px;border-radius:14px}.newbtn.nb2.sm .nbp svg{width:18px;height:18px}.newbtn.nb2.sm .nbt b{font-size:17px}.newbtn.nb2.sm .nbt small{font-size:12px}.newbtn.nb2.sm .nba{width:32px;height:32px}
 .newbtn.nb2.sm2{padding:6px 10px;gap:9px;border-radius:16px;margin-top:14px!important}.newbtn.nb2.sm2 .nbp{width:32px;height:32px;border-radius:11px}.newbtn.nb2.sm2 .nbp svg{width:15px;height:15px}.newbtn.nb2.sm2 .nbt b{font-size:15px}.newbtn.nb2.sm2 .nbt small{display:none}.newbtn.nb2.sm2 .nba{width:26px;height:26px}.newbtn.nb2.sm2 .nba svg{width:13px;height:13px}
-.pubt .pc{zoom:.95}.pubt .pubs{font-size:11.5px;padding:8px 11px;margin:2px 0 10px}.pubt .tabs.pvt{margin-bottom:8px!important}.pubt .tabs.pvt button{padding:6px 4px!important}
+.pubt .pc{zoom:.95}.pubt .pubg{padding:18px 16px;margin:6px 0}.pubt .pubg img{width:56px;height:56px}.pubt .pubg h3{font-size:17px;margin:8px 0 4px}.pubt .pubg p{font-size:13px;line-height:1.4}.pubt .pubg .cta{padding:13px 16px;margin-top:14px;font-size:13px;border-radius:16px}.pubt .pubs{font-size:11.5px;padding:8px 11px;margin:2px 0 10px}.pubt .tabs.pvt{margin-bottom:8px!important}.pubt .tabs.pvt button{padding:6px 4px!important}
 .newbtn.nb2:active{transform:scale(.98);box-shadow:0 10px 24px -16px rgba(var(--accr),.55)}
 .nbp{flex:none;width:50px;height:50px;border-radius:17px;background:#15151c;color:#fff;display:grid;place-items:center;box-shadow:0 8px 18px -8px rgba(0,0,0,.5)}
 .nbt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.nbt b{font:700 21px Brico,BricoCyr,system-ui;letter-spacing:-.02em;line-height:1.1}.nbt small{font:600 13px Brico,BricoCyr,system-ui;color:rgba(21,21,28,.62);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1553,7 +1553,7 @@ function home(){
   const draw=()=>{
     const all=live().filter(loaded),r=d=>roleOf(d),G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
     const tab=homeTab||"mine";
-    $("#nd").classList.toggle("sm",tab==="pub");$("#nd").classList.toggle("sm2",tab==="pub"&&pvMode()==="map");$("#list").classList.toggle("pubt",tab==="pub");
+    $("#list").classList.toggle("pubt",tab==="pub");
     $("#tb").innerHTML=["inv","mine","pub"].map(k=>`<button class="${k===tab?"on":""}" data-t="${k}">${TSV[k]}<span>${t(TK[k])} <i class="n">${k==="pub"?(PUB.list?PUB.list.length:""):k==="inv"&&G.inv.length?"":G[k].length}</i></span>${k==="inv"&&(G.inv.length+S.ginv.length)?`<b class="bd">${G.inv.length+S.ginv.length}</b>`:""}</button>`).join("");
     document.querySelectorAll("#tb button").forEach(b=>b.onclick=()=>{vib(8);homeTab=b.dataset.t;draw()});
     document.documentElement.classList.remove("pmlock");
