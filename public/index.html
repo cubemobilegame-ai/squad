@@ -1829,7 +1829,7 @@ async function groupView(code){
     rememberG(code);if(!u.isAnonymous&&!S.groups.has(code))S.addGroup?.(code,g);vib([30,40,30]);jbusy=false;go("/gc/"+code)};
   let arm=0;$("#lv").onclick=async()=>{const lb=owner?t("grDel"):t("grLeave");
     if(!arm){arm=1;$("#lv").textContent=t("delSure");setTimeout(()=>{arm=0;const e=$("#lv");if(e)e.textContent=lb},4000);return}
-    if(owner)await deleteDoc(ref);else await deleteDoc(doc(ref,"members",me()));
+    if(owner)await wipeGroup(code);else await deleteDoc(doc(ref,"members",me()));
     forgetG(code);S.groups.delete(code);changed();vib([40,30,40]);toast(t(owner?"grDeleted":"grLeft"));go(logged?"/chats":"/g/"+code)};
   unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({...y.data(),id:y.id}));mine=M.find(m=>m.id===me())||null;
     $("#mem").innerHTML=M.map(p=>`<span class="mchip" data-u="${esc(p.id)}">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
