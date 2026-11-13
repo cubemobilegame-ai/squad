@@ -1198,7 +1198,7 @@ const setLang=l=>{sset("lang",l);LANG=l;document.documentElement.lang=l;route()}
 
 const $=s=>document.querySelector(s),A=$("#app");
 const OCC=["bday","nameday","eighteen","anniv","holiday","other"],REP=["no","w","2w","m"],ymd=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
-const CATS=["pizza","sport","house","club","pub","food","coffee","cinema","gaming","gallery","walk","trip","biz","occ","other"];
+const CATS=["biz","sport","house","club","pub","food","coffee","cinema","gaming","gallery","walk","trip","occ","other"];
 const COLORS=["#FF4F86","#A855F7","#38BDF8","#FF5CAA","#FFD84D"];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const vib=p=>sget("n_snd")!=="0"&&navigator.vibrate?.(p),pad=n=>String(n).padStart(2,"0");
@@ -1882,7 +1882,7 @@ function notifView(){
 /* ---------- NEW DROP ---------- */
 function newView(){
   const u=authed();if(!u)return;if(u.isAnonymous){go("/");setTimeout(()=>guestUp("/new"),200);return}
-  let cat="pizza",day=0,sur=false,th=Math.floor(Math.random()*THEMES.length),rep="no",dsel=null,pub=false,seats=8;const t0=new Date(Date.now()+36e5);
+  let cat="biz",day=0,sur=false,th=Math.floor(Math.random()*THEMES.length),rep="no",dsel=null,pub=false,seats=8;const t0=new Date(Date.now()+36e5);
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:38px">${t("newDrop")}</h1>
   <h3>${t("what")}</h3><div class="tiles">${CATS.map(k=>`<div class="tile ${k===cat?"sel":""}" data-c="${k}">${ic(k)}${t("c_"+k)}</div>`).join("")}</div>
   <div class="chips" id="occ" hidden>${OCC.map((k,i)=>`<button class="chip" data-o="${i}">${t("o_"+k)}</button>`).join("")}</div>
