@@ -28,13 +28,31 @@ private func loadDrops(now: Date) -> [WDrop] {
     return all.filter { $0.start.addingTimeInterval(2 * 3600) > now }.sorted { $0.ts < $1.ts }
 }
 
-private let pl = (Locale.current.languageCode ?? "en") == "pl"
+/// Język z listy preferowanych języków systemu (Locale.current w rozszerzeniu zależy od lokalizacji zawartych w pakiecie i potrafi zwrócić angielski).
+private let lang: String = {
+    let p = (Locale.preferredLanguages.first ?? "en").lowercased()
+    let c = String(p.prefix(2))
+    return ["pl", "en", "es", "de", "fr", "it", "cs", "uk"].contains(c) ? c : "en"
+}()
+private let loc = Locale(identifier: Locale.preferredLanguages.first ?? "en")
+private let STR: [String: [String: String]] = [
+    "now": ["pl": "TRWA TERAZ", "en": "HAPPENING NOW", "es": "EN CURSO", "de": "LÄUFT JETZT", "fr": "EN COURS", "it": "IN CORSO", "cs": "PROBÍHÁ", "uk": "ТРИВАЄ ЗАРАЗ"],
+    "none": ["pl": "Brak nadchodzących dropów", "en": "No upcoming drops", "es": "No hay drops próximos", "de": "Keine anstehenden Drops", "fr": "Aucun drop à venir", "it": "Nessun drop in arrivo", "cs": "Žádné nadcházející dropy", "uk": "Немає майбутніх дропів"],
+    "noneHint": ["pl": "Stwórz drop i zbierz ekipę ✨", "en": "Create a drop and get the crew ✨", "es": "Crea un drop y reúne a la crew ✨", "de": "Erstelle einen Drop und trommle die Crew zusammen ✨", "fr": "Crée un drop et rassemble la team ✨", "it": "Crea un drop e raduna la crew ✨", "cs": "Vytvoř drop a svolej partu ✨", "uk": "Створи дроп і зібери компанію ✨"],
+    "starts": ["pl": "ZA", "en": "IN", "es": "EN", "de": "IN", "fr": "DANS", "it": "TRA", "cs": "ZA", "uk": "ЧЕРЕЗ"],
+    "host": ["pl": "TWÓJ DROP", "en": "YOUR DROP", "es": "TU DROP", "de": "DEIN DROP", "fr": "TON DROP", "it": "IL TUO DROP", "cs": "TVŮJ DROP", "uk": "ТВІЙ ДРОП"],
+    "today": ["pl": "Dziś", "en": "Today", "es": "Hoy", "de": "Heute", "fr": "Aujourd'hui", "it": "Oggi", "cs": "Dnes", "uk": "Сьогодні"],
+    "tomorrow": ["pl": "Jutro", "en": "Tomorrow", "es": "Mañana", "de": "Morgen", "fr": "Demain", "it": "Domani", "cs": "Zítra", "uk": "Завтра"],
+    "more": ["pl": "Więcej dropów wkrótce", "en": "More drops soon", "es": "Más drops pronto", "de": "Bald mehr Drops", "fr": "Bientôt d'autres drops", "it": "Presto altri drop", "cs": "Brzy další dropy", "uk": "Незабаром більше дропів"],
+    "desc": ["pl": "Najbliższy drop z odliczaniem.", "en": "Your next drop with a countdown.", "es": "Tu próximo drop con cuenta atrás.", "de": "Dein nächster Drop mit Countdown.", "fr": "Ton prochain drop avec compte à rebours.", "it": "Il tuo prossimo drop con conto alla rovescia.", "cs": "Tvůj nejbližší drop s odpočtem.", "uk": "Твій найближчий дроп з відліком."],
+]
+private func tr(_ k: String) -> String { STR[k]?[lang] ?? STR[k]?["en"] ?? k }
 private enum Tx {
-    static let now = pl ? "TRWA TERAZ" : "HAPPENING NOW"
-    static let none = pl ? "Brak nadchodzących dropów" : "No upcoming drops"
-    static let noneHint = pl ? "Stwórz drop i zbierz ekipę ✨" : "Create a drop and get the crew ✨"
-    static let starts = pl ? "ZA" : "IN"
-    static let host = pl ? "TWÓJ DROP" : "YOUR DROP"
+    static var now: String { tr("now") }
+    static var none: String { tr("none") }
+    static var noneHint: String { tr("noneHint") }
+    static var starts: String { tr("starts") }
+    static var host: String { tr("host") }
 }
 
 struct Provider: TimelineProvider {
@@ -84,12 +102,12 @@ extension View {
 
 private func dayLabel(_ d: Date) -> String {
     let f = DateFormatter()
-    f.locale = Locale.current
+    f.locale = loc
     let cal = Calendar.current
     f.dateFormat = "HH:mm"
     let time = f.string(from: d)
-    if cal.isDateInToday(d) { return (pl ? "Dziś " : "Today ") + time }
-    if cal.isDateInTomorrow(d) { return (pl ? "Jutro " : "Tomorrow ") + time }
+    if cal.isDateInToday(d) { return tr("today") + " " + time }
+    if cal.isDateInTomorrow(d) { return tr("tomorrow") + " " + time }
     f.setLocalizedDateFormatFromTemplate("EEE d MMM")
     return f.string(from: d) + " · " + time
 }
@@ -216,7 +234,7 @@ struct SquadWidgetView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             let rest = Array(entry.drops.dropFirst().prefix(3))
                             if rest.isEmpty {
-                                Text(pl ? "Więcej dropów wkrótce" : "More drops soon")
+                                Text(tr("more"))
                                     .font(.system(size: 12, weight: .semibold, design: .rounded)).foregroundColor(.white.opacity(0.55))
                             } else {
                                 ForEach(rest) { d in
@@ -245,7 +263,7 @@ struct SquadWidget: Widget {
             SquadWidgetView(entry: entry)
         }
         .configurationDisplayName("Squad")
-        .description(pl ? "Najbliższy drop z odliczaniem." : "Your next drop with a countdown.")
+        .description(Text(tr("desc")))
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
