@@ -1649,7 +1649,6 @@ function pubMap(el,safe){
   loadLeaflet().then(()=>{
     if(!P.map){const c=PUB.pos||{la:52.23,lo:21.01};
       P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomSnap:.25,zoomControl:false,attributionControl:true});
-      window.L.control.zoom({position:"bottomright"}).addTo(P.map);
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(P.map);
       P.cl=window.L.markerClusterGroup({animate:false,animateAddingMarkers:false,maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
       P.map.addLayer(P.cl);
