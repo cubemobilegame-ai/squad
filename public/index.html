@@ -1625,10 +1625,10 @@ const PVI={bk:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" strok
 const pvToggle=()=>`<div class="tabs pvt"><button data-pv="list" class="${pvMode()==="list"?"on":""}">${PVI.list}<span>${t("pvList")}</span></button><button data-pv="map" class="${pvMode()==="map"?"on":""}">${PVI.map}<span>${t("pvMap")}</span></button></div>`;
 const LL={p:null};
 const loadLeaflet=()=>window.L&&window.L.markerClusterGroup?Promise.resolve():LL.p||(LL.p=new Promise((ok,no)=>{const B="https://cdnjs.cloudflare.com/ajax/libs/";
-  const css=h=>{const l=document.createElement("link");l.rel="stylesheet";l.href=h;document.head.append(l)};
+  const css=h=>new Promise(r=>{const l=document.createElement("link");l.rel="stylesheet";l.href=h;l.onload=l.onerror=()=>r();document.head.append(l);setTimeout(r,5000)});
   const js=u=>new Promise((r,j)=>{const e=document.createElement("script");e.src=u;e.onload=r;e.onerror=()=>j(new Error("leaflet"));document.head.append(e)});
-  css(B+"leaflet/1.9.4/leaflet.css");css(B+"leaflet.markercluster/1.5.3/MarkerCluster.css");
-  js(B+"leaflet/1.9.4/leaflet.js").then(()=>js(B+"leaflet.markercluster/1.5.3/leaflet.markercluster.js")).then(ok,e=>{LL.p=null;no(e)})}));
+  const cs=Promise.all([css(B+"leaflet/1.9.4/leaflet.css"),css(B+"leaflet.markercluster/1.5.3/MarkerCluster.css")]);
+  js(B+"leaflet/1.9.4/leaflet.js").then(()=>js(B+"leaflet.markercluster/1.5.3/leaflet.markercluster.js")).then(()=>cs).then(ok,e=>{LL.p=null;no(e)})}));
 /* komórki geohash (precyzja 4: 0.3516° × 0.1758°) pokrywające prostokąt widoku */
 const cellsBox=(s,w,n,e)=>{const dla=180/1024,dlo=360/1024,S=new Set(),cl=(v,m)=>Math.max(-m,Math.min(m,v));for(let la=Math.floor(s/dla)*dla+dla/2;la<n+dla;la+=dla)for(let lo=Math.floor(w/dlo)*dlo+dlo/2;lo<e+dlo;lo+=dlo)S.add(geohash(cl(la,89.9),cl(lo,179.9),4));return[...S]};
 function pubMap(el,safe){
@@ -1896,7 +1896,7 @@ function newView(){
   const cmShow=async ll=>{await loadLeaflet();const w=$("#cmw");if(!w)return;
     if(!cmM){const h=document.createElement("div");h.className="dmap pmm";const pn=w.querySelector(".pin");if(pn)pn.remove();w.prepend(h);cmM=window.L.map(h,{center:ll,zoom:14,zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(cmM);cmK=window.L.marker(ll,{icon:cmI(),interactive:false,keyboard:false}).addTo(cmM)}
-    else cmK.setLatLng(ll);cmM.setView(ll,14,{animate:false});setTimeout(()=>cmM.invalidateSize(),30)};
+    else cmK.setLatLng(ll);cmM.invalidateSize(false);cmM.setView(ll,14,{animate:false});setTimeout(()=>cmM.invalidateSize(),30)};
   $("#cmx").onclick=e=>{e.stopPropagation();const q=$("#pl").value.trim(),sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null,st0=cmPt||sp;
     pinPicker({ll:st0?[st0.la,st0.lo]:[52,19.4],zoom:st0?(cmPt?17:14):6,cat,th:THEMES[th],onOk:c=>{cmQ=q;cmPt={la:c.la,lo:c.lo,q};cmShow([c.la,c.lo]);$("#cmst").textContent=t("ppSet")}})};
   const cmGo=async()=>{const q=$("#pl").value.trim(),st=$("#cmst");if(!st)return;if(!q){cmQ="";cmPt=null;st.textContent="";return}if(q===cmQ)return;cmQ=q;const my=++cmSeq;st.textContent=t("cmFind");
@@ -1974,7 +1974,7 @@ async function dropView(code){
   $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);(async()=>{try{const w=$("#dmw");if(!w)return;const hd=hidden(d);if(surHid(d)){const e=$("#surt"),f=()=>{if(!e)return;const r=Math.max(0,d.startsAt.toMillis()-36e5-Date.now()),z=x=>String(x).padStart(2,"0"),sc=Math.floor(r/1e3);e.textContent=z(Math.floor(sc/3600))+":"+z(Math.floor(sc%3600/60))+":"+z(sc%60)};every(f,1000)}if(hd)return;let pt=DEMO?{la:52.2297,lo:21.0122}:(d.pt&&isFinite(+d.pt.la)&&isFinite(+d.pt.lo)?{la:+d.pt.la,lo:+d.pt.lo}:await placeGeo(d.place,wxPt(d)||PUB.pos));
   if(!pt&&d.wx&&d.wx.p===d.place)pt={la:d.wx.la,lo:d.wx.lo};
   if(!pt&&!DEMO){const pl=String(d.place||"").trim(),parts=pl.split(/[,;|–—]|\s-\s/).map(x=>x.trim()).filter(Boolean);for(const q of [pl,...parts.slice().reverse()]){if(!q||pt)continue;pt=await wxGeo(q)}}
-  if(!pt||!w.isConnected)return;await loadLeaflet();if(!w.isConnected)return;const h=document.createElement("div");h.className="dmap pmm";w.querySelectorAll(".pin").forEach(x=>x.remove());w.prepend(h);if(hd){const k=hs(code),an=(k%360)*Math.PI/180,ds=700+(k%8)*100,cl=Math.cos(pt.la*Math.PI/180)||1;pt={la:pt.la+ds*Math.cos(an)/111320,lo:pt.lo+ds*Math.sin(an)/(111320*cl)}}const m=window.L.map(h,{center:[pt.la,pt.lo],zoom:15,zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(m);
+  if(!pt||!w.isConnected)return;await loadLeaflet();if(!w.isConnected)return;const h=document.createElement("div");h.className="dmap pmm";w.querySelectorAll(".pin").forEach(x=>x.remove());w.prepend(h);if(hd){const k=hs(code),an=(k%360)*Math.PI/180,ds=700+(k%8)*100,cl=Math.cos(pt.la*Math.PI/180)||1;pt={la:pt.la+ds*Math.cos(an)/111320,lo:pt.lo+ds*Math.sin(an)/(111320*cl)}}const m=window.L.map(h,{center:[pt.la,pt.lo],zoom:15,zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});m.invalidateSize(false);window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(m);
   if(hd){const [c1]=thm({...d,id:code}),ci=window.L.circle([pt.la,pt.lo],{radius:4000,color:c1,weight:2,dashArray:"6 6",fillColor:c1,fillOpacity:.14,interactive:false}).addTo(m);m.fitBounds(ci.getBounds(),{padding:[6,6],animate:false})}
   else{m.fitBounds(window.L.circle([pt.la,pt.lo],{radius:4000}).getBounds(),{padding:[6,6],animate:false});window.L.marker([pt.la,pt.lo],{icon:pubMapIcon({...d,id:code}),interactive:false,keyboard:false}).addTo(m);w.dataset.la=pt.la;w.dataset.lo=pt.lo}
   setTimeout(()=>m.invalidateSize(),50)}catch(e){}})();if($("#mex"))$("#mex").onclick=e=>{e.stopPropagation();const w=$("#dmw"),la=+w.dataset.la,lo=+w.dataset.lo,ok=isFinite(la)&&w.dataset.la!=null,sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null;if(Date.now()>=start)return;pinPicker({ll:ok?[la,lo]:sp?[sp.la,sp.lo]:[52,19.4],zoom:ok?17:sp?13:6,cat:d.category,th:thm({...d,id:code}),theme:d.theme,onOk:async c=>{try{await setDoc(ref,{pt:{la:c.la,lo:c.lo}},{merge:true});vib([20,30,20]);toast(t("edSaved"));dropView(code)}catch{toast(t("oops"))}}})};if($("#adr")&&!hidden(d))$("#adr").onclick=isHost?()=>editPlace(code,ref,d):async()=>{vib(15);try{await navigator.clipboard.writeText(d.place||"")}catch{}toast(t("adrC"))};if($("#dmw")&&!hidden(d))$("#dmw").onclick=()=>navSheet(d);$("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};
@@ -2680,11 +2680,13 @@ const WXT={
  cs:{c:"Jasno",p:"Polojasno",o:"Zataženo",f:"Mlha",d:"Mrholení",r:"Déšť",s:"Sníh",t:"Bouřka",soon:"Předpověď se objeví brzy",now:"Teď"},
  uk:{c:"Ясно",p:"Мінлива хмарність",o:"Хмарно",f:"Туман",d:"Мряка",r:"Дощ",s:"Сніг",t:"Гроза",soon:"Прогноз з’явиться незабаром",now:"Зараз"}};
 const wxKind=c=>c===0?"c":c<=2?"p":c===3?"o":c<=48?"f":c<=57?"d":c<=67?"r":c<=77?"s":c<=82?"r":c<=86?"s":"t";
-const placeGeo=async(place,near)=>{place=String(place||"").trim();if(!place)return null;const K="pg:"+place.toLowerCase();try{const c=JSON.parse(localStorage.getItem(K)||"null");if(c&&c.la!=null)return c}catch{}
-  try{let u="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language="+LANG+"&q="+encodeURIComponent(place);if(near&&near.la!=null)u+="&viewbox="+[near.lo-.5,near.la+.5,near.lo+.5,near.la-.5].join(",");
-    const j=await (await fetch(u)).json(),x=j&&j[0];if(x){const r={la:+x.lat,lo:+x.lon};try{localStorage.setItem(K,JSON.stringify(r))}catch{}return r}}catch(e){console.warn("nominatim",e)}
+const placeGeo=async(place,near)=>{place=String(place||"").trim();if(!place)return null;const K="pg2:"+place.toLowerCase();try{const c=JSON.parse(localStorage.getItem(K)||"null");if(c&&c.la!=null)return c}catch{}
+  const CC={pl:"pl",cs:"cz",de:"de,at,ch",fr:"fr,be,ch",it:"it",es:"es",uk:"ua"}[LANG]||"",keep=r=>{try{localStorage.setItem(K,JSON.stringify(r))}catch{}return r};
+  const nm=async extra=>{const j=await (await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language="+LANG+"&q="+encodeURIComponent(place)+extra)).json();return j&&j[0]?{la:+j[0].lat,lo:+j[0].lon}:null};
+  const tries=[];if(near&&near.la!=null)tries.push("&bounded=1&viewbox="+[near.lo-1,near.la+.7,near.lo+1,near.la-.7].join(","));if(CC)tries.push("&countrycodes="+CC);tries.push("");
+  for(const ex of tries){try{const r=await nm(ex);if(r)return keep(r)}catch(e){console.warn("nominatim",e)}}
   try{let u="https://photon.komoot.io/api/?limit=1&lang="+(["de","fr","en"].includes(LANG)?LANG:"en")+"&q="+encodeURIComponent(place);if(near&&near.la!=null)u+="&lat="+near.la+"&lon="+near.lo;
-    const j=await (await fetch(u)).json(),c=j&&j.features&&j.features[0]&&j.features[0].geometry&&j.features[0].geometry.coordinates;if(c){const r={la:+c[1],lo:+c[0]};try{localStorage.setItem(K,JSON.stringify(r))}catch{}return r}}catch(e){console.warn("photon",e)}
+    const j=await (await fetch(u)).json(),c=j&&j.features&&j.features[0]&&j.features[0].geometry&&j.features[0].geometry.coordinates;if(c)return keep({la:+c[1],lo:+c[0]})}catch(e){console.warn("photon",e)}
   return null};
 const wxGeo=async place=>{try{const r=await fetch("https://geocoding-api.open-meteo.com/v1/search?count=1&format=json&language="+LANG+"&name="+encodeURIComponent(place));const j=await r.json(),x=j.results&&j.results[0];return x?{la:x.latitude,lo:x.longitude}:null}catch{return null}};
 let WXS=null;
