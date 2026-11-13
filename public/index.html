@@ -1894,9 +1894,9 @@ function newView(){
   <div id="seatw" hidden><h3>${t("seats")}</h3><div class="chips" id="seats">${[4,6,8,10,15,20,30].map(n=>`<button class="chip ${n===8?"on":""}" data-n="${n}">${n}</button>`).join("")}</div></div></div>`:""}
   <h3>${t("rep")}</h3><div class="chips" id="rp">${REP.map((k,i)=>`<button class="chip ${i?"":"on"}" data-r="${k}">${t("rep_"+k)}</button>`).join("")}</div>
   <div class="sw">${t("sur")}<div class="tg" id="sw"></div></div><p class="hint s">${t("surD")}</p>
-  <h3>${t("where")}</h3><div class="map" id="cmw"><div class="pin">${PIN}</div><button type="button" class="mexp" id="cmx" aria-label="map">${PVI.fs}</button><label class="sb">${sv('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>')}<input id="pl" placeholder="${t("search")}" maxlength="80" autocomplete="off"></label></div><div class="sug" id="sug"></div><p class="mut" id="cmst" style="font-size:12px;margin:8px 4px 0;min-height:16px"></p><p class="mut" style="font-size:11.5px;margin:2px 4px 0;line-height:1.4;opacity:.85">${t("mapHint")}</p>
+  <h3>${t("where")}</h3><div class="map" id="cmw"><div class="pin">${PIN}</div><button type="button" class="mexp" id="cmx" aria-label="map">${PVI.fs}</button><label class="sb">${sv('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>')}<input id="pl" placeholder="${t("search")}" maxlength="80" autocomplete="off"></label></div><p class="mut" style="font-size:11.5px;margin:8px 6px 0;line-height:1.4;opacity:.8">${t("mapHint")}</p><div class="sug" id="sug"></div><p class="mut" id="cmst" style="font-size:12px;margin:8px 4px 0;min-height:16px"></p>
   
-  <p class="mut" style="font-size:12px;margin:14px 4px 0">${t("note")}</p>
+  <div style="height:1px;background:rgba(255,255,255,.07);margin:20px 4px 0"></div><p class="mut" style="font-size:12px;margin:14px 4px 0">${t("note")}</p>
   <button class="cta" id="go" style="margin-top:12px">${t("send")}</button></div>`);
   const wheel=(el,i)=>{const mark=()=>{const k=Math.round(el.scrollTop/40);[...el.children].forEach((c,j)=>c.classList.toggle("on",j===k))};el.scrollTop=i*40;mark();el.onscroll=mark};
   wheel($("#hh"),t0.getHours());wheel($("#mm"),Math.min(11,Math.round(t0.getMinutes()/5)));
@@ -1930,7 +1930,8 @@ function newView(){
   const sgFind=async q=>{const my=++sgSeq;if(DEMO||q.length<3){sgBox.innerHTML="";return}
     try{const sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:cmMe||null;let u="https://photon.komoot.io/api/?limit=15&q="+encodeURIComponent(q);const BB={pl:[14.1,49,24.2,54.9],cs:[12,48.5,18.9,51.1],de:[5.8,45.8,17.2,55.1],fr:[-5.2,41.3,9.6,51.1],it:[6.6,35.5,18.6,47.1],es:[-9.4,35.9,4.4,43.9],uk:[22.1,44.3,40.3,52.4]};
       const u0=u,gj=async x=>{try{return((await (await fetch(x)).json()).features)||[]}catch{return[]}};
-      let fs=[];if(sp){fs=await gj(u0+"&location_bias_scale=.8&bbox="+[sp.lo-3,sp.la-2.2,sp.lo+3,sp.la+2.2].map(x=>x.toFixed(2)).join(","))}
+      let fs=[];const bx=(r,k)=>"&bbox="+[sp.lo-r*k,sp.la-r,sp.lo+r*k,sp.la+r].map(x=>x.toFixed(3)).join(","),kk=1/Math.cos(sp?sp.la*Math.PI/180:0);
+      if(sp){const rs=await Promise.all([gj(u0+"&location_bias_scale=1"+bx(.35,kk)),gj(u0+"&location_bias_scale=.9"+bx(1.2,kk)),gj(u0+"&location_bias_scale=.8"+bx(3,kk))]);fs=[].concat(rs[0],rs[1],rs[2])}
       if(fs.length<3){const more=await gj(u0+(BB[LANG]?"&bbox="+BB[LANG].join(","):""));fs=fs.concat(more)}
       const j={features:fs};if(my!==sgSeq||!sgBox.isConnected)return;const seen={},cc={pl:"PL",cs:"CZ",de:"DE",fr:"FR",it:"IT",es:"ES",uk:"UA"}[LANG];
       const L2=((j&&j.features)||[]).map(f=>{const p=f.properties||{},g=f.geometry&&f.geometry.coordinates;if(!g)return null;const st=[p.street,p.housenumber].filter(Boolean).join(" "),ct=p.city||p.town||p.village||p.district||p.county||"",nm=p.name||st;if(!nm)return null;
