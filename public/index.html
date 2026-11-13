@@ -1995,6 +1995,7 @@ async function dropView(code){
 /* ---------- CZAT GRUPOWY (drop albo grupa) – zero DM, reakcje, zgłaszanie i blokowanie ---------- */
 const RX=["🔥","😂","👀","❤️","👍","😮"];
 async function chatView(code,g){
+  const BK=!g&&window.__from==="/d/"+code?"/d/"+code:"/chats";
   view(`<div class="scr"><p class="mut">${t("load")}</p></div>`);
   /* szybki start: dane dropa/grupy mamy już z listy (na żywo) – nie czekamy na serwer */
   let R=null;const C0=g?S.groups.get(code):S.items.get(code);
@@ -2004,7 +2005,7 @@ async function chatView(code,g){
   const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];
   const [hc1,hc2]=g?THEMES[hs(code)%THEMES.length]:thm({...d,id:code}),hst=!g&&d.startsAt?.toMillis?d.startsAt.toMillis():0;
   view(`<div class="scr chs sk" style="--c1:${hc1};--c2:${hc2}"><div class="chero" ${g?`onclick="go('/g/${code}')"`:`onclick="go('/d/${code}')"`}><i class="gr"></i>
-    <button class="hbk" onclick="event.stopPropagation();go('/chats')" aria-label="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="hbk" onclick="event.stopPropagation();go('${BK}')" aria-label="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
     <button class="hmo" onclick="event.stopPropagation();chatMenu(${g?1:0},'${code}')" aria-label="${t("cmMore")}">⋯</button>
     <div class="horb"></div><img class="hem" src="${g?"/e/handshake.webp":e3(d.category)}" style="${eo(g?"/e/handshake.webp":e3(d.category))}" alt="">
     <div class="htx">${hst?`<span class="tm hpill" data-t="${hst}" data-x="${d.expiresAt.toMillis()}"></span>`:`<span class="hpill">${t("grInfo")}</span>`}<h2>${esc(clean(title))}</h2>${g?"":`<small><span class="nw">🕒 ${when(hst)}</span>${plc(d)?` · <span class="nw">📍 ${esc(plc(d))}</span>`:""}</small>`}<small id="cnt" class="hcnt"></small></div></div>
