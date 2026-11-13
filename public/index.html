@@ -1890,7 +1890,7 @@ function newView(){
   <h3>${t("color")}</h3><div class="sws">${THEMES.map((c,i)=>`<button class="swc ${i==th?"sel":""}" data-i="${i}" style="background:linear-gradient(135deg,${c[0]},${c[1]})"></button>`).join("")}</div>
   <h3>${t("when")}</h3><div class="when"><div class="wheels"><div class="wh" id="hh">${[...Array(24)].map((_,i)=>`<div>${pad(i)}</div>`).join("")}</div><b style="font-size:26px">:</b><div class="wh" id="mm">${[...Array(12)].map((_,i)=>`<div>${pad(i*5)}</div>`).join("")}</div></div>
   <div class="dayb"><button class="sel" data-d="0">${t("today")}</button><button data-d="1">${t("tomorrow")}</button><button data-d="x" class="dpb"><span id="dlab">📅 ${t("pickD")}</span><input type="date" id="dpk" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></button></div></div>
-  ${pubOk()?`<div id="pubw"><div class="sw">🌍 ${t("pubMk")}<div class="tg" id="pbs"></div></div><p class="hint s">${t("pubMkD")}</p>
+  ${pubOk()?`<div id="pubw"${cat==="biz"?" hidden":""}><div class="sw">🌍 ${t("pubMk")}<div class="tg" id="pbs"></div></div><p class="hint s">${t("pubMkD")}</p>
   <div id="seatw" hidden><h3>${t("seats")}</h3><div class="chips" id="seats">${[4,6,8,10,15,20,30].map(n=>`<button class="chip ${n===8?"on":""}" data-n="${n}">${n}</button>`).join("")}</div></div></div>`:""}
   <h3>${t("rep")}</h3><div class="chips" id="rp">${REP.map((k,i)=>`<button class="chip ${i?"":"on"}" data-r="${k}">${t("rep_"+k)}</button>`).join("")}</div>
   <div class="sw">${t("sur")}<div class="tg" id="sw"></div></div><p class="hint s">${t("surD")}</p>
@@ -1900,7 +1900,7 @@ function newView(){
   <button class="cta" id="go" style="margin-top:12px">${t("send")}</button></div>`);
   const wheel=(el,i)=>{const mark=()=>{const k=Math.round(el.scrollTop/40);[...el.children].forEach((c,j)=>c.classList.toggle("on",j===k))};el.scrollTop=i*40;mark();el.onscroll=mark};
   wheel($("#hh"),t0.getHours());wheel($("#mm"),Math.min(11,Math.round(t0.getMinutes()/5)));
-  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";if($("#pubw")){const oc=cat==="occ";$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
+  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";if($("#pubw")){const oc=cat==="occ"||cat==="biz";$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
   const selDay=b=>document.querySelectorAll(".dayb button").forEach(x=>x.classList.toggle("sel",x===b));
   document.querySelectorAll(".dayb button").forEach(b=>b.onclick=e=>{vib(8);if(b.dataset.d==="x")return;day=+b.dataset.d;dsel=null;$("#dlab").textContent="📅 "+t("pickD");selDay(b)});
   $("#dpk").onclick=e=>{e.stopPropagation();try{e.target.showPicker()}catch{}};
