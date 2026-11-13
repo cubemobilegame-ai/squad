@@ -30,6 +30,7 @@ jobs:
         run: |
           B="${GITHUB_SHA::10}"
           sed -i "s/__BUILD__/$B/" public/index.html
+          sed -i "s/__BUILDN__/${GITHUB_RUN_NUMBER}/" public/index.html
           echo "$B" > public/build.txt
       - name: Podgląd linku dla zaproszeń do grup (grupa.html)
         run: node tools/og-grupa.mjs
