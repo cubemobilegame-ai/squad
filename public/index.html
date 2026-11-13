@@ -1199,7 +1199,7 @@ const remember=c=>{const j=joined().filter(x=>x!==c);j.push(c);sset("joined",JSO
 const hs=s=>[...String(s)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
 const left=ms=>ms>=36e5?`${ms/36e5|0}h ${ms%36e5/6e4|0}m`:`${Math.max(1,Math.ceil(ms/6e4))}m`;
 const when=ms=>{const d=new Date(ms),dd=Math.round((new Date(d).setHours(0,0,0,0)-new Date().setHours(0,0,0,0))/864e5);return`${pad(d.getHours())}:${pad(d.getMinutes())} (${dd==0?(d.getHours()>=17?t("tonL"):t("todL")):dd==1?t("tmrL"):d.toLocaleDateString(LANG,{day:"numeric",month:"short"})})`};
-const hidden=d=>d.surprise&&Date.now()<d.startsAt.toMillis()&&auth.currentUser?.uid!==d.hostId;
+const surHid=d=>d.surprise&&Date.now()<d.startsAt.toMillis()-36e5,hidden=d=>surHid(d)&&auth.currentUser?.uid!==d.hostId;
 const plc=d=>hidden(d)?t("surP"):d.place;
 
 /* ---- ikony (line-art) ---- */
@@ -1994,6 +1994,7 @@ async function dropView(code){
   unsubs.push(onSnapshot(collection(ref,"photos"),s=>{PH=s.docs.map(x=>({...x.data(),id:x.id})).sort((a,b)=>(a.createdAt?.toMillis?.()||0)-(b.createdAt?.toMillis?.()||0));drawAlbum()},()=>{}));
   const sig=x=>[x.title,x.place,x.startsAt?.toMillis?.(),!!x.surprise].join("|"),sig0=sig(d);
   unsubs.push(onSnapshot(ref,x=>{if(!x.exists())return gone();if(sig(x.data())!==sig0){if(!isHost)toast(t("dropChanged"));dropView(code)}},()=>{}));
+  if(!isHost&&d.surprise){const ms=d.startsAt.toMillis()-36e5-Date.now();if(ms>0&&ms<2e9){const TT=setTimeout(()=>{if(gp()==="/d/"+code)dropView(code)},ms+500);unsubs.push(()=>clearTimeout(TT))}}
   drawAlbum();
   if(pendingShare===code){pendingShare=null;setTimeout(()=>{if(gp()==="/d/"+code)openShare("d",{...d,id:code,P})},450)}
 }
@@ -2721,7 +2722,7 @@ function navSheet(d){vib(10);const w=$("#dmw"),pt=w&&w.dataset.la?{la:w.dataset.
   const s=sheet(`<h2>${t("navH")}</h2><p class="hint">${esc(d.place||"")}<br>${t("navD")}</p>${ios?`<a class="calb gw" id="nA" href="${ap}" target="_blank" rel="noopener">${ico}<span>${t("navA")}</span></a>`:""}<a class="calb ${ios?"ab":"gw"}" id="nG" href="${ga}" target="_blank" rel="noopener">${ico}<span>${t("navG")}</span></a>`);
   s.querySelectorAll("#nA,#nG").forEach(a=>a.onclick=e=>{if(IOSAPP){e.preventDefault();location.href=a.href}setTimeout(()=>s.close(),300)})}
 function calSheet(d,url){vib(10);const st=d.startsAt.toMillis(),en=st+2*36e5,z=x=>new Date(x).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,""),
-  where=d.surprise&&Date.now()<st?t("surP"):(d.place||""),title=String(d.title||"Squad"),det=t("calDet")+" "+url;
+  where=surHid(d)?t("surP"):(d.place||""),title=String(d.title||"Squad"),det=t("calDet")+" "+url;
   const g="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(title)+"&dates="+z(st)+"/"+z(en)+"&location="+encodeURIComponent(where)+"&details="+encodeURIComponent(det);
   const esc2=x=>String(x).replace(/[\;,]/g,m=>"\\"+m).replace(/\n/g,"\\n");
   const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Squad//PL","BEGIN:VEVENT","UID:"+(d.code||Date.now())+"@squad","DTSTAMP:"+z(Date.now()),"DTSTART:"+z(st),"DTEND:"+z(en),"SUMMARY:"+esc2(title),"LOCATION:"+esc2(where),"DESCRIPTION:"+esc2(det),"URL:"+url,"BEGIN:VALARM","TRIGGER:-PT30M","ACTION:DISPLAY","DESCRIPTION:"+esc2(title),"END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
