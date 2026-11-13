@@ -1931,12 +1931,12 @@ function newView(){
     try{const sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:cmMe||null;let u="https://photon.komoot.io/api/?limit=15&q="+encodeURIComponent(q);const BB={pl:[14.1,49,24.2,54.9],cs:[12,48.5,18.9,51.1],de:[5.8,45.8,17.2,55.1],fr:[-5.2,41.3,9.6,51.1],it:[6.6,35.5,18.6,47.1],es:[-9.4,35.9,4.4,43.9],uk:[22.1,44.3,40.3,52.4]};
       const u0=u,gj=async x=>{try{return((await (await fetch(x)).json()).features)||[]}catch{return[]}};
       let fs=[];const bx=(r,k)=>"&bbox="+[sp.lo-r*k,sp.la-r,sp.lo+r*k,sp.la+r].map(x=>x.toFixed(3)).join(","),kk=1/Math.cos(sp?sp.la*Math.PI/180:0);
-      if(sp){const rs=await Promise.all([gj(u0+"&location_bias_scale=1"+bx(.35,kk)),gj(u0+"&location_bias_scale=.9"+bx(1.2,kk)),gj(u0+"&location_bias_scale=.8"+bx(3,kk))]);fs=[].concat(rs[0],rs[1],rs[2])}
-      if(fs.length<3){const more=await gj(u0+(BB[LANG]?"&bbox="+BB[LANG].join(","):""));fs=fs.concat(more)}
+      if(sp){const rs=await Promise.all([gj(u0+"&location_bias_scale=1"+bx(.09,kk)),gj(u0+"&location_bias_scale=.9"+bx(.27,kk)),gj(u0+"&location_bias_scale=.8"+bx(.45,kk))]);fs=[].concat(rs[0],rs[1],rs[2])}
+      {const more=await gj(u0+(BB[LANG]?"&bbox="+BB[LANG].join(","):""));fs=fs.concat(more)}
       const j={features:fs};if(my!==sgSeq||!sgBox.isConnected)return;const seen={},cc={pl:"PL",cs:"CZ",de:"DE",fr:"FR",it:"IT",es:"ES",uk:"UA"}[LANG];
       const L2=((j&&j.features)||[]).map(f=>{const p=f.properties||{},g=f.geometry&&f.geometry.coordinates;if(!g)return null;const st=[p.street,p.housenumber].filter(Boolean).join(" "),ct=p.city||p.town||p.village||p.district||p.county||"",nm=p.name||st;if(!nm)return null;
         return{la:+g[1],lo:+g[0],nm,sub:[p.name&&st?st:"",ct,p.country&&p.countrycode!==cc?p.country:""].filter(Boolean).join(", "),cc:p.countrycode,ct}}).filter(x=>x&&!seen[x.nm+x.sub]&&(seen[x.nm+x.sub]=1));
-      if(sp){const ql=q.toLowerCase(),dk=x=>Math.hypot((x.la-sp.la)*111,(x.lo-sp.lo)*111*Math.cos(sp.la*Math.PI/180));L2.forEach(x=>{x.d=dk(x);x.m=x.ct&&ql.includes(x.ct.toLowerCase())?0:1});L2.sort((a,b)=>a.m-b.m||a.d-b.d)}
+      if(sp){const ql=q.toLowerCase(),dk=x=>Math.hypot((x.la-sp.la)*111,(x.lo-sp.lo)*111*Math.cos(sp.la*Math.PI/180));L2.forEach(x=>{x.d=dk(x);x.m=x.ct&&ql.includes(x.ct.toLowerCase())?0:1});L2.sort((a,b)=>a.m-b.m||a.d-b.d);for(let i=L2.length-1;i>=0;i--)if(L2[i].m&&L2[i].d>50&&L2.some(y=>y.m===0||y.d<=50))L2.splice(i,1)}
       L2.length=Math.min(L2.length,5);
       sgBox.innerHTML=L2.map((x,i)=>`<button type="button" data-i="${i}"><b>${esc(x.nm)}</b><span>${esc(x.sub)}</span></button>`).join("");
       sgBox.querySelectorAll("button").forEach(b=>b.onclick=()=>{const x=L2[+b.dataset.i],q2=(x.nm+(x.sub?", "+x.sub.split(", ")[0]:"")).slice(0,80);vib(10);sgSeq++;sgBox.innerHTML="";clearTimeout(cmT);$("#pl").value=q2;cmQ=q2;cmOk=q2;cmPt={la:x.la,lo:x.lo,q:q2,ap:0};cmShow([x.la,x.lo],17);$("#cmst").textContent=t("ppSet");$("#pl").blur()})}catch(e){}};
