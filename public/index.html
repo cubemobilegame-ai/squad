@@ -2376,19 +2376,21 @@ async function makeCollage(o,PH,st={}){await fontsReady();
   const ay=y+36,ab=H-(post?150:250),L9=PH.slice(0,9),n=Math.max(1,L9.length);
   /* układ „justified”: ramki dopasowane do orientacji zdjęć (pion / poziom / kwadrat), zdjęcia bez przycinania */
   const AR=[];for(const p of L9){try{const im=await loadImg(p.url);AR.push(Math.max(.6,Math.min(1.8,im.naturalWidth/im.naturalHeight)))}catch{AR.push(1)}}
-  const GP=22,PD=16,CP=54,WR=W-80,AH=ab-ay;
+  const DN=L9.length>=5,GP=DN?12:22,PD=DN?9:16,CP=DN?0:54,WR=W-(DN?56:80),AH=ab-ay;
   const plan=(cuts)=>{const rows=[];let a=0;for(const b of [...cuts,L9.length])if(b>a){rows.push([a,b]);a=b}
     let tot=-GP;const R=rows.map(([a,b])=>{const k=b-a;let sa=0;for(let i=a;i<b;i++)sa+=AR[i];const hp=(WR-GP*(k-1)-2*PD*k)/sa,rh=hp+2*PD+CP;tot+=rh+GP;return{a,b,hp,rh}});return{R,tot}};
   let best=null;const N=L9.length;
   for(let m=0;m<1<<Math.max(0,N-1);m++){const cuts=[];let ok=true,run=1;for(let i=1;i<N;i++){if(m>>(i-1)&1){cuts.push(i);run=1}else run++;if(run>4){ok=false;break}}if(!ok)continue;
-    const pl=plan(cuts),sc=AH/pl.tot,score=sc>=1?1-(sc-1)*.35:sc;if(!best||score>best.score)best={...pl,score,sc}}
+    const pl=plan(cuts),sc=AH/pl.tot,score=(sc>=1?1-(sc-1)*.35:sc)-.12*(Math.max(...pl.R.map(r=>r.hp))/Math.min(...pl.R.map(r=>r.hp))-1);if(!best||score>best.score)best={...pl,score,sc}}
   const S=Math.min(best.sc,1),cells=[];let cy0=ay+(AH-best.tot*S)/2;
-  for(const r of best.R){const hp=r.hp*S,rh=r.rh*S;let widths=[];for(let i=r.a;i<r.b;i++)widths.push((AR[i]*r.hp+2*PD)*S);const rw=widths.reduce((q,v)=>q+v,0)+GP*S*(widths.length-1);let cx0=40+(WR-rw)/2;
+  for(const r of best.R){const hp=r.hp*S,rh=r.rh*S;let widths=[];for(let i=r.a;i<r.b;i++)widths.push((AR[i]*r.hp+2*PD)*S);const rw=widths.reduce((q,v)=>q+v,0)+GP*S*(widths.length-1);let cx0=(W-rw)/2;
     widths.forEach((w,k)=>{cells.push({i:r.a+k,x:cx0,y:cy0,w,h:rh,hp});cx0+=w+GP*S});cy0+=rh+GP*S}
   for(const c of cells){const p=L9[c.i],fw=c.w,fh=c.h,pad=PD*S,cap=CP*S,rot=((hs(p.id)%9)-4)*.013;
     x.save();x.translate(c.x+fw/2,c.y+fh/2);x.rotate(rot);x.shadowColor="rgba(0,0,0,.45)";x.shadowBlur=26;x.shadowOffsetY=10;x.fillStyle="#fbfaf6";x.fillRect(-fw/2,-fh/2,fw,fh);x.shadowColor="transparent";
     await K.fit(p.url,-fw/2+pad,-fh/2+pad,fw-2*pad,fh-2*pad-cap);
-    const cs=Math.min(30,cap*.55);K.txt(p.nickname,-fw/2+pad+4,fh/2-cap/2+cs*.35,K.fitF(p.nickname,fw-2*pad-60,800,cs,14),"#2a2a33","left");K.txt(nc(p.authorId)?"♥":"",fw/2-pad-6,fh/2-cap/2+cs*.35,F(900,cs),"#ff4d5e","right");
+    if(DN){const cs=Math.max(15,Math.min(24,fw*.075)),nm=String(p.nickname||"")+(nc(p.authorId)?" ♥":"");x.font=F(800,cs);const tw=Math.min(x.measureText(nm).width,fw-2*pad-24),bw=tw+20,bh=cs+14,bx=-fw/2+pad+8,by=fh/2-pad-8-bh;
+      K.rr(bx,by,bw,bh,bh/2);x.fillStyle="rgba(251,250,246,.92)";x.fill();K.txt(nm,bx+10,by+bh/2+cs*.35,K.fitF(nm,fw-2*pad-44,800,cs,12),"#2a2a33","left")}
+    else{const cs=Math.min(30,cap*.55);K.txt(p.nickname,-fw/2+pad+4,fh/2-cap/2+cs*.35,K.fitF(p.nickname,fw-2*pad-60,800,cs,14),"#2a2a33","left");K.txt(nc(p.authorId)?"♥":"",fw/2-pad-6,fh/2-cap/2+cs*.35,F(900,cs),"#ff4d5e","right")}
     x.restore()}
   const names=[...new Set([...(o.P||[]).filter(p=>p.status!=="out").map(p=>p.nickname),...L9.map(p=>p.nickname)])],crew="👥 "+names.slice(0,6).join(", ")+(names.length>6?" +"+(names.length-6):"");
   K.txt(crew,W/2,ab+(post?58:70),K.fitF(crew,W-120,800,32,20),pl.fg);
