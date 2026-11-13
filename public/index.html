@@ -286,7 +286,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .getapp{margin-top:26px;padding:20px 18px;border-radius:24px;background:linear-gradient(135deg,rgba(var(--accr),.14),rgba(56,189,248,.12));border:1px solid rgba(var(--accr),.35);text-align:center}
 .getapp b{display:block;font-size:17px;font-weight:900;text-transform:uppercase}.getapp small{display:block;color:rgba(255,255,255,.72);margin-top:6px;font-size:13px;line-height:1.4}.getapp .cta{margin-top:14px}
 .rep{display:block;margin:22px auto 0;font-size:12px}.rep svg{width:13px;height:13px;vertical-align:-2px}
-.m time{display:block;font-size:10px;opacity:.5;margin-top:3px;text-align:right;font-weight:700}.m[data-a]{cursor:pointer}.m.hid>div{font-style:italic;opacity:.5;font-size:13px}
+.m time{display:block;font-size:10px;opacity:.5;margin-top:3px;text-align:right;font-weight:700}.m[data-a]{cursor:pointer}.mchip[data-u]{cursor:pointer}.m.hid>div{font-style:italic;opacity:.5;font-size:13px}
 .ghost svg{width:16px;height:16px;vertical-align:-3px;margin-right:6px}.cta svg{width:18px;height:18px;vertical-align:-3px;margin-right:6px}.cp svg{width:12px;height:12px;vertical-align:-2px;margin-right:2px}
 .inv>span{min-width:0;overflow-wrap:anywhere}
 #rot{display:none;position:fixed;inset:0;z-index:99;background:#0b0b12;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;font-weight:900;padding:20px}
@@ -1830,8 +1830,9 @@ async function groupView(code){
     if(!arm){arm=1;$("#lv").textContent=t("delSure");setTimeout(()=>{arm=0;const e=$("#lv");if(e)e.textContent=lb},4000);return}
     if(owner)await deleteDoc(ref);else await deleteDoc(doc(ref,"members",me()));
     forgetG(code);S.groups.delete(code);changed();vib([40,30,40]);toast(t(owner?"grDeleted":"grLeft"));go(logged?"/chats":"/g/"+code)};
-  unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({id:y.id,...y.data()}));mine=M.find(m=>m.id===me())||null;
-    $("#mem").innerHTML=M.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
+  unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({...y.data(),id:y.id}));mine=M.find(m=>m.id===me())||null;
+    $("#mem").innerHTML=M.map(p=>`<span class="mchip" data-u="${esc(p.id)}">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
+    $("#mem").onclick=e=>{const c=e.target.closest("[data-u]");if(!c)return;const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id))userActions(q,{target:"user",chat:"group",code})};
     $("#jb").hidden=!!mine;$("#oc").hidden=!mine;$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;
     if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
@@ -2096,7 +2097,8 @@ async function chatView(code,g){
   B.onclick=e=>{const c=e.target.closest(".rxc");if(c&&mine){const el=c.closest(".m");react(el.dataset.i,c.dataset.e,el)}};
   unsubs.push(onSnapshot(collection(ref,pc),sn=>{
     P=dedupP(sn.docs.map(x=>({...x.data(),id:x.id})));mine=P.find(p=>p.id===me())||null;
-    $("#mem").innerHTML=P.map(p=>`<span class="mchip">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("");
+    $("#mem").innerHTML=P.map(p=>`<span class="mchip" data-u="${esc(p.id)}">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("");
+    $("#mem").onclick=e=>{const c=e.target.closest("[data-u]");if(!c)return;const q=P.find(x=>x.id===c.dataset.u);if(q&&!isMe(q.id))userActions(q,{target:"user",chat:g?"group":"drop",code},drawM)};
     $("#cnt").textContent=t("members",P.length)+" · "+(g?t("grChH"):t("chH")).split(" · ")[0];
     if(!mine){const f=$("#mf");if(f){f.outerHTML=`<button class="cta" id="jn" style="margin:0">${t(g?"joinG":"joinC")}</button>`;$("#jn").onclick=()=>go((g?"/g/":"/d/")+code)}return}
     if(!g&&owner!==me()&&mine.status==="out"){go("/d/"+code);return}
@@ -2735,6 +2737,14 @@ Object.assign(L.fr,{"alNote": "💡 Le mieux : une photo de toute la bande – l
 Object.assign(L.it,{"alNote": "💡 Meglio una foto di tutta la crew – l'app può sceglierne una a caso come foto del drop.", "alRnd": "🎲 Scegli a caso la foto del drop"});
 Object.assign(L.cs,{"alNote": "💡 Nejlepší je společná fotka celé party – appka jednu náhodně vybere jako fotku dropu.", "alRnd": "🎲 Náhodně vybrat fotku dropu"});
 Object.assign(L.uk,{"alNote": "💡 Найкраще – спільне фото всієї компанії: застосунок може випадково обрати одне як фото дропу.", "alRnd": "🎲 Випадкове фото дропу"});
+Object.assign(L.pl,{"repUser": "Zgłoś użytkownika"});
+Object.assign(L.en,{"repUser": "Report user"});
+Object.assign(L.es,{"repUser": "Denunciar usuario"});
+Object.assign(L.de,{"repUser": "Nutzer melden"});
+Object.assign(L.fr,{"repUser": "Signaler l'utilisateur"});
+Object.assign(L.it,{"repUser": "Segnala utente"});
+Object.assign(L.cs,{"repUser": "Nahlásit uživatele"});
+Object.assign(L.uk,{"repUser": "Поскаржитися на користувача"});
 const RXOK=["🔥","😂","👀","❤️","👍","😮"];
 const isBad=x=>{BADRX.lastIndex=0;return BADRX.test(String(x||""))};
 const clean=x=>String(x??"").replace(BADRX,w=>w[0]+"*".repeat(Math.max(2,w.length-1)));
@@ -2772,6 +2782,12 @@ function report(info){const s=sheet(`<h2>${t("repT")}</h2><div class="acts">${RE
   s.querySelectorAll("[data-r]").forEach(b=>b.onclick=async()=>{s.close();if(!b.dataset.r)return;
     try{const u=(await ensureUser());const rr=await addDoc(collection(db,"reports"),{...info,reason:b.dataset.r,reporterId:u.uid,createdAt:serverTimestamp()});pushNow({kind:"report",id:rr.id})}catch{}
     vib(15);toast(t("repDone"))})}
+function userActions(u,info,redraw){vib(10);const bl=isBlk(u.id);
+  const s=sheet(`<h2>${esc(u.nickname)}</h2><div class="acts"><button id="ur">${sv(SI.flag)}${t("repUser")}</button><button id="ub" class="danger">${sv(BAN)}${bl?t("unblock"):t("blockU",esc(u.nickname))}</button><button id="uc">${t("cancel")}</button></div>`);
+  s.querySelector("#uc").onclick=s.close;
+  s.querySelector("#ur").onclick=()=>{s.close();report({...info,authorId:u.id,nickname:u.nickname})};
+  s.querySelector("#ub").onclick=()=>{s.close();if(bl){sset("blocked",JSON.stringify(blockedL().filter(b=>b.id!==u.id)));saveProfile();vib(10);toast(t("unblocked"))}
+    else{sset("blocked",JSON.stringify([...blockedL().filter(b=>b.id!==u.id),{id:u.id,nick:u.nickname,av:u.av??null,ph:u.ph||null}]));saveProfile();vib(20);toast(t("blkDone",u.nickname))}redraw?.()}}
 function msgActions(m,P,info,redrawChat){vib(10);
   const s=sheet(`<h2>${t("mActT",esc(m.nickname))}</h2><p class="qt">${esc(m.text)}</p><div class="acts"><button id="ar">${sv(SI.flag)}${t("repMsg")}</button><button id="ab" class="danger">${sv(BAN)}${t("blockU",esc(m.nickname))}</button><button id="ac">${t("cancel")}</button></div>`);
   s.querySelector("#ac").onclick=s.close;
