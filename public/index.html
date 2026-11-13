@@ -1315,7 +1315,7 @@ function watch(){const u=auth.currentUser;if(!u||(u.isAnonymous&&sget("guest")!=
     W.push(onSnapshot(query(collection(db,"groups",g.id,"messages"),orderBy("createdAt"),limit(100)),x=>{S.ms["g_"+g.id]=visM("g_"+g.id,x.docs.map(y=>y.data()));changed()},()=>{}))});changed()};
   S.addGroup=(c,g)=>{S.groups.set(c,{id:c,...g});gupd()};
   W.push(onSnapshot(query(collection(db,"groups"),where("ownerId","==",u.uid)),x=>{const ids=new Set(x.docs.map(y=>y.id));S.groups.forEach((g,k)=>{if(g.__h&&!ids.has(k))S.groups.delete(k)});x.docs.forEach(y=>S.groups.set(y.id,{id:y.id,__h:1,...y.data()}));gupd()},()=>{}));
-  joinedG().forEach(async c=>{try{const r=await getDoc(doc(db,"groups",c));if(r.exists()&&!S.groups.has(c)){S.groups.set(c,{id:c,...r.data()});gupd()}}catch{}});
+  joinedG().forEach(async c=>{try{const r=await getDoc(doc(db,"groups",c));if(!r.exists()){forgetG(c);return}if(S.groups.has(c))return;const gd=r.data();let mem=gd.ownerId===u.uid;if(!mem){try{mem=(await getDoc(doc(db,"groups",c,"members",u.uid))).exists()}catch{mem=true}}if(!mem){forgetG(c);return}S.groups.set(c,{id:c,...gd});gupd()}catch{}});
   /* KONTAKTY + zaproszenia od kontaktów (tylko konta, nie goście) */
   if(!u.isAnonymous){
     W.push(onSnapshot(collection(db,"users",u.uid,"contacts"),x=>{S.con=new Map(x.docs.map(y=>[y.id,{id:y.id,...y.data()}]));changed()},()=>{}));
@@ -1716,7 +1716,7 @@ function profileView(){
 /* ---------- PROFIL ZAPISANY RAZ: ksywka + awatar ---------- */
 const isGuestOk=()=>sget("guest")==="1";
 const authed=()=>{const u=auth.currentUser;if(!u||(u.isAnonymous&&!isGuestOk())){login();return null}if(!sget("nick")){onboard();return null}return u};
-const joinedG=()=>{try{return JSON.parse(sget("groups")||"[]")}catch{return[]}},rememberG=c=>{const j=joinedG().filter(x=>x!==c);j.push(c);sset("groups",JSON.stringify(j.slice(-50)));try{syncSoon()}catch{}},forgetG=c=>{sset("groups",JSON.stringify(joinedG().filter(x=>x!==c)));try{syncSoon()}catch{}};
+const joinedG=()=>{try{return JSON.parse(sget("groups")||"[]")}catch{return[]}},rememberG=c=>{const j=joinedG().filter(x=>x!==c);j.push(c);sset("groups",JSON.stringify(j.slice(-50)));try{syncSoon()}catch{}},forgetG=c=>{sset("groups",JSON.stringify(joinedG().filter(x=>x!==c)));try{const u=auth.currentUser;if(!DEMO&&FB.arrayRemove&&u&&!u.isAnonymous)setDoc(doc(db,"users",u.uid),{groups:FB.arrayRemove(c)},{merge:true}).catch(()=>{})}catch{}try{syncSoon()}catch{}};
 /* zmiana ksywki: raz na 14 dni (podszywanie się, spam). Pierwsze ustawienie zawsze wolno. */
 const NICK_D=14;const nickTry=n=>{const cur=sget("nick");if(!cur||n===cur)return true;const at=+sget("nickAt")||0,left=Math.ceil((at+NICK_D*864e5-Date.now())/864e5);
   if(at&&left>0){vib([50,30,50]);toast(t("nickWait",left));return false}sset("nickAt",Date.now());sset("nickChg","1");return true};
