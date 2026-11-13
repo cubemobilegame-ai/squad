@@ -1842,7 +1842,7 @@ async function groupView(code){
 function notifView(){
   const u=authed();if(!u)return;const T=nsT();
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:36px">${t("nT")}</h1>${pushCard().replace('id="pnx"','id="pnx" hidden')}<div id="nl"></div></div>${nav("n")}`);
-  const draw=()=>{$("#nl").innerHTML=events().slice(0,30).map(e=>`<div class="chat" onclick="go('/d/${e.d.id}')">${avc("l",avIdx(e.p))}<div><b>${esc(e.p.nickname)} · ${STL(e.p.status)}</b><small>${esc(clean(e.d.title))} · ${t("ago",Math.floor((Date.now()-e.ts)/6e4))}</small></div>${e.ts>T?'<b class="bd bdi">•</b>':""}</div>`).join("")||`<p class="mut">${t("nE")}</p>`;sset("nseen",Date.now());badges()};
+  const draw=()=>{$("#nl").innerHTML=events().slice(0,30).map(e=>`<div class="chat" onclick="go('/d/${e.d.id}')">${avc("l",avIdx(e.p))}<div><b>${esc(e.p.nickname)} · ${STL(e.p.status)}</b><small>🔥 ${esc(clean(e.d.title))}</small><small>${e.d.startsAt?.toMillis?"🕒 "+when(e.d.startsAt.toMillis()):""}${e.d.place?" · 📍 "+esc(clean(e.d.place)):""}${e.p.status==="late"&&e.p.etaMin?" · +"+e.p.etaMin+" min":""}</small><small style="opacity:.6">${t("ago",Math.floor((Date.now()-e.ts)/6e4))}</small></div>${e.ts>T?'<b class="bd bdi">•</b>':""}</div>`).join("")||`<p class="mut">${t("nE")}</p>`;sset("nseen",Date.now());badges()};
   redraw=draw;draw();
 }
 
