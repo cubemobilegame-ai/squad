@@ -416,7 +416,6 @@ html,body{overflow-x:clip;max-width:100%}.hx{overflow-x:clip}
 <p>Najszybciej w aplikacji: Profil → Więcej opcji konta → Usuń konto. Możesz też skorzystać ze strony <a href="https://squad-64cd5.web.app/usun-konto">squad-64cd5.web.app/usun-konto</a> albo napisać do nas. Szczegóły w <a href="https://squad-64cd5.web.app/privacy">Polityce prywatności</a>.</p>
 </div></div>
 
-<div class="pop" id="pop" hidden role="dialog" aria-modal="true" aria-labelledby="ppt"><div class="ppb"><button type="button" class="ppx" id="ppc" aria-label="Zamknij">×</button><div class="ppe">🎉</div><h3 id="ppt" data-en="Newsletter">Newsletter</h3><p data-en="News about Squad, now and then. Leave your e-mail.">Nowości o Squad, od czasu do czasu. Zostaw e-mail.</p><form class="wl" id="wl2"><input class="em" type="email" required placeholder="twoj@email.pl" autocomplete="email" aria-label="E-mail"><input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"><button type="submit" data-en="Subscribe">Zapisz się</button><label class="cons"><input type="checkbox" class="cs" required><span class="pl">Akceptuję <a href="https://squad-64cd5.web.app/terms" target="_blank" rel="noopener">Regulamin</a> i <a href="https://squad-64cd5.web.app/privacy" target="_blank" rel="noopener">Politykę prywatności</a> oraz zgadzam się na otrzymywanie od Cube Mobile Games newslettera z nowościami o Squad. Mogę zrezygnować w każdej chwili, pisząc na cubemobilegame@gmail.com.</span><span class="en">I accept the <a href="https://squad-64cd5.web.app/terms" target="_blank" rel="noopener">Terms</a> and <a href="https://squad-64cd5.web.app/privacy" target="_blank" rel="noopener">Privacy Policy</a> and agree to receive a newsletter with Squad news from Cube Mobile Games. I can unsubscribe any time by writing to cubemobilegame@gmail.com.</span></label></form><p class="soon wmsg" style="margin-top:10px"></p></div></div>
 </main>
 <div class="page" id="reklama"><div class="w doc ads"><div class="adc">
 <h1 data-en="Advertise with Squad">Reklama w Squad</h1>
@@ -457,7 +456,7 @@ while(nd=wk.nextNode()){if(nd.parentNode.closest('script,style,.doc'))continue;v
 var B={'in':4,late:1,out:2},cur='',ST={'':['Ekipa czeka na Twoją odpowiedź.','Your crew is waiting for your answer.'],'in':['Wbijasz! Ekipa już wie.','You’re in! The crew knows.'],late:['Spóźnisz się. Ekipa już wie.','You’re running late. The crew knows.'],out:['Następnym razem! Ekipa już wie.','Next time! The crew knows.']};
 function dm(){var c={'in':B['in'],late:B.late,out:B.out};if(cur)c[cur]++;$('dm').innerHTML='<b>✓ IN '+c['in']+'</b><b>◔ LATE '+c.late+'</b><b>✕ OUT '+c.out+'</b><span>'+ST[cur][en?1:0]+'</span>';q('.db button').forEach(function(b){b.classList.toggle('on',b.dataset.a===cur)})}
 q('.db button').forEach(function(b){b.onclick=function(){cur=cur===b.dataset.a?'':b.dataset.a;dm()}});
-function ap(){nodes.forEach(function(x){x[0].nodeValue=en?x[1].replace(x[1].trim(),function(){return x[2]}):x[1]});q('[data-en]').forEach(function(e){if(e._o===undefined)e._o=e.textContent;e.textContent=en?e.dataset.en:e._o});document.documentElement.lang=en?'en':'pl';$('lg').textContent=en?'PL':'EN';q('.em').forEach(function(x){x.placeholder=en?'you@email.com':'twoj@email.pl'});q('[data-pp]').forEach(function(x){x.placeholder=en?x.dataset.pe:x.dataset.pp});q('.ppx').forEach(function(x){x.setAttribute('aria-label',en?'Close':'Zamknij')});dm()}
+function ap(){nodes.forEach(function(x){x[0].nodeValue=en?x[1].replace(x[1].trim(),function(){return x[2]}):x[1]});q('[data-en]').forEach(function(e){if(e._o===undefined)e._o=e.textContent;e.textContent=en?e.dataset.en:e._o});document.documentElement.lang=en?'en':'pl';$('lg').textContent=en?'PL':'EN';q('.em').forEach(function(x){x.placeholder=en?'you@email.com':'twoj@email.pl'});q('[data-pp]').forEach(function(x){x.placeholder=en?x.dataset.pe:x.dataset.pp});dm()}
 try{s0=localStorage.getItem('sq')}catch(x){}
 en=s0?s0==='en':!/^pl/i.test(navigator.language||'pl');
 $('lg').onclick=function(){en=!en;try{localStorage.setItem('sq',en?'en':'pl')}catch(x){}ap()};
@@ -472,16 +471,11 @@ btn.disabled=true;o.textContent=en?'Saving…':'Zapisuję…';
 sha(m).then(function(id){var n='projects/'+PRJ+'/databases/(default)/documents/waitlist/'+id;
 return fetch('https://firestore.googleapis.com/v1/projects/'+PRJ+'/databases/(default)/documents:commit?key='+KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({writes:[{update:{name:n,fields:{email:{stringValue:m},lang:{stringValue:en?'en':'pl'},consent:{booleanValue:true},sent:{booleanValue:false}}},updateTransforms:[{fieldPath:'at',setToServerValue:'REQUEST_TIME'}],currentDocument:{exists:false}}]})})})
 .then(function(r){btn.disabled=false;
-if(r.ok||r.status===409||r.status===403){o.textContent=en?'Done! You’re subscribed.':'Gotowe! Zapisano do newslettera.';em.value='';cs.checked=false;sd();if(f.id==='wl2')setTimeout(cp,2200)}
+if(r.ok||r.status===409||r.status===403){o.textContent=en?'Done! You’re subscribed.':'Gotowe! Zapisano do newslettera.';em.value='';cs.checked=false;sd();}
 else o.textContent=en?'Something went wrong. Try again in a moment.':'Coś poszło nie tak. Spróbuj za chwilę.'})
 .catch(function(){btn.disabled=false;o.textContent=en?'No connection. Try again.':'Brak połączenia. Spróbuj ponownie.'})}}
 /* okno wyskakujące z zapisem na premierę: raz na odwiedzającego, po ok. 9 s lub po przewinięciu strony */
-var pop=$('pop'),shown=0;
-function cp(){pop.hidden=true;document.body.style.overflow='';sd()}
-function op(){if(shown||!pop.hidden)return;if((location.hash||'#home')!=='#home')return;try{if(localStorage.getItem('sqpop'))return}catch(x){}shown=1;pop.hidden=false;document.body.style.overflow='hidden';var i=pop.querySelector('.em');setTimeout(function(){try{i.focus({preventScroll:true})}catch(x){}},300)}
-$('ppc').onclick=cp;pop.addEventListener('click',function(e){if(e.target===pop)cp()});addEventListener('keydown',function(e){if(e.key==='Escape'&&!pop.hidden)cp()});
-setTimeout(op,9000);addEventListener('scroll',function sc(){if(scrollY>innerHeight*1.6){removeEventListener('scroll',sc);op()}},{passive:true});
-wire($('wl'));wire($('wl2'));
+wire($('wl'));
 $('sh').onclick=function(){var u=location.href.split('#')[0],t=en?'Squad: hangouts with your crew in 15 seconds':'Squad: wypad z ekipą w 15 sekund';if(navigator.share){navigator.share({title:'Squad',text:t,url:u}).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){$('wm').textContent=en?'Link copied!':'Link skopiowany!'}).catch(function(){})}};
 var sh=document.querySelector('.shots');
 if(sh){sh.querySelectorAll('img').forEach(function(i){i.draggable=false});
