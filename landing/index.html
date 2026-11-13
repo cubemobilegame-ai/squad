@@ -127,6 +127,39 @@ h1{font-size:clamp(56px,12vw,132px)}
 .qrc p{margin:0 0 10px}
 .qrc .ph{font-size:14px}
 @media(max-width:700px){header nav{display:none}.phones{gap:14px;margin-top:64px}.phones img{border-radius:16px}section{padding-top:64px}}
+.pmap{--mb:#12141c;--rd:#2a2e3d;--rn:#343a4d;--wt:#1b2a46;--pkb:#16261f;position:relative;height:min(640px,128vw);min-height:460px;border-radius:34px;overflow:hidden;border:1px solid var(--bd);background:var(--mb);isolation:isolate;touch-action:pan-y;box-shadow:0 40px 90px rgba(0,0,0,.35)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .pmap{--mb:#eef0f4;--rd:#fff;--rn:#fff;--wt:#cfe0f5;--pkb:#d8ecd9;box-shadow:0 40px 90px rgba(80,60,90,.18)}}
+.pmap::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;border-radius:inherit;box-shadow:inset 0 0 90px rgba(0,0,0,.35)}
+.ml{position:absolute;inset:-7%;transform:translate3d(var(--tx,0px),var(--ty,0px),0);transition:transform .25s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.ml svg{width:100%;height:100%;display:block}
+.ml0 .rd path{fill:none;stroke:var(--rd);stroke-width:14;stroke-linecap:round}.ml0 .rd .mn{stroke:var(--rn);stroke-width:7}
+.ml1 .wt{fill:var(--wt)}.ml1 .pk{fill:var(--pkb)}
+.ml2{z-index:2}.ml3{z-index:4;inset:7%;pointer-events:none}.ml3>*{pointer-events:auto}
+.ringw{position:absolute;inset:0}
+.ring{position:absolute;left:50%;top:50%;width:calc(var(--rr,1)*84%);height:calc(var(--rr,1)*76%);border-radius:50%;border:2px dashed color-mix(in srgb,var(--pk) 70%,transparent);background:radial-gradient(closest-side,color-mix(in srgb,var(--pk) 4%,transparent),color-mix(in srgb,var(--pk) 14%,transparent));transform:translate(-50%,-50%);transition:width .45s cubic-bezier(.2,.8,.2,1),height .45s cubic-bezier(.2,.8,.2,1)}
+.ring.r2{border:0;background:none;box-shadow:0 0 0 0 color-mix(in srgb,var(--pk) 40%,transparent);animation:rp 3.2s ease-out infinite}
+@keyframes rp{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--pk) 38%,transparent)}100%{box-shadow:0 0 0 34px transparent}}
+.you{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#4a8cff;border:3px solid #fff;box-shadow:0 0 0 8px rgba(74,140,255,.25)}
+.pin{position:absolute;width:46px;height:46px;margin:-52px 0 0 -23px;border-radius:50% 50% 50% 8px;transform:rotate(-45deg) scale(var(--sc,1));background:var(--g);border:3px solid #fff;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.35);cursor:pointer;transition:transform .35s cubic-bezier(.3,1.6,.4,1),opacity .3s;padding:0;font:inherit;color:inherit;transform-origin:50% 100%}
+.pin span{transform:rotate(45deg);font-size:21px;line-height:1}
+.pin.off{opacity:0;pointer-events:none;--sc:.3}
+.pin.on{--sc:1.22;z-index:3;box-shadow:0 0 0 6px color-mix(in srgb,var(--pk) 35%,transparent),0 12px 26px rgba(0,0,0,.45)}
+.pin:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.chipn{position:absolute;left:0;top:0;padding:8px 14px;border-radius:99px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--bd);font-size:14px;font-weight:600;white-space:nowrap}
+.chipn b{color:var(--pk)}
+.ctl{position:absolute;right:0;top:0;padding:9px 14px;border-radius:20px;background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--bd);width:min(210px,46%)}
+.ctl label{display:flex;justify-content:space-between;font-size:13px;color:var(--mu);font-weight:600}.ctl b{color:var(--tx)}
+.ctl input{width:100%;margin:6px 0 0;accent-color:var(--pk)}
+.dcard{position:absolute;left:0;bottom:0;width:min(380px,100%);padding:16px 18px;border-radius:26px;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--bd);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.dcard.pp{animation:dp .45s cubic-bezier(.2,1.3,.4,1)}
+@keyframes dp{from{transform:translateY(22px) scale(.96);opacity:0}}
+.dcard .t{display:flex;gap:12px;align-items:center}.dcard .e{width:48px;height:48px;border-radius:16px;background:var(--g);display:grid;place-items:center;font-size:25px;flex:none}
+.dcard h3{margin:0;font-size:19px;letter-spacing:-.02em}.dcard .m{color:var(--mu);font-size:14px}
+.dcard .bar{height:8px;border-radius:99px;background:var(--bd);margin:14px 0 6px;overflow:hidden}.dcard .bar i{display:block;height:100%;border-radius:99px;background:var(--g);transition:width .5s}
+.dcard .r{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;color:var(--mu)}
+.dcard button{border:0;border-radius:99px;padding:10px 22px;background:var(--g);color:#1a1016;font:700 15px inherit;font-family:inherit;cursor:pointer;transition:transform .2s}.dcard button:active{transform:scale(.94)}.dcard button.in{background:var(--in)}
+@media (max-width:560px){.pmap{border-radius:26px}.chipn{font-size:13px;padding:7px 11px}.dcard{padding:14px}}
+@media (prefers-reduced-motion:reduce){.pl,.ring,.pin,.ring.r2{transition:none;animation:none}}
 </style>
 </head>
 <body><div class="orb o1" data-s=".3"></div><div class="orb o2" data-s=".45"></div><div class="orb o3" data-s=".2"></div>
@@ -161,6 +194,15 @@ h1{font-size:clamp(56px,12vw,132px)}
 <div class="cats"><span>🍕 Pizza</span><span>⚽ Sport</span><span>🏠 Domówka</span><span>🪩 Klub</span><span>🍻 Knajpa</span><span>☕ Kawa</span><span>🎬 Kino</span><span>🎮 Gry</span><span>🖼️ Galeria</span><span>🚶 Spacer</span><span>🚗 Wyjazd</span><span>🎉 Okazje</span></div>
 </section>
 
+<section id="pm"><h2 data-en="The map of public drops">Mapa publicznych dropów</h2><p class="sub" data-en="Drag the slider, tap a pin and join. That’s how it works in the app.">Przesuń suwak, stuknij pinezkę i dołącz. Tak to działa w aplikacji.</p>
+<div class="pmap" id="pmap" aria-label="Demo">
+<div class="ml ml0"><svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="rd"><path d="M-20 140C200 170 330 90 520 130S860 230 1020 160"/><path d="M-20 430C160 380 360 470 560 420S860 330 1020 400"/><path d="M180 -20C210 150 150 330 230 620"/><path d="M640 -20C600 160 720 300 690 620"/><path d="M380 -20C360 200 470 360 430 620" class="mn"/><path d="M-20 290C300 270 600 330 1020 280" class="mn"/></g></svg></div>
+<div class="ml ml1"><svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path class="wt" d="M-20 520C180 470 300 560 520 500S820 440 1020 520V640H-20Z"/><ellipse class="pk" cx="300" cy="230" rx="120" ry="70"/><ellipse class="pk" cx="800" cy="450" rx="110" ry="65"/><ellipse class="pk" cx="880" cy="90" rx="90" ry="55"/></svg></div>
+<div class="ml ml2" id="ml2"><div class="ringw"><i class="ring" id="ring"></i><i class="ring r2" id="ring2"></i></div><div class="you" id="you"><b></b></div><div id="pins"></div></div>
+<div class="ml ml3"><div class="chipn" id="cn"></div>
+<div class="ctl"><label for="rg"><span data-en="Radius">Promień</span> <b id="rv">20 km</b></label><input id="rg" type="range" min="3" max="20" step="1" value="20"></div>
+<div class="dcard" id="dc" aria-live="polite"></div></div>
+</div></section>
 <section><h2>Wszystko dla ekipy</h2><p class="sub">I nic więcej. Squad nie jest kolejnym komunikatorem.</p>
 <div class="grid">
 <div class="card"><div class="ic">💬</div><h3>Czat tylko dla ekipy</h3><p>Każdy drop ma swój czat grupowy. Zero prywatnych wiadomości. Ankiety „gdzie idziemy?”, reakcje i informacja, kto przeczytał.</p></div>
@@ -290,6 +332,29 @@ if(e.dataset.dir){var dr=+e.dataset.dir;e.style.setProperty('--fx',(-d*.06*dr).t
 if(e.dataset.rot)e.style.setProperty('--rot',(d*e.dataset.rot).toFixed(1)+'deg')})}
 function req(){if(!busy){busy=1;requestAnimationFrame(tick)}}
 addEventListener('scroll',req,{passive:true});addEventListener('resize',req);addEventListener('hashchange',req);tick()})();
+</script>
+<script>(function(){var st=document.getElementById('pmap');if(!st)return;
+var D=[['🍕','Pizza po treningu','Pizza after practice','19:30',2.4,215,5,8],['⚽','Kopanka na Orliku','Pickup football','18:00',5.1,330,9,14],['☕','Kawa i planszówki','Coffee & board games','16:00',7.8,22,3,6],['🚶','Spacer nad rzeką','Riverside walk','17:30',11,140,6,12],['🎬','Kino pod chmurką','Open-air cinema','21:00',14.5,98,14,20],['🎮','Turniej FIFA','FIFA tournament','20:00',18,285,7,10]];
+var $=function(i){return document.getElementById(i)},pins=$('pins'),rg=$('rg'),dc=$('dc'),sel=0,joined={},R=20,isEn=function(){return document.documentElement.lang==='en'};
+D.forEach(function(d,i){var a=d[5]*Math.PI/180,b=document.createElement('button');b.type='button';b.className='pin';b.style.left=(50+d[4]/20*42*Math.cos(a))+'%';b.style.top=(50+d[4]/20*38*Math.sin(a))+'%';b.innerHTML='<span>'+d[0]+'</span>';b.setAttribute('aria-label',d[1]);b.onclick=function(){sel=i;draw(1)};pins.appendChild(b);d.b=b});
+function draw(pop){var vis=D.filter(function(d){return d[4]<=R}),en=isEn();
+if(D[sel][4]>R&&vis.length)sel=D.indexOf(vis[0]);
+D.forEach(function(d,i){d.b.classList.toggle('off',d[4]>R);d.b.classList.toggle('on',i===sel&&d[4]<=R)});
+$('cn').innerHTML=en?'<b>'+vis.length+'</b> public drops nearby':'<b>'+vis.length+'</b> '+(vis.length===1?'publiczny drop':'publicznych dropów')+' w pobliżu';
+$('rv').textContent=R+' km';var rr=R/20;st.style.setProperty('--rr',rr);
+if(!vis.length){dc.style.display='none';return}dc.style.display='';
+var d=D[sel],j=joined[sel]?1:0,n=d[6]+j;
+dc.className='dcard'+(pop?' pp':'');void dc.offsetWidth;
+dc.innerHTML='<div class="t"><div class="e">'+d[0]+'</div><div><h3>'+(en?d[2]:d[1])+'</h3><div class="m">'+(en?'today · ':'dziś · ')+d[3]+' · '+d[4].toString().replace('.',en?'.':',')+' km · 16+</div></div></div><div class="bar"><i style="width:'+Math.round(n/d[7]*100)+'%"></i></div><div class="r"><span>'+n+'/'+d[7]+(en?' spots taken':' miejsc zajętych')+'</span><button type="button" class="'+(j?'in':'')+'">'+(j?'✓ IN':(en?'Join':'Dołącz'))+'</button></div>';
+dc.querySelector('button').onclick=function(){joined[sel]=!joined[sel];draw(0);try{navigator.vibrate&&navigator.vibrate(12)}catch(x){}}}
+rg.oninput=function(){R=+rg.value;draw(0)};
+new MutationObserver(function(){draw(0)}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+draw(1);
+/* paralaksa: kursor/dotyk + przewijanie, warstwy o różnej głębi */
+var rm=matchMedia('(prefers-reduced-motion:reduce)').matches,L=[].slice.call(st.querySelectorAll('.ml')),dep=[10,22,46,70],px=0,py=0,sy=0;
+function ap(){var r=st.getBoundingClientRect(),vh=innerHeight;sy=Math.max(-1,Math.min(1,((r.top+r.height/2)-vh/2)/vh));L.forEach(function(l,i){l.style.setProperty('--tx',(px*dep[i]).toFixed(1)+'px');l.style.setProperty('--ty',(py*dep[i]*.6+sy*dep[i]*1.4).toFixed(1)+'px')})}
+if(!rm){st.addEventListener('pointermove',function(e){var r=st.getBoundingClientRect();px=(e.clientX-r.left)/r.width-.5;py=(e.clientY-r.top)/r.height-.5;ap()});st.addEventListener('pointerleave',function(){px=py=0;ap()});addEventListener('scroll',ap,{passive:true});ap()}
+})();
 </script>
 </body>
 </html>
