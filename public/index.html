@@ -1928,7 +1928,8 @@ function newView(){
 
   let sgT=0,sgSeq=0,sgBusy=0;const sgBox=$("#sug");
   const sgFind=async q=>{const my=++sgSeq;if(DEMO||q.length<3){sgBox.innerHTML="";return}
-    try{const sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:cmMe||null;let u="https://photon.komoot.io/api/?limit=6&q="+encodeURIComponent(q);if(sp)u+="&lat="+sp.la+"&lon="+sp.lo+"&location_bias_scale=.6";
+    try{const sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:cmMe||null;let u="https://photon.komoot.io/api/?limit=6&q="+encodeURIComponent(q);const BB={pl:[14.1,49,24.2,54.9],cs:[12,48.5,18.9,51.1],de:[5.8,45.8,17.2,55.1],fr:[-5.2,41.3,9.6,51.1],it:[6.6,35.5,18.6,47.1],es:[-9.4,35.9,4.4,43.9],uk:[22.1,44.3,40.3,52.4]};
+      if(sp){u+="&lat="+sp.la+"&lon="+sp.lo+"&location_bias_scale=.8&bbox="+[sp.lo-3,sp.la-2.2,sp.lo+3,sp.la+2.2].map(x=>x.toFixed(2)).join(",")}else if(BB[LANG])u+="&bbox="+BB[LANG].join(",");
       const j=await (await fetch(u)).json();if(my!==sgSeq||!sgBox.isConnected)return;const seen={},cc={pl:"PL",cs:"CZ",de:"DE",fr:"FR",it:"IT",es:"ES",uk:"UA"}[LANG];
       const L2=((j&&j.features)||[]).map(f=>{const p=f.properties||{},g=f.geometry&&f.geometry.coordinates;if(!g)return null;const st=[p.street,p.housenumber].filter(Boolean).join(" "),ct=p.city||p.town||p.village||p.district||p.county||"",nm=p.name||st;if(!nm)return null;
         return{la:+g[1],lo:+g[0],nm,sub:[p.name&&st?st:"",ct,p.country&&p.countrycode!==cc?p.country:""].filter(Boolean).join(", "),cc:p.countrycode}}).filter(x=>x&&!seen[x.nm+x.sub]&&(seen[x.nm+x.sub]=1)).slice(0,5);
