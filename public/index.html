@@ -2506,7 +2506,8 @@ async function pushScreen(){if(sget("pnAsk")||document.getElementById("pscr"))re
   document.body.append(el);vib(15);
   const y=el.querySelector("#pyes");if(y)y.onclick=()=>{vib(15);askPush();el.remove()};
   el.querySelector("#pno").onclick=()=>{sset("pnX",String(Date.now()));el.remove()}}
-const pushCard=()=>{const st=pushState();if(!["default","ios","twa"].includes(st))return"";const last=+sget("pnX")||0;if(Date.now()-last<3*864e5)return"";
+const pushCard=()=>{if(IOSAPP&&!DEMO&&!sget("natTok")&&!window.__ipNeed){if(!window.__ipChk){window.__ipChk=1;(async()=>{try{const M=NP("FirebaseMessaging"),r=await M.checkPermissions();if(r.receive==="granted"){await iosPush(false);try{await saveNatTok()}catch{}document.getElementById("pcard")?.remove()}else{window.__ipNeed=1;try{changed()}catch{}}}catch{window.__ipNeed=1}})()}return""}
+  const st=pushState();if(!["default","ios","twa"].includes(st))return"";const last=+sget("pnX")||0;if(Date.now()-last<3*864e5)return"";
   return`<div class="pcard" id="pcard"><img src="/e/bell.webp" alt=""><div><b>${t("pnT")}</b><small>${t("pnD")}</small></div><button class="mbtn" id="pon">${t("pnBtn")}</button><button class="px" id="pnx" aria-label="✕">✕</button></div>`};
 const bindPushCard=()=>{const b=$("#pon");if(b)b.onclick=()=>{vib(12);askPush();const c=$("#pcard");if(c&&pushState()!=="ios")c.remove()};const x=$("#pnx");if(x)x.onclick=()=>{sset("pnX",String(Date.now()));$("#pcard")?.remove()}};
 
