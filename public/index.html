@@ -1884,14 +1884,14 @@ function newView(){
   if($("#pbs")&&homeTab==="pub"&&sget("pubRules")==="1"){pub=true;$("#pbs").classList.add("on");$("#seatw").hidden=false;$("#sw").parentElement.style.opacity=".4"}
   document.querySelectorAll("#seats .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;document.querySelectorAll("#seats .chip").forEach(x=>x.classList.toggle("on",x===c))});
   document.querySelectorAll("#rp .chip").forEach(c=>c.onclick=()=>{vib(8);rep=c.dataset.r;document.querySelectorAll("#rp .chip").forEach(x=>x.classList.toggle("on",x===c))});
-  let cmM=null,cmK=null,cmT=0,cmQ="",cmSeq=0;const cmI=()=>pubMapIcon({category:cat,theme:th,id:"x"}),cmUpd=()=>{if(cmK)cmK.setIcon(cmI())};
-  const cmGo=async()=>{const q=$("#pl").value.trim(),st=$("#cmst");if(!st)return;if(!q){cmQ="";st.textContent="";return}if(q===cmQ)return;cmQ=q;const my=++cmSeq;st.textContent=t("cmFind");
-    const pt=DEMO?{la:52.2297,lo:21.0122}:await placeGeo(q,typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null);if(my!==cmSeq||!$("#cmw"))return;if(!pt){st.textContent=t("cmNo");return}
-    try{await loadLeaflet()}catch{st.textContent="";return}if(my!==cmSeq||!$("#cmw"))return;const w=$("#cmw"),ll=[pt.la,pt.lo];
+  let cmM=null,cmK=null,cmT=0,cmQ="",cmSeq=0,cmPt=null;const cmI=()=>pubMapIcon({category:cat,theme:th,id:"x"}),cmUpd=()=>{if(cmK)cmK.setIcon(cmI())};
+  const cmGo=async()=>{const q=$("#pl").value.trim(),st=$("#cmst");if(!st)return;if(!q){cmQ="";cmPt=null;st.textContent="";return}if(q===cmQ)return;cmQ=q;const my=++cmSeq;st.textContent=t("cmFind");
+    const pt=DEMO?{la:52.2297,lo:21.0122}:await placeGeo(q,typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null);if(my!==cmSeq||!$("#cmw"))return;if(!pt){cmPt=null;st.textContent=t("cmNo");return}
+    cmPt={la:pt.la,lo:pt.lo,q};try{await loadLeaflet()}catch{st.textContent="";return}if(my!==cmSeq||!$("#cmw"))return;const w=$("#cmw"),ll=[pt.la,pt.lo];
     if(!cmM){const h=document.createElement("div");h.className="dmap pmm";const pn=w.querySelector(".pin");if(pn)pn.remove();w.prepend(h);cmM=window.L.map(h,{center:ll,zoom:14,zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(cmM);cmK=window.L.marker(ll,{icon:cmI(),interactive:false,keyboard:false}).addTo(cmM)}
     else cmK.setLatLng(ll);cmM.setView(ll,14,{animate:false});setTimeout(()=>cmM.invalidateSize(),30);st.textContent=""};
-  $("#pl").addEventListener("input",()=>{clearTimeout(cmT);cmT=setTimeout(cmGo,800)});document.querySelectorAll(".tile,.swc").forEach(c=>c.addEventListener("click",()=>setTimeout(cmUpd,0)));
+  $("#pl").addEventListener("input",()=>{cmPt=null;clearTimeout(cmT);cmT=setTimeout(cmGo,800)});document.querySelectorAll(".tile,.swc").forEach(c=>c.addEventListener("click",()=>setTimeout(cmUpd,0)));
   $("#sw").onclick=()=>{if(!sur&&pub){vib([50,30,50]);return toast(t("surPubX"))}vib(10);sur=!sur;if($("#pbs"))$("#pbs").parentElement.style.opacity=sur?".4":"";$("#sw").classList.toggle("on",sur)};
   document.querySelectorAll(".swc").forEach(b=>b.onclick=()=>{vib(8);th=+b.dataset.i;document.querySelectorAll(".swc").forEach(x=>x.classList.toggle("sel",x===b))});
   $("#go").onclick=async()=>{
@@ -1902,6 +1902,7 @@ function newView(){
     let pg=null;if(pub&&pubOk()){try{const po=PUB.pos||await getPos();PUB.pos=po;pg={public:true,seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5)}}catch{vib([50,30,50]);return toast(t("pubNeedLoc"))}}
     $("#go").disabled=true;sset("nick",nick);
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
+    if(!DEMO&&cmPt&&cmPt.q===place)pg={...(pg||{}),pt:{la:cmPt.la,lo:cmPt.lo}};
     await setDoc(doc(db,"drops",code),{code,hostId:u.uid,hostNick:nick,hostAv:myAv(),hostPh:sget("photo")||null,category:cat,title:$("#ti").value.trim()||(cat==="other"?cu:cat==="occ"?t("occDef"):t("run",t("c_"+cat))),place,surprise:sur,theme:th,repeat:rep==="no"?null:rep,...(pg||{}),
       startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),createdAt:serverTimestamp()});
     await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
@@ -1957,7 +1958,7 @@ async function dropView(code){
     const cb=el.querySelector("#col");if(cb)cb.onclick=()=>openCollage({...d,id:code,P},PH);const rb=el.querySelector("#rnd");if(rb)rb.onclick=()=>{vib(12);openCollage({...d,id:code,P},[PH[Math.floor(Math.random()*PH.length)]])}};
   every(()=>{if(closed()!==wasC){wasC=closed();drawAlbum()}},1000);every(tick,1000);
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#acc"))$("#acc").onclick=accGo;if($("#rp"))$("#rp").onclick=()=>report({target:"drop",code});
-  $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);(async()=>{try{const w=$("#dmw");if(!w)return;const hd=hidden(d);if(surHid(d)){const e=$("#surt"),f=()=>{if(!e)return;const r=Math.max(0,d.startsAt.toMillis()-36e5-Date.now()),z=x=>String(x).padStart(2,"0"),sc=Math.floor(r/1e3);e.textContent=z(Math.floor(sc/3600))+":"+z(Math.floor(sc%3600/60))+":"+z(sc%60)};every(f,1000)}if(hd)return;let pt=DEMO?{la:52.2297,lo:21.0122}:await placeGeo(d.place,wxPt(d)||PUB.pos);
+  $("#oc").onclick=()=>go("/c/"+code);if($("#inv"))$("#inv").onclick=()=>inviteSheet(d,code,P,isHost);$("#cal").onclick=()=>calSheet(d,url);(async()=>{try{const w=$("#dmw");if(!w)return;const hd=hidden(d);if(surHid(d)){const e=$("#surt"),f=()=>{if(!e)return;const r=Math.max(0,d.startsAt.toMillis()-36e5-Date.now()),z=x=>String(x).padStart(2,"0"),sc=Math.floor(r/1e3);e.textContent=z(Math.floor(sc/3600))+":"+z(Math.floor(sc%3600/60))+":"+z(sc%60)};every(f,1000)}if(hd)return;let pt=DEMO?{la:52.2297,lo:21.0122}:(d.pt&&isFinite(+d.pt.la)&&isFinite(+d.pt.lo)?{la:+d.pt.la,lo:+d.pt.lo}:await placeGeo(d.place,wxPt(d)||PUB.pos));
   if(!pt&&d.wx&&d.wx.p===d.place)pt={la:d.wx.la,lo:d.wx.lo};
   if(!pt&&!DEMO){const pl=String(d.place||"").trim(),parts=pl.split(/[,;|–—]|\s-\s/).map(x=>x.trim()).filter(Boolean);for(const q of [pl,...parts.slice().reverse()]){if(!q||pt)continue;pt=await wxGeo(q)}}
   if(!pt||!w.isConnected)return;await loadLeaflet();if(!w.isConnected)return;const h=document.createElement("div");h.className="dmap pmm";w.querySelectorAll(".pin").forEach(x=>x.remove());w.prepend(h);if(hd){const k=hs(code),an=(k%360)*Math.PI/180,ds=700+(k%8)*100,cl=Math.cos(pt.la*Math.PI/180)||1;pt={la:pt.la+ds*Math.cos(an)/111320,lo:pt.lo+ds*Math.sin(an)/(111320*cl)}}const m=window.L.map(h,{center:[pt.la,pt.lo],zoom:15,zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(m);
@@ -2453,7 +2454,7 @@ function editPlace(code,ref,d){if(Date.now()>=d.startsAt.toMillis())return;vib(1
   const s=sheet(`<h2>${t("plEdT")}</h2><p class="hint">${t("plEdD")}</p><input id="epl" maxlength="80" value="${esc(d.place)}" autocomplete="off"><button class="cta" id="eplok" style="margin-top:14px">${t("save")}</button><button class="ghost" id="eplc">${t("cancel")}</button>`);
   const i=s.querySelector("#epl");setTimeout(()=>i.focus(),250);s.querySelector("#eplc").onclick=s.close;
   s.querySelector("#eplok").onclick=async()=>{const place=i.value.trim();if(!place){vib([50,30,50]);return toast(t("edPlace"))}if(isBad(place)){vib([50,30,50]);return toast(t("noBad"))}if(Date.now()>=d.startsAt.toMillis()){s.close();return}
-    if(place===d.place)return s.close();s.querySelector("#eplok").disabled=true;try{await setDoc(ref,{place,editedAt:serverTimestamp()},{merge:true});pushNow({kind:"edit",code});s.close();sfx("in");vib([20,30,20]);toast(t("edSaved"))}catch{s.querySelector("#eplok").disabled=false;toast(t("oops"))}}}
+    if(place===d.place)return s.close();s.querySelector("#eplok").disabled=true;try{const g=await placeGeo(place,d.pt||null);await setDoc(ref,{place,pt:g?{la:g.la,lo:g.lo}:null,editedAt:serverTimestamp()},{merge:true});pushNow({kind:"edit",code});s.close();sfx("in");vib([20,30,20]);toast(t("edSaved"))}catch{s.querySelector("#eplok").disabled=false;toast(t("oops"))}}}
 function editDrop(code,ref,d){vib(10);const st=new Date(d.startsAt.toMillis());let sur=!!d.surprise,rep=d.repeat||"no";
   const s=sheet(`<h2>${t("edT")}</h2>
   <label class="lbl" for="et">${t("nameD")}</label><input id="et" maxlength="40" value="${esc(clean(d.title))}" autocomplete="off">
@@ -2470,7 +2471,7 @@ function editDrop(code,ref,d){vib(10);const st=new Date(d.startsAt.toMillis());l
   q("#es").onclick=()=>{if(!sur&&d.public){vib([50,30,50]);return toast(t("surPubX"))}vib(8);sur=!sur;q("#es").classList.toggle("on",sur)};q("#ecn").onclick=s.close;
   q("#eok").onclick=async()=>{const place=q("#ep").value.trim();if(!place){vib([50,30,50]);return toast(t("edPlace"))}if(isBad(place)||isBad(q("#et").value)){vib([50,30,50]);return toast(t("noBad"))}
     const tm=cur();if(tm.getTime()<=Date.now()+60e3){vib([50,30,50]);return toast(t("edPast"))}
-    q("#eok").disabled=true;await setDoc(ref,{title:q("#et").value.trim()||d.title,place,surprise:sur,repeat:(rep==="no"?null:rep),startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),reminded:false,albumPing:false,editedAt:serverTimestamp()},{merge:true});pushNow({kind:"edit",code});
+    q("#eok").disabled=true;const eg=place===d.place?(d.pt||null):await placeGeo(place,d.pt||null);await setDoc(ref,{pt:eg?{la:eg.la,lo:eg.lo}:null,title:q("#et").value.trim()||d.title,place,surprise:sur,repeat:(rep==="no"?null:rep),startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),reminded:false,albumPing:false,editedAt:serverTimestamp()},{merge:true});pushNow({kind:"edit",code});
     s.close();sfx("in");vib([20,30,20]);toast(t("edSaved"))}}
 const askLate=cur=>new Promise(res=>{const s=sheet(`<h2>${t("lateT")}</h2><div class="lopts">${[5,15,30].map(n=>`<button class="rb late ${n===(cur||15)?"sel":""}" data-n="${n}"><b>${n}</b><small>min</small></button>`).join("")}</div><button class="ghost" id="lcn">${t("cancel")}</button>`);
   const done=v=>{s.close();res(v)};s.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{vib(10);done(+b.dataset.n)});s.querySelector("#lcn").onclick=()=>done(0);s.onclick=e=>{if(e.target===s)done(0)}});
