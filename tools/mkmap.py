@@ -43,6 +43,7 @@ for z, hi in ((10, 0), (11, 0), (12, 1), (13, 1)):
     im = canvas.crop((round(ox), round(oy), round(ox) + size, round(oy) + size))
     if hi == 0:
         im = im.resize((SPAN * 2, SPAN * 2), Image.LANCZOS)
-    im = dark(im)
-    im.save(f"landing/map/z{z}.webp", "WEBP", quality=60, method=6)
+    im = ImageEnhance.Color(im).enhance(0.85) if os.environ.get('LIGHT') else dark(im)
+    im = im.resize((2304, 2304), Image.LANCZOS)
+    im.save(f"landing/map/z{z}.webp", "WEBP", quality=58, method=6)
     print(z, im.size, os.path.getsize(f"landing/map/z{z}.webp"))

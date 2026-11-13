@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: pip install --quiet pillow
-      - run: python3 tools/mkmap.py
+      - run: LIGHT=1 python3 tools/mkmap.py
       - name: Zapis do repo
         run: |
           git config user.name "github-actions"; git config user.email "actions@github.com"
