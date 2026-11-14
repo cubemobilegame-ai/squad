@@ -3002,11 +3002,14 @@ const isBad=x=>{BADRX.lastIndex=0;return BADRX.test(String(x||""))};
 const pbN=x=>String(x||"").toLowerCase().replace(/ł/g,"l").normalize("NFD").replace(/[̀-ͯ]/g,""),pbC=x=>x.replace(/(.)\1+/g,"$1");
 const PB_ROOTS=(()=>{const R=[...BAD,"zgwalc","zgwalt","gwalt","zamord","morderc","zadzgam","zastrzel","podrzn","poderzn","ukamien","powiesi","terroryst","murder",
   "negr","czarnuch","pedzi","pedalsk","ciapat","cyganc","kacap","heil","hitler","brudas","zydek",
-  "seks","sexy","sexu","sexi","sexting","eskort","escort","nudes","porn","erotyc","erotic","onlyfans","rozbieran","nagie","nagich","hookup","bezzobowiaz","dyskrecj"];return[...new Set(R.map(w=>{const n=pbN(w),c=pbC(n);return c.length<4&&c!==n?null:c}).filter(w=>w&&w.length>=3))]})();
+  "seks","sexy","sexu","sexi","sexting","eskort","escort","nudes","porn","erotyc","erotic","onlyfans","rozbieran","nagie","nagich","hookup","bezzobowiaz","dyskrecj",
+  "analn","orgia","orgii","gangbang","bdsm","fetysz","masturb","onanis","penis","vagina","cycki","striptiz","stripte","burdel","prostytut","kurtyzan","ruchan","ruchac","wyruchan","zerzn","zamach","terror","strzelanin","lincz","egzekuc","tortur","uprowadz","porwani","dewast","zdewast","wandal","zadusz","wymord","ludobojstw","pogrom","holokaust"];return[...new Set(R.map(w=>{const n=pbN(w),c=pbC(n);return c.length<4&&c!==n?null:c}).filter(w=>w&&w.length>=3))]})();
 const PB_RAW=["nigg","sex"].map(w=>pbN(w));
-const PB_EXACT=new Set(["nazi","nazis","kill","kills","rape","raped","rapist","bomb","nsfw","fwb","xxx","sex"].map(w=>pbC(w)));
-const PB_PHR=["zabije cie","zabijemy cie","zabic cie","zabic ich","zabijmy","bez zobowiazan","dla doroslych","sugar dad","sugar mom","sugar mam","szukam sponsora"];
+const PB_EXACT=new Set(["nazi","nazis","kill","kills","rape","raped","rapist","bomb","nsfw","fwb","xxx","sex","anal","pochwa","oral"].map(w=>pbC(w)));
+const PB_PHR=["wysadzic w powietrze","wysadzimy w powietrze","wysadzmy","zabije cie","zabijemy cie","zabic cie","zabic ich","zabijmy","bez zobowiazan","dla doroslych","sugar dad","sugar mom","sugar mam","szukam sponsora"];
 const PB_MSG=new Set(["insta","instagram","snap","snapchat","telegram","whatsapp","watsap","whatsap","discord","tiktok","viber","wechat","kik","priv","prv","pw","messenger"].map(w=>pbC(w)));
+/* czasowniki zabijania/bicia: blokada, chyba że to przenośnia ("zabić czas", "pobić rekord") */
+const PB_KS=["zabic","zabij","zabit","pobic","pobij","rozjech","utopic","otruc","udusic","zarzn","zlincz","wyelimin"];
 const PB_NUM=new Set(["zero","jeden","dwa","trzy","cztery","piec","szesc","siedem","osiem","dziewiec","one","two","three","four","five","six","seven","eight","nine"]);
 function pubBlock(txt){const raw=String(txt||"");if(!raw.trim())return null;
   /* kontakty: telefon, e-mail, @nick, link, 18+ */
@@ -3020,7 +3023,9 @@ function pubBlock(txt){const raw=String(txt||"");if(!raw.trim())return null;
   const one=tk=>{if(PB_RAW.some(r=>r!=="sex"&&tk.startsWith(r)))return"w";const c=pbC(tk);if(PB_MSG.has(c))return"c";if(PB_EXACT.has(c))return"w";
     if(c.includes("*")){const ns=c.replace(/\*/g,"").length;return ns>=2&&PB_ROOTS.some(r=>c.length>=r.length&&[...r].every((ch,i)=>c[i]==="*"||c[i]===ch))?"w":null}
     return PB_ROOTS.some(r=>c.startsWith(r))?"w":null};
-  let res=null;for(const tk of spaced.split(" ")){if(!tk)continue;for(const z of["o","u"]){const r=one(leet(tk,z));if(r==="w")return"w";if(r)res=r}}
+  let res=null;const toks=spaced.split(" ");for(let i=0;i<toks.length;i++){const tk=toks[i];if(!tk)continue;
+    {const c=pbC(leet(tk,"o"));if(PB_KS.some(r=>c.startsWith(pbC(r)))&&!/(^| )(czas|nud|rekord)/.test(toks.slice(i+1,i+3).join(" ")))return"w"}
+    for(const z of["o","u"]){const r=one(leet(tk,z));if(r==="w")return"w";if(r)res=r}}
   /* litery rozdzielone spacjami w środku słowa (np. "ku rwa"): mocne rdzenie na sklejonym tekście */
   const glued=pbC(leet(spaced.replace(/[^a-z0-9]/g,""),"u"));if(["kurw","chuj","pizd","pierdol","fuck","cunt","dziwk","cwel"].some(r=>glued.includes(pbC(r))))return"w";
   return res}
