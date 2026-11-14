@@ -317,6 +317,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 @media (orientation:landscape) and (max-height:540px){#rot{display:flex}}
 .shw{height:min(32dvh,300px)}.shw img{transition:opacity .2s,filter .2s}.shw.ld img{opacity:.45;filter:blur(3px)}
 .chips{display:flex;gap:6px;overflow-x:auto;margin:0 -18px 10px;padding:0 18px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.spc .chip{display:inline-flex;align-items:center;gap:7px;padding:6px 14px 6px 8px}.spc .chip img{width:26px;height:26px}
 .chip{flex:none;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;border-radius:99px;padding:8px 14px;font:800 12px Brico,BricoCyr,system-ui;cursor:pointer;transition:background .15s,transform .12s}.chip:active{transform:scale(.94)}.chip.on{background:var(--acc);color:#0b0b12;border-color:var(--acc)}
 .albl{margin-top:18px;padding:18px;border-radius:22px;border:1.5px dashed rgba(255,255,255,.22);background:repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 12px,transparent 12px 24px);text-align:center}
 .albl b{display:block;font-size:15px;text-transform:uppercase;font-weight:900}.albl small{display:block;color:rgba(255,255,255,.62);margin-top:6px;line-height:1.45;font-size:12px}
@@ -1225,6 +1226,10 @@ uk:{"terms": {"t": "Умови користування", "u": "Діють з 20
 };
 const autoLang=()=>{for(const x of (navigator.languages||[navigator.language||""])){const c=String(x).slice(0,2).toLowerCase();if(c==="ua")return"uk";if(L[c])return c}return"en"};
 let LANG=L[sget("lang")]?sget("lang"):autoLang();
+/* podtypy sportu (kategoria dropa = klucz podtypu; "sport" = Inne) */
+const SPK=["fball","vball","basket","bike","run","gym","pool","scoot","sport"];
+const SPN={pl:"Piłka nożna|Siatkówka|Koszykówka|Rower|Bieganie|Siłownia|Basen|Hulajnoga|Inne",en:"Football|Volleyball|Basketball|Cycling|Running|Gym|Swimming|Scooter|Other",es:"Fútbol|Voleibol|Baloncesto|Ciclismo|Running|Gimnasio|Natación|Patinete|Otro",de:"Fußball|Volleyball|Basketball|Radfahren|Laufen|Fitnessstudio|Schwimmen|Roller|Sonstiges",fr:"Football|Volley|Basket|Vélo|Course|Salle de sport|Natation|Trottinette|Autre",it:"Calcio|Pallavolo|Basket|Ciclismo|Corsa|Palestra|Nuoto|Monopattino|Altro",cs:"Fotbal|Volejbal|Basket|Kolo|Běh|Posilovna|Plavání|Koloběžka|Jiné",uk:"Футбол|Волейбол|Баскетбол|Велосипед|Біг|Спортзал|Плавання|Самокат|Інше"};
+for(const g in SPN)SPN[g].split("|").forEach((v,i)=>{if(SPK[i]!=="sport")L[g]["c_"+SPK[i]]=v;L[g]["sp_"+SPK[i]]=v});
 const t=(k,...a)=>{const s=L[LANG][k]??L.en[k]??k;return typeof s==="function"?s(...a):s};
 const setLang=l=>{sset("lang",l);LANG=l;document.documentElement.lang=l;route()};
 
@@ -1285,7 +1290,7 @@ trip:'<rect x="5" y="7" width="14" height="12.5" rx="2"/><path d="M9 7V4.5h6V7M9
 pub:'<path d="M5 8h10v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M15 11h2.5a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H15"/><path d="M5 8a2.5 2.5 0 0 1 2.5-3 3 3 0 0 1 5.5 0A2.5 2.5 0 0 1 15 8"/>',
 skate:'<rect x="2.5" y="9.5" width="19" height="4" rx="2"/><circle cx="7" cy="17.5" r="1.9"/><circle cx="17" cy="17.5" r="1.9"/>',
 other:'<path d="m12 3 2.2 6.3L21 12l-6.8 2.7L12 21l-2.2-6.3L3 12l6.8-2.7z"/>'};
-const E3={gift:"gift",pizza:"pizza",bike:"bike",basket:"basket",cinema:"cinema",gaming:"gaming",coffee:"coffee",gallery:"gallery",skate:"skate",pub:"beers",sport:"sport",house:"house",club:"club",walk:"walk",food:"food",trip:"trip",biz:"handshake",occ:"party",xmas:"gift",nye:"partyface",other:"other"},e3=c=>"/e/"+(E3[c]||"other")+".webp";
+const E3={fball:"fball",vball:"vball",run:"run",gym:"gym",pool:"pool",scoot:"scoot",gift:"gift",pizza:"pizza",bike:"bike",basket:"basket",cinema:"cinema",gaming:"gaming",coffee:"coffee",gallery:"gallery",skate:"skate",pub:"beers",sport:"sport",house:"house",club:"club",walk:"walk",food:"food",trip:"trip",biz:"handshake",occ:"party",xmas:"gift",nye:"partyface",other:"other"},e3=c=>"/e/"+(E3[c]||"other")+".webp";
 const ic=(c,s)=>`<img class="e3" src="${e3(c)}" alt="">`,icSvg=(c,s)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${s||"url(#ng)"}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[c]||IC.other}</svg>`;
 const BOLT='<path d="M13 2 4 14h7l-1 8 10-13h-7z"/>',CLK='<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',X='<path d="M5 5l14 14M19 5 5 19"/>',PN='<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>';
 const i14=p=>`<span class="i14">${sv(p)}</span>`;
@@ -1427,7 +1432,7 @@ const gone=g=>view(`<div class="scr cen"><h1>${t(g?"expGT":"expT")}</h1><p class
 const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
 /* kolor dropu wynika z typu (bez wyboru przez użytkownika); stare dropy z polem theme zostają po staremu */
-const TCOL={biz:["#3b6cf6","#22d3ee"],sport:["#17c964","#a3e635"],house:["#f97316","#fb7185"],club:["#7c3aed","#ec4899"],pub:["#b45309","#f59e0b"],food:["#ea580c","#facc15"],pizza:["#ea580c","#facc15"],coffee:["#92400e","#d6a05a"],cinema:["#9f1239","#f43f5e"],gaming:["#4f46e5","#06b6d4"],gallery:["#0f766e","#5eead4"],walk:["#65a30d","#facc15"],trip:["#0ea5e9","#22d3a4"],occ:["#db2777","#fb7185"],xmas:["#166534","#dc2626"],nye:["#1e3a8a","#fbbf24"],bike:["#0f766e","#2dd4bf"],basket:["#17c964","#a3e635"],skate:["#475569","#94a3b8"],other:["#64748b","#a78bfa"]};
+const TCOL={biz:["#3b6cf6","#22d3ee"],sport:["#17c964","#a3e635"],house:["#f97316","#fb7185"],club:["#7c3aed","#ec4899"],pub:["#b45309","#f59e0b"],food:["#ea580c","#facc15"],pizza:["#ea580c","#facc15"],coffee:["#92400e","#d6a05a"],cinema:["#9f1239","#f43f5e"],gaming:["#4f46e5","#06b6d4"],gallery:["#0f766e","#5eead4"],walk:["#65a30d","#facc15"],trip:["#0ea5e9","#22d3a4"],occ:["#db2777","#fb7185"],xmas:["#166534","#dc2626"],nye:["#1e3a8a","#fbbf24"],bike:["#0f766e","#2dd4bf"],basket:["#ea580c","#fb923c"],fball:["#15803d","#4ade80"],vball:["#d97706","#fde047"],run:["#e11d48","#fb7185"],gym:["#4338ca","#a78bfa"],pool:["#0284c7","#38bdf8"],scoot:["#a21caf","#e879f9"],skate:["#475569","#94a3b8"],other:["#64748b","#a78bfa"]};
 const catCol=(cat,id)=>{const c=TCOL[cat];if(!c)return THEMES[hs(id||"x")%THEMES.length];return id&&hs(id)%2?[c[1],c[0]]:c};
 const thm=d=>d.theme!=null?THEMES[+d.theme%THEMES.length]:catCol(d.category,d.id);
 /* zdjęcia na kartach dropów: pula na typ (public/ph/<klucz>.webp); słowo w tytule wybiera zdjęcie, inaczej stały los wg id */
@@ -1941,6 +1946,7 @@ function newView(){
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:38px">${t("newDrop")}</h1>
   <h3>${t("what")}</h3><div class="tiles">${seasOn().concat(CATS).map(k=>`<div class="tile ${k===cat?"sel":""}" data-c="${k}">${ic(k)}${t("c_"+k)}</div>`).join("")}</div>
   <div class="chips" id="occ" hidden>${OCC.map((k,i)=>`<button class="chip" data-o="${i}">${t("o_"+k)}</button>`).join("")}</div>
+  <div class="chips spc" id="spc" hidden>${SPK.map(k=>`<button class="chip" data-s="${k}"><img src="${e3(k)}" alt="">${t("sp_"+k)}</button>`).join("")}</div>
   <input id="cu" placeholder="${t("otherPh")}" maxlength="30" hidden><input id="ti" placeholder="${t("nameD")}" maxlength="40">
   <h3>${t("when")}</h3><div class="when"><div class="wheels"><div class="wh" id="hh">${[...Array(24)].map((_,i)=>`<div>${pad(i)}</div>`).join("")}</div><b style="font-size:26px">:</b><div class="wh" id="mm">${[...Array(12)].map((_,i)=>`<div>${pad(i*5)}</div>`).join("")}</div></div>
   <div class="dayb"><button class="sel" data-d="0">${t("today")}</button><button data-d="1">${t("tomorrow")}</button><button data-d="x" class="dpb"><span id="dlab">📅 ${t("pickD")}</span><input type="date" id="dpk" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></button></div></div>
@@ -1954,11 +1960,12 @@ function newView(){
   <button class="cta" id="go" style="margin-top:12px">${t("send")}</button></div>`);
   const wheel=(el,i)=>{const mark=()=>{const k=Math.round(el.scrollTop/40);[...el.children].forEach((c,j)=>c.classList.toggle("on",j===k))};el.scrollTop=i*40;mark();el.onscroll=mark};
   wheel($("#hh"),t0.getHours());wheel($("#mm"),Math.min(11,Math.round(t0.getMinutes()/5)));
-  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();if(typeof cmPin==="function")cmPin();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
+  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";$("#spc").hidden=cat!=="sport";if(cat==="sport")document.querySelectorAll("#spc .chip").forEach(x=>x.classList.remove("on"));if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();if(typeof cmPin==="function")cmPin();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
   const selDay=b=>document.querySelectorAll(".dayb button").forEach(x=>x.classList.toggle("sel",x===b));
   document.querySelectorAll(".dayb button").forEach(b=>b.onclick=e=>{vib(8);if(b.dataset.d==="x")return;day=+b.dataset.d;dsel=null;$("#dlab").textContent="📅 "+t("pickD");selDay(b)});
   $("#dpk").onclick=e=>{e.stopPropagation();try{e.target.showPicker()}catch{}};
   $("#dpk").onchange=()=>{const v=$("#dpk").value;if(!v)return;dsel=v;day=-1;$("#dlab").textContent="📅 "+new Date(v+"T12:00").toLocaleDateString(LANG,{weekday:"short",day:"numeric",month:"short"});selDay($("#dpk").parentElement)};
+  document.querySelectorAll("#spc .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#spc .chip").forEach(x=>x.classList.toggle("on",x===c));cat=c.dataset.s;$("#ti").value=t("sp_"+cat)+" ";$("#ti").focus()});
   document.querySelectorAll("#occ .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#occ .chip").forEach(x=>x.classList.toggle("on",x===c));$("#ti").value=t("o_"+OCC[+c.dataset.o])+" ";$("#ti").focus()});
   if($("#pbs"))$("#pbs").onclick=()=>{if(!pub&&sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}if(!pub&&sur){vib([50,30,50]);return toast(t("surPubX"))}vib(10);pub=!pub;$("#pbs").classList.toggle("on",pub);$("#seatw").hidden=!pub;$("#sw").parentElement.style.opacity=pub?".4":""};
   /* nowy drop z zakładki Publiczne: od razu publiczny (bez ręcznego przełączania) */
