@@ -694,7 +694,7 @@ nav button span{white-space:nowrap}
 .pcn small .ptg.c{margin-left:0;margin-right:3px;background:rgba(255,255,255,.12);color:inherit;opacity:.9}
 .map .surh{left:10px;top:10px;height:40px;box-sizing:border-box;padding:0 14px 0 11px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(20,20,28,.94);box-shadow:0 4px 14px rgba(0,0,0,.45);gap:9px;max-width:calc(100% - 70px);white-space:nowrap;color:#fff}.map .surh>span:first-child{font-size:18px;line-height:1}.map .surh small{font-size:10px;font-weight:800;opacity:.62;letter-spacing:.07em}.map .surh #surt{font-size:15px;font-weight:900;letter-spacing:.03em;padding-left:9px;border-left:1px solid rgba(255,255,255,.18);line-height:1}@media(max-width:360px){.map .surh small{display:none}}
 .sk1{pointer-events:none;animation:skIn .5s ease both}@keyframes skIn{from{opacity:0}to{opacity:.5}}.sk1 .skc{display:block;width:40px;height:40px;border-radius:50%}.sk1 .skl{display:block;height:12px;border-radius:8px}.sk1 .skb{height:186px;border-radius:18px}.sk1 .skc,.sk1 .skl,.sk1 .skb{background:linear-gradient(100deg,rgba(255,255,255,.05) 30%,rgba(255,255,255,.14) 50%,rgba(255,255,255,.05) 70%);background-size:220% 100%;animation:skSh 1.4s linear infinite}@keyframes skSh{from{background-position:120% 0}to{background-position:-120% 0}}@media(prefers-reduced-motion:reduce){.sk1 .skc,.sk1 .skl,.sk1 .skb{animation:none}}
-.scr.chs.sk{background:#000}.scr.chs .cbar{flex:none;position:relative;display:flex;align-items:center;gap:10px;margin:calc(8px + env(safe-area-inset-top,0px)) 12px 6px;padding:11px 10px 11px 10px;border-radius:20px;background:#14141c;border:1px solid rgba(255,255,255,.08);cursor:pointer;color:#fff}
+.scr.chs.sk{background:#000}.scr.chs .cbar{flex:none;position:relative;display:flex;align-items:center;gap:10px;margin:calc(8px + env(safe-area-inset-top,0px)) 0 6px;padding:11px 14px 13px;border-radius:0;background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.09);cursor:pointer;color:#fff}
 .cbar .hbk{position:static;flex:none;width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(20,20,28,.94);box-shadow:0 4px 14px rgba(0,0,0,.45);color:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}
 .cbar .cbi{flex:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:grid;place-items:center}.cbar .cbi img{width:31px;height:31px;object-fit:contain}
 .cbar .cbt{flex:1;min-width:0}.cbar .cbt b{display:block;font-size:16px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -705,6 +705,7 @@ nav button span{white-space:nowrap}
 :root.kb .cbar .cbt small,:root.kb .cbar .cbc{display:none}
 .sk .m.me .bub{background:#2f7cf6!important;color:#fff!important;box-shadow:none}.sk .m.me .bub time{color:rgba(255,255,255,.7)!important}.sk .m.me .bub a{color:#fff!important}
 .sk #msb,.sk #mf #msb{background:#2f7cf6!important;color:#fff!important}
+.avw{position:relative;display:inline-flex;flex:none}.avw .onl{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#34d27b;border:2px solid #0b0b12;box-sizing:border-box}
 </style>
 </head>
 <body style="background:#0b0b12;margin:0">
@@ -2289,9 +2290,12 @@ async function chatView(code,g){
   B.oncontextmenu=e=>{const el=e.target.closest(".m[data-i]");if(el){e.preventDefault();clearTimeout(lp);lp=null;openRx(el)}};
   B.ondblclick=e=>{const el=e.target.closest(".m[data-i]");if(el&&mine&&!e.target.closest(".rxc"))react(el.dataset.i,"🔥",el)};
   B.onclick=e=>{const c=e.target.closest(".rxc");if(c&&mine){const el=c.closest(".m");react(el.dataset.i,c.dataset.e,el)}};
+  const onl=p=>{if(isMe(p.id))return false;if(DEMO)return hs(p.id)%2===0;const r=p.readAt?.toMillis?.(),ty=p.typing?.toMillis?.();return(r&&Date.now()-r<75e3)||(ty&&Date.now()-ty<20e3)};
+  const drawMem=()=>{const m=$("#mem");if(!m)return;m.innerHTML=P.map(p=>`<span class="mchip" data-u="${esc(p.id)}"><span class="avw">${avc("mini",avIdx(p))}${onl(p)?'<i class="onl"></i>':""}</span><b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("")};
+  const hb=()=>{if(!mine||document.hidden||DEMO)return;updateDoc(doc(ref,pc,me()),{readAt:serverTimestamp()}).catch(()=>{})};every(hb,40000);every(drawMem,20000);
   unsubs.push(onSnapshot(collection(ref,pc),sn=>{
     P=dedupP(sn.docs.map(x=>({...x.data(),id:x.id})));mine=P.find(p=>p.id===me())||null;
-    $("#mem").innerHTML=P.map(p=>`<span class="mchip" data-u="${esc(p.id)}">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("");
+    drawMem();
     $("#mem").onclick=e=>{const c=e.target.closest("[data-u]");if(!c)return;const q=P.find(x=>x.id===c.dataset.u);if(q&&!isMe(q.id))userActions(q,{target:"user",chat:g?"group":"drop",code},drawM)};
     $("#cnt").textContent=t("members",P.length)+" · "+(g?t("grChH"):t("chH")).split(" · ")[0];
     if(!mine){const f=$("#mf");if(f){f.outerHTML=`<button class="cta" id="jn" style="margin:0">${t(g?"joinG":"joinC")}</button>`;$("#jn").onclick=()=>go((g?"/g/":"/d/")+code)}return}
