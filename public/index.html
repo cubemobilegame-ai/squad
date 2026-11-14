@@ -1766,13 +1766,15 @@ function pubTab(el,redraw){
   el.onclick=e=>{const b=e.target.closest&&e.target.closest(".pvt button");if(b){vib(8);sset("pubv",b.dataset.pv);redraw()}};
   if(pvMode()==="map")return pubMap(el,safe);
   if(PUB.err&&!PUB.list){el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t(PUB.err==="deny"?"pubLocDeny":"pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;$("#pgo").onclick=()=>{PUB.err=null;PUB.pos=null;el.innerHTML=`<p class="mut">${t("load")}</p>`;loadPub().then(redraw)};return}
-  if(window.__pubSk&&PUB.list){window.__pubSk=0;window.__pubSkT=Date.now();el.innerHTML=safe+PUBSK;setTimeout(()=>{if(homeTab==="pub")redraw()},1800);if(Date.now()-PUB.at>60e3)loadPub();return}
+  const BOX=!!(PUB.M&&PUB.M.map),have=BOX?!!PUB.bat:!!PUB.list,stale=!have||Date.now()-(BOX?PUB.bat:PUB.at)>60e3||(BOX&&PUB.bkey!==pubBoxKey());
+  if(window.__pubSk&&have){window.__pubSk=0;window.__pubSkT=Date.now();el.innerHTML=safe+PUBSK;setTimeout(()=>{if(homeTab==="pub")redraw()},1800);if(stale)pubLoadAny().then(()=>{if(homeTab==="pub")redraw()});return}
   if(window.__pubSkT&&Date.now()-window.__pubSkT<1750){if(!el.querySelector(".sk1"))el.innerHTML=safe+PUBSK;return}
-  if(!PUB.list||Date.now()-PUB.at>60e3){if(!PUB.list)el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t("pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;
+  if(stale){if(!have)el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t("pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;
     window.__pubSk=0;
-    const go_=()=>{el.innerHTML=safe+`${PUBSK}`;Promise.all([loadPub(),new Promise(r=>setTimeout(r,1800))]).then(()=>{if(homeTab==="pub")redraw()})};
-    go_();if(!PUB.list)return}
-  el.innerHTML=safe+(PUB.list.length?PUB.list.map(d=>{const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=d.hostId===me()?"host":((d.P||[]).find(p=>p.id===me())?.status||"inv");
+    const go_=()=>{el.innerHTML=safe+`${PUBSK}`;Promise.all([pubLoadAny(),new Promise(r=>setTimeout(r,1800))]).then(()=>{if(homeTab==="pub")redraw()})};
+    go_();if(!have)return}
+  const LST=BOX?pubBoxList().map(d=>(d.km=PUB.pos?kmTo(PUB.pos,d.geo):null,d)):PUB.list;
+  el.innerHTML=safe+(LST.length?LST.map(d=>{const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=d.hostId===me()?"host":((d.P||[]).find(p=>p.id===me())?.status||"inv");
     return postCard(d,d.P||[],role,{km:d.km,seats:d.seats,free})}).join("")
     :`<div class="emp">${t("pubEmp")}</div>`)}
 /* ---------- MAPA PUBLICZNYCH DROPÓW (Leaflet + OpenStreetMap/CARTO, grupowanie znaczników) ---------- */
@@ -1824,19 +1826,28 @@ const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasA
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${ic(d.category)}</div></div>`})};
 function pmMe(P){try{const m=P.map,p=PUB.pos;if(!m||!p||!window.L)return;const ic=window.L.divIcon({className:"",iconSize:[46,46],iconAnchor:[23,23],html:`<div class="pmme2">${avc("",meAv())}</div>`});
   if(P.me){P.me.setLatLng([p.la,p.lo]);P.me.setIcon(ic)}else P.me=window.L.marker([p.la,p.lo],{icon:ic,interactive:false,keyboard:false,zIndexOffset:2000}).addTo(m)}catch(e){console.warn("me",e)}}
-function pmFit(P,p){const m=P.map;if(!m)return;pmMe(P);const sz=m.getSize(),px=Math.max(sz.x,sz.y,200),mpp=22000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp);m.setView([p.la,p.lo],Math.max(8,Math.min(17,z)),{animate:true})}
+function pmFit(P,p){const m=P.map;if(!m)return;pmMe(P);const sz=m.getSize(),px=Math.max(Math.min(sz.x,sz.y),200),mpp=60000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp);m.setView([p.la,p.lo],Math.max(8,Math.min(17,z)),{animate:true})}
 async function pubMapLoad(P,hint){try{await pubMapLoad0(P,hint)}catch(e){console.warn("map",e)}}
+/* pobranie dropów dla komórek geohash do wspólnego magazynu P.items (mapa i lista czytają z tego samego) */
+async function pubFetch(P,cs){const m=P.map,now=Date.now(),need=cs.filter(c=>!(P.loaded.get(c)>now-120e3));
+  if(DEMO){if(!P.items.size){const c=m.getCenter(),L0=demoPub({la:c.lat,lo:c.lng});L0.forEach((d,i)=>{const a=i*2.4;P.items.set(d.id,{...d,geo:{la:c.lat+Math.sin(a)*.05*(1+i%3),lo:c.lng+Math.cos(a)*.09*(1+i%2)}})})}}
+  else if(need.length){
+    const ch=[];for(let i=0;i<need.length;i+=30)ch.push(need.slice(i,i+30));
+    const rs=await Promise.all(ch.map(c=>getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",c)))));
+    need.forEach(c=>P.loaded.set(c,now));
+    rs.forEach(q=>q.docs.forEach(x=>{const d={...x.data(),id:x.id};if(d.geo)P.items.set(d.id,d)}))}}
+const pubBoxCells=m=>{const b=m.getBounds();let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());return cs.length>120?cs.slice(0,120):cs};
+/* lista = to, co widać na mapie (jej bieżący obszar) */
+const pubBoxList=()=>{const P=PUB.M,b=P.map.getBounds(),now=Date.now();return[...P.items.values()].filter(d=>d.startsAt?.toMillis?.()>now&&d.geo&&d.hostId!==me()&&!isBlk(d.hostId)&&b.contains(dmp(d))).sort((a,c)=>a.startsAt.toMillis()-c.startsAt.toMillis())};
+const pubBoxKey=()=>{const b=PUB.M.map.getBounds(),f=v=>v.toFixed(3);return[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()].map(f).join(",")};
+async function pubBoxLoad(){const P=PUB.M;if(!P||!P.map)return;try{await pubFetch(P,pubBoxCells(P.map));const L=pubBoxList().slice(0,40);
+  await Promise.all(L.map(async d=>{if(d.P)return;try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}}catch{d.P=[]}}));
+  }catch(e){console.warn("box",e)}finally{try{PUB.bat=Date.now();PUB.bkey=pubBoxKey()}catch{}}}
+const pubLoadAny=()=>PUB.M&&PUB.M.map?pubBoxLoad():loadPub();
 async function pubMapLoad0(P,hint){pmMe(P);const m=P.map;if(!m)return;
   const b=m.getBounds().pad(.1);let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());if(cs.length>120)cs=cs.slice(0,120);
-  const now=Date.now(),need=cs.filter(c=>!(P.loaded.get(c)>now-120e3));
-  try{
-    if(DEMO){if(!P.items.size){const c=m.getCenter(),L0=demoPub({la:c.lat,lo:c.lng});L0.forEach((d,i)=>{const a=i*2.4;P.items.set(d.id,{...d,geo:{la:c.lat+Math.sin(a)*.05*(1+i%3),lo:c.lng+Math.cos(a)*.09*(1+i%2)}})})}}
-    else if(need.length){
-      const ch=[];for(let i=0;i<need.length;i+=30)ch.push(need.slice(i,i+30));
-      const rs=await Promise.all(ch.map(c=>getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",c)))));
-      need.forEach(c=>P.loaded.set(c,now));
-      rs.forEach(q=>q.docs.forEach(x=>{const d={...x.data(),id:x.id};if(d.geo)P.items.set(d.id,d)}))}
-  }catch(e){hint(t("pmErr"));return}
+  const now=Date.now();
+  try{await pubFetch(P,cs)}catch(e){hint(t("pmErr"));return}
   const vis=[...P.items.values()].filter(d=>d.startsAt?.toMillis?.()>now&&d.geo&&d.hostId!==me()&&!isBlk(d.hostId));
   vis.forEach(d=>{if(P.mk.has(d.id))return;const k=window.L.marker(dmp(d),{icon:pubMapIcon(d)});k.on("click",()=>pubMapCard(P,d));P.mk.set(d.id,k);P.cl.addLayer(k)});
   const ids=new Set(vis.map(d=>d.id));P.mk.forEach((k,id)=>{if(!ids.has(id)){P.cl.removeLayer(k);P.mk.delete(id)}});
