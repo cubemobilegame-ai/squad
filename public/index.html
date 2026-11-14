@@ -1993,7 +1993,7 @@ function chatsView(){
   const row=(x)=>{const m=x.m,n=x.n,who=m?(isMe(m.authorId)?t("you2"):m.nickname):"";
     return`<div class="chrow${n?" un":""}" onclick="go('${x.href}')"><div class="cav th${x.g?" gr":""}" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
     <div class="crm"><div class="cr1"><b>${esc(clean(x.title))}${isMuted((x.g?"g_":"")+x.id)?" 🔕":""}</b><time>${tm(x.at)}</time></div>
-    <div class="cr2"><span class="ctag ${x.g?"g":"d"}">${x.tag}</span><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div></div>`};
+    <div class="cr2"><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div></div>`};
   let F=sget("chf")||"all";
   const draw=()=>{
     const G=[...S.groups.values()].map(g=>{const [c1,c2]=THEMES[hs(g.id)%8],m=(S.ms["g_"+g.id]||[]).slice(-1)[0];return{g:1,id:g.id,href:"/gc/"+g.id,c1,c2,icon:'<img class="e3" src="/e/handshake.webp" alt="">',title:g.name,m,n:unreadOf({id:"g_"+g.id}),tag:t("tagG"),at:m?.createdAt?.toMillis?.()||(m?Date.now():g.createdAt?.toMillis?.()||0),st:g.createdAt?.toMillis?.()||0}});
