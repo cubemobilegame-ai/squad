@@ -2207,6 +2207,8 @@ async function dropView(code){
   unsubs.push(onSnapshot(ref,x=>{if(!x.exists())return gone();if(sig(x.data())!==sig0){if(!isHost)toast(t("dropChanged"));dropView(code)}},()=>{}));
   if(!isHost&&d.surprise){const ms=d.startsAt.toMillis()-36e5-Date.now();if(ms>0&&ms<2e9){const TT=setTimeout(()=>{if(gp()==="/d/"+code){dropView(code);setTimeout(()=>{if(gp()==="/d/"+code)boomFx($("#dmw"))},90)}},ms+500);unsubs.push(()=>clearTimeout(TT))}}
   drawAlbum();
+  /* niespodzianka właśnie ujawniona (np. wejście z powiadomienia): przewiń od razu do mapy, raz */
+  if(!isHost&&d.surprise&&!surHid(d)){const mk="mapSeen_"+code;if(!sget(mk)||location.hash==="#map"){sset(mk,"1");setTimeout(()=>{if(gp()==="/d/"+code){const m=$("#dmw");if(m)m.scrollIntoView({behavior:"smooth",block:"center"})}},550)}}
   if(pendingShare===code){pendingShare=null;setTimeout(()=>{if(gp()==="/d/"+code)openShare("d",{...d,id:code,P},true)},450)}
 }
 
