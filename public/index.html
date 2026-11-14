@@ -317,7 +317,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .inv>span{min-width:0;overflow-wrap:anywhere}
 #rot{display:none;position:fixed;inset:0;z-index:99;background:#0b0b12;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;font-weight:900;padding:20px}
 #rot svg{width:64px;height:64px;color:var(--acc);animation:rt 2s ease-in-out infinite}@keyframes rt{50%{transform:rotate(-90deg)}}
-@media (orientation:landscape) and (max-height:540px){#rot{display:flex}}
+@media (orientation:landscape) and (max-height:540px) and (min-device-aspect-ratio:1/1){#rot{display:flex}}
 .shw{height:min(32dvh,300px)}.shw img{transition:opacity .2s,filter .2s}.shw.ld img{opacity:.45;filter:blur(3px)}
 .chips{display:flex;gap:6px;overflow-x:auto;margin:0 -18px 10px;padding:0 18px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
 .spc .chip{display:inline-flex;align-items:center;gap:7px;padding:6px 14px 6px 8px}.spc .chip img{width:26px;height:26px}
