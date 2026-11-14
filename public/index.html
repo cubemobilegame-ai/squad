@@ -1705,11 +1705,12 @@ function home(){
     document.documentElement.classList.remove("pmlock");
     $("#hint").textContent=tab==="pub"?"":t("h_"+tab);$("#hint").hidden=tab==="pub";
     if(tab==="pub"){pubTab($("#list"),draw);tick();return}
+    window.__pubSk=1;
     const GI=tab==="inv"?S.ginv.map(i=>`<div class="ginv">${avc("mini",avIdx({id:i.from,av:i.av,ph:i.ph}))}<div class="gi"><small>${t("kGInv",esc(i.nickname||"?"))}</small><b>👥 ${esc(clean(i.title||""))}</b></div><button class="mbtn" data-gv="${esc(i.code)}">${t("kSee")}</button><button class="kx" data-gx="${esc(i.id)}">✕</button></div>`).join(""):"";
     $("#list").innerHTML=GI+G[tab].map(d=>postCard(d,S.ppl[d.id]||[],r(d))).join("")||(tab==="mine"?`<div class="how">${[1,2,3].map(i=>`<div><b>${i}</b><span>${t("how"+i)}</span></div>`).join("")}</div>`:(tab==="inv"?`<div class="emp">${t("eInv")}</div>`:`<p class="mut">${t("eOut")}</p>`));{const em=!GI&&!G[tab].length;if(tab==="inv")$("#hint").hidden=em}
     document.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{vib(8);go("/g/"+b.dataset.gv)});document.querySelectorAll("[data-gx]").forEach(b=>b.onclick=()=>{vib(10);deleteDoc(doc(db,"users",me(),"invites",b.dataset.gx)).catch(()=>{});S.ginv=S.ginv.filter(i=>i.id!==b.dataset.gx);draw()});
     tick()};
-  redraw=draw;draw();badges();every(tick,1000);
+  window.__pubSk=1;  redraw=draw;draw();badges();every(tick,1000);
 }
 
 /* ---------- PUBLICZNE DROPY (16+): w promieniu 30 km, ograniczona liczba miejsc ---------- */
@@ -1749,6 +1750,7 @@ window.showPubRules=()=>{const s=sheet(`<h2>${t("prT")}</h2><ol class="prs">${PR
 const askLocOnce=()=>{if(DEMO||sget("locAsk")||sget("pub16")==="no"||!navigator.geolocation)return;if(document.querySelector(".sheetbg")){return setTimeout(askLocOnce,2500)}
   sset("locAsk","1");getPos().then(p=>{PUB.pos=p;if(pubOk()&&sget("pubRules")==="1")loadPub().then(()=>{if(homeTab==="pub")redraw?.()})}).catch(()=>{})};
 const taken=P=>(P||[]).filter(p=>["in","late"].includes(p.status)).length;
+const PUBSK=`<div class="pc sk1" aria-hidden="true"><div class="pch"><div class="pca"><i class="skc"></i></div><div class="pcn"><i class="skl" style="width:38%"></i><i class="skl" style="width:56%;margin-top:7px"></i></div></div><div class="skb"></div><div class="pact"><i class="skl" style="width:34%;height:38px;border-radius:14px"></i></div></div>`;
 function pubTab(el,redraw){
   if(sget("pub16")==="no"){el.innerHTML=`<div class="pubg"><img src="/e/lock.webp" alt=""><h3>${t("pubLockT")}</h3><p>${t("pubLockD")}</p></div>`;return}
   if(!pubOk()){const y=new Date().getFullYear();el.innerHTML=`<div class="pubg"><img src="/e/globe.webp" alt=""><h3>${t("pubAgeT")}</h3><p>${t("pubAgeD")}</p>
@@ -1761,8 +1763,11 @@ function pubTab(el,redraw){
   el.onclick=e=>{const b=e.target.closest&&e.target.closest(".pvt button");if(b){vib(8);sset("pubv",b.dataset.pv);redraw()}};
   if(pvMode()==="map")return pubMap(el,safe);
   if(PUB.err&&!PUB.list){el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t(PUB.err==="deny"?"pubLocDeny":"pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;$("#pgo").onclick=()=>{PUB.err=null;PUB.pos=null;el.innerHTML=`<p class="mut">${t("load")}</p>`;loadPub().then(redraw)};return}
+  if(window.__pubSk&&PUB.list){window.__pubSk=0;window.__pubSkT=Date.now();el.innerHTML=safe+PUBSK;setTimeout(()=>{if(homeTab==="pub")redraw()},1800);if(Date.now()-PUB.at>60e3)loadPub();return}
+  if(window.__pubSkT&&Date.now()-window.__pubSkT<1750){if(!el.querySelector(".sk1"))el.innerHTML=safe+PUBSK;return}
   if(!PUB.list||Date.now()-PUB.at>60e3){if(!PUB.list)el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t("pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;
-    const go_=()=>{el.innerHTML=safe+`<div class="pc sk1" aria-hidden="true"><div class="pch"><div class="pca"><i class="skc"></i></div><div class="pcn"><i class="skl" style="width:38%"></i><i class="skl" style="width:56%;margin-top:7px"></i></div></div><div class="skb"></div><div class="pact"><i class="skl" style="width:34%;height:38px;border-radius:14px"></i></div></div>`;Promise.all([loadPub(),new Promise(r=>setTimeout(r,1800))]).then(()=>{if(homeTab==="pub")redraw()})};
+    window.__pubSk=0;
+    const go_=()=>{el.innerHTML=safe+`${PUBSK}`;Promise.all([loadPub(),new Promise(r=>setTimeout(r,1800))]).then(()=>{if(homeTab==="pub")redraw()})};
     go_();if(!PUB.list)return}
   el.innerHTML=safe+(PUB.list.length?PUB.list.map(d=>{const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=d.hostId===me()?"host":((d.P||[]).find(p=>p.id===me())?.status||"inv");
     return postCard(d,d.P||[],role,{km:d.km,seats:d.seats,free})}).join("")
