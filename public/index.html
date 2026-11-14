@@ -1904,7 +1904,7 @@ function profileView(){
     document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));
     bindPhoto(changedAv);const r=$("#phr");if(r)r.onclick=()=>{vib(10);const u=auth.currentUser;if(u&&!DEMO)delImg("avatars/"+u.uid+".jpg");sset("photo","");changedAv()}};
   const changedAv=()=>{refresh();syncAvatar();saveProfile()};
-  refresh();bindBadges();
+  refresh();bindBadges();{const h=[...document.querySelectorAll(".sgrp>h3")].find(x=>x.textContent===t("sInfo"));if(h){let n=0,tm;h.onclick=()=>{n++;clearTimeout(tm);tm=setTimeout(()=>n=0,2500);if(n>=7){n=0;try{if(localStorage.getItem("safe_on")==="1")localStorage.removeItem("safe_on");else localStorage.setItem("safe_on","1")}catch{}vib(20);location.reload()}}}}
   $("#pqr").onclick=()=>qrContact();$("#pe").onclick=()=>{vib(10);const e=$("#ped");e.hidden=!e.hidden;$("#pe").classList.toggle("on",!e.hidden)};
   $("#ps").onclick=()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!nickTry(n)){$("#pn").value=sget("nick");return}sset("nick",n);$("#pnm").textContent=n;$("#ped").hidden=true;$("#pe").classList.remove("on");saveProfile();syncAvatar();vib(15);toast(t("saved"))};
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});$("#kmk").onclick=()=>avEditor(changedAv);
