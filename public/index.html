@@ -377,7 +377,7 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 .hi5 .bm{position:absolute;left:50%;top:-4px;width:54px;height:54px;margin-left:-27px;opacity:0;animation:bm 1.6s ease-out both}
 .hi5 .arc{position:absolute;top:40px;width:30px;height:62px;border:3px solid transparent;border-right-color:rgba(255,255,255,.85);border-radius:50%;opacity:0;animation:arc 1.6s ease-out both}
 .hi5 .arc{display:none!important}.hi5 .a1{left:-14px;transform:scaleX(-1)}.hi5 .a2{right:-14px}
-@keyframes bm{0%,58%{opacity:0;transform:scale(.2)}68%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.4) translateY(-8px)}}
+.map.rvl{animation:rvl 1s ease-in-out;box-shadow:0 0 0 0 rgba(var(--accr),.5)}@keyframes rvl{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(var(--accr),.55)}22%{transform:scale(1.035)}45%{transform:scale(1);box-shadow:0 0 0 14px rgba(var(--accr),0)}68%{transform:scale(1.06);box-shadow:0 0 0 0 rgba(var(--accr),.55)}100%{transform:scale(1.09);box-shadow:0 0 0 22px rgba(var(--accr),0)}}@keyframes bm{0%,58%{opacity:0;transform:scale(.2)}68%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.4) translateY(-8px)}}
 @keyframes arc{0%,60%{opacity:0}70%{opacity:1}100%{opacity:.85}}
 .hi5.sm{transform:scale(.9);margin:-14px auto -6px}.hi5.xs{transform:scale(.62);margin:-28px auto -30px}
 .bbig .hi5{font-size:initial}
@@ -2205,10 +2205,11 @@ async function dropView(code){
   unsubs.push(onSnapshot(collection(ref,"photos"),s=>{PH=s.docs.map(x=>({...x.data(),id:x.id})).sort((a,b)=>(a.createdAt?.toMillis?.()||0)-(b.createdAt?.toMillis?.()||0));drawAlbum()},()=>{}));
   const sig=x=>[x.title,x.place,x.startsAt?.toMillis?.(),!!x.surprise].join("|"),sig0=sig(d);
   unsubs.push(onSnapshot(ref,x=>{if(!x.exists())return gone();if(sig(x.data())!==sig0){if(!isHost)toast(t("dropChanged"));dropView(code)}},()=>{}));
-  if(!isHost&&d.surprise){const ms=d.startsAt.toMillis()-36e5-Date.now();if(ms>0&&ms<2e9){const TT=setTimeout(()=>{if(gp()==="/d/"+code){dropView(code);setTimeout(()=>{if(gp()==="/d/"+code)boomFx($("#dmw"))},90)}},ms+500);unsubs.push(()=>clearTimeout(TT))}}
+  if(!isHost&&d.surprise){const ms=d.startsAt.toMillis()-36e5-Date.now();if(ms>0&&ms<2e9){const TT=setTimeout(()=>{if(gp()==="/d/"+code){dropView(code)}},ms+500);unsubs.push(()=>clearTimeout(TT))}}
   drawAlbum();
   /* niespodzianka właśnie ujawniona (np. wejście z powiadomienia): przewiń od razu do mapy, raz */
-  if(!isHost&&d.surprise&&!surHid(d)){const mk="mapSeen_"+code;if(!sget(mk)||location.hash==="#map"){sset(mk,"1");setTimeout(()=>{if(gp()==="/d/"+code){const m=$("#dmw");if(m)m.scrollIntoView({behavior:"smooth",block:"center"})}},550)}}
+  if(!isHost&&d.surprise&&!surHid(d)){const mk="mapSeen_"+code;if(!sget(mk)||location.hash==="#map"){sset(mk,"1");setTimeout(()=>{if(gp()==="/d/"+code){const m=$("#dmw");if(m)m.scrollIntoView({behavior:"smooth",block:"center"})}},550);
+    setTimeout(()=>{if(gp()!=="/d/"+code)return;const m=$("#dmw");if(!m)return;m.classList.add("rvl");vib(12);setTimeout(()=>{m.classList.remove("rvl");if(gp()==="/d/"+code)boomFx(m)},1000)},1250)}}
   if(pendingShare===code){pendingShare=null;setTimeout(()=>{if(gp()==="/d/"+code)openShare("d",{...d,id:code,P},true)},450)}
 }
 
