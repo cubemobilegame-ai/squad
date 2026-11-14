@@ -1,0 +1,13 @@
+# PROPOSAL – NOT DEPLOYED. Wdrożyć dopiero po akceptacji Apple i zielonym świetle.
+# 1) Firestore rules – dodać wewnątrz match /users/{uid}:
+match /alerts/{aid} {
+  // odbiorca czyta/usuwa swoje; nadawca może tylko utworzyć alert dla kontaktu (musi być w jego contacts)
+  allow read, delete: if request.auth.uid == uid;
+  allow create: if request.auth != null
+    && request.resource.data.from == request.auth.uid
+    && request.resource.data.kind == "sos"
+    && exists(/databases/$(database)/documents/users/$(uid)/contacts/$(request.auth.uid));
+}
+# 2) Worker: na create w users/{uid}/alerts wysłać push (kind "sos") do tokenów uid:
+#    tytuł "<nick> potrzebuje wsparcia", treść "<drop> · <miejsce>", link /d/<code>.
+# 3) Client: flaga SAFE (localStorage safe_on / ?safe=1) – domyślnie wyłączona w produkcji.
