@@ -1234,7 +1234,7 @@ if(L.it)Object.assign(L.it,{c_xmas:"Natale",c_nye:"Capodanno"});
 if(L.cs)Object.assign(L.cs,{c_xmas:"Vánoce",c_nye:"Silvestr"});
 if(L.uk)Object.assign(L.uk,{c_xmas:"Різдво",c_nye:"Новий рік"});
 /* typy sezonowe: widoczne w formularzu tylko w podanym oknie dat (włącznie), potem znikają z wyboru, ale istniejące dropy zostają */
-const SEAS=[["xmas","2026-11-14","2026-12-26",7],["nye","2026-11-14","2027-01-02",1]],NOPUB=["occ","biz","xmas"];
+const SEAS=[["xmas","2026-11-14","2026-12-26"],["nye","2026-11-14","2027-01-02"]],NOPUB=["occ","biz","xmas"];
 const seasOn=()=>{const d=ymd(new Date());return SEAS.filter(x=>d>=x[1]&&d<=x[2]).map(x=>x[0])};
 const COLORS=["#FF4F86","#A855F7","#38BDF8","#FF5CAA","#FFD84D"];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -1419,7 +1419,10 @@ const getDocR=async r=>{for(let i=0;i<3;i++){try{return await Promise.race([getD
 const gone=g=>view(`<div class="scr cen"><h1>${t(g?"expGT":"expT")}</h1><p class="mut">${t(g?"expGD":"expD")}</p><button class="cta" onclick="go('/')">${t("back")}</button></div>`);
 const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
-const thm=d=>THEMES[(d.theme!=null?+d.theme:hs(d.id))%THEMES.length];
+/* kolor dropu wynika z typu (bez wyboru przez użytkownika); stare dropy z polem theme zostają po staremu */
+const TCOL={biz:["#3b6cf6","#22d3ee"],sport:["#17c964","#a3e635"],house:["#f97316","#fb7185"],club:["#7c3aed","#ec4899"],pub:["#b45309","#f59e0b"],food:["#ea580c","#facc15"],pizza:["#ea580c","#facc15"],coffee:["#92400e","#d6a05a"],cinema:["#9f1239","#f43f5e"],gaming:["#4f46e5","#06b6d4"],gallery:["#0f766e","#5eead4"],walk:["#65a30d","#facc15"],trip:["#0ea5e9","#22d3a4"],occ:["#db2777","#fb7185"],xmas:["#166534","#dc2626"],nye:["#1e3a8a","#fbbf24"],bike:["#0f766e","#2dd4bf"],basket:["#17c964","#a3e635"],skate:["#475569","#94a3b8"],other:["#64748b","#a78bfa"]};
+const catCol=(cat,id)=>{const c=TCOL[cat];if(!c)return THEMES[hs(id||"x")%THEMES.length];return id&&hs(id)%2?[c[1],c[0]]:c};
+const thm=d=>d.theme!=null?THEMES[+d.theme%THEMES.length]:catCol(d.category,d.id);
 const nc=id=>COLORS[hs(id)%5],base=()=>DEMO?"https://squad.app":location.origin;
 const roleOf=d=>d.hostId===me()?"host":((S.ppl[d.id]||[]).find(p=>p.id===me())?.status||"inv");
 /* widżet iOS: najbliższe dropy (host / IN / LATE) przekazywane do App Group */
@@ -1920,12 +1923,11 @@ function notifView(){
 /* ---------- NEW DROP ---------- */
 function newView(){
   const u=authed();if(!u)return;if(u.isAnonymous){go("/");setTimeout(()=>guestUp("/new"),200);return}
-  let cat="biz",day=0,sur=false,th=Math.floor(Math.random()*THEMES.length),rep="no",dsel=null,pub=false,seats=8;const t0=new Date(Date.now()+36e5);
+  let cat="biz",day=0,sur=false,rep="no",dsel=null,pub=false,seats=8;const t0=new Date(Date.now()+36e5);
   view(`<div class="scr"><div class="hdr">${bk("/")}</div><h1 class="logo" style="font-size:38px">${t("newDrop")}</h1>
   <h3>${t("what")}</h3><div class="tiles">${seasOn().concat(CATS).map(k=>`<div class="tile ${k===cat?"sel":""}" data-c="${k}">${ic(k)}${t("c_"+k)}</div>`).join("")}</div>
   <div class="chips" id="occ" hidden>${OCC.map((k,i)=>`<button class="chip" data-o="${i}">${t("o_"+k)}</button>`).join("")}</div>
   <input id="cu" placeholder="${t("otherPh")}" maxlength="30" hidden><input id="ti" placeholder="${t("nameD")}" maxlength="40">
-  <h3>${t("color")}</h3><div class="sws">${THEMES.map((c,i)=>`<button class="swc ${i==th?"sel":""}" data-i="${i}" style="background:linear-gradient(135deg,${c[0]},${c[1]})"></button>`).join("")}</div>
   <h3>${t("when")}</h3><div class="when"><div class="wheels"><div class="wh" id="hh">${[...Array(24)].map((_,i)=>`<div>${pad(i)}</div>`).join("")}</div><b style="font-size:26px">:</b><div class="wh" id="mm">${[...Array(12)].map((_,i)=>`<div>${pad(i*5)}</div>`).join("")}</div></div>
   <div class="dayb"><button class="sel" data-d="0">${t("today")}</button><button data-d="1">${t("tomorrow")}</button><button data-d="x" class="dpb"><span id="dlab">📅 ${t("pickD")}</span><input type="date" id="dpk" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></button></div></div>
   ${pubOk()?`<div id="pubw"${cat==="biz"?" hidden":""}><div class="sw">🌍 ${t("pubMk")}<div class="tg" id="pbs"></div></div><p class="hint s">${t("pubMkD")}</p>
@@ -1938,7 +1940,7 @@ function newView(){
   <button class="cta" id="go" style="margin-top:12px">${t("send")}</button></div>`);
   const wheel=(el,i)=>{const mark=()=>{const k=Math.round(el.scrollTop/40);[...el.children].forEach((c,j)=>c.classList.toggle("on",j===k))};el.scrollTop=i*40;mark();el.onscroll=mark};
   wheel($("#hh"),t0.getHours());wheel($("#mm"),Math.min(11,Math.round(t0.getMinutes()/5)));
-  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();{const sp=SEAS.find(x=>x[0]===cat);if(sp){th=sp[3];document.querySelectorAll(".swc").forEach(x=>x.classList.toggle("sel",+x.dataset.i===th))}}document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
+  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();if(typeof cmPin==="function")cmPin();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
   const selDay=b=>document.querySelectorAll(".dayb button").forEach(x=>x.classList.toggle("sel",x===b));
   document.querySelectorAll(".dayb button").forEach(b=>b.onclick=e=>{vib(8);if(b.dataset.d==="x")return;day=+b.dataset.d;dsel=null;$("#dlab").textContent="📅 "+t("pickD");selDay(b)});
   $("#dpk").onclick=e=>{e.stopPropagation();try{e.target.showPicker()}catch{}};
@@ -1955,8 +1957,8 @@ function newView(){
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(cmM)}
     cmM.invalidateSize(false);cmM.setView(ll,z,{animate:false});setTimeout(()=>cmM.invalidateSize(),30)};
   $("#cmx").onclick=e=>{e.stopPropagation();const q=$("#pl").value.trim(),sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null,st0=cmPt||cmMe||sp;
-    pinPicker({ll:st0?[st0.la,st0.lo]:[52,19.4],zoom:st0?(cmPt?17:14):6,cat,th:THEMES[th],onOk:async c=>{let q2=$("#pl").value.trim();if(!q2){q2=(await revGeo(c))||t("pinPlace");$("#pl").value=q2}cmQ=q2;cmOk=q2;cmPt={la:c.la,lo:c.lo,q:q2,ap:0};cmShow([c.la,c.lo]);$("#cmst").textContent=t("ppSet")}})};
-  const cmPin=()=>{const pn=document.querySelector("#cmw .pin");if(pn){const [a,b]=THEMES[th];pn.innerHTML=`<div class="pmk" style="--c1:${a};--c2:${b}"><div class="pmi">${ic(cat)}</div></div>`}};cmPin();
+    pinPicker({ll:st0?[st0.la,st0.lo]:[52,19.4],zoom:st0?(cmPt?17:14):6,cat,th:catCol(cat),onOk:async c=>{let q2=$("#pl").value.trim();if(!q2){q2=(await revGeo(c))||t("pinPlace");$("#pl").value=q2}cmQ=q2;cmOk=q2;cmPt={la:c.la,lo:c.lo,q:q2,ap:0};cmShow([c.la,c.lo]);$("#cmst").textContent=t("ppSet")}})};
+  const cmPin=()=>{const pn=document.querySelector("#cmw .pin");if(pn){const [a,b]=catCol(cat);pn.innerHTML=`<div class="pmk" style="--c1:${a};--c2:${b}"><div class="pmi">${ic(cat)}</div></div>`}};cmPin();
   (async()=>{try{let me=DEMO?{la:52.2297,lo:21.0122}:(typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null);if(!me&&navigator.permissions){const ps=await navigator.permissions.query({name:"geolocation"});if(ps.state==="granted")me=await getPos()}
     if(!me||!$("#cmw")||cmM||$("#pl").value.trim())return;cmMe=me;await cmShow([me.la,me.lo],14);if(!cmPt&&!$("#pl").value.trim())$("#cmst").textContent=t("cmMine")}catch{}})();
   const cmGo=async()=>{const plx=$("#pl"),st=$("#cmst");if(!plx||!st)return;const q=plx.value.trim();if(!q){cmQ="";cmPt=null;st.textContent="";return}if(q===cmQ)return;cmQ=q;const my=++cmSeq;st.textContent=t("cmFind");
@@ -1980,7 +1982,6 @@ function newView(){
       sgBox.querySelectorAll("button").forEach(b=>b.onclick=()=>{const x=L2[+b.dataset.i],q2=(x.nm+(x.sub?", "+x.sub.split(", ")[0]:"")).slice(0,80);vib(10);sgSeq++;sgBox.innerHTML="";clearTimeout(cmT);$("#pl").value=q2;cmQ=q2;cmOk=q2;cmPt={la:x.la,lo:x.lo,q:q2,ap:0};cmShow([x.la,x.lo],17);$("#cmst").textContent=t("ppSet");$("#pl").blur()})}catch(e){}};
   $("#pl").addEventListener("input",()=>{cmPt=null;clearTimeout(cmT);cmT=setTimeout(cmGo,800);clearTimeout(sgT);const q=$("#pl").value.trim();sgT=setTimeout(()=>sgFind(q),450)});document.querySelectorAll(".tile,.swc").forEach(c=>c.addEventListener("click",()=>setTimeout(cmUpd,0)));
   $("#sw").onclick=()=>{if(!sur&&pub){vib([50,30,50]);return toast(t("surPubX"))}vib(10);sur=!sur;if($("#pbs"))$("#pbs").parentElement.style.opacity=sur?".4":"";$("#sw").classList.toggle("on",sur)};
-  document.querySelectorAll(".swc").forEach(b=>b.onclick=()=>{vib(8);th=+b.dataset.i;document.querySelectorAll(".swc").forEach(x=>x.classList.toggle("sel",x===b))});
   $("#go").onclick=async()=>{
     if(!$("#pl").value.trim()&&cmPt){$("#pl").value=t("pinPlace");cmPt.q=t("pinPlace")}
     const place=$("#pl").value.trim(),nick=sget("nick"),cu=$("#cu").value.trim();
@@ -1993,7 +1994,7 @@ function newView(){
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
     const isPubDrop=!!pg;
     if(!DEMO&&cmPt&&cmPt.q===place)pg={...(pg||{}),pt:{la:cmPt.la,lo:cmPt.lo,ap:cmPt.ap?1:0}};
-    await setDoc(doc(db,"drops",code),{code,hostId:u.uid,hostNick:nick,hostAv:myAv(),hostPh:sget("photo")||null,category:cat,title:$("#ti").value.trim()||(cat==="other"?cu:cat==="occ"?t("occDef"):t("run",t("c_"+cat))),place,surprise:sur,theme:th,repeat:rep==="no"?null:rep,...(pg||{}),
+    await setDoc(doc(db,"drops",code),{code,hostId:u.uid,hostNick:nick,hostAv:myAv(),hostPh:sget("photo")||null,category:cat,title:$("#ti").value.trim()||(cat==="other"?cu:cat==="occ"?t("occDef"):t("run",t("c_"+cat))),place,surprise:sur,repeat:rep==="no"?null:rep,...(pg||{}),
       startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),createdAt:serverTimestamp()});
     await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
     remember(code);if(isPubDrop)PUB.at=0;pendingShare=isPubDrop?null:code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);go("/d/"+code);
