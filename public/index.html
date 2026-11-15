@@ -365,6 +365,18 @@ input.zr{width:min(84vw,340px);padding:0;border:0;background:none;accent-color:v
 @media (prefers-reduced-motion:reduce){.fly,.cel i,.rxc,.aph,.bbig{animation:none}}
 .lopts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:6px}.lopts .rb{aspect-ratio:1}.lopts .rb b{font-size:34px;color:inherit}.lopts .rb.sel b{color:#0b0b12}
 .edt{display:flex;gap:10px;align-items:center}.edt input{flex:0 0 132px;color-scheme:dark}
+/* Okno „Edytuj drop": jedna siatka pól 52 px, odstęp 20 px między grupami, chipsy zawsze w całości */
+.eds .lbl{margin:20px 2px 8px}.eds .lbl:first-child{margin-top:6px}
+.eds input{margin:0;height:52px;padding:0 16px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05)}.eds input:focus{border-color:var(--acc)}
+.eds .edt{display:grid;grid-template-columns:1fr 1fr;gap:10px}.eds .edt input{flex:none;width:100%;min-width:0;text-align:center;-webkit-appearance:none;appearance:none;display:block;line-height:50px}
+.eds .edt input::-webkit-date-and-time-value{text-align:center;min-height:0}
+.eds .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;overflow:visible;margin:10px 0 0;padding:0}
+.eds #erp{grid-template-columns:repeat(2,1fr);margin-top:0}
+.eds .chip{height:38px;padding:0 8px;display:flex;align-items:center;justify-content:center;white-space:nowrap;text-transform:none!important;letter-spacing:0!important;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);font-size:13px}.eds .chip.on{background:var(--acc);border-color:var(--acc)}
+.eds .sw{margin:20px 0 0;padding:0 16px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);text-transform:none;font-weight:800;font-size:14.5px}
+.eds .hint.s{margin:12px 4px 0;font-size:12.5px;line-height:1.45}
+.eds .cta{margin-top:20px}.eds .ghost{margin-top:12px}
+
 
 .e3{display:block;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.35))}
 .di .e3{width:52px;height:52px}.tile .e3{width:38px;height:38px}.cav .e3{width:38px;height:38px}
@@ -2766,15 +2778,15 @@ function editPlace(code,ref,d){if(Date.now()>=d.startsAt.toMillis())return;vib(1
   const i=s.querySelector("#epl");setTimeout(()=>i.focus(),250);s.querySelector("#eplc").onclick=s.close;
   s.querySelector("#eplok").onclick=async()=>{const place=i.value.trim();if(!place){vib([50,30,50]);return toast(t("edPlace"))}if(isBad(place)){vib([50,30,50]);return toast(t("noBad"))}if(Date.now()>=d.startsAt.toMillis()){s.close();return}
     if(place===d.place)return s.close();s.querySelector("#eplok").disabled=true;try{const g=await placeGeo(place,d.pt||null);await setDoc(ref,{place,pt:g?{la:g.la,lo:g.lo,ap:g.ap?1:0}:null,editedAt:serverTimestamp()},{merge:true});pushNow({kind:"edit",code});s.close();sfx("in");vib([20,30,20]);toast(t("edSaved"))}catch{s.querySelector("#eplok").disabled=false;toast(t("oops"))}}}
-function editDrop(code,ref,d){vib(10);const st=new Date(d.startsAt.toMillis());let sur=!!d.surprise,rep=d.repeat||"no";
-  const s=sheet(`<h2>${t("edT")}</h2>
+function editDrop(code,ref,d){const sc=x=>{x=String(x).toLowerCase();return x.charAt(0).toUpperCase()+x.slice(1)};vib(10);const st=new Date(d.startsAt.toMillis());let sur=!!d.surprise,rep=d.repeat||"no";
+  const s=sheet(`<h2>${t("edT")}</h2><div class="eds">
   <label class="lbl" for="et">${t("nameD")}</label><input id="et" maxlength="40" value="${esc(clean(d.title))}" autocomplete="off">
   <label class="lbl" for="ep">${t("where")}</label><input id="ep" maxlength="80" value="${esc(d.place)}" autocomplete="off">
   <label class="lbl" for="eh">${t("when")}</label><div class="edt"><input id="eh" type="time" step="300" value="${pad(st.getHours())}:${pad(st.getMinutes())}"><input id="edd" type="date" value="${ymd(st)}" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></div>
-  <div class="chips" id="eq" style="margin-top:6px">${[-15,15,30,60].map(m=>`<button class="chip" data-m="${m}">${m>0?"+":"−"}${Math.abs(m)>=60?Math.abs(m)/60+" h":Math.abs(m)+" min"}</button>`).join("")}<button class="chip" data-dd="0">${t("today")}</button><button class="chip" data-dd="1">${t("tomorrow")}</button></div>
+  <div class="chips" id="eq">${[-15,15,30,60].map(m=>`<button class="chip" data-m="${m}">${m>0?"+":"−"}${Math.abs(m)>=60?Math.abs(m)/60+" h":Math.abs(m)+" min"}</button>`).join("")}<button class="chip" data-dd="0">${sc(t("today"))}</button><button class="chip" data-dd="1">${sc(t("tomorrow"))}</button></div>
   <label class="lbl">${t("rep")}</label><div class="chips" id="erp">${REP.map(k=>`<button class="chip ${k===rep?"on":""}" data-r="${k}">${t("rep_"+k)}</button>`).join("")}</div>
   ${d.category==="biz"?"":`<div class="sw">${t("sur")}<div class="tg ${sur?"on":""}" id="es" role="switch"></div></div>`}
-  <p class="hint s">${t("edNote")}</p><button class="cta" id="eok">${t("save")}</button><button class="ghost" id="ecn">${t("cancel")}</button>`);
+  <p class="hint s">${t("edNote")}</p><button class="cta" id="eok">${t("save")}</button><button class="ghost" id="ecn">${t("cancel")}</button></div>`);
   const q=x=>s.querySelector(x),cur=()=>{const [h,m]=(q("#eh").value||"18:00").split(":").map(Number),x=new Date((q("#edd").value||ymd(new Date()))+"T00:00");x.setHours(h||0,m||0,0,0);return x},
     put=x=>{q("#eh").value=pad(x.getHours())+":"+pad(x.getMinutes());q("#edd").value=ymd(x)};
   s.querySelectorAll("#eq .chip").forEach(c=>c.onclick=()=>{vib(8);if(c.dataset.dd!=null){const x=cur(),n=new Date();n.setDate(n.getDate()+(+c.dataset.dd));x.setFullYear(n.getFullYear(),n.getMonth(),n.getDate());return put(x)}put(new Date(cur().getTime()+(+c.dataset.m)*6e4))});
