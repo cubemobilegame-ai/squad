@@ -56,6 +56,19 @@ service cloud.firestore {
           || (request.auth.uid == cid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nickname', 'av', 'ph'])));
         allow delete: if signedIn() && (request.auth.uid == uid || request.auth.uid == cid);
       }
+      // ALARM zaufanej osoby (przycisk bezpieczeństwa): czyta i kasuje odbiorca; tworzy tylko ktoś z jego kontaktów, tylko swój alert
+      match /alerts/{aid} {
+        allow read, delete: if signedIn() && request.auth.uid == uid;
+        allow create: if signedIn() && !isGuest()
+          && request.resource.data.from == request.auth.uid
+          && request.resource.data.kind == 'sos'
+          && request.resource.data.at == request.time
+          && request.resource.data.keys().hasOnly(['from', 'nick', 'av', 'code', 'title', 'place', 'drop', 'loc', 'people', 'kind', 'at'])
+          && request.resource.data.get('title', '').size() <= 120
+          && request.resource.data.get('place', '').size() <= 160
+          && request.resource.data.get('people', []).size() <= 12
+          && exists(/databases/$(db)/documents/users/$(uid)/contacts/$(request.auth.uid));
+      }
       // zaproszenia na drop / do grupy – wysyła tylko ktoś z moich kontaktów
       match /invites/{iid} {
         allow read, delete: if signedIn() && request.auth.uid == uid;
