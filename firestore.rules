@@ -231,7 +231,13 @@ service cloud.firestore {
       allow create: if signedIn() && !isGuest()
         && request.resource.data.ownerId == request.auth.uid
         && request.resource.data.name.size() <= 40;
-      allow update, delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+      // organizator zmienia wszystko; zwykły członek tylko przypiętą wiadomość (pin, do 200 znaków)
+      allow update: if signedIn() && (resource.data.ownerId == request.auth.uid
+        || (exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pin'])
+            && (!('pin' in request.resource.data)
+                || (request.resource.data.pin is map && request.resource.data.pin.text is string && request.resource.data.pin.text.size() <= 200))));
 
       match /members/{uid} {
         allow read: if true;
