@@ -2184,7 +2184,7 @@ function newView(){
   document.querySelectorAll("#occ .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#occ .chip").forEach(x=>x.classList.toggle("on",x===c));$("#ti").value=t("o_"+OCC[+c.dataset.o])+" ";$("#ti").focus()});
   if($("#pbs"))$("#pbs").onclick=()=>{if(!pub&&sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}if(!pub&&sur){vib([50,30,50]);return toast(t("surPubX"))}vib(10);pub=!pub;$("#pbs").classList.toggle("on",pub);$("#seatw").hidden=!pub;$("#sw").parentElement.style.opacity=pub?".4":""};
   /* nowy drop z zakładki Publiczne: od razu publiczny (bez ręcznego przełączania) */
-  if($("#pbs")&&homeTab==="pub"&&sget("pubRules")==="1"){pub=true;$("#pbs").classList.add("on");$("#seatw").hidden=false;$("#sw").parentElement.style.opacity=".4"}
+  /* publiczny drop: domyślnie wyłączony – włącza go dopiero przełącznik w formularzu (bez automatu z zakładki Publiczne) */
   document.querySelectorAll("#seats .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;document.querySelectorAll("#seats .chip").forEach(x=>x.classList.toggle("on",x===c))});
   document.querySelectorAll("#rp .chip").forEach(c=>c.onclick=()=>{vib(8);rep=c.dataset.r;document.querySelectorAll("#rp .chip").forEach(x=>x.classList.toggle("on",x===c))});
   let cmM=null,cmK=null,cmT=0,cmQ="",cmSeq=0,cmPt=null,cmMe=null,cmAsk="",cmOk="";const cmUpd=()=>cmPin();
