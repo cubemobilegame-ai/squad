@@ -34,7 +34,11 @@ if os.path.exists(st):
     t = open(st).read()
     t = t.replace("<item name=\"android:background\">@null</item>", "<item name=\"android:background\">@color/squad_bg</item>")
     t = re.sub(r'(<style name="AppTheme.NoActionBar"[^>]*>)', r'\1\n        <item name="android:windowBackground">@color/squad_bg</item>\n        <item name="android:statusBarColor">@color/squad_bg</item>\n        <item name="android:navigationBarColor">@color/squad_bg</item>', t, 1)
+    # ekran startowy Androida 12+: tło w kolorze aplikacji i bez ikony, żeby od razu przechodził w animację Squad
+    t = re.sub(r'(<style name="AppTheme.NoActionBarLaunch"[^>]*>)', r'\1\n        <item name="windowSplashScreenBackground">@color/squad_bg</item>\n        <item name="windowSplashScreenAnimatedIcon">@drawable/squad_splash_blank</item>\n        <item name="android:windowSplashScreenBackground">@color/squad_bg</item>', t, 1)
     open(st, "w").write(t)
+    dr = os.path.join(A, "src/main/res/drawable"); os.makedirs(dr, exist_ok=True)
+    open(os.path.join(dr, "squad_splash_blank.xml"), "w").write('<?xml version="1.0" encoding="utf-8"?>\n<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">\n    <path android:fillColor="#00000000" android:pathData="M0,0h1v1h-1z"/>\n</vector>\n')
 # kanał powiadomień "squad" tworzymy w MainActivity (Java)
 ma = None
 for d, _, fs in os.walk(os.path.join(A, "src/main/java")):
