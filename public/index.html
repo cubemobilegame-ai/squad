@@ -749,7 +749,7 @@ setTimeout(function(){window.__splDone()},20000);})();
 <script>
 /* wysokość widocznej części ekranu (iPhone z klawiaturą) – czat trzyma pole pisania tuż nad klawiaturą */
 (function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,
-f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")),kb=window.innerHeight-vv.height>120||foc;
+f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&!document.querySelector(".sheetbg")),kb=window.innerHeight-vv.height>120||foc;
   /* bez klawiatury: pełna wysokość i zero przesunięcia (iOS potrafi zostawić stare offsetTop po schowaniu klawiatury) */
   if(!kb){R.style.setProperty("--vvh",window.innerHeight+"px");R.style.setProperty("--vvt","0px");if(chat&&(window.scrollY||document.documentElement.scrollTop))window.scrollTo(0,0)}
   else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px")}
@@ -2419,7 +2419,7 @@ const blockedL=()=>{try{return JSON.parse(sget("blocked")||"[]")}catch{return[]}
 const loadImg=src=>new Promise((ok,no)=>{const i=new Image();if(/^https?:/.test(src))i.crossOrigin="anonymous";i.onload=()=>ok(i);i.onerror=no;i.src=src});
 
 /* ---------- ARKUSZ OD DOŁU ---------- */
-function sheet(h){const bg=document.createElement("div");bg.className="sheetbg";bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${h}</div>`;
+function sheet(h){try{const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))a.blur()}catch{}const bg=document.createElement("div");bg.className="sheetbg";bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${h}</div>`;
   bg.close=()=>bg.remove();bg.onclick=e=>{if(e.target===bg)bg.close()};document.body.append(bg);swipeClose(bg.firstChild,()=>bg.close(),bg);return bg}
 /* przesunięcie w dół zamyka wysuwane okno (gdy jest przewinięte do góry) */
 function swipeClose(el,close,fade){let y0=null,dy=0,t0=0;
