@@ -2695,7 +2695,7 @@ window.qrDrop=async(c,title)=>{vib(10);const d=S.items.get(c)||(typeof PUB!=="un
   s.querySelector("#qsh").onclick=()=>{s.close();shareDrop(c)};s.querySelector("#qcl").onclick=s.close};
 window.shareDrop=c=>{const d=S.items.get(c)||(typeof PUB!=="undefined"&&((PUB.items&&PUB.items.get&&PUB.items.get(c))||(PUB.list||[]).find(x=>x.id===c)));if(d)openShare("d",{...d,P:S.ppl[c]||[]})};
 function openShare(k,o,first){const G=k==="g",url=base()+(G?"/g/":"/d/")+o.id;
-  shareSheet({grp:G,qr:!!first,later:!!first,title:t(G?"shTG":"shT"),url,txt:G?t("shTxtG",o.name,url):t("shTxt",o.title,o.surprise?t("surP").toLowerCase():o.place,when(o.startsAt.toMillis()),url,o.hostNick||sget("nick")),noImg:true,head:G?o.name:o.title,invL:t(G?"invG":"invD"),fname:"squad-"+o.id+".jpg",make:null,opts:[],
+  shareSheet({grp:G,qr:!!first,later:!!first,title:t(G?"shTG":"shT"),url,txt:G?t("shTxtG",o.name,url):t("shTxt",o.title,o.surprise?t("surP").toLowerCase():o.place,when(o.startsAt.toMillis()),url,o.hostNick||sget("nick")),noImg:!!first,head:G?o.name:o.title,invL:t(G?"invG":"invD"),fname:"squad-"+o.id+".jpg",make:first?null:()=>makeInviteH(k,o),ar:first?undefined:"1200/630",opts:[],
   kon:auth.currentUser&&!auth.currentUser.isAnonymous?()=>pickContacts(k,o.id,G?o.name:o.title,new Set([o.hostId||o.ownerId,...(o.P||o.M||[]).map(p=>p.id)])):null})}
 function openCollage(o,PH){shareSheet({title:t("colT"),url:null,txt:t("colTxt",o.title),fname:"squad-album-"+o.id+".jpg",make:st=>makeCollage(o,PH,st),
   opts:[{k:"fmt",def:"story",ch:()=>[["story",t("fmt_story")],["post",t("fmt_post")]]},OPT_STY,OPT_PK]})}
@@ -2807,6 +2807,35 @@ async function makeCard(k,o,st={}){await fontsReady();
   K.rr(W/2-330,H-200,660,100,50);x.fillStyle=pl.dlBg;x.fill();K.txt(t("imgDl"),W/2,H-136,K.fitF(t("imgDl"),600,800,38,24),pl.dlFg,"center",0);
   K.txt(t("imgNoApp"),W/2,H-48,F(600,30),pl.sub);
   stickers(K,st.pack,G?"👊":CATE[o.category],[[110,520,-.3,110],[975,560,.26,100]]);
+  return K.blob()}
+async function makeInviteH(k,o,st={}){await fontsReady();
+  const K=kit(1200,630),{x,W,H,F}=K,PI2=Math.PI*2,G=k==="g",P=o.P||[],M=o.M||[];
+  x.fillStyle="#0b0b12";x.fillRect(0,0,W,H);
+  [[120,60,520,"rgba(70,80,170,.30)"],[1150,40,520,"rgba(150,60,80,.22)"],[900,620,520,"rgba(120,70,40,.14)"]].forEach(([cx,cy,r,c])=>{const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,c);g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.fillRect(0,0,W,H)});
+  K.txt("Squad",72,112,F(800,52),"#fff","left",-2);x.font=F(800,52);const lw=x.measureText("Squad").width;K.txt("✦",72+lw+2,106,F(800,40),"#ff4f86","left");
+  const host=(G?o.ownerNick:o.hostNick)||sget("nick")||"?",hm=G?M.find(m=>m.id===o.ownerId):null;
+  const hv=G?(hm?avIdx(hm):avIdx({id:o.ownerId})):(o.hostPh||(o.hostAv!=null?+o.hostAv:avIdx({id:o.hostId})));
+  const hs0=typeof hv==="string"?hv:await genAv(hv,true);
+  x.fillStyle="#1d1d29";x.beginPath();x.arc(104,196,32,0,PI2);x.fill();await K.pic(hs0,72,164,64,64,true);x.lineWidth=3;x.strokeStyle="rgba(255,255,255,.85)";x.beginPath();x.arc(104,196,32,0,PI2);x.stroke();
+  const it=t("inv",host).replace(/!$/,"");K.txt(it,152,208,K.fitF(it,520,800,34,22),"#fff","left");
+  const gr=x.createLinearGradient(72,0,520,0);gr.addColorStop(0,"#ffc2d6");gr.addColorStop(1,"#ffd9a8");
+  const l1=t(G?"imgHG1":"imgHD1"),l2=t(G?"imgHG2":"imgHD2");K.txt(l1,72,322,K.fitF(l1,560,800,84,48),"#fff","left",-3);K.txt(l2,72,414,K.fitF(l2,560,800,84,48),gr,"left",-3);
+  const sub=G?t("imgHGS"):(o.surprise?t("surP"):String(o.place||""));K.txt(sub,72,468,K.fitF(sub,540,500,28,18),"rgba(255,255,255,.6)","left");
+  if(G){const bt=t("imgHGJ")+" →";x.font=F(800,28);const bw=x.measureText(bt).width+72,bg2=x.createLinearGradient(72,0,72+bw,0);bg2.addColorStop(0,"#dfe3ff");bg2.addColorStop(1,"#ffd9e6");K.rr(72,506,bw,72,36);x.fillStyle=bg2;x.fill();K.txt(bt,72+bw/2,552,F(800,28),"#14141c","center")}
+  else{[["IN","#3dff8a"],["LATE","#ffd84d"],["OUT","#ff6b7d"]].forEach(([b,c],i)=>{const bx=72+i*136;K.rr(bx,506,124,72,22);x.fillStyle="#16161f";x.fill();x.lineWidth=2;x.strokeStyle="rgba(255,255,255,.1)";x.stroke();K.txt(b,bx+62,552,F(800,26),c,"center")})}
+  x.save();x.translate(925,318);x.rotate(.055);
+  x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=50;x.shadowOffsetY=24;K.rr(-232,-222,464,444,40);x.fillStyle="#16161f";x.fill();x.shadowColor="transparent";x.lineWidth=2;x.strokeStyle="rgba(255,255,255,.12)";x.stroke();
+  const cg=x.createLinearGradient(-210,-200,210,50);
+  if(G){cg.addColorStop(0,"#c9d3ff");cg.addColorStop(.55,"#e1d6ff");cg.addColorStop(1,"#ffd6e6")}else{cg.addColorStop(0,"#ffc9b8");cg.addColorStop(.6,"#ffd0d8");cg.addColorStop(1,"#e0d4ff")}
+  K.rr(-212,-204,424,300,30);x.fillStyle=cg;x.fill();
+  const tag=G?"👥 "+t("imgMem",Math.max(1,M.length)):when(o.startsAt.toMillis());x.font=F(800,20);const tw=x.measureText(tag).width+32;K.rr(-190,-182,tw,40,20);x.fillStyle="rgba(255,255,255,.7)";x.fill();K.txt(tag,-190+tw/2,-155,F(800,20),"#22222e","center",1);
+  x.beginPath();x.arc(120,-60,86,0,PI2);x.fillStyle="rgba(255,255,255,.45)";x.fill();x.lineWidth=2;x.strokeStyle="rgba(255,255,255,.8)";x.stroke();
+  await K.pic(G?"/e/handshake.webp":e3(o.category),50,-130,140,140);
+  const title=String((G?o.name:o.title)||""),tl=K.wrap(title,230,2);x.font=F(800,34);tl.forEach((l,i)=>K.txt(l,-190,(tl.length>1?-6:32)+i*38,K.fitF(l,230,800,34,20),"#14141c","left",-1));
+  if(!G&&!o.surprise&&o.place){const pt="📍 "+o.place;x.font=F(800,19);const w=Math.min(x.measureText(pt).width+34,260);K.rr(-190,50,w,36,18);x.fillStyle="rgba(255,255,255,.75)";x.fill();K.txt(pt,-190+w/2,75,K.fitF(pt,w-24,800,19,13),"#22222e","center")}
+  x.fillStyle="#1d1d29";x.beginPath();x.arc(-176,160,28,0,PI2);x.fill();await K.pic(hs0,-204,132,56,56,true);
+  const ins=P.filter(p=>p.status==="in").length,l3=G?host:(ins?t("imgIn",ins):host);K.txt(l3,-132,156,K.fitF(l3,260,800,24,15),"#fff","left");K.txt(G?t("imgHGW"):t("imgHDW"),-132,182,F(600,19),"rgba(255,255,255,.55)","left");
+  x.restore();
   return K.blob()}
 async function makeContactCard(nick,url,st={}){await fontsReady();
   const K=kit(1200,630),{x,W,H,F}=K,PI2=Math.PI*2,u0=auth.currentUser,nk=String(nick||"?");
@@ -3145,6 +3174,14 @@ Object.assign(L.fr,{dpPollBtn:"Créer un sondage du drop",dpPollHint:"Le sondage
 Object.assign(L.it,{dpPollBtn:"Crea sondaggio del drop",dpPollHint:"Il sondaggio apparirà nella chat del drop e tutti possono votare.",dpPollOk:"Sondaggio aggiunto alla chat",dpQPh:"Es. Cosa ordiniamo?",dpOptPh:"Opzione"});
 Object.assign(L.cs,{dpPollBtn:"Vytvořit anketu dropu",dpPollHint:"Anketa se objeví v chatu dropu a hlasovat může každý.",dpPollOk:"Anketa přidána do chatu",dpQPh:"Např. Co si objednáme?",dpOptPh:"Možnost"});
 Object.assign(L.uk,{dpPollBtn:"Створити опитування дропу",dpPollHint:"Опитування з'явиться в чаті дропу, голосувати може кожен.",dpPollOk:"Опитування додано в чат",dpQPh:"Напр. Що замовляємо?",dpOptPh:"Варіант"});
+Object.assign(L.pl,{imgHD1:"Zaproszenie",imgHD2:"na drop",imgHGS:"Czat grupowy, który nie znika",imgHG1:"Dołącz",imgHG2:"do ekipy",imgHGJ:"Dołącz do ekipy",imgHGW:"czeka na ciebie",imgHDW:"a ty?"});
+Object.assign(L.en,{imgHD1:"Invitation",imgHD2:"to a drop",imgHGS:"A group chat that stays",imgHG1:"Join",imgHG2:"the crew",imgHGJ:"Join the crew",imgHGW:"is waiting for you",imgHDW:"and you?"});
+Object.assign(L.es,{imgHD1:"Invitación",imgHD2:"a un drop",imgHGS:"Un chat de grupo que no desaparece",imgHG1:"Únete",imgHG2:"a la crew",imgHGJ:"Unirme a la crew",imgHGW:"te espera",imgHDW:"¿y tú?"});
+Object.assign(L.de,{imgHD1:"Einladung",imgHD2:"zum Drop",imgHGS:"Ein Gruppenchat, der bleibt",imgHG1:"Komm",imgHG2:"in die Crew",imgHGJ:"In die Crew",imgHGW:"wartet auf dich",imgHDW:"und du?"});
+Object.assign(L.fr,{imgHD1:"Invitation",imgHD2:"à un drop",imgHGS:"Un chat de groupe qui reste",imgHG1:"Rejoins",imgHG2:"la team",imgHGJ:"Rejoindre la team",imgHGW:"t'attend",imgHDW:"et toi ?"});
+Object.assign(L.it,{imgHD1:"Invito",imgHD2:"a un drop",imgHGS:"Una chat di gruppo che resta",imgHG1:"Unisciti",imgHG2:"alla crew",imgHGJ:"Unisciti alla crew",imgHGW:"ti aspetta",imgHDW:"e tu?"});
+Object.assign(L.cs,{imgHD1:"Pozvánka",imgHD2:"na drop",imgHGS:"Skupinový chat, který nemizí",imgHG1:"Přidej se",imgHG2:"do party",imgHGJ:"Přidat se do party",imgHGW:"na tebe čeká",imgHDW:"a ty?"});
+Object.assign(L.uk,{imgHD1:"Запрошення",imgHD2:"на дроп",imgHGS:"Груповий чат, який не зникає",imgHG1:"Приєднуйся",imgHG2:"до компанії",imgHGJ:"Приєднатися до компанії",imgHGW:"чекає на тебе",imgHDW:"а ти?"});
 Object.assign(L.pl,{cmMute:"Wycisz czat",cmUnmute:"Włącz powiadomienia",cmMuted:"Czat wyciszony",cmUnm:"Powiadomienia włączone",cmRep:"Zgłoś",cmClr:"Wyczyść czat u mnie",cmClrD:"Wiadomości znikną tylko u ciebie. Reszta nadal je widzi.",cmCleared:"Czat wyczyszczony"});
 Object.assign(L.en,{cmMute:"Mute chat",cmUnmute:"Turn notifications on",cmMuted:"Chat muted",cmUnm:"Notifications on",cmRep:"Report",cmClr:"Clear chat for me",cmClrD:"Messages disappear only for you. Everyone else still sees them.",cmCleared:"Chat cleared"});
 Object.assign(L.es,{cmMute:"Silenciar chat",cmUnmute:"Activar notificaciones",cmMuted:"Chat silenciado",cmUnm:"Notificaciones activadas",cmRep:"Denunciar",cmClr:"Vaciar chat para mí",cmClrD:"Los mensajes desaparecen solo para ti. Los demás los siguen viendo.",cmCleared:"Chat vaciado"});
