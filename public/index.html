@@ -1827,7 +1827,9 @@ const cells=(la,lo)=>{const k=Math.max(.2,Math.cos(la*Math.PI/180)),S=new Set();
 const PUB={list:null,at:0,pos:null,busy:false};
 const pubOk=()=>sget("pub16")==="1";
 /* limit: 3 publiczne dropy na 24 h na osobę (sprawdzane w aplikacji; błąd sieci nie blokuje) */
-const pubQuota=async()=>{if(DEMO)return true;try{const q=await getDocs(query(collection(db,"drops"),where("hostId","==",me()),where("public","==",true),limit(50))),since=Date.now()-24*36e5;return q.docs.filter(x=>{const d=x.data(),m=(d.pubAt||d.createdAt)?.toMillis?.()||0;return m>=since}).length<3}catch{return true}};
+const utcDay=()=>+new Date().toISOString().slice(0,10).replace(/-/g,"");
+const pubQuota=async()=>{if(DEMO)return true;try{const x=await getDoc(doc(db,"users",me(),"lim","d"));if(!x.exists())return true;const o=x.data();return o.day!==utcDay()||(o.pub||0)<3}catch{return true}};
+const pubFlip=async(ref,data)=>{if(DEMO||!FB.writeBatch)return updateDoc(ref,data);const lr=doc(db,"users",me(),"lim","d");let o={};try{const x=await getDoc(lr);if(x.exists())o=x.data()}catch{}const td=utcDay(),same=o.day===td,b=FB.writeBatch(db);b.update(ref,data);b.set(lr,{at:serverTimestamp(),day:td,n:same?o.n||0:0,pub:(same?o.pub||0:0)+1});await b.commit()};
 const ipPos=async()=>{const r=await fetch("https://get.geojs.io/v1/ip/geo.json"),j=await r.json(),la=+j.latitude,lo=+j.longitude;if(!isFinite(la)||!isFinite(lo))throw new Error("ip");return{la:Math.round(la*100)/100,lo:Math.round(lo*100)/100,approx:1}};
 const getPos=async()=>{const rd=v=>Math.round(v*100)/100,GL=NATAPP&&NP("Geolocation");
   if(GL){try{let pm=await GL.checkPermissions();if(pm.location!=="granted"){pm=await GL.requestPermissions({permissions:["location"]})}
@@ -2214,7 +2216,7 @@ function newView(){
       sgBox.querySelectorAll("button").forEach(b=>b.onclick=()=>{const x=L2[+b.dataset.i],q2=(x.nm+(x.sub?", "+x.sub.split(", ")[0]:"")).slice(0,80);vib(10);sgSeq++;sgBox.innerHTML="";clearTimeout(cmT);$("#pl").value=q2;cmQ=q2;cmOk=q2;cmPt={la:x.la,lo:x.lo,q:q2,ap:0};cmShow([x.la,x.lo],17);$("#cmst").textContent=t("ppSet");$("#pl").blur()})}catch(e){}};
   $("#pl").addEventListener("input",()=>{cmPt=null;clearTimeout(cmT);cmT=setTimeout(cmGo,800);clearTimeout(sgT);const q=$("#pl").value.trim();sgT=setTimeout(()=>sgFind(q),450)});document.querySelectorAll(".tile,.swc").forEach(c=>c.addEventListener("click",()=>setTimeout(cmUpd,0)));
   $("#sw").onclick=()=>{if(!sur&&pub){vib([50,30,50]);return toast(t("surPubX"))}vib(10);sur=!sur;if($("#pbs"))$("#pbs").parentElement.style.opacity=sur?".4":"";$("#sw").classList.toggle("on",sur)};
-  $("#go").onclick=async()=>{
+  const goRun=async()=>{
     if(!$("#pl").value.trim()&&cmPt){$("#pl").value=t("pinPlace");cmPt.q=t("pinPlace")}
     const place=$("#pl").value.trim(),nick=sget("nick"),cu=$("#cu").value.trim();
     if(!DEMO&&place&&cmAsk!==place){if(cmQ!==place){clearTimeout(cmT);await cmGo()}if(!cmPt||cmPt.ap||cmPt.q!==place||cmOk!==place){cmAsk=place;const r=await pinAsk(!cmPt||cmPt.q!==place?true:cmPt.ap?false:"c");if(r==="pin"){$("#cmx").click();return}if(r!=="go")return;cmOk=place}}
@@ -2232,6 +2234,7 @@ function newView(){
     await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
     remember(code);if(isPubDrop)PUB.at=0;pendingShare=isPubDrop?null:code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);go("/d/"+code);
   };
+  $("#go").onclick=async()=>{const b=$("#go");if(!b||b.dataset.b)return;b.dataset.b="1";try{await goRun()}finally{setTimeout(()=>{try{delete b.dataset.b}catch{}},1500)}};
 }
 
 /* ---------- DROP / ZAPROSZENIE ---------- */
@@ -2868,7 +2871,7 @@ Object.assign(L.pl,{pnT:"Włącz powiadomienia",pnD:"Dowiesz się od razu, gdy k
 Object.assign(L.pl,{pnE1:"Nowe wiadomości od ekipy",pnE2:"Zaproszenia na dropy",pnE3:"Przypomnienie przed startem",pnLater:"Nie teraz"});Object.assign(L.en,{pnE1:"New messages from your crew",pnE2:"Invites to drops",pnE3:"Reminder before the start",pnLater:"Not now"});Object.assign(L.es,{pnE1:"Mensajes nuevos de tu crew",pnE2:"Invitaciones a drops",pnE3:"Recordatorio antes del inicio",pnLater:"Ahora no"});Object.assign(L.de,{pnE1:"Neue Nachrichten deiner Crew",pnE2:"Einladungen zu Drops",pnE3:"Erinnerung vor dem Start",pnLater:"Nicht jetzt"});Object.assign(L.fr,{pnE1:"Nouveaux messages de ta team",pnE2:"Invitations à des drops",pnE3:"Rappel avant le début",pnLater:"Pas maintenant"});Object.assign(L.it,{pnE1:"Nuovi messaggi dalla crew",pnE2:"Inviti ai drop",pnE3:"Promemoria prima dell'inizio",pnLater:"Non ora"});Object.assign(L.cs,{pnE1:"Nové zprávy od party",pnE2:"Pozvánky na dropy",pnE3:"Připomenutí před začátkem",pnLater:"Teď ne"});Object.assign(L.uk,{pnE1:"Нові повідомлення від компанії",pnE2:"Запрошення на дропи",pnE3:"Нагадування перед початком",pnLater:"Не зараз"});
 /* natychmiastowe powiadomienia: serwer Cloudflare (adres w config.js → pushUrl) */
 const createDropDoc=async(code,data)=>{if(DEMO||!FB.writeBatch)return setDoc(doc(db,"drops",code),data);const lr=doc(db,"users",me(),"lim","d");let o={};try{const x=await getDoc(lr);if(x.exists())o=x.data()}catch{}
-  const td=+(new Date().toISOString().slice(0,10).replace(/-/g,"")),same=o.day===td,b=FB.writeBatch(db);b.set(doc(db,"drops",code),data);b.set(lr,{at:serverTimestamp(),day:td,n:(same?o.n||0:0)+1,pub:(same?o.pub||0:0)+(data.public?1:0)});await b.commit()};
+  const td=utcDay(),same=o.day===td,b=FB.writeBatch(db);b.set(doc(db,"drops",code),data);b.set(lr,{at:serverTimestamp(),day:td,n:(same?o.n||0:0)+1,pub:(same?o.pub||0:0)+(data.public?1:0)});await b.commit()};
 const sendMsg=async(col,data)=>{if(DEMO||!FB.writeBatch)return addDoc(col,data);const r=doc(col),b=FB.writeBatch(db);b.set(r,data);b.set(doc(db,"users",me(),"lim","m"),{at:serverTimestamp()});await b.commit();return r};
 const pushNow=b=>{try{const U=FB.__c&&FB.__c.pushUrl,u=auth.currentUser;if(DEMO||!U||!u)return;u.getIdToken().then(tk=>fetch(U.replace(/\/$/,"")+"/notify",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+tk},body:JSON.stringify(b)})).catch(()=>{})}catch{}};
 /* ---------- PROŚBA O POWIADOMIENIA (musi być od razu w kliknięciu – inaczej iPhone/Chrome ją ignorują) ---------- */
@@ -3096,7 +3099,7 @@ function makePublic(code,ref,d,P){vib(10);
   q.querySelectorAll("#mks .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;q.querySelectorAll("#mks .chip").forEach(x=>x.classList.toggle("on",x===c))});
   q.querySelector("#mkg").onclick=async()=>{const b=q.querySelector("#mkg");b.disabled=true;
     try{const po=PUB.pos||await getPos();PUB.pos=po;
-      await updateDoc(ref,{public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5),hostAv:myAv(),hostPh:sget("photo")||null});
+      await pubFlip(ref,{public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5),hostAv:myAv(),hostPh:sget("photo")||null});
       PUB.at=0;q.close();vib([30,40,30]);toast(t("mkPubOk"));go("/d/"+code)}
     catch(e){b.disabled=false;vib([50,30,50]);toast(t(e&&e.code===1?"pubLocDeny":"pubNeedLoc"))}}}
 const mkpT={pl:["Zrób publiczny","Zrób drop publiczny","Po zmianie nie da się wrócić do prywatnego. Obecni uczestnicy i link zostają.","Drop jest teraz publiczny 🌍"],
