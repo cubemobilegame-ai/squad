@@ -2228,7 +2228,7 @@ function newView(){
     const tm=dsel?new Date(dsel+"T00:00"):new Date();tm.setHours(Math.round($("#hh").scrollTop/40),Math.round($("#mm").scrollTop/40)*5,0,0);if(dsel){if(tm<=Date.now()){vib([50,30,50]);return toast(t("edPast"))}}else if(day)tm.setDate(tm.getDate()+1);else if(tm<=Date.now())tm.setDate(tm.getDate()+1);
     if(isBad(nick)||isBad(place)||isBad(cu)||isBad($("#ti")?.value||"")){vib([50,30,50]);return toast(t("noBad"))}
     if(pub&&pubOk()){const pk=pubChk($("#ti")?.value,cu,place);if(pk){vib([50,30,50]);return toast(t(pk))}}
-    let pg=null;if(pub&&pubOk()){if(!await pubQuota()){vib([50,30,50]);return toast(t("pubLim"))}try{const po=PUB.pos||await getPos();PUB.pos=po;pg={public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5)}}catch{vib([50,30,50]);return toast(t("pubNeedLoc"))}}
+    let pg=null;if(pub&&pubOk()){if(!await pubQuota()){vib([50,30,50]);return toast(t("pubLim"))}try{const hp=PUB.pos||await getPos();PUB.pos=hp;const po=(cmPt&&cmPt.q===place&&isFinite(+cmPt.la)&&isFinite(+cmPt.lo))?{la:+cmPt.la,lo:+cmPt.lo}:hp;pg={public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5)}}catch{vib([50,30,50]);return toast(t("pubNeedLoc"))}}
     $("#go").disabled=true;sset("nick",nick);
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
     const isPubDrop=!!pg;
@@ -3103,7 +3103,7 @@ function makePublic(code,ref,d,P){vib(10);
    <button class="cta" id="mkg" style="margin-top:16px">${t("mkPubB")}</button>`);
   q.querySelectorAll("#mks .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;q.querySelectorAll("#mks .chip").forEach(x=>x.classList.toggle("on",x===c))});
   q.querySelector("#mkg").onclick=async()=>{const b=q.querySelector("#mkg");b.disabled=true;
-    try{const po=PUB.pos||await getPos();PUB.pos=po;
+    try{const hp=PUB.pos||await getPos();PUB.pos=hp;const po=(d.pt&&isFinite(+d.pt.la)&&isFinite(+d.pt.lo))?{la:+d.pt.la,lo:+d.pt.lo}:hp;
       await pubFlip(ref,{public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5),hostAv:myAv(),hostPh:sget("photo")||null});
       PUB.at=0;q.close();vib([30,40,30]);toast(t("mkPubOk"));go("/d/"+code)}
     catch(e){b.disabled=false;vib([50,30,50]);toast(t(e&&e.code===1?"pubLocDeny":"pubNeedLoc"))}}}
