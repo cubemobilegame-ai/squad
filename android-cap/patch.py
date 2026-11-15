@@ -117,4 +117,10 @@ if fid and ftok:
             v = v.replace("ext {", "ext {\n    rgcfaIncludeFacebook = true\n    rgcfaFacebookSdkVersion = '17.0.2'", 1); open(vg, "w").write(v)
     print("facebook ok", fid[:4] + "…")
 else: print("facebook: brak App ID lub tokenu – pomijam")
+
+# Google Play (Automatyczna ochrona) wymaga minSdk >= 24
+vg = os.path.join(proj, "android", "variables.gradle")
+if os.path.exists(vg):
+    v = open(vg).read(); v = re.sub(r"minSdkVersion\s*=\s*\d+", "minSdkVersion = 24", v); open(vg, "w").write(v)
+    print("minSdk 24:", re.findall(r"minSdkVersion\s*=\s*\d+", v))
 print("patch ok")
