@@ -769,7 +769,7 @@ window.__pre.d.catch(function(){});window.__pre.P.catch(function(){});}catch(e){
 /* ekran ładowania: piątka + pasek postępu; znika, gdy pierwszy ekran aplikacji jest gotowy.
    Pasek jedzie animacją CSS (wątek kompozytora) – nie zacina się, nawet gdy telefon mieli JavaScript. */
 (function(){var S=document.getElementById("spl");if(!S)return;var t0=Date.now(),B=S.querySelector(".sbar i"),done=false;
-var deep=location.pathname!=="/"&&location.pathname!=="";if(deep){S.style.transition="opacity .2s"}
+var deep=(location.pathname!=="/"&&location.pathname!=="")||(function(){try{var a=+localStorage.actT||0;return a>0&&Date.now()-a<30*60e3}catch(e){return false}})();if(deep){S.style.transition="opacity .2s"}
 if(B){B.getBoundingClientRect();B.style.transition="transform 7s cubic-bezier(.15,.75,.35,1)";B.style.transform="scaleX(.92)"}
 window.__splP=function(){};
 window.__splDone=function(){if(done)return;done=true;var w=deep?0:Math.max(0,1300-(Date.now()-t0));
@@ -1551,7 +1551,7 @@ if("ontouchstart"in window){let sx=0,sy=0,bx=0,lx=0,on=false,mv=false,el=null;co
 if(!DEMO)addEventListener("popstate",()=>{const cur=gp();window.__rest=SCR[cur]!=null?SCR[cur]:null;route()});
 const gp=()=>DEMO?PATH:location.pathname;
 try{const lp=sget("lastP"),lt=+sget("lastT")||0;if((NATAPP||STDL)&&!DEMO&&location.pathname==="/"&&!/[?&](demo|safe|join|ref|invite)/.test(location.search)&&!location.hash&&lp&&Date.now()-lt<30*60e3&&/^\/(d|c|g|gc|k)\/[A-Za-z0-9_-]+$/.test(lp))history.replaceState(null,"",lp)}catch{}
-const saveLast=()=>{try{const p=location.pathname;if(!DEMO&&/^\/(d|c|g|gc|k)\//.test(p)){sset("lastP",p);sset("lastT",String(Date.now()))}else if(p==="/"||/^\/(me|g)$/.test(p)){sset("lastP","");sset("lastT","0")}}catch{}};
+const saveLast=()=>{try{sset("actT",String(Date.now()));const p=location.pathname;if(!DEMO&&/^\/(d|c|g|gc|k)\//.test(p)){sset("lastP",p);sset("lastT",String(Date.now()))}else if(p==="/"||/^\/(me|g)$/.test(p)){sset("lastP","");sset("lastT","0")}}catch{}};
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")saveLast()});addEventListener("pagehide",saveLast);
 function route(){if(mailPending()){if(!document.querySelector("#mp2"))mailView();return}const p=gp(),m=r=>p.match(r),ka=m(/^\/k\/([A-Za-z0-9]{10,40})/),d=m(/^\/d\/(\w+)/),c=m(/^\/c\/(\w+)/),g=m(/^\/g\/(\w+)/),gc=m(/^\/gc\/(\w+)/);
   if(d)dropView(d[1].toUpperCase());else if(c)chatView(c[1].toUpperCase(),0);else if(g)groupView(g[1].toUpperCase());else if(gc)chatView(gc[1].toUpperCase(),1);
@@ -2486,7 +2486,7 @@ async function chatView(code,g){
     if(!mine){const f=$("#mf");if(f){f.outerHTML=`<button class="cta" id="jn" style="margin:0">${t(g?"joinG":"joinC")}</button>`;$("#jn").onclick=()=>go((g?"/g/":"/d/")+code)}return}
     if(!g&&owner!==me()&&mine.status==="out"){go("/d/"+code);return}
     if(!g&&owner!==me()&&!["in","late"].includes(mine.status)){const f=$("#mf");if(f){const started=d.startsAt.toMillis()<=Date.now();f.outerHTML=`<div class="chlock"><p class="hint" style="margin:0 0 10px;text-align:center">${t(started?"chClosed":"chOut")}</p>${started?"":`<button class="cta" id="jn" style="margin:0">${t("chChange")}</button>`}</div>`;const j=$("#jn");if(j)j.onclick=()=>go("/d/"+code)}}
-    else if(!$("#mf")&&$(".chlock")){location.reload();return}
+    else if(!$("#mf")&&$(".chlock")){try{window.__rest=null;route()}catch{location.reload()}return}
     drawM();if(on)return;on=true;
     unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt"),limit(200)),s=>{M=visM((g?"g_":"")+code,s.docs.map(x=>({...x.data(),id:x.id})));drawM();markRead();if(Date.now()-(window.__justSent||0)<1500){const l=[...document.querySelectorAll("#msgs .m.me")].pop();l?.classList.add("new");window.__justSent=0}sset(key,Date.now());badges()},()=>{}));
     {const mi=$("#mi"),fit=()=>{mi.style.height="auto";mi.style.height=Math.min(Math.max(mi.scrollHeight,44),132)+"px"};window.__miFit=fit;
