@@ -20,6 +20,7 @@ link = '''
             </intent-filter>''' % host
 if host not in x: x = re.sub(r"(<activity[^>]*MainActivity[\s\S]*?)(</activity>)", lambda k: k.group(1) + link + "\n        " + k.group(2), x, 1)
 x = x.replace("<application", '<application android:usesCleartextTraffic="false"', 1) if "usesCleartextTraffic" not in x else x
+if "enableOnBackInvokedCallback" not in x: x = x.replace("<application", '<application android:enableOnBackInvokedCallback="false"', 1)
 if "default_notification_channel_id" not in x:
     x = x.replace("</application>", '''    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="squad" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_stat_squad" />
@@ -51,6 +52,14 @@ if "NotificationChannel" not in j:
             c.enableVibration(true);
             getSystemService(NotificationManager.class).createNotificationChannel(c);
         }
+        final android.view.View dv = getWindow().getDecorView();
+        dv.addOnLayoutChangeListener((v, l, tp, r, bt, ol, ot, or2, ob) -> {
+            if (Build.VERSION.SDK_INT >= 29) {
+                float d = getResources().getDisplayMetrics().density;
+                int w = v.getWidth(), h = v.getHeight(), eh = (int) (200 * d), top = Math.max(0, h / 2 - eh / 2);
+                v.setSystemGestureExclusionRects(java.util.Collections.singletonList(new android.graphics.Rect(w - (int) (24 * d), top, w, top + eh)));
+            }
+        });
     }
 }''', j)
     open(ma, "w").write(j)
