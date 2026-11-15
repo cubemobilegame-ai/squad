@@ -12,8 +12,8 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     // ---- LIMITY (tempo wiadomości, cooldown i dzienny limit dropów, 3 publiczne/dobę) ----
     // Zapis limitu idzie w tej samej paczce (batch) co drop / wiadomość: users/{uid}/lim/d oraz lim/m.
-    // enforce() = false -> reguły tylko pozwalają zapisać liczniki; true -> wymuszają limity.
-    function enforce() { return false; }
+    // enforce() = true -> limity wymuszane (false = tylko zapis liczników).
+    function enforce() { return true; }
     function today() { return request.time.year() * 10000 + request.time.month() * 100 + request.time.day(); }
     function limRef(k) { return /databases/$(db)/documents/users/$(request.auth.uid)/lim/$(k); }
     function dropLimOk(pub) {

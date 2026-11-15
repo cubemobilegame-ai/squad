@@ -12,8 +12,8 @@ const day = () => +new Date().toISOString().slice(0, 10).replace(/-/g, "");
 const old = () => Timestamp.fromMillis(Date.now() - 60000);
 
 async function env(enforce) {
-  const rules = enforce ? src.replace("function enforce() { return false; }", "function enforce() { return true; }") : src;
-  if (enforce && rules === src) throw new Error("brak enforce()");
+  const rules = enforce ? src : src.replace("function enforce() { return true; }", "function enforce() { return false; }");
+  if (!enforce && rules === src) throw new Error("brak enforce()");
   return initializeTestEnvironment({ projectId: "demo-squad-" + (enforce ? "on" : "off"), firestore: { rules, host: "127.0.0.1", port: 8080 } });
 }
 const G = { firebase: { sign_in_provider: "google.com" } };
