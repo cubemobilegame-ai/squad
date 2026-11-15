@@ -20,7 +20,7 @@ link = '''
             </intent-filter>''' % host
 if host not in x: x = re.sub(r"(<activity[^>]*MainActivity[\s\S]*?)(</activity>)", lambda k: k.group(1) + link + "\n        " + k.group(2), x, 1)
 x = x.replace("<application", '<application android:usesCleartextTraffic="false"', 1) if "usesCleartextTraffic" not in x else x
-if "enableOnBackInvokedCallback" not in x: x = x.replace("<application", '<application android:enableOnBackInvokedCallback="false"', 1)
+if "enableOnBackInvokedCallback" not in x: x = x.replace("<application", '<application android:enableOnBackInvokedCallback="true"', 1)
 if "default_notification_channel_id" not in x:
     x = x.replace("</application>", '''    <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="squad" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_stat_squad" />
@@ -42,7 +42,7 @@ for d, _, fs in os.walk(os.path.join(A, "src/main/java")):
         if f == "MainActivity.java": ma = os.path.join(d, f)
 j = open(ma).read()
 if "NotificationChannel" not in j:
-    j = j.replace("import com.getcapacitor.BridgeActivity;", "import android.app.NotificationChannel;\nimport android.app.NotificationManager;\nimport android.os.Build;\nimport android.os.Bundle;\nimport com.getcapacitor.BridgeActivity;")
+    j = j.replace("import com.getcapacitor.BridgeActivity;", "import android.app.NotificationChannel;\nimport android.app.NotificationManager;\nimport android.os.Build;\nimport android.os.Bundle;\nimport androidx.activity.BackEventCompat;\nimport androidx.activity.OnBackPressedCallback;\nimport com.getcapacitor.BridgeActivity;")
     j = re.sub(r"public class MainActivity extends BridgeActivity \{\s*\}", '''public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle b) {
@@ -52,6 +52,18 @@ if "NotificationChannel" not in j:
             c.enableVibration(true);
             getSystemService(NotificationManager.class).createNotificationChannel(c);
         }
+        // cofanie: ignorujemy gest zaczęty od PRAWEJ krawędzi (Android 14+ podaje krawędź); od lewej i przycisk działają
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            int edge = -1;
+            @Override public void handleOnBackStarted(BackEventCompat e) { edge = e.getSwipeEdge(); }
+            @Override public void handleOnBackCancelled() { edge = -1; }
+            @Override public void handleOnBackPressed() {
+                int ed = edge; edge = -1;
+                if (ed == BackEventCompat.EDGE_RIGHT) return;
+                if (getBridge() == null || getBridge().getWebView() == null) { moveTaskToBack(true); return; }
+                getBridge().getWebView().evaluateJavascript("(window.__appBack?window.__appBack():'min')", v -> { if (v != null && v.contains("min")) moveTaskToBack(true); });
+            }
+        });
         final android.view.View dv = getWindow().getDecorView();
         dv.addOnLayoutChangeListener((v, l, tp, r, bt, ol, ot, or2, ob) -> {
             if (Build.VERSION.SDK_INT >= 29) {
