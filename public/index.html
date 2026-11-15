@@ -2570,6 +2570,9 @@ async function chatView(code,g){
       mi.oninput=()=>{fit();typing(!!mi.value.trim())};
       mi.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&!matchMedia("(pointer:coarse)").matches){e.preventDefault();$("#mf").requestSubmit()}}}
     $("#mpl").onclick=pollSheet;
+    {const EM=[[/^(:-?\)|=\))$/,"🙂"],[/^;-?\)$/,"😉"],[/^:-?D$/,"😀"],[/^:-?\($/,"🙁"],[/^:-?[Pp]$/,"😛"],[/^:-?[Oo]$/,"😮"],[/^<3$/,"❤️"],[/^:\*$/,"😘"],[/^[xX]D$/,"😆"],[/^:'\($/,"😢"],[/^B\)$/,"😎"],[/^:-?\/$/,"😕"]],mi=$("#mi");
+      mi.addEventListener("input",e=>{if(e.isComposing||(e.inputType||"").startsWith("delete"))return;const c=mi.selectionStart;if(c!==mi.selectionEnd)return;const b=mi.value.slice(0,c),m=b.match(/(^|\s)(\S{2,3})$/);if(!m)return;const hit=EM.find(x=>x[0].test(m[2]));if(!hit)return;
+        const st=c-m[2].length;mi.value=mi.value.slice(0,st)+hit[1]+mi.value.slice(c);const q=st+hit[1].length;mi.setSelectionRange(q,q);try{window.__miFit()}catch{}})}
     $("#grt").onclick=async e=>{const bt=e.target.closest("button[data-i]");if(!bt||!mine)return;const x=t("grt"+(g?"G":"D")+(+bt.dataset.i+1));sset(grtK,"1");$("#grt").hidden=true;seen0=0;below=0;sfx("send");vib(12);window.__justSent=Date.now();window.__chatEnd&&window.__chatEnd();
       try{const mr=await sendMsg(collection(ref,"messages"),{authorId:me(),nickname:mine.nickname,text:GI[+bt.dataset.i]+" "+x,createdAt:serverTimestamp()});pushNow({kind:"msg",code,id:mr.id,group:!!g});bump("msgs")}catch{sset(grtK,"");toast(t("err"))}};
     $("#msgs").addEventListener("click",e=>{const v=e.target.closest("[data-pv]"),a=e.target.closest("[data-pa]");if(a){e.stopPropagation();const [id,i]=a.dataset.pa.split(":");return applyPoll(id,+i)}if(v){e.stopPropagation();const [id,i]=v.dataset.pv.split(":");vote(id,+i)}});
