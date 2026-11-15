@@ -27,7 +27,7 @@ h3{font-size:13px;letter-spacing:.08em;margin:24px 0 12px;color:rgba(255,255,255
 .logo{font-size:48px;letter-spacing:-.03em;margin:12px 0 4px}.logo.bigl{font-size:72px;text-align:center;line-height:1}
 html,body{overscroll-behavior-y:contain}
 html:has(.scr.chl),body:has(.scr.chl){background:#06060b!important}
-.prf .slist,.prf .bcol .bhd,.prf .glass{background:rgba(255,255,255,.022)!important;border-color:rgba(255,255,255,.055)!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.mut{color:rgba(255,255,255,.55)}.cen{text-align:center;padding-top:22vh}
+.prf .slist,.prf .bcol .bhd,.prf .glass,.prf .kshb{background:rgba(255,255,255,.022)!important;border-color:rgba(255,255,255,.055)!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.mut{color:rgba(255,255,255,.55)}.cen{text-align:center;padding-top:22vh}
 .top{display:flex;justify-content:space-between;align-items:center}.gi{color:var(--acc);display:flex}.gi svg{width:30px;height:30px}
 .me{display:flex;align-items:center;gap:8px;font:800 14px Brico,BricoCyr,system-ui;background:none;border:0;color:#fff;cursor:pointer;padding:0}.me .av{width:42px;height:42px}.me>svg{width:16px;height:16px;opacity:.55}
 .av{display:block;flex:none;border-radius:50%;background:#1d1d29;overflow:hidden;width:44px;height:44px}.av.mini{width:26px;height:26px}.av.l{width:50px;height:50px}.av.xl{width:112px;height:112px}
@@ -1687,7 +1687,7 @@ window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymou
 function contactsView(add){
   const u=authed();if(!u)return;
   if(u.isAnonymous){view(`<div class="scr"><h1 class="logo" style="font-size:34px">${t("nK")}</h1><p class="hint">${t("kH")}</p><div class="gcard"><b>${t("guCardT")}</b><small>${t("kGuest")}</small><button class="cta" onclick="guestUp('/k')" style="margin:12px 0 0">${t("guCardB")}</button></div></div>${nav("k")}`);return}
-  view(`<div class="scr"><h1 class="logo" style="font-size:34px">${t("nK")}</h1><p class="hint kh">${t("kH")}</p>
+  view(`<div class="scr prf"><h1 class="logo" style="font-size:34px">${t("nK")}</h1><p class="hint kh">${t("kH")}</p>
   <button class="kshb" id="ksh" style="margin-bottom:10px"><i>${sv(SI.share)}</i><span><b>${t("kLink")}</b><small>${t("kLinkD")}</small></span></button><button class="kshb" id="kqr"><i>${QRI}</i><span><b>${t("qcB")}</b><small>${t("qcBD")}</small></span></button><div id="kl"></div></div>${nav("k")}`);
   $("#ksh").onclick=conShare;$("#kqr").onclick=()=>qrContact();
   const draw=()=>{const el=$("#kl");if(!el)return;
