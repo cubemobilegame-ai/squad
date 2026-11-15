@@ -54,4 +54,38 @@ if "NotificationChannel" not in j:
     }
 }''', j)
     open(ma, "w").write(j)
+
+# ---------- widżet (3 rozmiary, język systemowy) ----------
+import shutil
+W = os.path.join(root, "android-cap/widget")
+pk = os.path.dirname(ma)
+for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java"): shutil.copy(os.path.join(W, f), pk)
+for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml")):
+    o = os.path.join(A, "src/main/res", d); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, f), o)
+STR = {
+ "w_now":   {"en":"HAPPENING NOW","pl":"TRWA TERAZ","es":"EN CURSO","de":"LÄUFT JETZT","fr":"EN COURS","it":"IN CORSO","cs":"PROBÍHÁ","uk":"ТРИВАЄ ЗАРАЗ"},
+ "w_none":  {"en":"No upcoming drops","pl":"Brak nadchodzących dropów","es":"No hay drops próximos","de":"Keine anstehenden Drops","fr":"Aucun drop à venir","it":"Nessun drop in arrivo","cs":"Žádné nadcházející dropy","uk":"Немає майбутніх дропів"},
+ "w_none_hint": {"en":"Create a drop and get the crew ✨","pl":"Stwórz drop i zbierz ekipę ✨","es":"Crea un drop y reúne a la crew ✨","de":"Erstelle einen Drop und hol die Crew ✨","fr":"Crée un drop et rassemble la bande ✨","it":"Crea un drop e raduna la crew ✨","cs":"Vytvoř drop a seber partu ✨","uk":"Створи дроп і збери компанію ✨"},
+ "w_host":  {"en":"YOUR DROP","pl":"TWÓJ DROP","es":"TU DROP","de":"DEIN DROP","fr":"TON DROP","it":"IL TUO DROP","cs":"TVŮJ DROP","uk":"ТВІЙ ДРОП"},
+ "w_today": {"en":"Today","pl":"Dziś","es":"Hoy","de":"Heute","fr":"Aujourd'hui","it":"Oggi","cs":"Dnes","uk":"Сьогодні"},
+ "w_tomorrow": {"en":"Tomorrow","pl":"Jutro","es":"Mañana","de":"Morgen","fr":"Demain","it":"Domani","cs":"Zítra","uk":"Завтра"},
+ "w_more":  {"en":"More drops soon","pl":"Więcej dropów wkrótce","es":"Más drops pronto","de":"Bald mehr Drops","fr":"Bientôt d'autres drops","it":"Presto altri drop","cs":"Brzy další dropy","uk":"Скоро більше дропів"},
+ "w_desc":  {"en":"Your next drop with a countdown.","pl":"Najbliższy drop z odliczaniem.","es":"Tu próximo drop con cuenta atrás.","de":"Dein nächster Drop mit Countdown.","fr":"Ton prochain drop avec compte à rebours.","it":"Il tuo prossimo drop con conto alla rovescia.","cs":"Tvůj nejbližší drop s odpočtem.","uk":"Твій найближчий дроп із відліком."},
+}
+def esc(x): return x.replace("&","&amp;").replace("<","&lt;").replace("'","\\'")
+for lang in ["en","pl","es","de","fr","it","cs","uk"]:
+    d = os.path.join(A, "src/main/res", "values" if lang == "en" else "values-" + lang); os.makedirs(d, exist_ok=True)
+    open(os.path.join(d, "squad_widget_strings.xml"), "w", encoding="utf-8").write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n' + "".join('    <string name="%s">%s</string>\n' % (k, esc(v[lang])) for k, v in STR.items()) + '</resources>\n')
+x = open(m).read()
+if "SquadWidgetProvider" not in x:
+    x = x.replace("</application>", '''    <receiver android:name=".SquadWidgetProvider" android:exported="false">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/squad_widget_info" />
+        </receiver>
+    </application>''')
+    open(m, "w").write(x)
+j = open(ma).read()
+if "registerPlugin" not in j:
+    j = j.replace("super.onCreate(b);", "registerPlugin(SquadWidgetPlugin.class);\n        super.onCreate(b);", 1)
+    open(ma, "w").write(j)
 print("patch ok")
