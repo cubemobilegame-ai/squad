@@ -10,6 +10,27 @@ service cloud.firestore {
     }
 
     function signedIn() { return request.auth != null; }
+    // ---- LIMITY (tempo wiadomości, cooldown i dzienny limit dropów, 3 publiczne/dobę) ----
+    // Zapis limitu idzie w tej samej paczce (batch) co drop / wiadomość: users/{uid}/lim/d oraz lim/m.
+    // enforce() = false -> reguły tylko pozwalają zapisać liczniki; true -> wymuszają limity.
+    function enforce() { return false; }
+    function today() { return request.time.year() * 10000 + request.time.month() * 100 + request.time.day(); }
+    function limRef(k) { return /databases/$(db)/documents/users/$(request.auth.uid)/lim/$(k); }
+    function dropLimOk(pub) {
+      return !enforce() || (
+        getAfter(limRef('d')).data.at == request.time
+        && (!exists(limRef('d')) || get(limRef('d')).data.at < request.time - duration.value(10, 's'))
+        && getAfter(limRef('d')).data.day == today()
+        && getAfter(limRef('d')).data.n == (exists(limRef('d')) && get(limRef('d')).data.day == today() ? get(limRef('d')).data.n : 0) + 1
+        && getAfter(limRef('d')).data.n <= 20
+        && getAfter(limRef('d')).data.pub == (exists(limRef('d')) && get(limRef('d')).data.day == today() ? get(limRef('d')).data.pub : 0) + (pub ? 1 : 0)
+        && getAfter(limRef('d')).data.pub <= 3);
+    }
+    function msgLimOk() {
+      return !enforce() || (
+        getAfter(limRef('m')).data.at == request.time
+        && (!exists(limRef('m')) || get(limRef('m')).data.at < request.time - duration.value(1, 's')));
+    }
     function isGuest() { return request.auth.token.firebase.sign_in_provider == 'anonymous'; }
     function drop(id) { return get(/databases/$(db)/documents/drops/$(id)).data; }
     function grp(id) { return get(/databases/$(db)/documents/groups/$(id)).data; }
@@ -41,6 +62,17 @@ service cloud.firestore {
         !('nick' in request.resource.data) || !('nick' in resource.data) || request.resource.data.nick == resource.data.nick
         || (request.resource.data.get('nickAt', null) == request.time
             && (!('nickAt' in resource.data) || request.time > resource.data.nickAt + duration.value(14, 'd'))));
+      // liczniki limitów (tylko własne, tylko znacznik czasu serwera + liczniki dzienne)
+      match /lim/{k} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow create, update: if signedIn() && request.auth.uid == uid
+          && ((k == 'm' && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at == request.time)
+           || (k == 'd' && request.resource.data.keys().hasOnly(['at', 'day', 'n', 'pub']) && request.resource.data.at == request.time
+               && request.resource.data.day == today() && request.resource.data.n is int && request.resource.data.n >= 0 && request.resource.data.n <= 50
+               && request.resource.data.pub is int && request.resource.data.pub >= 0 && request.resource.data.pub <= 50
+               && (!exists(/databases/$(db)/documents/users/$(uid)/lim/d) || resource.data.day != today()
+                   || (request.resource.data.n >= resource.data.n && request.resource.data.pub >= resource.data.pub))));
+      }
       // tokeny powiadomień push (jeden dokument na telefon)
       match /tokens/{tok} {
         allow read, write: if signedIn() && request.auth.uid == uid;
@@ -98,7 +130,8 @@ service cloud.firestore {
         && request.resource.data.expiresAt < request.time + duration.value(400, 'd')
         && request.resource.data.title.size() <= 60
         // publiczny drop tylko od osoby, która potwierdziła wiek 16+
-        && (request.resource.data.get('public', false) != true || is16());
+        && (request.resource.data.get('public', false) != true || is16())
+        && dropLimOk(request.resource.data.get('public', false) == true);
       allow delete: if signedIn() && resource.data.hostId == request.auth.uid;
       allow update: if signedIn() && resource.data.hostId == request.auth.uid
         && request.resource.data.expiresAt < request.time + duration.value(400, 'd');
@@ -128,7 +161,8 @@ service cloud.firestore {
               || get(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid)).data.status in ['in', 'late'])
           && request.resource.data.authorId == request.auth.uid
           && !('r' in request.resource.data) && request.resource.data.get('v', {}).size() == 0
-          && okText(request.resource.data.text);
+          && okText(request.resource.data.text)
+          && msgLimOk();
         allow update: if signedIn() && drop(code).expiresAt > request.time
           && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
           && (okReact() || okVote());
@@ -204,7 +238,8 @@ service cloud.firestore {
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
           && request.resource.data.authorId == request.auth.uid
           && !('r' in request.resource.data) && request.resource.data.get('v', {}).size() == 0
-          && okText(request.resource.data.text);
+          && okText(request.resource.data.text)
+          && msgLimOk();
         allow update: if signedIn()
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
           && (okReact() || okVote());
