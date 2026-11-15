@@ -678,7 +678,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .gpo{position:relative;display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;box-sizing:border-box;height:46px;padding:0 14px;margin-top:8px;border:0;border-radius:14px;background:#1d1d29;color:#fff;font:800 14px Brico,BricoCyr,system-ui;overflow:hidden;cursor:pointer}.gpo i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(255,79,134,.45),rgba(255,154,61,.35));transition:width .25s}.gpo span,.gpo em{position:relative;font-style:normal}.gpo span{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gpo em{font-size:13px;opacity:.85}.gpo.my{box-shadow:inset 0 0 0 2px #ff4f86}
 .gpx{display:block;width:100%;margin-top:12px;background:none;border:0;color:rgba(255,255,255,.5);font:700 12px Brico,BricoCyr,system-ui;cursor:pointer}
 .ngb{display:flex;align-items:center;gap:8px;flex:none;height:40px;padding:0 17px 0 13px;border-radius:99px;border:1px solid rgba(255,255,255,.22);background:transparent;color:rgba(255,255,255,.92);font:800 11.5px Brico,BricoCyr,system-ui;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s}.ngb:active{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4)}.ngb svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.gint{text-align:center}.gint .gih{width:84px;height:84px;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));margin:2px auto 4px;display:block}.gint h2{margin:6px 0 16px}
+.gint{text-align:center}.gint .cta{margin-top:14px}.gint .cmb{margin-top:10px}.gint .gih{width:84px;height:84px;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));margin:2px auto 4px;display:block}.gint h2{margin:6px 0 16px}
 .gir{display:flex;gap:14px;align-items:flex-start;text-align:left;padding:14px 16px;margin-top:10px;border-radius:20px;background:#15151e;border:1px solid rgba(255,255,255,.08)}.gir i{flex:none;width:46px;height:46px;border-radius:50%;background:#1f1f2b;display:grid;place-items:center}.gir i img{width:30px;height:30px;object-fit:contain}.gir b{display:block;font-size:15.5px;font-weight:800}.gir p{margin:3px 0 0;font-size:13px;line-height:1.4;color:rgba(255,255,255,.62);font-weight:600}
 .gin{margin:16px 6px 4px;font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.5);font-weight:600}
 .crew:empty{display:none}.crew{background:#121218;border:1px solid rgba(255,255,255,.07);border-radius:22px;padding:14px 14px 6px}
@@ -2107,10 +2107,10 @@ function chatsView(){
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
   const openNf=()=>{$("#nf").hidden=!$("#nf").hidden;if(!$("#nf").hidden)$("#gn").focus()};
   $("#newg").onclick=()=>{vib(8);if(auth.currentUser?.isAnonymous)return guestUp("/chats");
-    if(sget("grIntro")!=="1"&&$("#nf").hidden){const s2=sheet(`<div class="gint"><img class="gih" src="/e/handshake.webp" alt=""><h2>${t("giT")}</h2>
+    if(sget("grIntro")!=="1"&&$("#nf").hidden){const s2=sheet(`<div class="cmenu gint"><img class="gih" src="/e/handshake.webp" alt=""><h2>${t("giT")}</h2>
       <div class="gir"><i><img src="/e/handshake.webp" alt=""></i><div><b>${t("giGrT")}</b><p>${t("giGrD")}</p></div></div>
       <div class="gir"><i><img src="/e/fire.webp" alt=""></i><div><b>${t("giDrT")}</b><p>${t("giDrD")}</p></div></div>
-      <p class="gin">${t("giNote")}</p><button class="cta" id="gig">${t("giGo")}</button><button class="ghost cmb cmx" id="gic" style="margin-top:10px">${t("cancel")}</button></div>`);
+      <p class="gin">${t("giNote")}</p><button class="cta" id="gig">${t("giGo")}</button><button class="ghost cmb cmx" id="gic">${t("cancel")}</button></div>`);
       s2.querySelector("#gic").onclick=s2.close;s2.querySelector("#gig").onclick=()=>{sset("grIntro","1");s2.close();setTimeout(openNf,200)};return}
     openNf()};
   $("#gk").onclick=async()=>{const name=$("#gn").value.trim();if(!name){vib([50,30,50]);return toast(t("needGroup"))}if(isBad(name)){vib([50,30,50]);return toast(t("noBad"))}
