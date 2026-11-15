@@ -2188,7 +2188,8 @@ function newView(){
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(cmM)}
     cmM.invalidateSize(false);cmM.setView(ll,z,{animate:false});setTimeout(()=>cmM.invalidateSize(),30)};
   $("#cmx").onclick=e=>{e.stopPropagation();const q=$("#pl").value.trim(),sp=typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null,st0=cmPt||cmMe||sp;
-    pinPicker({ll:st0?[st0.la,st0.lo]:[52,19.4],zoom:st0?(cmPt?17:14):6,cat,th:catCol(cat),onOk:async c=>{let q2=$("#pl").value.trim();if(!q2){q2=(await revGeo(c))||t("pinPlace");$("#pl").value=q2}cmQ=q2;cmOk=q2;cmPt={la:c.la,lo:c.lo,q:q2,ap:0};cmShow([c.la,c.lo]);$("#cmst").textContent=t("ppSet")}})};
+    pinPicker({ll:st0?[st0.la,st0.lo]:[52,19.4],zoom:st0?(cmPt?17:14):6,cat,th:catCol(cat),onOk:async c=>{let q2=$("#pl").value.trim();const auto=!q2;if(auto){q2=t("pinPlace");$("#pl").value=q2}cmQ=q2;cmOk=q2;cmPt={la:c.la,lo:c.lo,q:q2,ap:0};cmShow([c.la,c.lo]);$("#cmst").textContent=t("ppSet");
+      if(auto){const g=await revGeo(c);const pl=$("#pl");if(g&&pl&&pl.value.trim()===q2&&cmPt&&cmPt.la===c.la){pl.value=g;cmQ=g;cmOk=g;cmPt.q=g}}}})};
   const cmPin=()=>{const pn=document.querySelector("#cmw .pin");if(pn){const [a,b]=catCol(cat);pn.innerHTML=`<div class="pmk" style="--c1:${a};--c2:${b}"><div class="pmi">${ic(cat)}</div></div>`}};cmPin();
   (async()=>{try{let me=DEMO?{la:52.2297,lo:21.0122}:(typeof PUB!=="undefined"&&PUB.pos?PUB.pos:null);if(!me&&navigator.permissions){const ps=await navigator.permissions.query({name:"geolocation"});if(ps.state==="granted")me=await getPos()}
     if(!me||!$("#cmw")||cmM||$("#pl").value.trim())return;cmMe=me;await cmShow([me.la,me.lo],14);if(!cmPt&&!$("#pl").value.trim())$("#cmst").textContent=t("cmMine")}catch{}})();
