@@ -1885,6 +1885,7 @@ function pubTab(el,redraw){
     const go_=()=>{el.innerHTML=safe+`${PUBSK}`;Promise.all([pubLoadAny(),new Promise(r=>setTimeout(r,1800))]).then(()=>{if(homeTab==="pub")redraw()})};
     go_();if(!have)return}
   const LST=BOX?pubBoxList().map(d=>(d.km=PUB.pos?kmTo(PUB.pos,dpt(d)):null,d)):PUB.list;
+  try{const nb=document.querySelector('#tb button[data-t="pub"] i.n');if(nb)nb.textContent=LST.length}catch{}
   const RG=BOX?(()=>{const b=PUB.M.map.getBounds(),la=(b.getNorth()+b.getSouth())/2,w=Math.round(kmTo({la,lo:b.getWest()},{la,lo:b.getEast()})),h=Math.round(kmTo({la:b.getSouth(),lo:b.getWest()},{la:b.getNorth(),lo:b.getWest()}));return t("pubRgM",w,h)})():t("pubRgR");
   el.innerHTML=safe+`<div class="pvr">${RG}</div>`+(LST.length?LST.map(d=>{const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=d.hostId===me()?"host":((d.P||[]).find(p=>p.id===me())?.status||"inv");
     return postCard(d,d.P||[],role,{km:d.km,seats:d.seats,free})}).join("")
