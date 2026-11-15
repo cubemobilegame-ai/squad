@@ -2986,6 +2986,7 @@ window.chatMenu=(g,id)=>{vib(10);
   const IB='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/>',IBO='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0M4 4l16 16"/>',IC='<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>';
   const mi=x=>`<span class="cmi">${sv(x)}</span>`;
   const s=sheet(`<div class="cmenu"><h2>${esc(clean(title||""))}</h2>
+    ${g&&G&&!auth.currentUser?.isAnonymous?`<button class="ghost cmb" id="cmI">${mi(SI.share)}${t("cmInv")}</button>`:""}
     <button class="ghost cmb" id="cmM">${mi(isMuted(k)?IB:IBO)}${isMuted(k)?t("cmUnmute"):t("cmMute")}</button>
     <button class="ghost cmb" id="cmC">${mi(IC)}${t("cmClr")}</button><p class="hint" style="margin:8px 0 0">${t("cmClrD")}</p>
     ${owner?"":`<button class="ghost cmb" id="cmR">${mi(SI.flag)}${t("cmRep")}</button>`}
@@ -2996,6 +2997,7 @@ window.chatMenu=(g,id)=>{vib(10);
   s.querySelector("#cmM").onclick=()=>{const on=!isMuted(k);sset("mut_"+k,on?"1":"");sync({muted:{[k]:on?true:deleteField()}});s.close();vib(on?[20,30,20]:10);toast(t(on?"cmMuted":"cmUnm"));changed()};
   if(s.querySelector("#cmR"))s.querySelector("#cmR").onclick=()=>{s.close();report({target:g?"group":"drop",code:id})};
   s.querySelector("#cmX").onclick=()=>s.close();
+  if(s.querySelector("#cmI"))s.querySelector("#cmI").onclick=()=>{s.close();openShare("g",{id,...G,M:S.gm?.[id]||[]})};
   arm(s.querySelector("#cmC"),t("cmClr"),async()=>{const n=Date.now(),c=clrMap();c[k]=n;sset("clrc",JSON.stringify(c));sset("seen_"+k,n);sync({cleared:{[k]:n}});s.close();vib([20,30,20]);toast(t("cmCleared"));S.ms[k==="g_"+id?k:id]=[];changed();route()});
   s.querySelector("#cmL")&&arm(s.querySelector("#cmL"),t("grLeave"),async()=>{await deleteDoc(doc(db,"groups",id,"members",me()));forgetG(id);S.groups.delete(id);changed();s.close();vib([40,30,40]);toast(t("grLeft"));go("/chats")});
   s.querySelector("#cmD")&&arm(s.querySelector("#cmD"),t("grDel"),async()=>{await wipeGroup(id);forgetG(id);S.groups.delete(id);changed();s.close();vib([40,30,40]);toast(t("grDeleted"));go("/chats")})};
@@ -3217,6 +3219,14 @@ Object.assign(L.it,{"bugT": "Segnala un errore", "bugD": "Dicci cosa è andato s
 Object.assign(L.cs,{"bugT": "Nahlásit chybu", "bugD": "Popiš, co se pokazilo. Pošle se to přímo nám.", "bugPh": "Co se stalo? Co jsi dělal(a), když se chyba objevila?", "bugMail": "Tvůj e-mail (volitelně, abychom mohli odpovědět)", "bugSend": "Odeslat", "bugDone": "Díky! Hlášení odesláno ✓", "bugFail": "Odeslání se nepovedlo. Zkus to znovu.", "bugNeed": "Popiš problém (alespoň 10 znaků)", "bugWait": "Chvíli počkej před dalším hlášením", "bugL": "Nahlásit chybu"});
 Object.assign(L.uk,{"bugT": "Повідомити про помилку", "bugD": "Опиши, що пішло не так. Це надійде безпосередньо нам.", "bugPh": "Що сталося? Що ти робив(-ла), коли з’явилася помилка?", "bugMail": "Твоя ел. пошта (необов’язково, щоб ми могли відповісти)", "bugSend": "Надіслати", "bugDone": "Дякуємо! Повідомлення надіслано ✓", "bugFail": "Не вдалося надіслати. Спробуй ще раз.", "bugNeed": "Опиши проблему (щонайменше 10 символів)", "bugWait": "Зачекай трохи перед наступним повідомленням", "bugL": "Повідомити про помилку"});
 Object.assign(L.pl,{"mapOpen": "Otwórz w mapach"});
+Object.assign(L.pl,{"cmInv": "Zaproś znajomych"});
+Object.assign(L.en,{"cmInv": "Invite friends"});
+Object.assign(L.es,{"cmInv": "Invitar amigos"});
+Object.assign(L.de,{"cmInv": "Freunde einladen"});
+Object.assign(L.fr,{"cmInv": "Inviter des amis"});
+Object.assign(L.it,{"cmInv": "Invita amici"});
+Object.assign(L.cs,{"cmInv": "Pozvat přátele"});
+Object.assign(L.uk,{"cmInv": "Запросити друзів"});
 Object.assign(L.en,{"mapOpen": "Open in Maps"});
 Object.assign(L.es,{"mapOpen": "Abrir en Mapas"});
 Object.assign(L.de,{"mapOpen": "In Karten öffnen"});
