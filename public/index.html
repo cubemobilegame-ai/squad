@@ -1550,8 +1550,8 @@ if("ontouchstart"in window){let sx=0,sy=0,bx=0,lx=0,on=false,mv=false,el=null;co
   addEventListener("touchcancel",fin,{passive:true})}
 if(!DEMO)addEventListener("popstate",()=>{const cur=gp();window.__rest=SCR[cur]!=null?SCR[cur]:null;route()});
 const gp=()=>DEMO?PATH:location.pathname;
-try{const lp=sget("lastP"),lt=+sget("lastT")||0;if((NATAPP||STDL)&&!DEMO&&location.pathname==="/"&&!/[?&](demo|safe|join|ref|invite)/.test(location.search)&&!location.hash&&lp&&Date.now()-lt<30*60e3&&/^\/(d|c|g|gc|k)\/[A-Za-z0-9_-]+$/.test(lp))history.replaceState(null,"",lp)}catch{}
-const saveLast=()=>{try{sset("actT",String(Date.now()));const p=location.pathname;if(!DEMO&&/^\/(d|c|g|gc|k)\//.test(p)){sset("lastP",p);sset("lastT",String(Date.now()))}else if(p==="/"||/^\/(me|g)$/.test(p)){sset("lastP","");sset("lastT","0")}}catch{}};
+try{const lp=sget("lastP"),lt=+sget("lastT")||0;if((NATAPP||STDL)&&!DEMO&&location.pathname==="/"&&!/[?&](demo|safe|join|ref|invite)/.test(location.search)&&!location.hash&&lp&&Date.now()-lt<30*60e3&&/^\/(d|c|g|gc)\/[A-Za-z0-9_-]+$/.test(lp)){history.replaceState(null,"",lp);window.__restored=true;setTimeout(()=>{window.__restored=false},8000)}}catch{}
+const saveLast=()=>{try{sset("actT",String(Date.now()));const p=location.pathname;if(!DEMO&&/^\/(d|c|g|gc)\//.test(p)){sset("lastP",p);sset("lastT",String(Date.now()))}else if(p==="/"||/^\/(me|g)$/.test(p)){sset("lastP","");sset("lastT","0")}}catch{}};
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")saveLast()});addEventListener("pagehide",saveLast);
 function route(){if(mailPending()){if(!document.querySelector("#mp2"))mailView();return}const p=gp(),m=r=>p.match(r),ka=m(/^\/k\/([A-Za-z0-9]{10,40})/),d=m(/^\/d\/(\w+)/),c=m(/^\/c\/(\w+)/),g=m(/^\/g\/(\w+)/),gc=m(/^\/gc\/(\w+)/);
   if(d)dropView(d[1].toUpperCase());else if(c)chatView(c[1].toUpperCase(),0);else if(g)groupView(g[1].toUpperCase());else if(gc)chatView(gc[1].toUpperCase(),1);
@@ -1572,7 +1572,7 @@ const nav=a=>`<nav>${[["h","/",I.home,"nHome"],["c","/chats",I.chat,"nCh","bdc"]
 
 const loadDrop=async code=>{const pr=window.__pre;if(pr&&pr.code===code&&Date.now()-pr.t<60000){window.__pre=null;try{const [d,P]=await Promise.all([pr.d,pr.P.catch(()=>null)]);if(d&&d.expiresAt&&d.startsAt){if(P)window.__preP={code,list:P};return d.expiresAt.toMillis()<=Date.now()?null:{ref:doc(db,"drops",code),d}}}catch{}}try{const r=doc(db,"drops",code),s=await getDocR(r);if(!s.exists())return null;const d=s.data();return d.expiresAt.toMillis()<=Date.now()?null:{ref:r,d}}catch{return null}};
 const getDocR=async r=>{for(let i=0;i<3;i++){try{return await Promise.race([getDoc(r),new Promise((_,j)=>setTimeout(()=>j(new Error("timeout")),i?8000:5000))])}catch(e){if(i===2)throw e}}};
-const gone=g=>view(`<div class="scr cen"><h1>${t(g?"expGT":"expT")}</h1><p class="mut">${t(g?"expGD":"expD")}</p><button class="cta" onclick="go('/')">${t("back")}</button></div>`);
+const gone=g=>{if(window.__restored){window.__restored=false;try{sset("lastP","");sset("lastT","0")}catch{}return go("/")}return gone0(g)};const gone0=g=>view(`<div class="scr cen"><h1>${t(g?"expGT":"expT")}</h1><p class="mut">${t(g?"expGD":"expD")}</p><button class="cta" onclick="go('/')">${t("back")}</button></div>`);
 const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
 /* kolor dropu wynika z typu (bez wyboru przez użytkownika); stare dropy z polem theme zostają po staremu */
