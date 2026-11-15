@@ -1,0 +1,2 @@
+# SHA-1 klucza podpisywania Google Play (publiczny)
+51:BD:FF:DB:25:C6:96:9E:D2:4E:44:BE:2F:0D:D4:BC:E6:DE:65:17
