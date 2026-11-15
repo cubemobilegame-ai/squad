@@ -2137,7 +2137,7 @@ async function groupView(code){
   if(!sn||!sn.exists())return gone(1);
   const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code;let mine=null,M=[];
   const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
-  view(`<div class="scr">${logged?`<div class="hdr ghd">${bk("/chats")}<h2 class="ghn">${gn}</h2></div>`:`<div class="brand">Squad</div>`}${owner?"":`<div class="inv"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
+  view(`<div class="scr">${logged?`<div class="hdr ghd">${bk(fromChat?"/gc/"+code:"/chats")}<h2 class="ghn">${gn}</h2></div>`:`<div class="brand">Squad</div>`}${owner?"":`<div class="inv"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
   <div class="ghero"><div><em>👥 ${t("tagG")}</em><h1>${gn}</h1><small id="gcn"></small></div><img src="/e/handshake.webp" alt=""></div>
   <div id="shb" class="grow" hidden>${gb(sv(SI.share),t("grInvB"),"sh")}${logged?gb(sv('<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>'),t("nK"),"gk"):""}${gb(sv('<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/>'),t("shCopy"),"cl")}${logged?gb(sv(isMuted("g_"+code)?BELLO:BELL),isMuted("g_"+code)?t("cmUnmuteS"):t("cmMuteS"),"gmu"):""}</div>
   <div class="crew gcrew" id="mem"></div><div id="gpin"></div><div id="gpol"></div>
