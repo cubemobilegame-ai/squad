@@ -661,6 +661,10 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .sheet #gug{background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3))!important;color:#0b0b12!important;justify-content:center!important;text-align:center!important;border-radius:99px!important;font-weight:900!important;border:0!important;margin:4px 0 8px!important;padding:16px!important}.sheet #guf{justify-content:center!important;text-align:center!important;border-radius:99px!important;border:1.5px solid rgba(255,255,255,.18)!important;margin-bottom:6px!important}.sheet #gux{justify-content:center!important;text-align:center!important}
 
 /* lista „kto jest w dropie” */
+.ghd{justify-content:flex-start;gap:14px}.ghn{font-size:22px;font-weight:800;margin:0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ghero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0 18px;padding:20px 20px;border-radius:26px;background:linear-gradient(135deg,#3b82f6,#2dd4bf);overflow:hidden;color:#fff}.ghero>div{min-width:0}.ghero em{display:inline-block;font-style:normal;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:99px;background:rgba(10,20,50,.35)}.ghero h1{font-size:30px;line-height:1.1;margin:12px 0 6px;overflow-wrap:anywhere}.ghero small{font-size:14px;font-weight:700;opacity:.9}.ghero img{width:92px;height:92px;flex:none;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25))}
+.grow{display:flex;justify-content:space-between;gap:8px;margin:0 0 20px}.grow[hidden]{display:none}.gic{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:9px;background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:0}.gic span{width:58px;height:58px;border-radius:50%;background:#1c1c26;border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;transition:transform .12s}.gic:active span{transform:scale(.92)}.gic svg{width:22px;height:22px}.gic b{font-size:12px;font-weight:800;color:rgba(255,255,255,.85);white-space:nowrap}.gic.on span{background:#2a2a38}
+.gcrew{margin-bottom:6px}.gcrew .crr[data-u]{cursor:pointer}
 .crew:empty{display:none}.crew{background:#121218;border:1px solid rgba(255,255,255,.07);border-radius:22px;padding:14px 14px 6px}
 .crh{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}.crh b{font-size:15px;font-weight:700}.crh span{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:rgba(255,255,255,.7)}
 .cdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px}.cdot.in{background:#7ff0b4}.cdot.late{background:#ffd27a}.cdot.out{background:#ff9db0}
@@ -1748,8 +1752,8 @@ async function conAcc(r){const u=auth.currentUser;if(!u)return;try{
   await deleteDoc(doc(db,"creq",r.id));pushNow({kind:"cacc",to:r.from});sfx("in");vib([20,30,20]);toast(t("kAccOk"))}catch(e){toast(t("err"))}}
 async function conDel(uid){const u=auth.currentUser;if(!u)return;await deleteDoc(doc(db,"users",u.uid,"contacts",uid)).catch(()=>{});await deleteDoc(doc(db,"users",uid,"contacts",u.uid)).catch(()=>{});vib(10);toast(t("kRmOk"))}
 const syncCon=(av,ph,nk)=>{const u=auth.currentUser;if(!u||u.isAnonymous)return;S.con.forEach((c,k)=>setDoc(doc(db,"users",k,"contacts",u.uid),{av,ph,...(nk?{nickname:nk}:{})},{merge:true}).catch(()=>{}))};
-function conShare(){const u=auth.currentUser;if(!u)return;const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||""),txt=t("kLinkTxt",url);vib(10);
-  if(navigator.share)navigator.share({text:txt}).catch(()=>{});else{try{navigator.clipboard.writeText(txt)}catch{}toast(t("copied"))}}
+function conShare(){const u=auth.currentUser;if(!u)return;const nick=sget("nick")||"",url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(nick);
+  shareSheet({title:t("kLink"),url,txt:t("kLinkTxt",url,nick),fname:"squad-kontakt.jpg",make:st=>makeContactCard(nick,url,st),opts:[OPT_STY]})}
 window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"");let svg="";
   try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
   const s=sheet(`<h2>${t("qcT")}</h2><p class="hint">${t("qcD")}</p><div class="qrbox">${svg}</div><p class="qrn">${esc(clean(sget("nick")||""))}</p>
@@ -2122,9 +2126,11 @@ async function groupView(code){
   let sn;try{sn=await getDocR(doc(db,"groups",code))}catch{}
   if(!sn||!sn.exists())return gone(1);
   const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code;let mine=null,M=[];
-  view(`<div class="scr">${logged?`<div class="hdr">${bk("/chats")}</div>`:`<div class="brand">Squad</div>`}<div class="inv"><span>${owner?esc(clean(g.name)):t("grInv",esc(g.ownerNick||"?"),esc(clean(g.name)))}</span></div>
-  <div id="shb" hidden><button class="ghost gbtn" id="sh">${sv(SI.share)}${t("shTG")}</button>${logged?`<button class="ghost gbtn" id="gk"><span style="font-size:17px;line-height:1">👋</span>${t("kPick")}</button>`:""}<button class="ghost gbtn" id="cl">${sv('<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/>')}${t("shCopy")}</button></div>
-  <h3>${t("grMembers")}</h3><div class="mem wrap" id="mem"></div>
+  const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
+  view(`<div class="scr">${logged?`<div class="hdr ghd">${bk("/chats")}<h2 class="ghn">${gn}</h2></div>`:`<div class="brand">Squad</div>`}${owner?"":`<div class="inv"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
+  <div class="ghero"><div><em>👥 ${t("tagG")}</em><h1>${gn}</h1><small id="gcn"></small></div><img src="/e/handshake.webp" alt=""></div>
+  <div id="shb" class="grow" hidden>${gb(sv(SI.share),t("grInvB"),"sh")}${logged?gb(sv('<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>'),t("nK"),"gk"):""}${gb(sv('<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/>'),t("shCopy"),"cl")}${logged?gb('<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8M10.3 21a1.9 1.9 0 003.4 0"/></svg>',isMuted("g_"+code)?t("cmUnmuteS"):t("cmMuteS"),"gmu"):""}</div>
+  <div class="crew gcrew" id="mem"></div>
   <div class="asr" id="asr" ${sget("nick")?"":"hidden"}>${avc("mini",meAv())}<span>${t("asYou")} <b>${esc(sget("nick"))}</b></span><button class="lnk" id="chn">${t("change")}</button></div>
   <input id="nick" placeholder="${t("nick")}…" maxlength="20" value="${esc(sget("nick"))}" ${sget("nick")?"hidden":""}>
   <button class="cta" id="jb">${t("grJoin")}</button><button class="cta" id="oc" hidden>${t("openGC")}</button>
@@ -2132,7 +2138,7 @@ async function groupView(code){
   ${logged?"":getAppBox()}
   ${owner?"":`<button class="lnk rep" id="rp">${sv(SI.flag)} ${t("repGroup")}</button>`}</div>`);
   $("#cl").onclick=async()=>{vib(15);try{await navigator.clipboard.writeText(url)}catch{}toast(t("copied"))};
-  $("#sh").onclick=()=>openShare("g",{id:code,...g,M});if($("#gk"))$("#gk").onclick=()=>pickContacts("g",code,g.name,new Set([g.ownerId,...M.map(m=>m.id)]));
+  $("#sh").onclick=()=>openShare("g",{id:code,...g,M});if($("#gmu"))$("#gmu").onclick=()=>{const k="g_"+code,on=!isMuted(k);sset("mut_"+k,on?"1":"");sync({muted:{[k]:on?true:deleteField()}});vib(on?[20,30,20]:10);toast(t(on?"cmMuted":"cmUnm"));$("#gmu b").textContent=t(on?"cmUnmuteS":"cmMuteS");$("#gmu").classList.toggle("on",on);changed()};if($("#gk"))$("#gk").onclick=()=>pickContacts("g",code,g.name,new Set([g.ownerId,...M.map(m=>m.id)]));
   $("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};$("#oc").onclick=()=>go("/gc/"+code);
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#acc"))$("#acc").onclick=accGo;if($("#rp"))$("#rp").onclick=()=>report({target:"group",code});
   let jbusy=false;$("#jb").onclick=async()=>{if(jbusy)return;const n=$("#nick").value.trim();if(!n){vib([50,30,50]);$("#nick").hidden=false;$("#nick").focus();return toast(t("needNick"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!nickTry(n)){$("#nick").value=sget("nick");return}
@@ -2144,7 +2150,8 @@ async function groupView(code){
     if(owner)await wipeGroup(code);else await deleteDoc(doc(ref,"members",me()));
     forgetG(code);S.groups.delete(code);changed();vib([40,30,40]);toast(t(owner?"grDeleted":"grLeft"));go(logged?"/chats":"/g/"+code)};
   unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({...y.data(),id:y.id}));mine=M.find(m=>m.id===me())||null;
-    $("#mem").innerHTML=M.map(p=>`<span class="mchip" data-u="${esc(p.id)}">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname)}</b>${FR(p.id)}${p.id===g.ownerId?'<span class="stt">★</span>':""}</span>`).join("");
+    {const L=[...M].sort((a,b)=>(b.id===g.ownerId)-(a.id===g.ownerId));$("#gcn").textContent=t("grCnt",M.length);$("#mem").hidden=!M.length;
+    $("#mem").innerHTML=M.length?`<div class="crh"><b>${t("grMembers")}</b><span>${M.length}</span></div><div class="crl open">${L.map(p=>`<div class="crr" data-u="${esc(p.id)}">${avc("",avIdx(p))}<span class="crn"><b style="color:${gc(p)}">${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("pcOrg")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</span></div>`).join("")}</div>`:""}
     $("#mem").onclick=e=>{const c=e.target.closest("[data-u]");if(!c)return;const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id))userActions(q,{target:"user",chat:"group",code})};
     $("#jb").hidden=!!mine;$("#oc").hidden=!mine||fromChat;$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;
     if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
@@ -2756,6 +2763,25 @@ async function makeCard(k,o,st={}){await fontsReady();
   K.txt(t("imgNoApp"),W/2,H-48,F(600,30),pl.sub);
   stickers(K,st.pack,G?"👊":CATE[o.category],[[110,520,-.3,110],[975,560,.26,100]]);
   return K.blob()}
+async function makeContactCard(nick,url,st={}){await fontsReady();
+  const K=kit(1080,1920),{x,W,H,F}=K,PI2=Math.PI*2,sty=PAL[st.sty]?st.sty:"neon",pl=PAL[sty],u0=auth.currentUser;
+  const cs=getComputedStyle(document.documentElement),cv=n=>(cs.getPropertyValue(n)||"").trim();
+  const A=cv("--acc")||"#FF4F86",g1=cv("--g1")||"#FF3D7F",g2=cv("--g2")||"#FF6A4D",g3=cv("--g3")||"#FFA53D";
+  const [c1,c2]=THEMES[hs(u0?.uid||"k")%THEMES.length];paintBg(K,sty,c1,c2);
+  K.txt("Squad",W/2,150,F(800,72),pl.fg,"center",-3);
+  const hv=meAv(),it=t("inv",nick||"?")+" 👋";x.font=K.fitF(it,700,800,50,30);const iw=x.measureText(it).width,rowW=120+24+iw,rx=(W-rowW)/2;
+  x.fillStyle="#1d1d29";x.beginPath();x.arc(rx+60,290,60,0,PI2);x.fill();
+  await K.pic(typeof hv==="string"?hv:await genAv(hv,true),rx,230,120,120,true);
+  x.lineWidth=5;x.strokeStyle=pl.fg;x.beginPath();x.arc(rx+60,290,60,0,PI2);x.stroke();
+  K.txt(it,rx+144,307,x.font,pl.fg,"left");
+  x.save();x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=40;x.shadowOffsetY=18;await K.pic("/e/wave2.webp",W/2-170,420,340,340);x.restore();
+  const tt=t("imgKT"),tl=K.wrap(tt,940,2);let y=900;tl.forEach((l,i)=>K.txt(l,W/2,y+i*110,K.fitF(l,960,800,104,52),pl.fg,"center",-3));y+=(tl.length-1)*110;
+  y+=90;const sub=t("imgKS");K.txt(sub,W/2,y,K.fitF(sub,920,700,46,28),pl.fg);
+  y+=190;const X0=90,CW=900;K.rr(X0,y,CW,140,70);x.fillStyle=pl.pill==="solid"?"#0b0b12":A;x.fill();K.txt(t("imgKJ"),W/2,y+92,F(800,56),pl.pill==="solid"?A:"#0b0b12","center",1);
+  y+=140+84;const hw="👆 "+t("imgHowG");K.txt(hw,W/2,y,K.fitF(hw,940,800,42,28),pl.fg);
+  K.rr(W/2-330,H-170,660,100,50);x.fillStyle=pl.dlBg;x.fill();K.txt(t("imgDl"),W/2,H-106,K.fitF(t("imgDl"),600,800,38,24),pl.dlFg,"center",0);
+  stickers(K,st.pack,"🤙",[[110,520,-.3,110],[975,560,.26,100]]);
+  return K.blob()}
 const url2=(G,id)=>(base()+(G?"/g/":"/d/")+id).replace(/^https?:\/\//,"");
 
 /* kolaż z albumu: story 1080×1920 albo post 1080×1350 */
@@ -3026,6 +3052,22 @@ Object.assign(L.fr,{pmGeoErr:"Impossible d'obtenir ta position. Réessaie dans u
 Object.assign(L.it,{pmGeoErr:"Impossibile ottenere la posizione. Riprova tra un attimo.",pvList:"Elenco",pvMap:"Mappa",pmSearch:"Cerca una città o un luogo…",pmMy:"La mia posizione",pmNo:"Nessun drop in questa posizione",pmNoPlace:"Luogo non trovato",pmErr:"Impossibile caricare la mappa. Controlla la connessione."});
 Object.assign(L.cs,{pmGeoErr:"Polohu se nepodařilo zjistit. Zkus to za chvíli.",pvList:"Seznam",pvMap:"Mapa",pmSearch:"Hledej město nebo místo…",pmMy:"Moje poloha",pmNo:"Na tomto místě nejsou žádné dropy",pmNoPlace:"Místo nenalezeno",pmErr:"Mapu se nepodařilo načíst. Zkontroluj připojení."});
 Object.assign(L.uk,{pmGeoErr:"Не вдалося визначити локацію. Спробуй за мить.",pvList:"Список",pvMap:"Мапа",pmSearch:"Шукай місто або місце…",pmMy:"Моя локація",pmNo:"У цій локації немає дропів",pmNoPlace:"Місце не знайдено",pmErr:"Не вдалося завантажити мапу. Перевір інтернет."});
+Object.assign(L.pl,{grInvB:"Zaproś",cmMuteS:"Wycisz",cmUnmuteS:"Włącz",grCnt:n=>n+(n===1?" osoba":n>1&&n<5?" osoby":" osób")});
+Object.assign(L.en,{grInvB:"Invite",cmMuteS:"Mute",cmUnmuteS:"Unmute",grCnt:n=>n+(n===1?" member":" members")});
+Object.assign(L.es,{grInvB:"Invitar",cmMuteS:"Silenciar",cmUnmuteS:"Activar",grCnt:n=>n+(n===1?" miembro":" miembros")});
+Object.assign(L.de,{grInvB:"Einladen",cmMuteS:"Stumm",cmUnmuteS:"Laut",grCnt:n=>n+(n===1?" Mitglied":" Mitglieder")});
+Object.assign(L.fr,{grInvB:"Inviter",cmMuteS:"Sourdine",cmUnmuteS:"Activer",grCnt:n=>n+(n===1?" membre":" membres")});
+Object.assign(L.it,{grInvB:"Invita",cmMuteS:"Silenzia",cmUnmuteS:"Attiva",grCnt:n=>n+(n===1?" membro":" membri")});
+Object.assign(L.cs,{grInvB:"Pozvat",cmMuteS:"Ztlumit",cmUnmuteS:"Zapnout",grCnt:n=>n+(n===1?" člen":" členů")});
+Object.assign(L.uk,{grInvB:"Запросити",cmMuteS:"Вимкнути",cmUnmuteS:"Увімкнути",grCnt:n=>n+" уч."});
+Object.assign(L.pl,{imgKT:"Dodaj mnie do kontaktów",imgKS:"Łatwiej zgadamy się na wypady",imgKJ:"DODAJ DO KONTAKTÓW",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" zaprasza cię do Squad\nDodaj mnie do kontaktów 👉 "+u});
+Object.assign(L.en,{imgKT:"Add me to your contacts",imgKS:"Planning hangouts gets easier",imgKJ:"ADD ME",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" invites you to Squad\nAdd me to your contacts 👉 "+u});
+Object.assign(L.es,{imgKT:"Añádeme a tus contactos",imgKS:"Quedar será más fácil",imgKJ:"AÑADIR",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" te invita a Squad\nAñádeme a tus contactos 👉 "+u});
+Object.assign(L.de,{imgKT:"Füge mich zu deinen Kontakten hinzu",imgKS:"Verabreden wird einfacher",imgKJ:"HINZUFÜGEN",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" lädt dich zu Squad ein\nFüge mich zu deinen Kontakten hinzu 👉 "+u});
+Object.assign(L.fr,{imgKT:"Ajoute-moi à tes contacts",imgKS:"On s’organisera plus facilement",imgKJ:"AJOUTER",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" t’invite sur Squad\nAjoute-moi à tes contacts 👉 "+u});
+Object.assign(L.it,{imgKT:"Aggiungimi ai tuoi contatti",imgKS:"Organizzarsi sarà più facile",imgKJ:"AGGIUNGI",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" ti invita su Squad\nAggiungimi ai tuoi contatti 👉 "+u});
+Object.assign(L.cs,{imgKT:"Přidej si mě do kontaktů",imgKS:"Domluvit se bude snazší",imgKJ:"PŘIDAT",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" tě zve do Squadu\nPřidej si mě do kontaktů 👉 "+u});
+Object.assign(L.uk,{imgKT:"Додай мене до контактів",imgKS:"Домовлятися буде легше",imgKJ:"ДОДАТИ",kLinkTxt:(u,n)=>"👋 "+(n||"?")+" запрошує тебе до Squad\nДодай мене до контактів 👉 "+u});
 Object.assign(L.pl,{cmMute:"Wycisz czat",cmUnmute:"Włącz powiadomienia",cmMuted:"Czat wyciszony",cmUnm:"Powiadomienia włączone",cmRep:"Zgłoś",cmClr:"Wyczyść czat u mnie",cmClrD:"Wiadomości znikną tylko u ciebie. Reszta nadal je widzi.",cmCleared:"Czat wyczyszczony"});
 Object.assign(L.en,{cmMute:"Mute chat",cmUnmute:"Turn notifications on",cmMuted:"Chat muted",cmUnm:"Notifications on",cmRep:"Report",cmClr:"Clear chat for me",cmClrD:"Messages disappear only for you. Everyone else still sees them.",cmCleared:"Chat cleared"});
 Object.assign(L.es,{cmMute:"Silenciar chat",cmUnmute:"Activar notificaciones",cmMuted:"Chat silenciado",cmUnm:"Notificaciones activadas",cmRep:"Denunciar",cmClr:"Vaciar chat para mí",cmClrD:"Los mensajes desaparecen solo para ti. Los demás los siguen viendo.",cmCleared:"Chat vaciado"});
