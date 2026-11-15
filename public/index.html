@@ -1830,8 +1830,9 @@ const getPos=async()=>{const rd=v=>Math.round(v*100)/100,GL=NATAPP&&NP("Geolocat
 async function loadPub(){if(PUB.busy)return;PUB.busy=true;try{
   if(!PUB.pos)PUB.pos=await getPos();
   if(DEMO){PUB.list=demoPub(PUB.pos)}else{
-  const q=await getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",cells(PUB.pos.la,PUB.pos.lo))));
+  const q=await getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",cells(PUB.pos.la,PUB.pos.lo)),limit(100)));
   const now=Date.now();let L=q.docs.map(x=>({...x.data(),id:x.id})).filter(d=>d.startsAt?.toMillis?.()>now&&d.geo).map(d=>({...d,km:kmTo(PUB.pos,dpt(d))})).filter(d=>d.km<=30&&!isBlk(d.hostId));
+  L.sort((a,b)=>a.startsAt.toMillis()-b.startsAt.toMillis());L=L.slice(0,40);
   await Promise.all(L.map(async d=>{try{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}catch{d.P=[]}}));
   PUB.list=L.sort((a,b)=>a.startsAt.toMillis()-b.startsAt.toMillis())}
   /* własnych dropów nie pokazujemy w Publicznych – są w Moich dropach */
@@ -1939,7 +1940,7 @@ async function pubFetch(P,cs){const m=P.map,now=Date.now(),need=cs.filter(c=>!(P
   if(DEMO){if(!P.items.size){const c=m.getCenter(),L0=demoPub({la:c.lat,lo:c.lng});L0.forEach((d,i)=>{const a=i*2.4;P.items.set(d.id,{...d,geo:{la:c.lat+Math.sin(a)*.05*(1+i%3),lo:c.lng+Math.cos(a)*.09*(1+i%2)}})})}}
   else if(need.length){
     const ch=[];for(let i=0;i<need.length;i+=30)ch.push(need.slice(i,i+30));
-    const rs=await Promise.all(ch.map(c=>getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",c)))));
+    const rs=await Promise.all(ch.map(c=>getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",c),limit(100)))));
     need.forEach(c=>P.loaded.set(c,now));
     rs.forEach(q=>q.docs.forEach(x=>{const d={...x.data(),id:x.id};if(d.geo)P.items.set(d.id,d)}))}}
 const pubBoxCells=m=>{const b=m.getBounds();let cs=cellsBox(b.getSouth(),b.getWest(),b.getNorth(),b.getEast());return cs.length>120?cs.slice(0,120):cs};

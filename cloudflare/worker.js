@@ -63,6 +63,8 @@ function fs(env) {
   return {
     get: async (path) => { const r = await fetch(base + path, { headers: await H() }); if (!r.ok) return null; const d = await r.json(); return { ...obj(d.fields), id: d.name.split("/").pop() }; },
     list: async (path) => { const r = await fetch(base + path + "?pageSize=300", { headers: await H() }); if (!r.ok) return []; const d = await r.json(); return (d.documents || []).map((x) => ({ ...obj(x.fields), id: x.name.split("/").pop() })); },
+    patch: async (path, kv) => { const f = {}; for (const k in kv) f[k] = typeof kv[k] === "boolean" ? { booleanValue: kv[k] } : { integerValue: String(kv[k]) };
+      await fetch(base + path + "?" + Object.keys(kv).map((k) => "updateMask.fieldPaths=" + k).join("&"), { method: "PATCH", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => {}); },
     del: async (path) => { await fetch(base + path, { method: "DELETE", headers: await H() }).catch(() => {}); },
   };
 }
@@ -109,6 +111,7 @@ async function handle(env, uid, b) {
   if (b.kind === "msg" && isCode(b.code) && isCode(b.id)) {           // nowa wiadomość w czacie dropa albo grupy
     const G = !!b.group, root = G ? `groups/${b.code}` : `drops/${b.code}`;
     const m = await db.get(`${root}/messages/${b.id}`); if (!m || m.authorId !== uid) return 0;
+    if (m.notified) return 0; await db.patch(`${root}/messages/${b.id}`, { notified: true });   // to samo wywołanie nie wyśle drugiego powiadomienia
     const chat = await db.get(root); if (!chat) return 0;
     const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => p.id !== uid);
     const title = G ? chat.name : chat.title;
@@ -117,6 +120,7 @@ async function handle(env, uid, b) {
   if (b.kind === "rsp" && isCode(b.code)) {                            // odpowiedź IN / LATE / OUT -> autor dropa i reszta ekipy
     const d = await db.get(`drops/${b.code}`), p = await db.get(`drops/${b.code}/participants/${uid}`);
     if (!d || !p) return 0;
+    if (Date.now() - (+p.rspAt || 0) < 5000) return 0; await db.patch(`drops/${b.code}/participants/${uid}`, { rspAt: Date.now() });   // limit tempa
     const isIn = (x) => x === "in" || x === "late", prev = typeof b.prev === "string" ? b.prev : "";
     const st = p.status === "late" ? `LATE ${p.etaMin || 15} min` : ST[p.status] || p.status;
     // kogo powiadomić: organizator + osoby, które są IN / LATE (poza autorem akcji)
@@ -144,6 +148,7 @@ async function handle(env, uid, b) {
         "Szczegóły (Firebase)": `https://console.firebase.google.com/project/${env.PID}/firestore/data/~2Freports~2F${b.id}`,
         "Czas": new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" }) }) });
     const txt = await res.text().catch(() => ""); env.stats = { to: 1, toks: 0, errs: res.ok ? [] : ["mail " + res.status + " " + txt.slice(0, 120)] };
+    if (res.ok) await db.patch(`reports/${b.id}`, { mailed: true });
     return res.ok ? 1 : 0;
   }
   const isUid = (x) => typeof x === "string" && /^[A-Za-z0-9]{10,40}$/.test(x);
