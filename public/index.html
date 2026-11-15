@@ -1807,7 +1807,7 @@ async function loadPub(){if(PUB.busy)return;PUB.busy=true;try{
   if(!PUB.pos)PUB.pos=await getPos();
   if(DEMO){PUB.list=demoPub(PUB.pos)}else{
   const q=await getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",cells(PUB.pos.la,PUB.pos.lo))));
-  const now=Date.now();let L=q.docs.map(x=>({...x.data(),id:x.id})).filter(d=>d.startsAt?.toMillis?.()>now&&d.geo).map(d=>({...d,km:kmTo(PUB.pos,d.geo)})).filter(d=>d.km<=30&&!isBlk(d.hostId));
+  const now=Date.now();let L=q.docs.map(x=>({...x.data(),id:x.id})).filter(d=>d.startsAt?.toMillis?.()>now&&d.geo).map(d=>({...d,km:kmTo(PUB.pos,dpt(d))})).filter(d=>d.km<=30&&!isBlk(d.hostId));
   await Promise.all(L.map(async d=>{try{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}catch{d.P=[]}}));
   PUB.list=L.sort((a,b)=>a.startsAt.toMillis()-b.startsAt.toMillis())}
   /* własnych dropów nie pokazujemy w Publicznych – są w Moich dropach */
@@ -1846,12 +1846,13 @@ function pubTab(el,redraw){
     window.__pubSk=0;
     const go_=()=>{el.innerHTML=safe+`${PUBSK}`;Promise.all([pubLoadAny(),new Promise(r=>setTimeout(r,1800))]).then(()=>{if(homeTab==="pub")redraw()})};
     go_();if(!have)return}
-  const LST=BOX?pubBoxList().map(d=>(d.km=PUB.pos?kmTo(PUB.pos,d.geo):null,d)):PUB.list;
+  const LST=BOX?pubBoxList().map(d=>(d.km=PUB.pos?kmTo(PUB.pos,dpt(d)):null,d)):PUB.list;
   const RG=BOX?(()=>{const b=PUB.M.map.getBounds(),la=(b.getNorth()+b.getSouth())/2,w=Math.round(kmTo({la,lo:b.getWest()},{la,lo:b.getEast()})),h=Math.round(kmTo({la:b.getSouth(),lo:b.getWest()},{la:b.getNorth(),lo:b.getWest()}));return t("pubRgM",w,h)})():t("pubRgR");
   el.innerHTML=safe+`<div class="pvr">${RG}</div>`+(LST.length?LST.map(d=>{const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=d.hostId===me()?"host":((d.P||[]).find(p=>p.id===me())?.status||"inv");
     return postCard(d,d.P||[],role,{km:d.km,seats:d.seats,free})}).join("")
     :`<div class="emp">${t("pubEmp")}</div>`)}
 /* ---------- MAPA PUBLICZNYCH DROPÓW (Leaflet + OpenStreetMap/CARTO, grupowanie znaczników) ---------- */
+const dpt=d=>{const a=dmp(d);return{la:a[0],lo:a[1]}};
 const dmp=d=>d.pt&&isFinite(+d.pt.la)&&isFinite(+d.pt.lo)?[+d.pt.la,+d.pt.lo]:[d.geo.la,d.geo.lo];
 const pvMode=()=>sget("pubv")==="map"?"map":"list";
 const PVI={bk:'<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',loc:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>',fs:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',list:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',map:'<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>'};
@@ -1929,7 +1930,7 @@ async function pubMapLoad0(P,hint){pmMe(P);const m=P.map;if(!m)return;
 async function pubMapCard(P,d){try{await pubMapCard0(P,d)}catch(e){console.warn("card",e)}}
 async function pubMapCard0(P,d){const c=P.wrap.querySelector("#pmcard");if(!c)return;vib(8);
   if(!d.P){try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}}catch{d.P=[]}}
-  const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=(d.P.find(p=>p.id===me())?.status)||"inv",km=PUB.pos?kmTo(PUB.pos,d.geo):null;
+  const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=(d.P.find(p=>p.id===me())?.status)||"inv",km=PUB.pos?kmTo(PUB.pos,dpt(d)):null;
   const [c1,c2]=thm(d),st=d.startsAt.toMillis(),ins=(d.P||[]).filter(p=>p.status==="in").length,pl=plc(d);
   if(P.wrap.classList.contains("fs")){c.innerHTML=`<button class="pmx" aria-label="${t("close")}">✕</button>`+postCard(d,d.P,role,{km,seats:d.seats,free});c.hidden=false;c.querySelector(".pmx").onclick=e=>{e.stopPropagation();c.hidden=true};try{P.map.panTo(dmp(d),{animate:true})}catch{}tick();return}
   c.innerHTML=`<div class="pmc2" onclick="go('/d/${esc(d.id)}')"><div class="pmi2" style="background:linear-gradient(135deg,${c1},${c2})">${ic(d.category)}</div><div class="pmt2"><b>${esc(clean(d.title))}</b><small>🕒 ${when(st)}${pl?` · 📍 ${esc(pl)}`:""}</small><small>${esc(d.hostNick||"?")}${FR(d.hostId)}${km!=null?` · ${km<1?"<1":Math.round(km)} km`:""}${d.seats?` · 🎟️ ${free?t("pubFree",free,d.seats):t("pubFull")}`:""}${ins?` · ⚡ ${ins} IN`:""}</small></div><span class="pmg">›</span></div><button class="pmx" aria-label="${t("close")}">✕</button>`;c.hidden=false;c.querySelector(".pmx").onclick=e=>{e.stopPropagation();c.hidden=true};
