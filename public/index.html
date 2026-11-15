@@ -1763,7 +1763,7 @@ async function conAcc(r){const u=auth.currentUser;if(!u)return;try{
 async function conDel(uid){const u=auth.currentUser;if(!u)return;await deleteDoc(doc(db,"users",u.uid,"contacts",uid)).catch(()=>{});await deleteDoc(doc(db,"users",uid,"contacts",u.uid)).catch(()=>{});vib(10);toast(t("kRmOk"))}
 const syncCon=(av,ph,nk)=>{const u=auth.currentUser;if(!u||u.isAnonymous)return;S.con.forEach((c,k)=>setDoc(doc(db,"users",k,"contacts",u.uid),{av,ph,...(nk?{nickname:nk}:{})},{merge:true}).catch(()=>{}))};
 function conShare(){const u=auth.currentUser;if(!u)return;const nick=sget("nick")||"",url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(nick);
-  shareSheet({title:t("kLink"),url,txt:t("kLinkTxt",url,nick),fname:"squad-kontakt.jpg",make:st=>makeContactCard(nick,url,st),opts:[OPT_STY]})}
+  shareSheet({title:t("kLink"),url,txt:t("kLinkTxt",url,nick),fname:"squad-kontakt.jpg",make:st=>makeContactCard(nick,url,st),opts:[]})}
 window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"");let svg="";
   try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
   const s=sheet(`<h2>${t("qcT")}</h2><p class="hint">${t("qcD")}</p><div class="qrbox">${svg}</div><p class="qrn">${esc(clean(sget("nick")||""))}</p>
@@ -2797,23 +2797,30 @@ async function makeCard(k,o,st={}){await fontsReady();
   stickers(K,st.pack,G?"👊":CATE[o.category],[[110,520,-.3,110],[975,560,.26,100]]);
   return K.blob()}
 async function makeContactCard(nick,url,st={}){await fontsReady();
-  const K=kit(1080,1920),{x,W,H,F}=K,PI2=Math.PI*2,sty=PAL[st.sty]?st.sty:"neon",pl=PAL[sty],u0=auth.currentUser;
-  const cs=getComputedStyle(document.documentElement),cv=n=>(cs.getPropertyValue(n)||"").trim();
-  const A=cv("--acc")||"#FF4F86",g1=cv("--g1")||"#FF3D7F",g2=cv("--g2")||"#FF6A4D",g3=cv("--g3")||"#FFA53D";
-  const [c1,c2]=THEMES[hs(u0?.uid||"k")%THEMES.length];paintBg(K,sty,c1,c2);
-  K.txt("Squad",W/2,150,F(800,72),pl.fg,"center",-3);
-  const hv=meAv(),it=t("inv",nick||"?")+" 👋";x.font=K.fitF(it,700,800,50,30);const iw=x.measureText(it).width,rowW=120+24+iw,rx=(W-rowW)/2;
-  x.fillStyle="#1d1d29";x.beginPath();x.arc(rx+60,290,60,0,PI2);x.fill();
-  await K.pic(typeof hv==="string"?hv:await genAv(hv,true),rx,230,120,120,true);
-  x.lineWidth=5;x.strokeStyle=pl.fg;x.beginPath();x.arc(rx+60,290,60,0,PI2);x.stroke();
-  K.txt(it,rx+144,307,x.font,pl.fg,"left");
-  x.save();x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=40;x.shadowOffsetY=18;await K.pic("/e/wave2.webp",W/2-170,420,340,340);x.restore();
-  const tt=t("imgKT"),tl=K.wrap(tt,940,2);let y=900;tl.forEach((l,i)=>K.txt(l,W/2,y+i*110,K.fitF(l,960,800,104,52),pl.fg,"center",-3));y+=(tl.length-1)*110;
-  y+=90;const sub=t("imgKS");K.txt(sub,W/2,y,K.fitF(sub,920,700,46,28),pl.fg);
-  y+=190;const X0=90,CW=900;K.rr(X0,y,CW,140,70);x.fillStyle=pl.pill==="solid"?"#0b0b12":A;x.fill();K.txt(t("imgKJ"),W/2,y+92,F(800,56),pl.pill==="solid"?A:"#0b0b12","center",1);
-  y+=140+84;const hw="👆 "+t("imgHowG");K.txt(hw,W/2,y,K.fitF(hw,940,800,42,28),pl.fg);
-  K.rr(W/2-330,H-170,660,100,50);x.fillStyle=pl.dlBg;x.fill();K.txt(t("imgDl"),W/2,H-106,K.fitF(t("imgDl"),600,800,38,24),pl.dlFg,"center",0);
-  stickers(K,st.pack,"🤙",[[110,520,-.3,110],[975,560,.26,100]]);
+  const K=kit(1200,630),{x,W,H,F}=K,PI2=Math.PI*2,u0=auth.currentUser,nk=String(nick||"?");
+  x.fillStyle="#0b0b12";x.fillRect(0,0,W,H);
+  [[120,60,520,"rgba(70,80,170,.30)"],[1150,40,520,"rgba(150,60,80,.22)"],[900,620,520,"rgba(120,70,40,.14)"]].forEach(([cx,cy,r,c])=>{const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,c);g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.fillRect(0,0,W,H)});
+  K.txt("Squad",72,112,F(800,52),"#fff","left",-2);x.font=F(800,52);const lw=x.measureText("Squad").width;K.txt("✦",72+lw+2,106,F(800,40),"#ff4f86","left");
+  /* kto zaprasza */
+  const hv=meAv();x.fillStyle="#1d1d29";x.beginPath();x.arc(104,196,32,0,PI2);x.fill();await K.pic(typeof hv==="string"?hv:await genAv(hv,true),72,164,64,64,true);x.lineWidth=3;x.strokeStyle="rgba(255,255,255,.85)";x.beginPath();x.arc(104,196,32,0,PI2);x.stroke();
+  const it=t("inv",nk).replace(/!$/,"");K.txt(it,152,208,K.fitF(it,520,800,34,22),"#fff","left");
+  const gr=x.createLinearGradient(72,0,520,0);gr.addColorStop(0,"#ffc2d6");gr.addColorStop(1,"#ffd9a8");
+  const l1=t("imgK1"),l2=t("imgK2");K.txt(l1,72,322,K.fitF(l1,560,800,84,48),"#fff","left",-3);K.txt(l2,72,414,K.fitF(l2,560,800,84,48),gr,"left",-3);
+  const sub=t("imgKS");K.txt(sub,72,468,K.fitF(sub,540,500,28,18),"rgba(255,255,255,.6)","left");
+  const bt=t("imgKJ2")+" →";x.font=F(800,28);const bw=x.measureText(bt).width+72;const bg2=x.createLinearGradient(72,0,72+bw,0);bg2.addColorStop(0,"#dfe3ff");bg2.addColorStop(1,"#ffd9e6");
+  K.rr(72,506,bw,72,36);x.fillStyle=bg2;x.fill();K.txt(bt,72+bw/2,552,F(800,28),"#14141c","center");
+  /* karta po prawej (jak w podglądzie linku) */
+  x.save();x.translate(925,318);x.rotate(.055);
+  x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=50;x.shadowOffsetY=24;K.rr(-232,-222,464,444,40);x.fillStyle="#16161f";x.fill();x.shadowColor="transparent";x.lineWidth=2;x.strokeStyle="rgba(255,255,255,.12)";x.stroke();
+  const cg=x.createLinearGradient(-210,-200,210,50);cg.addColorStop(0,"#c9d3ff");cg.addColorStop(.55,"#e1d6ff");cg.addColorStop(1,"#ffd6e6");K.rr(-212,-204,424,300,30);x.fillStyle=cg;x.fill();
+  K.rr(-190,-182,150,40,20);x.fillStyle="rgba(255,255,255,.7)";x.fill();K.txt(t("imgKTag"),-115,-155,F(800,20),"#22222e","center",1);
+  x.beginPath();x.arc(120,-60,86,0,PI2);x.fillStyle="rgba(255,255,255,.45)";x.fill();x.lineWidth=2;x.strokeStyle="rgba(255,255,255,.8)";x.stroke();
+  await K.pic("/e/wave2.webp",50,-130,140,140);
+  const c1=t("imgKC1"),c2=t("imgKC2");K.txt(c1,-190,-6,K.fitF(c1,230,800,34,20),"#14141c","left",-1);K.txt(c2,-190,32,K.fitF(c2,230,800,34,20),"#14141c","left",-1);
+  {let px=-190;["🔥 "+t("imgKP1"),"👥 "+t("imgKP2")].forEach(pt=>{x.font=F(800,19);const w=x.measureText(pt).width+34;K.rr(px,50,w,36,18);x.fillStyle="rgba(255,255,255,.75)";x.fill();K.txt(pt,px+w/2,75,F(800,19),"#22222e","center");px+=w+10})}
+  x.fillStyle="#1d1d29";x.beginPath();x.arc(-176,160,28,0,PI2);x.fill();await K.pic(typeof hv==="string"?hv:await genAv(hv,true),-204,132,56,56,true);
+  K.txt(nk,-132,156,K.fitF(nk,250,800,26,16),"#fff","left");K.txt(t("imgKIn"),-132,182,F(600,19),"rgba(255,255,255,.55)","left");
+  x.restore();
   return K.blob()}
 const url2=(G,id)=>(base()+(G?"/g/":"/d/")+id).replace(/^https?:\/\//,"");
 
@@ -3110,6 +3117,14 @@ Object.assign(L.fr,{uaFr:"Ajouter en ami",gpPin:"Épinglé",gpPinAdd:"Épingler 
 Object.assign(L.it,{uaFr:"Aggiungi agli amici",gpPin:"Fissato",gpPinAdd:"Fissa un messaggio importante",gpPinT:"Messaggio fissato",gpPinPh:"Es. Ci vediamo sempre all'angolo, 18:00",gpSave:"Salva",gpUnpin:"Rimuovi",gpEdit:"modifica",gpPol:"Quando ci vediamo?",gpPolAdd:"Crea sondaggio",gpPolQ:"Es. Weekend a Danzica",gpPolD:"Scegli le date che ti vanno bene",gpPolNew:"+ Nuovo sondaggio",gpOptPh:"Es. Sab 22.11 · 18:00",gpBy:n=>"da "+n,gpVotes:n=>n+(n===1?" voto":" voti")});
 Object.assign(L.cs,{uaFr:"Přidat do přátel",gpPin:"Připnuto",gpPinAdd:"Připnout důležitou zprávu",gpPinT:"Připnutá zpráva",gpPinPh:"Např. Sraz vždy u obchodu, 18:00",gpSave:"Uložit",gpUnpin:"Odepnout",gpEdit:"upravit",gpPol:"Kdy se sejdeme?",gpPolAdd:"Vytvořit anketu",gpPolQ:"Např. Víkend v Gdaňsku",gpPolD:"Vyber termíny, které ti vyhovují",gpPolNew:"+ Nová anketa",gpOptPh:"Např. So 22.11 · 18:00",gpBy:n=>"od "+n,gpVotes:n=>n+(n===1?" hlas":n>=2&&n<=4?" hlasy":" hlasů")});
 Object.assign(L.uk,{uaFr:"Додати в друзі",gpPin:"Закріплено",gpPinAdd:"Закріпити важливе повідомлення",gpPinT:"Закріплене повідомлення",gpPinPh:"Напр. Збір завжди біля магазину, 18:00",gpSave:"Зберегти",gpUnpin:"Відкріпити",gpEdit:"редагувати",gpPol:"Коли зустрінемось?",gpPolAdd:"Створити опитування",gpPolQ:"Напр. Вихідні в Гданську",gpPolD:"Обери зручні дати",gpPolNew:"+ Нове опитування",gpOptPh:"Напр. Сб 22.11 · 18:00",gpBy:n=>"від "+n,gpVotes:n=>n+" гол."});
+Object.assign(L.pl,{imgK1:"Dodaj mnie",imgK2:"do kontaktów",imgKS:"Łatwiej zaprosimy się na wypady i do grup.",imgKJ2:"Dodaj do kontaktów",imgKTag:"KONTAKT",imgKC1:"Zaproś mnie",imgKC2:"na wypady",imgKP1:"dropy",imgKP2:"grupy",imgKIn:"jest w Squad"});
+Object.assign(L.en,{imgK1:"Add me",imgK2:"to contacts",imgKS:"Planning hangouts gets easier.",imgKJ2:"Add to contacts",imgKTag:"CONTACT",imgKC1:"Invite me",imgKC2:"to hang out",imgKP1:"drops",imgKP2:"groups",imgKIn:"is on Squad"});
+Object.assign(L.es,{imgK1:"Añádeme",imgK2:"a tus contactos",imgKS:"Quedar será más fácil.",imgKJ2:"Añadir a contactos",imgKTag:"CONTACTO",imgKC1:"Invítame",imgKC2:"a planes",imgKP1:"drops",imgKP2:"grupos",imgKIn:"está en Squad"});
+Object.assign(L.de,{imgK1:"Füge mich",imgK2:"zu Kontakten hinzu",imgKS:"Verabreden wird einfacher.",imgKJ2:"Zu Kontakten",imgKTag:"KONTAKT",imgKC1:"Lade mich",imgKC2:"zu Treffen ein",imgKP1:"Drops",imgKP2:"Gruppen",imgKIn:"ist bei Squad"});
+Object.assign(L.fr,{imgK1:"Ajoute-moi",imgK2:"à tes contacts",imgKS:"On s'organisera plus facilement.",imgKJ2:"Ajouter aux contacts",imgKTag:"CONTACT",imgKC1:"Invite-moi",imgKC2:"à sortir",imgKP1:"drops",imgKP2:"groupes",imgKIn:"est sur Squad"});
+Object.assign(L.it,{imgK1:"Aggiungimi",imgK2:"ai contatti",imgKS:"Organizzarsi sarà più facile.",imgKJ2:"Aggiungi ai contatti",imgKTag:"CONTATTO",imgKC1:"Invitami",imgKC2:"alle uscite",imgKP1:"drop",imgKP2:"gruppi",imgKIn:"è su Squad"});
+Object.assign(L.cs,{imgK1:"Přidej si mě",imgK2:"do kontaktů",imgKS:"Domluvit se bude snazší.",imgKJ2:"Přidat do kontaktů",imgKTag:"KONTAKT",imgKC1:"Pozvi mě",imgKC2:"na akce",imgKP1:"dropy",imgKP2:"skupiny",imgKIn:"je na Squadu"});
+Object.assign(L.uk,{imgK1:"Додай мене",imgK2:"до контактів",imgKS:"Домовлятися буде легше.",imgKJ2:"Додати до контактів",imgKTag:"КОНТАКТ",imgKC1:"Запроси мене",imgKC2:"на зустрічі",imgKP1:"дропи",imgKP2:"групи",imgKIn:"у Squad"});
 Object.assign(L.pl,{cmMute:"Wycisz czat",cmUnmute:"Włącz powiadomienia",cmMuted:"Czat wyciszony",cmUnm:"Powiadomienia włączone",cmRep:"Zgłoś",cmClr:"Wyczyść czat u mnie",cmClrD:"Wiadomości znikną tylko u ciebie. Reszta nadal je widzi.",cmCleared:"Czat wyczyszczony"});
 Object.assign(L.en,{cmMute:"Mute chat",cmUnmute:"Turn notifications on",cmMuted:"Chat muted",cmUnm:"Notifications on",cmRep:"Report",cmClr:"Clear chat for me",cmClrD:"Messages disappear only for you. Everyone else still sees them.",cmCleared:"Chat cleared"});
 Object.assign(L.es,{cmMute:"Silenciar chat",cmUnmute:"Activar notificaciones",cmMuted:"Chat silenciado",cmUnm:"Notificaciones activadas",cmRep:"Denunciar",cmClr:"Vaciar chat para mí",cmClrD:"Los mensajes desaparecen solo para ti. Los demás los siguen viendo.",cmCleared:"Chat vaciado"});
