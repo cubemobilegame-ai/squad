@@ -1887,12 +1887,19 @@ function pubMap(el,safe){
   const hint=m=>{const h=w.querySelector("#pmh");if(!h)return;h.hidden=!m;h.textContent=m||""};
   loadLeaflet().then(()=>{
     if(!P.map){const c=PUB.pos||{la:52.23,lo:21.01};
-      P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomSnap:.25,zoomControl:false,attributionControl:true});
+      P.map=window.L.map(w.querySelector("#pmap"),{center:[c.la,c.lo],zoom:11,minZoom:8,maxZoom:17,zoomSnap:.25,zoomControl:false,attributionControl:true,doubleClickZoom:false});
       window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(P.map);
       P.cl=window.L.markerClusterGroup({animate:false,animateAddingMarkers:false,maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
       P.map.addLayer(P.cl);
       P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>{if(P.wrap&&P.wrap.isConnected)pubMapLoad(P,hint)},350)});
       P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true});
+      /* dwa szybkie stuknięcia = przybliżenie x2 (wokół palca); własna obsługa, bo iOS nie wysyła dblclick z dotyku */
+      {const mc=P.map.getContainer();let t0=0,tx=0,ty=0,sx=0,sy=0,tz=0;const bad=e=>e.target.closest&&e.target.closest(".leaflet-marker-icon,.pmfs,.pmme,.pmbk,.pmcard,.pmh,.leaflet-control");
+        const zin=pt=>{const z=P.map.getZoom();P.map.setZoomAround(pt,Math.min(P.map.getMaxZoom(),z+1),{animate:true});tz=Date.now();vib(6)};
+        mc.addEventListener("touchstart",e=>{if(e.touches.length===1){sx=e.touches[0].clientX;sy=e.touches[0].clientY}else t0=0},{passive:true});
+        mc.addEventListener("touchend",e=>{if(e.touches.length||e.changedTouches.length!==1||bad(e))return;const c=e.changedTouches[0];if(Math.hypot(c.clientX-sx,c.clientY-sy)>12){t0=0;return}
+          const n=Date.now();if(t0&&n-t0<320&&Math.hypot(c.clientX-tx,c.clientY-ty)<32){t0=0;const r=mc.getBoundingClientRect();zin(window.L.point(c.clientX-r.left,c.clientY-r.top))}else{t0=n;tx=c.clientX;ty=c.clientY}},{passive:true});
+        P.map.on("dblclick",e=>{if(Date.now()-tz<700||(e.originalEvent&&bad(e.originalEvent)))return;zin(e.containerPoint)})}
       const fit=p=>{if(P.fit||!P.map)return;P.fit=1;pmFit(P,p)};
       if(PUB.pos)fit(PUB.pos);else getPos().then(p=>{PUB.pos=p;fit(p)}).catch(()=>{})}
     else setTimeout(()=>P.map.invalidateSize(),30);
