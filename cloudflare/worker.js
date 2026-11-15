@@ -167,14 +167,17 @@ async function handle(env, uid, b) {
     return notify(env, db, ok, null, (T) => T.kinv(iv.nickname, iv.title, b.k === "g"), `/${b.k}/${b.code}`, uid);
   }
   if (b.kind === "sos" && b.a && typeof b.a === "object") {            // przycisk bezpieczeństwa -> zaufane osoby (alert musi istnieć, od nadawcy, świeży)
-    const ok = []; let al = null;
+    const ok = [];                                                       // [uid, aid, alert]
     for (const [x, aid] of Object.entries(b.a).slice(0, 3)) {
       if (!isUid(x) || typeof aid !== "string" || !/^[A-Za-z0-9]{10,40}$/.test(aid)) continue;
       const a = await db.get(`users/${x}/alerts/${aid}`);
-      if (a && a.from === uid && a.kind === "sos" && Date.now() - Number(a.at || 0) < 120000) { ok.push(x); al = a; }
+      if (a && a.from === uid && a.kind === "sos" && Date.now() - Number(a.at || 0) < 120000) ok.push([x, aid, a]);
     }
-    if (!al) return 0;
-    return notify(env, db, ok, null, (T) => T.sos(String(al.nick || "Squad").slice(0, 40), String(al.title || "").slice(0, 80), String(al.place || "").slice(0, 80)), al.code ? `/d/${al.code}` : "/", uid);
+    if (!ok.length) return 0;
+    // kliknięcie powiadomienia otwiera od razu okno alarmu (drop + lokalizacja): /n?sos=<id alertu odbiorcy>
+    let sent = 0;
+    for (const [x, aid, al] of ok) sent += await notify(env, db, [x], null, (T) => T.sos(String(al.nick || "Squad").slice(0, 40), String(al.title || "").slice(0, 80), String(al.place || "").slice(0, 80)), `/n?sos=${aid}`, uid);
+    return sent;
   }
   if (b.kind === "edit" && isCode(b.code)) {                           // autor zmienił godzinę / miejsce
     const d = await db.get(`drops/${b.code}`); if (!d || d.hostId !== uid) return 0;
