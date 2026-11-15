@@ -1,0 +1,15 @@
+{
+  "appId": "com.cubemobilegames.squad",
+  "appName": "Squad",
+  "webDir": "www",
+  "backgroundColor": "#06060b",
+  "server": {
+    "url": "https://squad-64cd5.web.app",
+    "allowNavigation": ["squad-64cd5.web.app", "squad-64cd5.firebaseapp.com", "getsquad.web.app"]
+  },
+  "android": { "backgroundColor": "#06060b", "allowMixedContent": false },
+  "plugins": {
+    "FirebaseAuthentication": { "skipNativeAuth": true, "providers": ["google.com"] },
+    "FirebaseMessaging": { "presentationOptions": ["alert", "badge", "sound"] }
+  }
+}
