@@ -104,6 +104,7 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .lgs{display:flex;gap:8px;flex-wrap:wrap}.lg{border:1.5px solid rgba(255,255,255,.18);background:none;color:#fff;border-radius:99px;padding:9px 16px;font:800 13px Brico,BricoCyr,system-ui;cursor:pointer}.lg.sel{background:var(--acc);color:#0b0b12;border-color:var(--acc)}
 .chs{display:flex;flex-direction:column;height:100dvh;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
 .chh{display:flex;align-items:center;gap:14px;margin-bottom:10px}.chh h2{font-size:20px}.chh small{color:var(--acc);font-weight:900;font-size:10px;letter-spacing:.12em}
+.cpan>.mem{display:none!important}.m[data-a] .av{cursor:pointer}
 .mem{display:flex;gap:8px;margin:6px 0 12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.mem::-webkit-scrollbar{display:none}
 #msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:6px 0}
 .m{display:flex;gap:8px;align-items:flex-end;max-width:88%}.m>div{background:rgba(255,255,255,.1);border-radius:18px 18px 18px 4px;padding:9px 14px;word-break:break-word}.m small{display:block;color:#38BDF8;font-size:11px;font-weight:800}
@@ -2521,7 +2522,7 @@ async function chatView(code,g){
   B.addEventListener("pointerdown",e=>{if(e.pointerType==="touch")return;st(e.clientX,e.clientY,e.target)});
   B.addEventListener("pointermove",e=>{if(e.pointerType==="touch")return;mv(e.clientX,e.clientY,e)});
   B.addEventListener("pointerup",e=>{if(e.pointerType==="touch")return;en(e.clientX)})}
-  B.onclick=e=>{const q=e.target.closest(".rq");if(q){const o=B.querySelector(`.m[data-i="${CSS.escape(q.dataset.q)}"]`);if(o){o.scrollIntoView({block:"center",behavior:"smooth"});o.classList.remove("flash");void o.offsetWidth;o.classList.add("flash")}return}const c=e.target.closest(".rxc");if(c&&mine){const el=c.closest(".m");react(el.dataset.i,c.dataset.e,el)}};
+  B.onclick=e=>{const av=e.target.closest(".m[data-a] .av");if(av){const id=av.closest(".m").dataset.a,q=P.find(x=>x.id===id);if(q&&!isMe(q.id))userActions(q,{target:"user",chat:g?"group":"drop",code},drawM);return}const q=e.target.closest(".rq");if(q){const o=B.querySelector(`.m[data-i="${CSS.escape(q.dataset.q)}"]`);if(o){o.scrollIntoView({block:"center",behavior:"smooth"});o.classList.remove("flash");void o.offsetWidth;o.classList.add("flash")}return}const c=e.target.closest(".rxc");if(c&&mine){const el=c.closest(".m");react(el.dataset.i,c.dataset.e,el)}};
   const onl=p=>{if(isMe(p.id))return false;if(DEMO)return hs(p.id)%2===0;const r=p.readAt?.toMillis?.(),ty=p.typing?.toMillis?.();return(r&&Date.now()-r<75e3)||(ty&&Date.now()-ty<20e3)};
   const drawMem=()=>{const m=$("#mem");if(!m)return;m.innerHTML=P.map(p=>`<span class="mchip" data-u="${esc(p.id)}"><span class="avw">${avc("mini",avIdx(p))}${onl(p)?'<i class="onl"></i>':""}</span><b style="color:${gc(p)}">${esc(p.nickname)}</b>${FR(p.id)}${p.id===owner?'<span class="stt">★</span>':""}${g?"":`<em class="dot ${p.status}"></em>`}</span>`).join("")};
   const hb=()=>{if(!mine||document.hidden||DEMO)return;updateDoc(doc(ref,pc,me()),{readAt:serverTimestamp()}).catch(()=>{})};every(hb,40000);every(drawMem,20000);
