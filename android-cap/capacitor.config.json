@@ -9,7 +9,7 @@
   },
   "android": { "backgroundColor": "#06060b", "allowMixedContent": false },
   "plugins": {
-    "FirebaseAuthentication": { "skipNativeAuth": true, "providers": ["google.com"] },
+    "FirebaseAuthentication": { "skipNativeAuth": true, "providers": ["google.com", "facebook.com"] },
     "FirebaseMessaging": { "presentationOptions": ["alert", "badge", "sound"] }
   }
 }

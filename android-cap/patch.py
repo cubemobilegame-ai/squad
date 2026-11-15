@@ -88,4 +88,33 @@ j = open(ma).read()
 if "registerPlugin" not in j:
     j = j.replace("super.onCreate(b);", "registerPlugin(SquadWidgetPlugin.class);\n        super.onCreate(b);", 1)
     open(ma, "w").write(j)
+
+# ---------- Facebook (opcjonalnie: tylko gdy znamy App ID) ----------
+fb = {}
+try: fb = json.load(open(os.path.join(root, "cap/fbcfg.json")))
+except Exception: pass
+fid, ftok = fb.get("FB_APP_ID", ""), os.environ.get("FB_CLIENT_TOKEN", "")
+if fid and ftok:
+    open(os.path.join(V, "squad_facebook.xml"), "w").write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <string name="facebook_app_id">%s</string>\n    <string name="fb_login_protocol_scheme">fb%s</string>\n    <string name="facebook_client_token">%s</string>\n</resources>\n' % (fid, fid, ftok))
+    x = open(m).read()
+    if "com.facebook.sdk.ApplicationId" not in x:
+        x = x.replace("</application>", '''    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token" />
+        <activity android:name="com.facebook.CustomTabActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+    </application>''')
+        open(m, "w").write(x)
+    vg = os.path.join(proj, "android", "variables.gradle")
+    if os.path.exists(vg):
+        v = open(vg).read()
+        if "rgcfaIncludeFacebook" not in v:
+            v = v.replace("ext {", "ext {\n    rgcfaIncludeFacebook = true\n    rgcfaFacebookSdkVersion = '17.0.2'", 1); open(vg, "w").write(v)
+    print("facebook ok", fid[:4] + "…")
+else: print("facebook: brak App ID lub tokenu – pomijam")
 print("patch ok")

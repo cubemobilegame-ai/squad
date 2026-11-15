@@ -64,6 +64,7 @@ jobs:
           for i in 1 2 3; do $FT apps:sdkconfig ANDROID "$ID" --project "$P" > sdk.txt 2>&1 && break; sleep 5; done
           mkdir -p build-android/app && node android/gservices.cjs "$ID"
           cp build-android/app/google-services.json cap/google-services.json
+          echo '{}' > cap/fbcfg.json; python3 ios/fbid.py "$RUNNER_TEMP/sa.json" cap/fbcfg.json || true
           node -e 'const g=require("./cap/google-services.json");const c=g.client[0];console.log("oauth_client:",(c.oauth_client||[]).map(o=>o.client_type).join(",")||"BRAK")'
 
       - name: Projekt Capacitor (Android)
@@ -76,9 +77,10 @@ jobs:
           npx cap add android
           cp google-services.json android/app/google-services.json
           pip install --quiet pillow 2>&1 | tail -1 || true
-          VERSION_CODE=$(( 10000 + ${{ github.run_number }} )) python3 ../android-cap/patch.py .. .
+          FB_CLIENT_TOKEN=d80705974fb58fbaf041eb63a4574336 VERSION_CODE=$(( 10000 + ${{ github.run_number }} )) python3 ../android-cap/patch.py .. .
           python3 ../android-cap/icons.py .. .
           npx cap sync android
+          grep -n -i "facebook" node_modules/@capacitor-firebase/authentication/android/build.gradle || true
           # reguły Google services: wtyczka dla pakietu
           grep -n "google-services" android/app/build.gradle android/build.gradle || true
 
