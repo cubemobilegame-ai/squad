@@ -52,6 +52,15 @@ if "NotificationChannel" not in j:
             c.enableVibration(true);
             getSystemService(NotificationManager.class).createNotificationChannel(c);
         }
+        // Android 15+ (edge-to-edge): okno nie zmniejsza się nad klawiaturą, więc czat zostawał pod nią - dosuwamy treść o wysokość klawiatury
+        if (Build.VERSION.SDK_INT >= 35) {
+            final android.view.View root = findViewById(android.R.id.content);
+            androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(root, (v, ins) -> {
+                int ime = ins.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime()).bottom;
+                v.setPadding(0, 0, 0, ime);
+                return ins;
+            });
+        }
         // cofanie: ignorujemy gest zaczęty od PRAWEJ krawędzi (Android 14+ podaje krawędź); od lewej i przycisk działają
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             int edge = -1;
