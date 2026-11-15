@@ -145,4 +145,17 @@ if os.path.exists(vg):
     v = open(vg).read(); v = re.sub(r"minSdkVersion\s*=\s*\d+", "minSdkVersion = 24", v); open(vg, "w").write(v)
     v = re.sub(r"targetSdkVersion\s*=\s*\d+", "targetSdkVersion = 36", v); open(vg, "w").write(v)
     print("minSdk 24 / targetSdk 36:", re.findall(r"(?:minSdkVersion|targetSdkVersion|compileSdkVersion)\s*=\s*\d+", v))
+
+# Identyfikator reklam: Squad nie pokazuje reklam – usuwamy uprawnienie AD_ID (Facebook SDK mógł je dołożyć) i wyłączamy zbieranie przez Facebook SDK
+x = open(m).read()
+if "xmlns:tools" not in x: x = x.replace("<manifest ", '<manifest xmlns:tools="http://schemas.android.com/tools" ', 1)
+if "permission.AD_ID" not in x:
+    x = x.replace("</manifest>", '    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove" />\n</manifest>')
+if "AdvertiserIDCollectionEnabled" not in x:
+    x = x.replace("</application>", '''    <meta-data android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled" android:value="false" />
+        <meta-data android:name="com.facebook.sdk.AutoLogAppEventsEnabled" android:value="false" />
+        <meta-data android:name="com.facebook.sdk.AutoInitEnabled" android:value="true" />
+    </application>''')
+open(m, "w").write(x)
+print("AD_ID usuniete")
 print("patch ok")
