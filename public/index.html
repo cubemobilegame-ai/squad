@@ -2922,7 +2922,7 @@ Object.assign(L.pl,{oiaD:"Masz aplikację? Otwórz zaproszenie w niej",oiaBtn:"O
 /* wiadomość z service workera po kliknięciu w powiadomienie -> przejdź do czatu / dropa */
 try{navigator.serviceWorker&&navigator.serviceWorker.addEventListener("message",e=>{const m=e.data||{};if(m.type==="open"&&typeof m.url==="string"&&m.url.startsWith("/")){const pth=m.url.split("?")[0];if(gp()!==pth)go(pth)}})}catch{}
 /* link otwarty w przeglądarce na Androidzie -> pasek „Otwórz w aplikacji” (gdy aplikacja jest zainstalowana, otworzy się od razu w niej) */
-function openInAppBar(){try{if(DEMO||isTWA()||!/Android/i.test(navigator.userAgent)||document.getElementById("oia"))return;const pth=location.pathname;if(!/^\/(d|c|g|gc)\//.test(pth))return;
+function openInAppBar(){try{if(DEMO||isTWA()||CAPN||!/Android/i.test(navigator.userAgent)||document.getElementById("oia"))return;const pth=location.pathname;if(!/^\/(d|c|g|gc)\//.test(pth))return;
   const X=+sget("oiaX")||0;if(Date.now()-X<3*864e5)return;
   const ref=encodeURIComponent("utm_source=invite&utm_medium=link&utm_campaign="+(pth.split("/")[1]||"d")),PU=PLAY_URL+"&referrer="+ref;
   const open="intent://"+location.host+pth+"#Intent;scheme=https;package=com.cubemobilegames.squad;S.browser_fallback_url="+encodeURIComponent(PU)+";end";
