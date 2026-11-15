@@ -57,6 +57,8 @@ jobs:
             for h in "$S1" "$S256"; do [ -n "$h" ] && $FT apps:android:sha:create "$ID" "$h" --project "$P" 2>&1 | tail -1 || true; done
             echo "::notice title=SHA-1 klucza uploadu::$S1"
           fi
+          PLAY=$(grep -E '^[0-9A-F]{2}(:[0-9A-F]{2}){31}$' android/sha256.txt | tail -1)
+          [ -n "$PLAY" ] && { $FT apps:android:sha:create "$ID" "$PLAY" --project "$P" 2>&1 | tail -1 || true; echo "::notice title=Klucz Play SHA-256 zarejestrowany::$PLAY"; }
           for i in 1 2 3; do $FT apps:sdkconfig ANDROID "$ID" --project "$P" > sdk.txt 2>&1 && break; sleep 5; done
           mkdir -p build-android/app && node android/gservices.cjs "$ID"
           cp build-android/app/google-services.json cap/google-services.json
