@@ -3,7 +3,7 @@
 self.addEventListener("notificationclick", (e) => {
   const d = e.notification.data || {}, F = d.FCM_MSG || {};
   let url = d.url || (F.data && F.data.url) || (F.fcmOptions && F.fcmOptions.link) || (F.notification && F.notification.click_action) || "/";
-  try { const u = new URL(url, self.location.origin); url = u.origin === self.location.origin ? u.pathname + u.search : "/"; } catch (x) { url = "/"; }
+  try { const u = new URL(url, self.location.origin); url = u.origin === self.location.origin ? u.pathname + u.search + (/^#(map)$/.test(u.hash) ? u.hash : "") : "/"; } catch (x) { url = "/"; }
   e.stopImmediatePropagation();
   e.notification.close();
   e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {

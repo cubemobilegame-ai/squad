@@ -1300,6 +1300,14 @@ Object.assign(L.fr,{tmTom:"DÉBUT DEMAIN",tmD:w=>`DÉBUT: ${w}`});
 Object.assign(L.it,{tmTom:"INIZIA DOMANI",tmD:w=>`INIZIA: ${w}`});
 Object.assign(L.cs,{tmTom:"ZAČÁTEK ZÍTRA",tmD:w=>`ZAČÁTEK: ${w}`});
 Object.assign(L.uk,{tmTom:"ПОЧАТОК ЗАВТРА",tmD:w=>`ПОЧАТОК: ${w}`});
+Object.assign(L.pl,{pubLim:"Możesz dodać najwyżej 3 publiczne dropy na dobę."});
+Object.assign(L.en,{pubLim:"You can add up to 3 public drops per day."});
+Object.assign(L.es,{pubLim:"Puedes añadir hasta 3 drops públicos al día."});
+Object.assign(L.de,{pubLim:"Du kannst höchstens 3 öffentliche Drops pro Tag hinzufügen."});
+Object.assign(L.fr,{pubLim:"Tu peux ajouter au maximum 3 drops publics par jour."});
+Object.assign(L.it,{pubLim:"Puoi aggiungere al massimo 3 drop pubblici al giorno."});
+Object.assign(L.cs,{pubLim:"Můžeš přidat nejvýše 3 veřejné dropy za den."});
+Object.assign(L.uk,{pubLim:"Можна додати не більше 3 публічних дропів на добу."});
 /* Zaufane osoby / alarm (za wyłącznikiem SAFE) */
 Object.assign(L.pl,{crMore:n=>`Pokaż wszystkich (${n})`,crLess:"Zwiń"});
 Object.assign(L.en,{crMore:n=>`Show all (${n})`,crLess:"Show less"});
@@ -1715,7 +1723,7 @@ async function syncAvatar(){const u=auth.currentUser;if(!u||DEMO&&!u)return;save
 /* ---------- KONTAKTY: bez profili i prywatnych wiadomości – tylko szybkie zapraszanie do dropów i grup ---------- */
 const conList=()=>[...S.con.values()].sort((a,b)=>String(a.nickname||"").localeCompare(String(b.nickname||"")));
 const myCard=()=>({nickname:sget("nick")||"?",av:myAv(),ph:sget("photo")||null});
-const kRow=(p,act,cls="")=>`<div class="kr ${cls}">${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname||"?")}</b><span class="ka">${act}</span></div>`;
+const kRow=(p,act,cls="")=>`<div class="kr ${cls}" data-pu="${esc(p.id||"")}"><span class="avw">${avc("mini",avIdx(p))}</span><b style="color:${gc(p)}">${esc(p.nickname||"?")}</b><span class="ka">${act}</span></div>`;
 async function conReq(uid,p){const u=auth.currentUser;if(!u||u.isAnonymous)return guestUp("/k");if(uid===u.uid)return toast(t("kSelf"));if(S.con.has(uid))return toast(t("kAlready"));
   const inc=S.creqIn.find(r=>r.from===uid);if(inc)return conAcc(inc);
   try{await setDoc(doc(db,"creq",u.uid+"_"+uid),{from:u.uid,to:uid,...myCard(),toNick:String(p?.nickname||"").slice(0,20),toAv:p?.av??null,toPh:p?.ph||null,at:serverTimestamp()});pushNow({kind:"creq",to:uid});vib(15);toast(t("kReqOk"))}catch(e){toast(t("err"))}}
@@ -1732,6 +1740,10 @@ window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymou
   const s=sheet(`<h2>${t("qcT")}</h2><p class="hint">${t("qcD")}</p><div class="qrbox">${svg}</div><p class="qrn">${esc(clean(sget("nick")||""))}</p>
     <button class="qbtn pri" id="qsh">${sv(SI.share)}${t("kLink")}</button><button class="qbtn" id="qcl">${t("close")}</button>`);
   s.querySelector("#qsh").onclick=()=>{s.close();conShare()};s.querySelector("#qcl").onclick=s.close};
+/* kropka „online" w kontaktach: aplikacja co 4 min (gdy jest na wierzchu) zapisuje presence/<uid>.at; kontakt widzi ją, jeśli jest w jego kontaktach (reguły) */
+const presBeat=()=>{try{const u=auth.currentUser;if(DEMO||!u||u.isAnonymous||document.hidden||!S.con.size)return;if(Date.now()-(+sget("presT")||0)<2.5*6e4)return;sset("presT",String(Date.now()));setDoc(doc(db,"presence",u.uid),{at:serverTimestamp()}).catch(()=>{})}catch{}};
+setInterval(presBeat,4*6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)setTimeout(presBeat,800)});
+async function markOnline(el){try{if(DEMO)return;const rows=[...el.querySelectorAll(".kr")].filter(r=>r.querySelector("[data-rm]")&&r.dataset.pu);await Promise.all(rows.map(async r=>{try{const x=await getDoc(doc(db,"presence",r.dataset.pu)),m=x.exists()?x.data().at?.toMillis?.():0;if(m&&Date.now()-m<7*6e4&&r.isConnected&&!r.querySelector(".onl"))r.querySelector(".avw")?.insertAdjacentHTML("beforeend",'<i class="onl"></i>')}catch{}}))}catch{}}
 function contactsView(add){
   const u=authed();if(!u)return;
   if(u.isAnonymous){view(`<div class="scr"><h1 class="logo" style="font-size:34px">${t("nK")}</h1><p class="hint">${t("kH")}</p><div class="gcard"><b>${t("guCardT")}</b><small>${t("kGuest")}</small><button class="cta" onclick="guestUp('/k')" style="margin:12px 0 0">${t("guCardB")}</button></div></div>${nav("k")}`);return}
@@ -1750,6 +1762,7 @@ function contactsView(add){
     el.querySelectorAll("[data-rej]").forEach(b=>b.onclick=()=>{vib(10);deleteDoc(doc(db,"creq",b.dataset.rej)).catch(()=>{})});
     el.querySelectorAll("[data-un]").forEach(b=>b.onclick=()=>{vib(10);deleteDoc(doc(db,"creq",b.dataset.un)).catch(()=>{})});
     el.querySelectorAll("[data-sx]").forEach(b=>b.onclick=()=>{vib(8);try{const L=JSON.parse(sget("sugx")||"[]");L.push(b.dataset.sx);sset("sugx",JSON.stringify(L.slice(-300)))}catch{}draw()});
+    markOnline(el);
     el.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{b.disabled=true;b.textContent="✓";conReq(b.dataset.add,known.get(b.dataset.add))});
     el.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{if(!b.classList.contains("arm")){vib(10);b.classList.add("arm");b.textContent=t("kRm");setTimeout(()=>{if(b.isConnected){b.classList.remove("arm");b.textContent="✕"}},3500);return}conDel(b.dataset.rm)})};
   redraw=draw;draw();badges();
@@ -1805,6 +1818,8 @@ const kmTo=(a,b)=>{const R=6371,r=x=>x*Math.PI/180,dl=r(b.la-a.la),dn=r(b.lo-a.l
 const cells=(la,lo)=>{const k=Math.max(.2,Math.cos(la*Math.PI/180)),S=new Set();for(let dy=-.3;dy<=.301;dy+=.1)for(let dx=-.45;dx<=.451;dx+=.15)S.add(geohash(Math.max(-89,Math.min(89,la+dy)),lo+dx/k,4));return[...S].slice(0,30)};
 const PUB={list:null,at:0,pos:null,busy:false};
 const pubOk=()=>sget("pub16")==="1";
+/* limit: 3 publiczne dropy na 24 h na osobę (sprawdzane w aplikacji; błąd sieci nie blokuje) */
+const pubQuota=async()=>{if(DEMO)return true;try{const q=await getDocs(query(collection(db,"drops"),where("hostId","==",me()),where("public","==",true),limit(50))),since=Date.now()-24*36e5;return q.docs.filter(x=>{const d=x.data(),m=(d.pubAt||d.createdAt)?.toMillis?.()||0;return m>=since}).length<3}catch{return true}};
 const ipPos=async()=>{const r=await fetch("https://get.geojs.io/v1/ip/geo.json"),j=await r.json(),la=+j.latitude,lo=+j.longitude;if(!isFinite(la)||!isFinite(lo))throw new Error("ip");return{la:Math.round(la*100)/100,lo:Math.round(lo*100)/100,approx:1}};
 const getPos=async()=>{const rd=v=>Math.round(v*100)/100,GL=IOSAPP&&NP("Geolocation");
   if(GL){try{let pm=await GL.checkPermissions();if(pm.location!=="granted"){pm=await GL.requestPermissions({permissions:["location"]})}
@@ -2197,7 +2212,7 @@ function newView(){
     const tm=dsel?new Date(dsel+"T00:00"):new Date();tm.setHours(Math.round($("#hh").scrollTop/40),Math.round($("#mm").scrollTop/40)*5,0,0);if(dsel){if(tm<=Date.now()){vib([50,30,50]);return toast(t("edPast"))}}else if(day)tm.setDate(tm.getDate()+1);else if(tm<=Date.now())tm.setDate(tm.getDate()+1);
     if(isBad(nick)||isBad(place)||isBad(cu)||isBad($("#ti")?.value||"")){vib([50,30,50]);return toast(t("noBad"))}
     if(pub&&pubOk()){const pk=pubChk($("#ti")?.value,cu,place);if(pk){vib([50,30,50]);return toast(t(pk))}}
-    let pg=null;if(pub&&pubOk()){try{const po=PUB.pos||await getPos();PUB.pos=po;pg={public:true,seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5)}}catch{vib([50,30,50]);return toast(t("pubNeedLoc"))}}
+    let pg=null;if(pub&&pubOk()){if(!await pubQuota()){vib([50,30,50]);return toast(t("pubLim"))}try{const po=PUB.pos||await getPos();PUB.pos=po;pg={public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5)}}catch{vib([50,30,50]);return toast(t("pubNeedLoc"))}}
     $("#go").disabled=true;sset("nick",nick);
     const code=Math.random().toString(36).slice(2,8).toUpperCase();
     const isPubDrop=!!pg;
@@ -3060,6 +3075,7 @@ function makePublic(code,ref,d,P){vib(10);
   if(d.category==="occ"||d.category==="xmas"){vib([50,30,50]);return toast(t("occNoPub"))}
   if(!pubOk()||sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}
   {const pk=pubChk(d.title,d.place);if(pk){vib([50,30,50]);return toast(t(pk))}}
+  pubQuota().then(ok=>{if(!ok){vib([50,30,50]);toast(t("pubLim"));const sb=document.querySelector(".sheetbg");if(sb)sb.remove()}});
   const taken=(P||[]).filter(p=>p.status==="in"||p.status==="late").length;let seats=Math.max(8,taken);
   const q=sheet(`<h2>🌍 ${t("mkPubT")}</h2><p class="hint">${t("pubMkD")}</p><p class="hint" style="margin-top:6px">${t("mkPubN")}</p>
    <h3>${t("seats")}</h3><div class="chips" id="mks">${[4,6,8,10,15,20,30].filter(n=>n>=taken).map(n=>`<button class="chip ${n===seats?"on":""}" data-n="${n}">${n}</button>`).join("")}</div>
@@ -3067,7 +3083,7 @@ function makePublic(code,ref,d,P){vib(10);
   q.querySelectorAll("#mks .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;q.querySelectorAll("#mks .chip").forEach(x=>x.classList.toggle("on",x===c))});
   q.querySelector("#mkg").onclick=async()=>{const b=q.querySelector("#mkg");b.disabled=true;
     try{const po=PUB.pos||await getPos();PUB.pos=po;
-      await updateDoc(ref,{public:true,seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5),hostAv:myAv(),hostPh:sget("photo")||null});
+      await updateDoc(ref,{public:true,pubAt:serverTimestamp(),seats,geo:po,gh4:geohash(po.la,po.lo,4),gh5:geohash(po.la,po.lo,5),hostAv:myAv(),hostPh:sget("photo")||null});
       PUB.at=0;q.close();vib([30,40,30]);toast(t("mkPubOk"));go("/d/"+code)}
     catch(e){b.disabled=false;vib([50,30,50]);toast(t(e&&e.code===1?"pubLocDeny":"pubNeedLoc"))}}}
 const mkpT={pl:["Zrób publiczny","Zrób drop publiczny","Po zmianie nie da się wrócić do prywatnego. Obecni uczestnicy i link zostają.","Drop jest teraz publiczny 🌍"],

@@ -80,6 +80,14 @@ service cloud.firestore {
       }
     }
 
+    // OBECNOŚĆ (kropka „online" w kontaktach): zapis tylko własny znacznik czasu; odczyt: ja oraz osoby z moich kontaktów
+    match /presence/{uid} {
+      allow create, update: if signedIn() && !isGuest() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at == request.time;
+      allow get: if signedIn() && (request.auth.uid == uid
+        || exists(/databases/$(db)/documents/users/$(uid)/contacts/$(request.auth.uid)));
+    }
+
     // DROPY: link działa do startu eventu, wiadomości do 24h po evencie, potem dokument znika
     match /drops/{code} {
       allow get: if resource.data.expiresAt > request.time;

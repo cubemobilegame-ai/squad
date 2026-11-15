@@ -245,7 +245,7 @@ async function reminders(envRaw) {
     const up = await fetch(`${base}/drops/${id}?updateMask.fieldPaths=revealPing&currentDocument.updateTime=${encodeURIComponent(r.document.updateTime)}`, { method: "PATCH", headers: H, body: JSON.stringify({ fields: { revealPing: { booleanValue: true } } }) });
     if (!up.ok) continue;
     const to = (await db.list(`drops/${id}/participants`)).filter((p) => p.status === "in" || p.status === "late").map((p) => p.id).filter((x) => x !== d.hostId);
-    n += await notify(env, db, to, "rem", (T) => T.reveal(d.title, hhmm(d.startsAt), d.place), `/d/${id}`);
+    n += await notify(env, db, to, "rem", (T) => T.reveal(d.title, hhmm(d.startsAt), d.place), `/d/${id}#map`);
   }
   if (n) await logEv(env, { kind: "rem", sent: n });
 }
