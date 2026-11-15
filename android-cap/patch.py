@@ -143,5 +143,6 @@ else: print("facebook: brak App ID lub tokenu – pomijam")
 vg = os.path.join(proj, "android", "variables.gradle")
 if os.path.exists(vg):
     v = open(vg).read(); v = re.sub(r"minSdkVersion\s*=\s*\d+", "minSdkVersion = 24", v); open(vg, "w").write(v)
-    print("minSdk 24:", re.findall(r"minSdkVersion\s*=\s*\d+", v))
+    v = re.sub(r"targetSdkVersion\s*=\s*\d+", "targetSdkVersion = 36", v); open(vg, "w").write(v)
+    print("minSdk 24 / targetSdk 36:", re.findall(r"(?:minSdkVersion|targetSdkVersion|compileSdkVersion)\s*=\s*\d+", v))
 print("patch ok")
