@@ -116,7 +116,8 @@ input{width:100%;border:1.5px solid rgba(255,255,255,.14);background:rgba(255,25
 .cr1{display:flex;align-items:baseline;gap:8px}.cr1 b{flex:1;min-width:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cr1 time{flex:none;font-size:12px;font-weight:700;color:rgba(255,255,255,.45)}
 .cr2{display:flex;align-items:center;gap:7px;margin-top:3px}.cr2 small{flex:1;min-width:0;color:rgba(255,255,255,.55);font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cr2 small em{font-style:normal;color:rgba(255,255,255,.8)}.cr2 small i{font-style:normal;opacity:.7}
 .chrow .ctag{flex:none;font-size:10.5px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:7px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7)}.chrow .ctag.d{background:rgba(255,120,60,.16);color:#ffb38a}
-.chrow.un .cr1 b{color:#fff}.chrow.un .cr2 small{color:#fff}.chrow.un .cr1 time{color:var(--acc)}.chrow .bdi{position:static;display:grid;flex:none}
+.chrow.un .cr1 b{color:#fff}
+.cr1 b{display:flex;align-items:center}.cr1 .cnm{min-width:0;overflow:hidden;text-overflow:ellipsis}.cr1 .gtg{flex:none;margin-left:8px;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.45);font:800 9px Brico,BricoCyr,system-ui;letter-spacing:.09em;text-transform:uppercase}.cr1 .mtd{flex:none;vertical-align:baseline}.chrow.un .cr2 small{color:#fff}.chrow.un .cr1 time{color:var(--acc)}.chrow .bdi{position:static;display:grid;flex:none}
 .hostn{margin:14px 0 4px;padding:12px 14px;border-radius:14px;background:rgba(var(--accr),.12);font-weight:800;font-size:14px}
 .dsep{display:flex;justify-content:center;margin:14px 0 8px}.dsep span{font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.55);background:rgba(255,255,255,.07);padding:5px 12px;border-radius:999px}
 .m.cont{margin-top:-6px}.avsp{width:26px;flex:none}
@@ -2124,7 +2125,7 @@ function chatsView(){
   const tm=ms=>{if(!ms)return"";const d=new Date(ms),n=new Date(),dd=Math.round((new Date(n).setHours(0,0,0,0)-new Date(d).setHours(0,0,0,0))/864e5);return dd<=0?`${pad(d.getHours())}:${pad(d.getMinutes())}`:dd===1?t("yest"):d.toLocaleDateString(LANG,{day:"numeric",month:"short"})};
   const row=(x)=>{const m=x.m,n=x.n,who=m?(isMe(m.authorId)?t("you2"):m.nickname):"";
     return`<div class="chrow${n?" un":""}" onclick="go('${x.href}')"><div class="cav th${x.g?" gr":""}" onclick="event.stopPropagation();go('${x.g?"/g/":"/d/"}${x.id}')" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
-    <div class="crm"><div class="cr1"><b>${esc(clean(x.title))}${isMuted((x.g?"g_":"")+x.id)?`<span class="mtd">${sv(BELLO)}</span>`:""}</b><time>${m?tm(x.at):""}</time></div>
+    <div class="crm"><div class="cr1"><b><span class="cnm">${esc(clean(x.title))}</span>${x.g?`<span class="gtg">${t("tagG")}</span>`:""}${isMuted((x.g?"g_":"")+x.id)?`<span class="mtd">${sv(BELLO)}</span>`:""}</b><time>${m?tm(x.at):""}</time></div>
     <div class="cr2"><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div></div>`};
   let F=sget("chf")||"all";
   const draw=()=>{
