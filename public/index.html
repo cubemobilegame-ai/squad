@@ -2840,8 +2840,8 @@ async function makeInviteH(k,o,st={}){await fontsReady();
   x.fillStyle="#0b0b12";x.fillRect(0,0,W,H);
   [[120,60,520,"rgba(70,80,170,.30)"],[1150,40,520,"rgba(150,60,80,.22)"],[900,620,520,"rgba(120,70,40,.14)"]].forEach(([cx,cy,r,c])=>{const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,c);g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.fillRect(0,0,W,H)});
   K.txt("Squad",72,112,F(800,52),"#fff","left",-2);x.font=F(800,52);const lw=x.measureText("Squad").width;K.txt("✦",72+lw+2,106,F(800,40),"#ff4f86","left");
-  const host=(G?o.ownerNick:o.hostNick)||sget("nick")||"?",hm=G?M.find(m=>m.id===o.ownerId):null;
-  const hv=G?(hm?avIdx(hm):avIdx({id:o.ownerId})):(o.hostPh||(o.hostAv!=null?+o.hostAv:avIdx({id:o.hostId})));
+  /* zaprasza osoba, która udostępnia (ty), a nie organizator */
+  const host=sget("nick")||(G?o.ownerNick:o.hostNick)||"?",hv=meAv();
   const hs0=typeof hv==="string"?hv:await genAv(hv,true);
   x.fillStyle="#1d1d29";x.beginPath();x.arc(104,196,32,0,PI2);x.fill();await K.pic(hs0,72,164,64,64,true);x.lineWidth=3;x.strokeStyle="rgba(255,255,255,.85)";x.beginPath();x.arc(104,196,32,0,PI2);x.stroke();
   const it=t("inv",host).replace(/!$/,"");K.txt(it,152,208,K.fitF(it,520,800,34,22),"#fff","left");
