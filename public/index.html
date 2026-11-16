@@ -2373,7 +2373,6 @@ async function dropView(code){
   </div>
   <button id="oc" hidden></button><div id="chp" class="chp" hidden></div>
   <h3>${t("whereH")}</h3><div class="map${hidden(d)?" hd":""}" id="dmw"><div class="pin">${(()=>{const [a,b]=thm({...d,id:code});return `<div class="pmk" style="--c1:${a};--c2:${b}"><div class="pmi">${ic(d.category)}</div></div>`})()}</div>${isHost&&surHid(d)?`<div class="surh"><span>🎁</span><small>${t("surC")}</small><span id="surt">--:--:--</span></div>`:""}${hidden(d)?`<div class="surc"><b>🎁</b><small>${t("surC")}</small><span id="surt">--:--:--</span></div>`:""}</div>
-  ${hidden(d)?"":`<button class="adrb" id="adr" ${isHost&&Date.now()>=d.startsAt.toMillis()?"disabled":""}>${i14(PN)}<span>${esc(d.place)}</span>${isHost?`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.800 2.800 0 00-4-4L4 16z"/></svg>`:`<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/></svg>`}</button>`}
   ${logged&&!closed()?`<div id="dpw"${isHost?"":" hidden"}><h3>${t("gpPol")}</h3><button class="gpn ed add" id="dpl"><i>＋</i><div><b>${t("gpPolAdd")}</b></div></button><p class="hint dph">${t("dpPollHint")}</p></div>`:""}
   <div id="alb"></div>
   <div class="acts4">
