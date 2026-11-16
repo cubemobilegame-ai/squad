@@ -16,11 +16,15 @@ public class SquadWidgetPlugin extends Plugin {
         Context c = getContext();
         String json = call.getString("json", "[]");
         c.getSharedPreferences("squad_widget", Context.MODE_PRIVATE).edit().putString("drops", json).apply();
-        Intent i = new Intent(c, SquadWidgetProvider.class);
-        i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids = AppWidgetManager.getInstance(c).getAppWidgetIds(new ComponentName(c, SquadWidgetProvider.class));
-        i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        c.sendBroadcast(i);
+        Class<?>[] cls = {SquadWidgetProvider.class, SquadWidgetMedium.class, SquadWidgetLarge.class};
+        for (Class<?> k : cls) {
+            int[] ids = AppWidgetManager.getInstance(c).getAppWidgetIds(new ComponentName(c, k));
+            if (ids.length == 0) continue;
+            Intent i = new Intent(c, k);
+            i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            c.sendBroadcast(i);
+        }
         call.resolve();
     }
 }

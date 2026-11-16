@@ -22,14 +22,17 @@ import org.json.JSONObject;
 public class SquadWidgetProvider extends AppWidgetProvider {
     static final String SITE = "https://squad-64cd5.web.app";
 
+    /** 0 = mały (jeden drop), 1 = średni (+1 drop), 2 = duży (+3 dropy) */
+    protected int mode() { return 0; }
+
     @Override
     public void onUpdate(Context c, AppWidgetManager m, int[] ids) {
-        for (int id : ids) draw(c, m, id);
+        for (int id : ids) draw(c, m, id, mode());
     }
 
     @Override
     public void onAppWidgetOptionsChanged(Context c, AppWidgetManager m, int id, Bundle o) {
-        draw(c, m, id);
+        draw(c, m, id, mode());
     }
 
     static int col(String s, int def) {
@@ -53,11 +56,11 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getActivity(c, req, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
-    static void draw(Context c, AppWidgetManager m, int id) {
+    static void draw(Context c, AppWidgetManager m, int id, int mode) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.squad_widget);
         Bundle o = m.getAppWidgetOptions(id);
         int h = o == null ? 110 : o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110);
-        int rows = h < 130 ? 0 : (h < 230 ? 1 : 3);   // małe: jeden drop, średnie: + 1, duże: + 3
+        int rows = mode == 0 ? 0 : (mode == 1 ? 1 : 3);   // mały: jeden drop, średni: + 1, duży: + 3
         JSONArray arr = new JSONArray();
         try { arr = new JSONArray(c.getSharedPreferences("squad_widget", Context.MODE_PRIVATE).getString("drops", "[]")); } catch (Exception e) { }
         long now = System.currentTimeMillis();

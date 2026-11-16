@@ -93,8 +93,8 @@ if "NotificationChannel" not in j:
 import shutil
 W = os.path.join(root, "android-cap/widget")
 pk = os.path.dirname(ma)
-for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java"): shutil.copy(os.path.join(W, f), pk)
-for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml")):
+for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java", "SquadWidgetMedium.java", "SquadWidgetLarge.java"): shutil.copy(os.path.join(W, f), pk)
+for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml")):
     o = os.path.join(A, "src/main/res", d); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, f), o)
 STR = {
  "w_now":   {"en":"HAPPENING NOW","pl":"TRWA TERAZ","es":"EN CURSO","de":"LÄUFT JETZT","fr":"EN COURS","it":"IN CORSO","cs":"PROBÍHÁ","uk":"ТРИВАЄ ЗАРАЗ"},
@@ -105,18 +105,28 @@ STR = {
  "w_tomorrow": {"en":"Tomorrow","pl":"Jutro","es":"Mañana","de":"Morgen","fr":"Demain","it":"Domani","cs":"Zítra","uk":"Завтра"},
  "w_more":  {"en":"More drops soon","pl":"Więcej dropów wkrótce","es":"Más drops pronto","de":"Bald mehr Drops","fr":"Bientôt d'autres drops","it":"Presto altri drop","cs":"Brzy další dropy","uk":"Скоро більше дропів"},
  "w_desc":  {"en":"Your next drop with a countdown.","pl":"Najbliższy drop z odliczaniem.","es":"Tu próximo drop con cuenta atrás.","de":"Dein nächster Drop mit Countdown.","fr":"Ton prochain drop avec compte à rebours.","it":"Il tuo prossimo drop con conto alla rovescia.","cs":"Tvůj nejbližší drop s odpočtem.","uk":"Твій найближчий дроп із відліком."},
+ "w_desc_s": {"en":"Your next drop with a countdown.","pl":"Najbliższy drop z odliczaniem.","es":"Tu próximo drop con cuenta atrás.","de":"Dein nächster Drop mit Countdown.","fr":"Ton prochain drop avec compte à rebours.","it":"Il tuo prossimo drop con conto alla rovescia.","cs":"Tvůj nejbližší drop s odpočtem.","uk":"Твій найближчий дроп із відліком."},
+ "w_desc_m": {"en":"Your next drop plus one more.","pl":"Najbliższy drop i jeszcze jeden.","es":"Tu próximo drop y uno más.","de":"Dein nächster Drop und ein weiterer.","fr":"Ton prochain drop et un autre.","it":"Il tuo prossimo drop e un altro.","cs":"Tvůj nejbližší drop a ještě jeden.","uk":"Твій найближчий дроп і ще один."},
+ "w_desc_l": {"en":"Your next drop plus three more.","pl":"Najbliższy drop i jeszcze trzy.","es":"Tu próximo drop y tres más.","de":"Dein nächster Drop und drei weitere.","fr":"Ton prochain drop et trois autres.","it":"Il tuo prossimo drop e altri tre.","cs":"Tvůj nejbližší drop a další tři.","uk":"Твій найближчий дроп і ще три."},
+ "w_name_s": {"en":"Squad · small","pl":"Squad · mały","es":"Squad · pequeño","de":"Squad · klein","fr":"Squad · petit","it":"Squad · piccolo","cs":"Squad · malý","uk":"Squad · малий"},
+ "w_name_m": {"en":"Squad · medium","pl":"Squad · średni","es":"Squad · mediano","de":"Squad · mittel","fr":"Squad · moyen","it":"Squad · medio","cs":"Squad · střední","uk":"Squad · середній"},
+ "w_name_l": {"en":"Squad · large","pl":"Squad · duży","es":"Squad · grande","de":"Squad · groß","fr":"Squad · grand","it":"Squad · grande","cs":"Squad · velký","uk":"Squad · великий"},
 }
 def esc(x): return x.replace("&","&amp;").replace("<","&lt;").replace("'","\\'")
 for lang in ["en","pl","es","de","fr","it","cs","uk"]:
     d = os.path.join(A, "src/main/res", "values" if lang == "en" else "values-" + lang); os.makedirs(d, exist_ok=True)
     open(os.path.join(d, "squad_widget_strings.xml"), "w", encoding="utf-8").write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n' + "".join('    <string name="%s">%s</string>\n' % (k, esc(v[lang])) for k, v in STR.items()) + '</resources>\n')
 x = open(m).read()
-if "SquadWidgetProvider" not in x:
-    x = x.replace("</application>", '''    <receiver android:name=".SquadWidgetProvider" android:exported="false">
+if "SquadWidgetLarge" not in x:
+    x = re.sub(r'\s*<receiver android:name="\.SquadWidget[A-Za-z]*"[\s\S]*?</receiver>', "", x)
+    rc = ""
+    for cls, info, lab in ((".SquadWidgetProvider", "squad_widget_info", "w_name_s"), (".SquadWidgetMedium", "squad_widget_info_m", "w_name_m"), (".SquadWidgetLarge", "squad_widget_info_l", "w_name_l")):
+        rc += '''    <receiver android:name="%s" android:label="@string/%s" android:exported="false">
             <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/squad_widget_info" />
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/%s" />
         </receiver>
-    </application>''')
+    ''' % (cls, lab, info)
+    x = x.replace("</application>", rc + "</application>")
     open(m, "w").write(x)
 j = open(ma).read()
 if "registerPlugin" not in j:
