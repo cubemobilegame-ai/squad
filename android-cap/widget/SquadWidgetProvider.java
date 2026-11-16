@@ -56,26 +56,28 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getActivity(c, req, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
-    static android.graphics.Bitmap bg(Context c, int wdp, int hdp, int c1, int c2) {
+    static android.graphics.Bitmap bg(Context c, int wdp, int hdp, int c1, int c2, boolean sq) {
         float d = c.getResources().getDisplayMetrics().density;
         float w = wdp * d, h = hdp * d, k = Math.min(1f, 640f / Math.max(w, h));
         int bw = Math.max(40, Math.round(w * k)), bh = Math.max(40, Math.round(h * k));
         android.graphics.Bitmap b = android.graphics.Bitmap.createBitmap(bw, bh, android.graphics.Bitmap.Config.ARGB_8888);
         android.graphics.Canvas cv = new android.graphics.Canvas(b);
+        float sw = bw, sh = bh;
+        if (sq) { sw = sh = Math.min(bw, bh); cv.translate((bw - sw) / 2f, (bh - sh) / 2f); }
         float r = 26 * d * k;
-        android.graphics.RectF rc = new android.graphics.RectF(0, 0, bw, bh);
+        android.graphics.RectF rc = new android.graphics.RectF(0, 0, sw, sh);
         android.graphics.Path p = new android.graphics.Path();
         p.addRoundRect(rc, r, r, android.graphics.Path.Direction.CW);
         cv.clipPath(p);
         android.graphics.Paint pt = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
-        pt.setShader(new android.graphics.LinearGradient(0, 0, bw, bh, 0xFF101018, 0xFF1A1A26, android.graphics.Shader.TileMode.CLAMP));
+        pt.setShader(new android.graphics.LinearGradient(0, 0, sw, sh, 0xFF101018, 0xFF1A1A26, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
-        pt.setShader(new android.graphics.RadialGradient(bw * 0.12f, bh * 0.0f, Math.max(bw, bh) * 0.95f, (c1 & 0x00FFFFFF) | 0x66000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
+        pt.setShader(new android.graphics.RadialGradient(sw * 0.12f, sh * 0.0f, Math.max(sw, sh) * 0.95f, (c1 & 0x00FFFFFF) | 0x66000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
-        pt.setShader(new android.graphics.RadialGradient(bw * 1.0f, bh * 1.0f, Math.max(bw, bh) * 0.7f, (c2 & 0x00FFFFFF) | 0x40000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
+        pt.setShader(new android.graphics.RadialGradient(sw * 1.0f, sh * 1.0f, Math.max(sw, sh) * 0.7f, (c2 & 0x00FFFFFF) | 0x40000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
         pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x26FFFFFF);
-        cv.drawRoundRect(new android.graphics.RectF(pt.getStrokeWidth() / 2, pt.getStrokeWidth() / 2, bw - pt.getStrokeWidth() / 2, bh - pt.getStrokeWidth() / 2), r, r, pt);
+        cv.drawRoundRect(new android.graphics.RectF(pt.getStrokeWidth() / 2, pt.getStrokeWidth() / 2, sw - pt.getStrokeWidth() / 2, sh - pt.getStrokeWidth() / 2), r, r, pt);
         return b;
     }
 
@@ -100,7 +102,7 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         int rows = mode == 0 ? 0 : (mode == 1 ? 2 : (hd >= 430 ? 5 : (hd >= 350 ? 4 : 3)));
         JSONObject f = L.isEmpty() ? null : L.get(0);
         int p1 = f == null ? 0xFFFFD0DC : col(f.optString("p1"), 0xFFFFD0DC), p2 = f == null ? 0xFFD7ECFF : col(f.optString("p2"), 0xFFD7ECFF);
-        v.setImageViewBitmap(R.id.bg, bg(c, wd, hd, p1, p2));
+        v.setImageViewBitmap(R.id.bg, bg(c, wd, hd, p1, p2, mode == 0));
         if (f == null) {
             v.setViewVisibility(R.id.card, View.GONE);
             v.setViewVisibility(R.id.empty, View.VISIBLE);
@@ -152,6 +154,12 @@ public class SquadWidgetProvider extends AppWidgetProvider {
                 v.setOnClickPendingIntent(R.id.btnNew, open(c, "/new", id * 10 + 7));
                 v.setOnClickPendingIntent(R.id.btnChat, open(c, "/chats", id * 10 + 8));
             }
+        }
+        if (mode == 0) {
+            float dn = c.getResources().getDisplayMetrics().density, side = Math.min(wd, hd);
+            int ph = Math.max(0, Math.round(((wd - side) / 2f + 12) * dn)), pv = Math.max(0, Math.round(((hd - side) / 2f + 12) * dn));
+            v.setViewPadding(R.id.card, ph, pv, ph, pv);
+            v.setViewPadding(R.id.empty, ph, pv, ph, pv);
         }
         m.updateAppWidget(id, v);
     }
