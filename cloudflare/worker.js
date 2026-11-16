@@ -65,6 +65,8 @@ function fs(env) {
     list: async (path) => { const r = await fetch(base + path + "?pageSize=300", { headers: await H() }); if (!r.ok) return []; const d = await r.json(); return (d.documents || []).map((x) => ({ ...obj(x.fields), id: x.name.split("/").pop() })); },
     patch: async (path, kv) => { const f = {}; for (const k in kv) f[k] = typeof kv[k] === "boolean" ? { booleanValue: kv[k] } : { integerValue: String(kv[k]) };
       await fetch(base + path + "?" + Object.keys(kv).map((k) => "updateMask.fieldPaths=" + k).join("&"), { method: "PATCH", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => {}); },
+    add: async (path, kv) => { const f = {}; for (const k in kv) f[k] = k === "at" ? { timestampValue: kv[k] } : { stringValue: String(kv[k] ?? "").slice(0, 300) };
+      await fetch(base + path, { method: "POST", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => {}); },
     del: async (path) => { await fetch(base + path, { method: "DELETE", headers: await H() }).catch(() => {}); },
   };
 }
@@ -87,8 +89,10 @@ async function notify(env, db, uids, kind, build, link, from, muteKey) {
     st.to++; const u = await db.get(`users/${uid}`); if (!u) { st.errs.push("brak profilu " + uid.slice(0, 6)); return; }
     if (kind && u.notif && u.notif[kind] === false) { st.errs.push("wyłączone " + uid.slice(0, 6)); return; }
     if (muteKey && u.muted && u.muted[muteKey]) { st.errs.push("wyciszony czat " + uid.slice(0, 6)); return; }
-    const toks = await db.list(`users/${uid}/tokens`); st.users++; if (!toks.length) { st.errs.push("brak tokenu " + uid.slice(0, 6)); return; } st.toks += toks.length;
     const L = TX[u.lang] ? u.lang : "en", [title, body] = build(TX[L], L);
+    // kopia w aplikacji (dzwonek): wszystko poza czatem i odpowiedziami IN/LATE/OUT (te są pokazywane osobno)
+    if (kind !== "chat" && kind !== "rsp") await db.add(`users/${uid}/inbox`, { title, body, link, kind: kind || "inv", from: from || "", at: new Date().toISOString() });
+    const toks = await db.list(`users/${uid}/tokens`); st.users++; if (!toks.length) { st.errs.push("brak tokenu " + uid.slice(0, 6)); return; } st.toks += toks.length;
     await Promise.all(toks.map(async (t) => {
       const r = await fetch(`https://fcm.googleapis.com/v1/projects/${env.PID}/messages:send`, {
         method: "POST", headers: { Authorization: "Bearer " + (await access(env.SA)), "Content-Type": "application/json" },

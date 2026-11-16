@@ -98,6 +98,11 @@ service cloud.firestore {
         allow delete: if signedIn() && (request.auth.uid == uid || request.auth.uid == cid);
       }
       // ALARM zaufanej osoby (przycisk bezpieczeństwa): czyta i kasuje odbiorca; tworzy tylko ktoś z jego kontaktów, tylko swój alert
+      // powiadomienia w aplikacji (dzwonek): zapisuje tylko serwer (konto usługi), czyta i kasuje właściciel
+      match /inbox/{iid} {
+        allow read, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update: if false;
+      }
       match /alerts/{aid} {
         allow read, delete: if signedIn() && request.auth.uid == uid;
         allow create: if signedIn() && !isGuest()
