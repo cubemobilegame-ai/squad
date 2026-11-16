@@ -70,7 +70,7 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         android.graphics.Paint pt = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
         pt.setShader(new android.graphics.LinearGradient(0, 0, bw, bh, c1, c2, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
-        pt.setShader(new android.graphics.RadialGradient(bw * 0.18f, bh * 0.02f, Math.max(bw, bh) * 0.85f, 0x66FFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP));
+        pt.setShader(new android.graphics.RadialGradient(bw * 0.18f, bh * 0.02f, Math.max(bw, bh) * 0.85f, 0x38FFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
         pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x99FFFFFF);
         cv.drawRoundRect(new android.graphics.RectF(pt.getStrokeWidth() / 2, pt.getStrokeWidth() / 2, bw - pt.getStrokeWidth() / 2, bh - pt.getStrokeWidth() / 2), r, r, pt);
@@ -89,8 +89,8 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         long now = System.currentTimeMillis();
         java.util.ArrayList<JSONObject> L = new java.util.ArrayList<>();
         for (int i = 0; i < arr.length(); i++) { JSONObject d = arr.optJSONObject(i); if (d != null && d.optLong("ts") + 2 * 3600000L > now) L.add(d); }
-        int[] rowIds = {R.id.row1, R.id.row2, R.id.row3}, rowE = {R.id.e1, R.id.e2, R.id.e3}, rowT = {R.id.t1, R.id.t2, R.id.t3}, rowW = {R.id.w1, R.id.w2, R.id.w3};
-        int rows = mode == 0 ? 0 : (mode == 1 ? 2 : 3);
+        int[] rowIds = {R.id.row1, R.id.row2, R.id.row3, R.id.row4, R.id.row5}, rowE = {R.id.e1, R.id.e2, R.id.e3, R.id.e4, R.id.e5}, rowT = {R.id.t1, R.id.t2, R.id.t3, R.id.t4, R.id.t5}, rowW = {R.id.w1, R.id.w2, R.id.w3, R.id.w4, R.id.w5};
+        int rows = mode == 0 ? 0 : (mode == 1 ? 2 : (hd >= 430 ? 5 : (hd >= 350 ? 4 : 3)));
         JSONObject f = L.isEmpty() ? null : L.get(0);
         int p1 = f == null ? 0xFFFFD0DC : col(f.optString("p1"), 0xFFFFD0DC), p2 = f == null ? 0xFFD7ECFF : col(f.optString("p2"), 0xFFD7ECFF);
         v.setImageViewBitmap(R.id.bg, bg(c, wd, hd, p1, p2));
