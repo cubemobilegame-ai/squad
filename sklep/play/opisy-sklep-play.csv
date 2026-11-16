@@ -1,257 +1,305 @@
 ﻿"Język (kod Play)","Tytuł aplikacji (max 30)","Krótki opis (max 80)","Pełny opis (max 4000)"
-"pl-PL","Squad: wypady z ekipą","Wypady ze znajomymi w 15 sekund: jeden link, odpowiedź IN, LATE lub OUT.","Planujesz wypad ze znajomymi, ale ustalanie godziny, miejsca i tego, kto idzie, na kilku czatach to męka? Squad to aplikacja do organizowania spotkań z ekipą: tworzysz zaproszenie (drop), wysyłasz link i od razu widzisz, kto wbija. Znajomi odpowiadają jednym kliknięciem, bez instalowania aplikacji.
+"pl-PL","Squad: wypady ze znajomymi","Planuj spotkania ze znajomymi: jeden link, czat grupowy, odpowiedzi IN/LATE/OUT.","Squad to aplikacja do organizowania spotkań ze znajomymi. Tworzysz zaproszenie (drop) z miejscem i godziną, wysyłasz link i od razu widzisz, kto przychodzi. Koniec z ustalaniem szczegółów na kilku czatach naraz.
 
-⚡ JAK TO DZIAŁA
-• Tworzysz drop: co, gdzie i kiedy
-• Wysyłasz link w komunikatorze, SMS-em albo pokazujesz kod QR
-• Znajomi klikają IN, LATE albo OUT
-• Widzisz listę: kto jest, kto się spóźni i o ile minut, kto odpada
+Jak to działa
+• Utwórz drop: co robicie, gdzie i kiedy.
+• Wyślij link w komunikatorze, SMS-em albo pokaż kod QR.
+• Znajomi odpowiadają jednym kliknięciem: IN (wbijam), LATE (spóźnię się) albo OUT (nie dam rady). Nie muszą instalować aplikacji, żeby odpowiedzieć.
+• Na bieżąco widzisz listę uczestników, kto się spóźni i o ile minut.
 
-🎯 KAŻDY RODZAJ SPOTKANIA
-Pizza, sport, domówka, impreza, klub, knajpa, kawa, kino, gry, spacer, wyjazd, urodziny i inne okazje. Wypad może powtarzać się co tydzień, co dwa tygodnie albo co miesiąc.
+Planer na każdą okazję
+Domówka, impreza, klub, pizza po treningu, mecz, kino, gry, spacer, wyjazd, urodziny, osiemnastka, rocznica. Spotkanie ustawisz jako cykliczne (co tydzień, co dwa tygodnie, co miesiąc) albo jako niespodziankę z miejscem odsłanianym godzinę przed startem.
 
-💬 CZAT GRUPOWY DLA EKIPY
-Każdy drop ma własny czat. Ankiety „gdzie idziemy?”, reakcje, informacja kto przeczytał i kto pisze. Bez prywatnych wiadomości.
+Czat grupowy dla ekipy
+Każdy drop ma własny czat. Zrobisz w nim ankietę „gdzie idziemy?”, dodasz reakcje i zobaczysz, kto przeczytał wiadomość. Czaty są tylko grupowe, bez prywatnych wiadomości.
 
-👥 STAŁE GRUPY I KONTAKTY
-Załóż grupę z czatem, który nie znika: klasa, drużyna, paczka z osiedla. Zapraszaj znajomych do kontaktów i dodawaj ich do dropów oraz grup jednym stuknięciem, bez linków i kodów QR.
+Stałe grupy i kontakty
+Załóż grupę z czatem, który nie znika: klasa, drużyna, paczka znajomych. Dodawaj osoby do kontaktów, zapraszaj je jednym stuknięciem i wysyłaj dropy prosto do swoich grup.
 
-📍 PUBLICZNE DROPY W OKOLICY
-Dołącz do otwartych spotkań do 20 km od ciebie albo stwórz własne z limitem miejsc. Tylko dla osób 16+.
+Publiczne dropy w okolicy
+Przeglądaj otwarte spotkania w promieniu do 20 km na liście albo na mapie. Dołącz do nich lub stwórz własne z limitem miejsc. Publiczne dropy są dostępne dla osób od 16 lat.
 
-🔔 PRZYPOMNIENIA I KALENDARZ
-Powiadomimy, gdy ktoś odpowie albo napisze, i przypomnimy całej ekipie 30 minut przed startem. Drop dodasz do kalendarza jednym kliknięciem.
+Grafiki do udostępniania
+Zaproszenie możesz wysłać jako gotową grafikę: do relacji na Instagramie, na WhatsAppa, Messengera albo SMS-em. Do wyboru kilka stylów, a obrazek zapiszesz też w galerii.
 
-📸 ALBUM I KOLAŻ
-Gdy drop się zaczyna, otwiera się wspólny album. Zdjęcia z wypadu w jednym miejscu i gotowy kolaż na relację.
+Awatary 3D i odznaki
+Wybierz swojego awatara 3D i zdobywaj odznaki za aktywność: zorganizowane spotkania, obecność, punktualność i więcej.
 
-🔒 BEZPIECZEŃSTWO
-Zgłaszanie i blokowanie jednym przytrzymaniem wiadomości, filtr wulgaryzmów, linki, które znikają 24 godziny po starcie dropa. Z aplikacji korzystają osoby od 13 lat (do 16 lat za zgodą rodzica lub opiekuna).
+Przypomnienia, kalendarz i widżety
+Dostaniesz powiadomienie, gdy ktoś odpowie lub napisze, a ekipa przypomnienie 30 minut przed startem. Spotkanie dodasz do kalendarza jednym kliknięciem. Na ekranie głównym telefonu ustawisz widżet w trzech rozmiarach: z najbliższym dropem i odliczaniem oraz szybkimi przyciskami Nowy drop i Czaty.
 
-🌍 Dostępna po polsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku. Bezpłatna.
+Album i kolaż
+Gdy drop się zaczyna, otwiera się wspólny album. Zdjęcia z wypadu są w jednym miejscu, a z nich powstaje gotowy kolaż.
 
-Zbierz ekipę. Wbijajcie razem. Squad ✦"
-"en-US","Squad: Group Hangouts","Plan hangouts with friends in 15 seconds: one link, reply IN, LATE or OUT.","Planning a night out, but sorting out the time, the place and who's coming across five chats is a headache? Squad is a group planner for your crew: create an invite (a ""drop""), send the link and see right away who's in. Friends reply with one tap, no app install needed.
+Bezpieczeństwo i prywatność
+Możesz zgłosić lub zablokować użytkownika, przytrzymując wiadomość. Działa filtr wulgaryzmów, a linki do dropów wygasają 24 godziny po starcie spotkania. Konto usuniesz w każdej chwili w ustawieniach aplikacji. Z aplikacji mogą korzystać osoby od 13 lat (do 16 lat za zgodą rodzica lub opiekuna).
 
-⚡ HOW IT WORKS
-• Create a drop: what, where and when
-• Send the link in any messenger or by text, or show a QR code
-• Friends tap IN, LATE or OUT
-• See who's coming, who's running late and by how many minutes, who's out
+Squad jest bezpłatny i dostępny po polsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku.
 
-🎯 ANY KIND OF PLAN
-Pizza, sports, house party, club, bar, coffee, movies, gaming, walks, trips, birthdays and other occasions. A hangout can repeat weekly, every two weeks or monthly.
+Zbierz ekipę i ustalcie spotkanie w kilka sekund."
+"en-US","Squad: Hangouts with Friends","Plan hangouts with friends: one link, group chat, reply IN, LATE or OUT.","Squad is an app for organizing hangouts with your friends. Create an invite (a ""drop"") with a place and time, send the link and see right away who's coming. No more sorting out details across several chats.
 
-💬 GROUP CHAT FOR YOUR CREW
-Every drop has its own chat. ""Where are we going?"" polls, reactions, read receipts and typing indicators. No private messages.
+How it works
+• Create a drop: what you're doing, where and when.
+• Send the link in a messenger or by text, or show a QR code.
+• Friends reply with one tap: IN, LATE or OUT. They don't need to install the app to answer.
+• You see the guest list live, including who will be late and by how many minutes.
 
-👥 REGULAR GROUPS AND CONTACTS
-Create a group with a chat that never disappears: your class, team or neighborhood crew. Invite friends to your contacts and add them to drops and groups in one tap, no links or QR codes needed.
+A planner for every occasion
+House party, night out, club, pizza after practice, a match, the movies, gaming, a walk, a trip, a birthday, an 18th or an anniversary. Make a hangout repeat weekly, every two weeks or monthly, or turn it into a surprise where the place is revealed an hour before the start.
 
-📍 PUBLIC DROPS NEARBY
-Join open meetups within 20 km or create your own with limited spots. 16+ only.
+Group chat for your crew
+Every drop has its own group chat. Run a ""where should we go?"" poll, add reactions and see who has read a message. Chats are group-only, with no private messages.
 
-🔔 REMINDERS AND CALENDAR
-Get notified when someone replies or writes, and the whole crew gets a reminder 30 minutes before the start. Add a drop to your calendar in one tap.
+Permanent groups and contacts
+Create a group with a chat that doesn't disappear: a class, a team, a group of friends. Add people to your contacts, invite them with a single tap and send drops straight to your groups.
 
-📸 ALBUM AND COLLAGE
-When the drop starts, a shared album opens. Photos from the hangout in one place and a ready collage for your story.
+Public drops nearby
+Browse open hangouts within 20 km as a list or on a map. Join one or create your own with a limited number of spots. Public drops are available for people aged 16 and over.
 
-🔒 SAFETY
-Report and block with a long press on a message, a profanity filter, and links that disappear 24 hours after the drop starts. For ages 13+ (under 16 with a parent's or guardian's consent).
+Graphics to share
+Send your invite as a ready-made graphic: for Instagram Stories, WhatsApp, Messenger or a text. Pick from several styles and save the image to your gallery.
 
-🌍 Available in English, Polish, Spanish, German, French, Italian, Czech and Ukrainian. Free to use.
+3D avatars and badges
+Choose your own 3D avatar and earn badges for being active: hosted hangouts, showing up, being on time and more.
 
-Get your crew together. Show up together. Squad ✦"
-"es-ES","Squad: planes con amigos","Organiza planes con amigos en 15 segundos: un enlace, responde IN, LATE u OUT.","¿Quieres quedar con tus amigos, pero poner de acuerdo la hora, el sitio y quién viene en cinco chats es un lío? Squad es una app para organizar quedadas con tu grupo: creas una invitación (un ""drop""), envías el enlace y ves al instante quién se apunta. Tus amigos responden con un toque, sin instalar nada.
+Reminders, calendar and widgets
+Get a notification when someone replies or writes, and a reminder for the whole crew 30 minutes before the start. Add a hangout to your calendar in one tap. On your home screen, add a widget in three sizes with your next drop and a countdown, plus quick New drop and Chats buttons.
 
-⚡ CÓMO FUNCIONA
-• Creas un drop: qué, dónde y cuándo
-• Envías el enlace por mensajería o SMS, o muestras un código QR
-• Tus amigos pulsan IN, LATE u OUT
-• Ves quién viene, quién llega tarde y cuántos minutos, y quién no puede
+Album and collage
+When a drop starts, a shared album opens. All the photos from the hangout are in one place and turn into a ready-made collage.
 
-🎯 CUALQUIER TIPO DE PLAN
-Pizza, deporte, fiesta en casa, discoteca, bar, café, cine, juegos, paseo, viaje, cumpleaños y otras ocasiones. El plan puede repetirse cada semana, cada dos semanas o cada mes.
+Safety and privacy
+Report or block a user by holding a message. A profanity filter is on, and drop links expire 24 hours after the hangout starts. You can delete your account at any time in the app settings. The app is for people aged 13 and over (13 to 16 with a parent's or guardian's consent).
 
-💬 CHAT DE GRUPO PARA TU CREW
-Cada drop tiene su propio chat. Encuestas de ""¿adónde vamos?"", reacciones, quién ha leído y quién está escribiendo. Sin mensajes privados.
+Squad is free and available in Polish, English, Spanish, German, French, Italian, Czech and Ukrainian.
 
-👥 GRUPOS FIJOS Y CONTACTOS
-Crea un grupo con un chat que no desaparece: tu clase, equipo o pandilla del barrio. Invita a amigos a tus contactos y añádelos a drops y grupos con un toque, sin enlaces ni códigos QR.
+Gather your crew and settle on a plan in seconds."
+"es-ES","Squad: quedadas con amigos","Organiza quedadas con amigos: un enlace, chat de grupo y respuestas IN/LATE/OUT.","Squad es una app para organizar quedadas con tus amigos. Creas una invitación (un «drop») con lugar y hora, envías el enlace y ves al instante quién viene. Se acabó acordar los detalles en varios chats a la vez.
 
-📍 DROPS PÚBLICOS CERCA DE TI
-Únete a quedadas abiertas a menos de 20 km o crea la tuya con plazas limitadas. Solo para mayores de 16.
+Cómo funciona
+• Crea un drop: qué hacéis, dónde y cuándo.
+• Envía el enlace por mensajería o SMS, o muestra un código QR.
+• Tus amigos responden con un toque: IN (voy), LATE (llego tarde) u OUT (no puedo). No necesitan instalar la app para responder.
+• Ves la lista de asistentes al momento, quién llegará tarde y cuántos minutos.
 
-🔔 AVISOS Y CALENDARIO
-Te avisamos cuando alguien responde o escribe, y recordamos a todo el grupo 30 minutos antes del inicio. Añade el drop a tu calendario con un toque.
+Un planificador para cada ocasión
+Fiesta en casa, salida nocturna, discoteca, pizza tras el entreno, partido, cine, videojuegos, paseo, viaje, cumpleaños, mayoría de edad o aniversario. Puedes repetir la quedada cada semana, cada dos semanas o cada mes, o convertirla en sorpresa: el lugar se revela una hora antes.
 
-📸 ÁLBUM Y COLLAGE
-Cuando empieza el drop se abre un álbum compartido. Las fotos del plan en un solo sitio y un collage listo para tu historia.
+Chat de grupo para tu gente
+Cada drop tiene su propio chat de grupo. Haz una encuesta de «¿adónde vamos?», añade reacciones y mira quién ha leído un mensaje. Los chats son solo de grupo, sin mensajes privados.
 
-🔒 SEGURIDAD
-Denuncia y bloquea manteniendo pulsado un mensaje, filtro de palabrotas y enlaces que desaparecen 24 horas después del inicio. Para mayores de 13 años (menores de 16 con permiso de un padre o tutor).
+Grupos permanentes y contactos
+Crea un grupo con un chat que no desaparece: una clase, un equipo, tu pandilla. Añade personas a tus contactos, invítalas con un toque y envía drops directamente a tus grupos.
 
-🌍 Disponible en español, polaco, inglés, alemán, francés, italiano, checo y ucraniano. Gratis.
+Drops públicos cerca de ti
+Explora quedadas abiertas en un radio de 20 km, en lista o en mapa. Únete o crea la tuya con plazas limitadas. Los drops públicos están disponibles para mayores de 16 años.
 
-Reúne a tu gente. Vayan juntos. Squad ✦"
-"de-DE","Squad: Treffen mit Freunden","Treffen mit Freunden in 15 Sekunden planen: ein Link, Antwort IN, LATE oder OUT.","Du willst dich mit Freunden treffen, aber Uhrzeit, Ort und wer kommt in fünf Chats zu klären, nervt? Squad ist die App für Verabredungen mit deiner Crew: Du erstellst eine Einladung (einen „Drop“), schickst den Link und siehst sofort, wer dabei ist. Deine Freunde antworten mit einem Tipp, ganz ohne App-Installation.
+Gráficos para compartir
+Envía tu invitación como un gráfico listo para usar: para historias de Instagram, WhatsApp, Messenger o SMS. Elige entre varios estilos y guarda la imagen en tu galería.
 
-⚡ SO FUNKTIONIERT'S
-• Drop erstellen: was, wo und wann
-• Link per Messenger oder SMS senden oder einen QR-Code zeigen
-• Freunde tippen auf IN, LATE oder OUT
-• Du siehst, wer kommt, wer sich um wie viele Minuten verspätet und wer absagt
+Avatares 3D e insignias
+Elige tu avatar 3D y consigue insignias por tu actividad: quedadas organizadas, asistencia, puntualidad y más.
 
-🎯 FÜR JEDEN ANLASS
-Pizza, Sport, Hausparty, Club, Kneipe, Kaffee, Kino, Spieleabend, Spaziergang, Ausflug, Geburtstag und mehr. Ein Treffen kann sich jede Woche, alle zwei Wochen oder monatlich wiederholen.
+Recordatorios, calendario y widgets
+Recibe una notificación cuando alguien responda o escriba, y un recordatorio para todos 30 minutos antes. Añade la quedada al calendario con un toque. En la pantalla de inicio puedes poner un widget en tres tamaños con tu próximo drop y cuenta atrás, y botones rápidos de Nuevo drop y Chats.
 
-💬 GRUPPENCHAT FÜR DEINE CREW
-Jeder Drop hat seinen eigenen Chat. Umfragen („Wohin gehen wir?“), Reaktionen, Lesebestätigungen und Tippanzeige. Keine privaten Nachrichten.
+Álbum y collage
+Cuando empieza un drop se abre un álbum compartido. Las fotos de la quedada están en un solo sitio y con ellas se crea un collage listo.
 
-👥 FESTE GRUPPEN UND KONTAKTE
-Erstelle eine Gruppe mit einem Chat, der bleibt: Klasse, Team oder Clique. Lade Freunde in deine Kontakte ein und füge sie mit einem Tipp zu Drops und Gruppen hinzu, ohne Links oder QR-Codes.
+Seguridad y privacidad
+Puedes denunciar o bloquear a un usuario manteniendo pulsado un mensaje. Hay un filtro de palabras malsonantes y los enlaces de los drops caducan 24 horas después de empezar la quedada. Puedes eliminar tu cuenta en cualquier momento desde los ajustes. La app es para mayores de 13 años (de 13 a 16, con el consentimiento de un padre, madre o tutor).
 
-📍 ÖFFENTLICHE DROPS IN DER NÄHE
-Nimm an offenen Treffen im Umkreis von 20 km teil oder erstelle eigene mit begrenzter Platzzahl. Nur ab 16 Jahren.
+Squad es gratuita y está disponible en polaco, inglés, español, alemán, francés, italiano, checo y ucraniano.
 
-🔔 ERINNERUNGEN UND KALENDER
-Du wirst benachrichtigt, wenn jemand antwortet oder schreibt, und die ganze Crew wird 30 Minuten vor dem Start erinnert. Den Drop trägst du mit einem Tipp in deinen Kalender ein.
+Reúne a tu gente y cerrad el plan en segundos."
+"de-DE","Squad: Treffen mit Freunden","Treffen mit Freunden planen: ein Link, Gruppenchat, Antwort IN, LATE oder OUT.","Squad ist eine App zum Organisieren von Treffen mit deinen Freunden. Du erstellst eine Einladung (einen „Drop“) mit Ort und Uhrzeit, schickst den Link und siehst sofort, wer kommt. Schluss mit dem Abstimmen in mehreren Chats gleichzeitig.
 
-📸 ALBUM UND COLLAGE
-Wenn der Drop startet, öffnet sich ein gemeinsames Album. Alle Fotos an einem Ort und eine fertige Collage für deine Story.
+So funktioniert es
+• Drop erstellen: was ihr macht, wo und wann.
+• Link per Messenger oder SMS senden oder einen QR-Code zeigen.
+• Freunde antworten mit einem Tipp: IN (ich komme), LATE (ich komme später) oder OUT (ich kann nicht). Zum Antworten müssen sie die App nicht installieren.
+• Du siehst die Gästeliste live, wer sich verspätet und um wie viele Minuten.
 
-🔒 SICHERHEIT
-Melden und Blockieren per langem Druck auf eine Nachricht, Schimpfwortfilter und Links, die 24 Stunden nach dem Start verschwinden. Ab 13 Jahren (unter 16 mit Einwilligung der Eltern oder Erziehungsberechtigten).
+Ein Planer für jeden Anlass
+Hausparty, Ausgehen, Club, Pizza nach dem Training, Spiel, Kino, Zocken, Spaziergang, Ausflug, Geburtstag, 18. oder Jahrestag. Treffen lassen sich wöchentlich, alle zwei Wochen oder monatlich wiederholen oder als Überraschung planen, bei der der Ort eine Stunde vorher enthüllt wird.
 
-🌍 Verfügbar auf Deutsch, Polnisch, Englisch, Spanisch, Französisch, Italienisch, Tschechisch und Ukrainisch. Kostenlos.
+Gruppenchat für die Crew
+Jeder Drop hat seinen eigenen Gruppenchat. Starte eine Umfrage „Wohin gehen wir?“, nutze Reaktionen und sieh, wer eine Nachricht gelesen hat. Chats gibt es nur in Gruppen, ohne private Nachrichten.
 
-Hol deine Crew zusammen. Seid zusammen dabei. Squad ✦"
-"fr-FR","Squad: sorties entre amis","Sorties entre amis en 15 secondes : un lien, réponds IN, LATE ou OUT.","Tu veux voir tes amis, mais fixer l'heure, le lieu et qui vient sur cinq conversations, c'est la galère ? Squad, c'est l'appli pour organiser des sorties avec ta bande : tu crées une invitation (un « drop »), tu envoies le lien et tu vois tout de suite qui vient. Tes amis répondent d'un tap, sans rien installer.
+Feste Gruppen und Kontakte
+Lege eine Gruppe mit einem Chat an, der bleibt: Klasse, Team, Freundeskreis. Füge Leute zu deinen Kontakten hinzu, lade sie mit einem Tipp ein und sende Drops direkt in deine Gruppen.
 
-⚡ COMMENT ÇA MARCHE
-• Tu crées un drop : quoi, où et quand
-• Tu envoies le lien par messagerie ou SMS, ou tu montres un code QR
-• Tes amis touchent IN, LATE ou OUT
-• Tu vois qui vient, qui aura du retard et de combien de minutes, qui ne vient pas
+Öffentliche Drops in der Nähe
+Stöbere in offenen Treffen im Umkreis von 20 km als Liste oder auf der Karte. Mach mit oder erstelle eigene mit begrenzter Plätzezahl. Öffentliche Drops sind ab 16 Jahren verfügbar.
 
-🎯 TOUS LES TYPES DE SORTIES
-Pizza, sport, soirée, boîte, bar, café, ciné, jeux, balade, voyage, anniversaire et autres occasions. Une sortie peut se répéter chaque semaine, toutes les deux semaines ou chaque mois.
+Grafiken zum Teilen
+Verschicke deine Einladung als fertige Grafik: für Instagram-Stories, WhatsApp, Messenger oder SMS. Wähle aus mehreren Stilen und speichere das Bild in deiner Galerie.
 
-💬 CHAT DE GROUPE POUR TA BANDE
-Chaque drop a son propre chat. Sondages « on va où ? », réactions, accusés de lecture et indicateur d'écriture. Pas de messages privés.
+3D-Avatare und Abzeichen
+Wähle deinen 3D-Avatar und sammle Abzeichen für Aktivität: organisierte Treffen, Anwesenheit, Pünktlichkeit und mehr.
 
-👥 GROUPES FIXES ET CONTACTS
-Crée un groupe avec un chat qui reste : classe, équipe, bande du quartier. Invite tes amis dans tes contacts et ajoute-les aux drops et aux groupes d'un tap, sans liens ni codes QR.
+Erinnerungen, Kalender und Widgets
+Du bekommst eine Benachrichtigung, wenn jemand antwortet oder schreibt, und die Crew eine Erinnerung 30 Minuten vor dem Start. Mit einem Tipp landet das Treffen im Kalender. Auf dem Startbildschirm kannst du ein Widget in drei Größen mit dem nächsten Drop und Countdown sowie den Schnelltasten Neuer Drop und Chats einrichten.
 
-📍 DROPS PUBLICS PRÈS DE CHEZ TOI
-Rejoins des rendez-vous ouverts dans un rayon de 20 km ou crée les tiens avec un nombre de places limité. Réservé aux 16 ans et plus.
+Album und Collage
+Sobald ein Drop startet, öffnet sich ein gemeinsames Album. Alle Fotos vom Treffen sind an einem Ort und werden zu einer fertigen Collage.
 
-🔔 RAPPELS ET CALENDRIER
-Tu es prévenu quand quelqu'un répond ou écrit, et toute la bande reçoit un rappel 30 minutes avant le début. Ajoute le drop à ton calendrier en un tap.
+Sicherheit und Datenschutz
+Nutzer kannst du melden oder blockieren, indem du eine Nachricht gedrückt hältst. Ein Schimpfwortfilter ist aktiv, und Drop-Links verfallen 24 Stunden nach Beginn des Treffens. Dein Konto kannst du jederzeit in den App-Einstellungen löschen. Die App ist für Personen ab 13 Jahren (13 bis 16 mit Zustimmung der Eltern oder Erziehungsberechtigten).
 
-📸 ALBUM ET COLLAGE
-Quand le drop commence, un album partagé s'ouvre. Les photos de la sortie au même endroit et un collage prêt pour ta story.
+Squad ist kostenlos und auf Polnisch, Englisch, Spanisch, Deutsch, Französisch, Italienisch, Tschechisch und Ukrainisch verfügbar.
 
-🔒 SÉCURITÉ
-Signale et bloque en appuyant longuement sur un message, filtre de gros mots et liens qui disparaissent 24 heures après le début. À partir de 13 ans (avant 16 ans, avec l'accord d'un parent ou tuteur).
+Hol deine Crew zusammen und plant in Sekunden."
+"fr-FR","Squad : sorties entre amis","Organise des sorties entre amis : un lien, chat de groupe, réponses IN/LATE/OUT.","Squad est une application pour organiser des sorties entre amis. Tu crées une invitation (un « drop ») avec un lieu et une heure, tu envoies le lien et tu vois tout de suite qui vient. Fini les détails à régler dans plusieurs discussions à la fois.
 
-🌍 Disponible en français, polonais, anglais, espagnol, allemand, italien, tchèque et ukrainien. Gratuite.
+Comment ça marche
+• Crée un drop : ce que vous faites, où et quand.
+• Envoie le lien par messagerie ou SMS, ou montre un code QR.
+• Tes amis répondent d'un clic : IN (je viens), LATE (j'arrive en retard) ou OUT (je ne peux pas). Pas besoin d'installer l'application pour répondre.
+• Tu vois la liste des participants en direct, qui sera en retard et de combien de minutes.
 
-Réunis ta bande. Pointez ensemble. Squad ✦"
-"it-IT","Squad: uscite con gli amici","Organizza uscite con gli amici in 15 secondi: un link, rispondi IN, LATE o OUT.","Vuoi vedere i tuoi amici, ma mettersi d'accordo su orario, posto e chi viene in cinque chat è un incubo? Squad è l'app per organizzare uscite con la tua crew: crei un invito (un ""drop""), mandi il link e vedi subito chi ci sta. I tuoi amici rispondono con un tocco, senza installare nulla.
+Un organisateur pour chaque occasion
+Soirée à la maison, sortie, boîte de nuit, pizza après l'entraînement, match, cinéma, jeux vidéo, balade, voyage, anniversaire, 18 ans ou anniversaire de couple. Répète une sortie chaque semaine, toutes les deux semaines ou chaque mois, ou fais-en une surprise dont le lieu est dévoilé une heure avant.
 
-⚡ COME FUNZIONA
-• Crei un drop: cosa, dove e quando
-• Mandi il link con un messenger o un SMS, oppure mostri un codice QR
-• Gli amici toccano IN, LATE oppure OUT
-• Vedi chi viene, chi farà tardi e di quanti minuti, chi non c'è
+Chat de groupe pour ta bande
+Chaque drop a son propre chat de groupe. Lance un sondage « on va où ? », ajoute des réactions et vois qui a lu un message. Les chats sont uniquement de groupe, sans messages privés.
 
-🎯 OGNI TIPO DI USCITA
-Pizza, sport, festa a casa, discoteca, locale, caffè, cinema, giochi, passeggiata, viaggio, compleanno e altre occasioni. L'uscita può ripetersi ogni settimana, ogni due settimane o ogni mese.
+Groupes permanents et contacts
+Crée un groupe avec un chat qui ne disparaît pas : une classe, une équipe, une bande d'amis. Ajoute des personnes à tes contacts, invite-les d'un geste et envoie des drops directement à tes groupes.
 
-💬 CHAT DI GRUPPO PER LA CREW
-Ogni drop ha la sua chat. Sondaggi ""dove andiamo?"", reazioni, conferme di lettura e indicatore di scrittura. Niente messaggi privati.
+Drops publics près de toi
+Parcours les sorties ouvertes dans un rayon de 20 km, en liste ou sur une carte. Rejoins-en une ou crée la tienne avec un nombre de places limité. Les drops publics sont réservés aux personnes de 16 ans et plus.
 
-👥 GRUPPI FISSI E CONTATTI
-Crea un gruppo con una chat che non sparisce: classe, squadra, compagnia del quartiere. Invita gli amici nei tuoi contatti e aggiungili a drop e gruppi con un tocco, senza link né codici QR.
+Visuels à partager
+Envoie ton invitation sous forme de visuel prêt à l'emploi : pour les stories Instagram, WhatsApp, Messenger ou par SMS. Choisis parmi plusieurs styles et enregistre l'image dans ta galerie.
 
-📍 DROP PUBBLICI VICINO A TE
-Unisciti a ritrovi aperti entro 20 km o creane uno tuo con posti limitati. Solo dai 16 anni.
+Avatars 3D et badges
+Choisis ton avatar 3D et gagne des badges pour ton activité : sorties organisées, présence, ponctualité et plus encore.
 
-🔔 PROMEMORIA E CALENDARIO
-Ricevi una notifica quando qualcuno risponde o scrive, e tutta la crew riceve un promemoria 30 minuti prima dell'inizio. Aggiungi il drop al calendario con un tocco.
+Rappels, agenda et widgets
+Tu reçois une notification quand quelqu'un répond ou écrit, et toute la bande un rappel 30 minutes avant le début. Ajoute la sortie à ton agenda d'un geste. Sur l'écran d'accueil, place un widget en trois tailles avec ton prochain drop et un compte à rebours, plus des boutons rapides Nouveau drop et Chats.
 
-📸 ALBUM E COLLAGE
-Quando il drop inizia si apre un album condiviso. Le foto dell'uscita in un posto solo e un collage pronto per la tua storia.
+Album et collage
+Quand un drop commence, un album partagé s'ouvre. Toutes les photos de la sortie sont au même endroit et forment un collage prêt à partager.
 
-🔒 SICUREZZA
-Segnala e blocca tenendo premuto su un messaggio, filtro delle parolacce e link che spariscono 24 ore dopo l'inizio. Dai 13 anni (sotto i 16 con il consenso di un genitore o tutore).
+Sécurité et confidentialité
+Tu peux signaler ou bloquer un utilisateur en appuyant longuement sur un message. Un filtre de gros mots est actif et les liens des drops expirent 24 heures après le début de la sortie. Tu peux supprimer ton compte à tout moment dans les réglages. L'application est destinée aux personnes de 13 ans et plus (de 13 à 16 ans avec l'accord d'un parent ou tuteur).
 
-🌍 Disponibile in italiano, polacco, inglese, spagnolo, tedesco, francese, ceco e ucraino. Gratuita.
+Squad est gratuite et disponible en polonais, anglais, espagnol, allemand, français, italien, tchèque et ukrainien.
 
-Raduna la tua crew. Presentatevi insieme. Squad ✦"
-"cs-CZ","Squad: akce s partou","Plánuj sraz s kamarády za 15 vteřin: jeden odkaz, odpověď IN, LATE nebo OUT.","Chceš se sejít s kamarády, ale domlouvat čas, místo a kdo přijde v pěti chatech je otrava? Squad je aplikace na plánování akcí s partou: vytvoříš pozvánku (drop), pošleš odkaz a hned vidíš, kdo jde. Kamarádi odpoví jedním klepnutím, bez instalace aplikace.
+Rassemble ta bande et fixez un plan en quelques secondes."
+"it-IT","Squad: uscite con gli amici","Organizza uscite con gli amici: un link, chat di gruppo, risposte IN/LATE/OUT.","Squad è un'app per organizzare le uscite con gli amici. Crei un invito (un «drop») con luogo e orario, mandi il link e vedi subito chi viene. Basta mettersi d'accordo su più chat contemporaneamente.
 
-⚡ JAK TO FUNGUJE
-• Vytvoříš drop: co, kde a kdy
-• Odkaz pošleš v messengeru nebo SMS, případně ukážeš QR kód
-• Kamarádi klepnou na IN, LATE nebo OUT
-• Vidíš, kdo přijde, kdo se opozdí a o kolik minut, kdo nepůjde
+Come funziona
+• Crea un drop: cosa fate, dove e quando.
+• Invia il link in un messenger o via SMS, oppure mostra un codice QR.
+• Gli amici rispondono con un tocco: IN (ci sono), LATE (arrivo in ritardo) oppure OUT (non posso). Per rispondere non devono installare l'app.
+• Vedi l'elenco dei partecipanti in tempo reale, chi arriva tardi e di quanti minuti.
 
-🎯 KAŽDÝ DRUH SRAZU
-Pizza, sport, domácí párty, klub, hospoda, káva, kino, hry, procházka, výlet, narozeniny a další příležitosti. Akce se může opakovat každý týden, každé dva týdny nebo každý měsíc.
+Un planner per ogni occasione
+Festa in casa, serata fuori, discoteca, pizza dopo l'allenamento, partita, cinema, videogiochi, passeggiata, gita, compleanno, 18 anni o anniversario. Puoi ripetere l'uscita ogni settimana, ogni due settimane o ogni mese, oppure farne una sorpresa con il luogo svelato un'ora prima.
 
-💬 SKUPINOVÝ CHAT PRO PARTU
-Každý drop má vlastní chat. Ankety „kam půjdeme?“, reakce, potvrzení přečtení a indikátor psaní. Žádné soukromé zprávy.
+Chat di gruppo per la crew
+Ogni drop ha la sua chat di gruppo. Crea un sondaggio «dove andiamo?», aggiungi reazioni e guarda chi ha letto un messaggio. Le chat sono solo di gruppo, senza messaggi privati.
 
-👥 STÁLÉ SKUPINY A KONTAKTY
-Vytvoř skupinu s chatem, který nezmizí: třída, tým, parta z okolí. Zvi kamarády do kontaktů a přidávej je do dropů a skupin jedním klepnutím, bez odkazů a QR kódů.
+Gruppi permanenti e contatti
+Crea un gruppo con una chat che non sparisce: una classe, una squadra, la tua compagnia. Aggiungi persone ai contatti, invitale con un tocco e invia i drop direttamente ai tuoi gruppi.
 
-📍 VEŘEJNÉ DROPY V OKOLÍ
-Připoj se k otevřeným srazům do 20 km od tebe nebo vytvoř vlastní s omezeným počtem míst. Jen od 16 let.
+Drop pubblici vicino a te
+Sfoglia le uscite aperte entro 20 km, in elenco o su mappa. Unisciti o creane una tua con posti limitati. I drop pubblici sono disponibili dai 16 anni.
 
-🔔 PŘIPOMÍNKY A KALENDÁŘ
-Upozorníme tě, když někdo odpoví nebo napíše, a celá parta dostane připomínku 30 minut před začátkem. Drop přidáš do kalendáře jedním klepnutím.
+Grafiche da condividere
+Invia il tuo invito come grafica già pronta: per le storie di Instagram, WhatsApp, Messenger o SMS. Scegli tra diversi stili e salva l'immagine in galleria.
 
-📸 ALBUM A KOLÁŽ
-Když drop začne, otevře se společné album. Fotky ze srazu na jednom místě a hotový koláž na story.
+Avatar 3D e badge
+Scegli il tuo avatar 3D e conquista badge per la tua attività: uscite organizzate, presenze, puntualità e altro.
 
-🔒 BEZPEČÍ
-Nahlášení a blokování podržením zprávy, filtr vulgarismů a odkazy, které 24 hodin po začátku zmizí. Od 13 let (do 16 let se souhlasem rodiče nebo zákonného zástupce).
+Promemoria, calendario e widget
+Ricevi una notifica quando qualcuno risponde o scrive, e tutta la crew un promemoria 30 minuti prima dell'inizio. Aggiungi l'uscita al calendario con un tocco. Nella schermata Home puoi mettere un widget in tre dimensioni con il prossimo drop e il conto alla rovescia, più i pulsanti rapidi Nuovo drop e Chat.
 
-🌍 K dispozici v češtině, polštině, angličtině, španělštině, němčině, francouzštině, italštině a ukrajinštině. Zdarma.
+Album e collage
+Quando un drop inizia si apre un album condiviso. Le foto dell'uscita sono tutte in un posto e diventano un collage pronto.
 
-Svolej partu. Přijďte spolu. Squad ✦"
-"uk","Squad: зустрічі з друзями","Зустрічі з друзями за 15 секунд: одне посилання, відповідь IN, LATE або OUT.","Хочеш зустрітися з друзями, але домовлятися про час, місце й хто йде у п'яти чатах — це мука? Squad — застосунок для організації зустрічей із компанією: ти створюєш запрошення (дроп), надсилаєш посилання й одразу бачиш, хто йде. Друзі відповідають одним дотиком, без встановлення застосунку.
+Sicurezza e privacy
+Puoi segnalare o bloccare un utente tenendo premuto un messaggio. C'è un filtro per le parolacce e i link dei drop scadono 24 ore dopo l'inizio dell'uscita. Puoi eliminare l'account in qualsiasi momento dalle impostazioni. L'app è per persone dai 13 anni in su (da 13 a 16 con il consenso di un genitore o tutore).
 
-⚡ ЯК ЦЕ ПРАЦЮЄ
-• Створюєш дроп: що, де і коли
-• Надсилаєш посилання в месенджері чи SMS або показуєш QR-код
-• Друзі натискають IN, LATE або OUT
-• Бачиш, хто прийде, хто запізниться і на скільки хвилин, хто не зможе
+Squad è gratuita e disponibile in polacco, inglese, spagnolo, tedesco, francese, italiano, ceco e ucraino.
 
-🎯 БУДЬ-ЯКИЙ ФОРМАТ ЗУСТРІЧІ
-Піца, спорт, вечірка вдома, клуб, кафе, кава, кіно, ігри, прогулянка, поїздка, день народження та інші нагоди. Зустріч може повторюватися щотижня, раз на два тижні або щомісяця.
+Riunisci la tua crew e decidete in pochi secondi."
+"cs-CZ","Squad: setkání s přáteli","Plánuj setkání s přáteli: jeden odkaz, skupinový chat, odpovědi IN/LATE/OUT.","Squad je aplikace pro pořádání setkání s přáteli. Vytvoříš pozvánku (drop) s místem a časem, pošleš odkaz a hned vidíš, kdo přijde. Konec s domlouváním podrobností v několika chatech najednou.
 
-💬 ГРУПОВИЙ ЧАТ ДЛЯ КОМПАНІЇ
-У кожного дропа свій чат. Опитування «куди йдемо?», реакції, позначки «прочитано» та індикатор набору тексту. Без приватних повідомлень.
+Jak to funguje
+• Vytvoř drop: co budete dělat, kde a kdy.
+• Pošli odkaz v messengeru nebo SMS, případně ukaž QR kód.
+• Přátelé odpoví jedním klepnutím: IN (jdu), LATE (přijdu později) nebo OUT (nemůžu). K odpovědi nemusí aplikaci instalovat.
+• Seznam účastníků vidíš průběžně, včetně toho, kdo se zpozdí a o kolik minut.
 
-👥 ПОСТІЙНІ ГРУПИ Й КОНТАКТИ
-Створи групу з чатом, який не зникає: клас, команда, компанія з двору. Запрошуй друзів у контакти й додавай їх до дропів і груп одним дотиком, без посилань і QR-кодів.
+Plánovač na každou příležitost
+Domácí párty, večer venku, klub, pizza po tréninku, zápas, kino, hraní her, procházka, výlet, narozeniny, osmnáctka nebo výročí. Setkání můžeš opakovat každý týden, každé dva týdny nebo každý měsíc, případně z něj udělat překvapení s místem odhaleným hodinu před začátkem.
 
-📍 ПУБЛІЧНІ ДРОПИ ПОРУЧ
-Приєднуйся до відкритих зустрічей у радіусі 20 км або створи власну з обмеженою кількістю місць. Лише для 16+.
+Skupinový chat pro partu
+Každý drop má svůj skupinový chat. Uděláš v něm anketu „kam půjdeme?“, přidáš reakce a uvidíš, kdo zprávu přečetl. Chaty jsou jen skupinové, bez soukromých zpráv.
 
-🔔 НАГАДУВАННЯ Й КАЛЕНДАР
-Ми повідомимо, коли хтось відповість чи напише, а всій компанії нагадаємо за 30 хвилин до початку. Дроп додається до календаря одним дотиком.
+Stálé skupiny a kontakty
+Vytvoř skupinu s chatem, který nezmizí: třída, tým, parta kamarádů. Přidávej lidi do kontaktů, zvi je jedním klepnutím a posílej dropy rovnou do svých skupin.
 
-📸 АЛЬБОМ І КОЛАЖ
-Коли дроп починається, відкривається спільний альбом. Фото зі зустрічі в одному місці й готовий колаж для сторіс.
+Veřejné dropy v okolí
+Prohlížej otevřená setkání do 20 km v seznamu nebo na mapě. Připoj se k nim nebo vytvoř vlastní s omezeným počtem míst. Veřejné dropy jsou dostupné od 16 let.
 
-🔒 БЕЗПЕКА
-Скарга й блокування — довгим натисканням на повідомлення, фільтр нецензурної лексики та посилання, що зникають через 24 години після початку. Для віку від 13 років (до 16 — за згодою батьків або опікунів).
+Grafiky ke sdílení
+Pozvánku pošli jako hotovou grafiku: do příběhu na Instagramu, na WhatsApp, Messenger nebo SMS. Vybereš z několika stylů a obrázek si uložíš do galerie.
 
-🌍 Доступний українською, польською, англійською, іспанською, німецькою, французькою, італійською та чеською. Безкоштовний.
+3D avatary a odznaky
+Vyber si svůj 3D avatar a získávej odznaky za aktivitu: uspořádaná setkání, účast, přesnost a další.
 
-Збери компанію. Приходьте разом. Squad ✦"
+Připomínky, kalendář a widgety
+Dostaneš upozornění, když někdo odpoví nebo napíše, a parta připomínku 30 minut před začátkem. Setkání přidáš do kalendáře jedním klepnutím. Na ploše telefonu si můžeš nastavit widget ve třech velikostech s nejbližším dropem a odpočtem a s rychlými tlačítky Nový drop a Chaty.
+
+Album a koláž
+Když drop začne, otevře se společné album. Fotky ze setkání jsou na jednom místě a vznikne z nich hotová koláž.
+
+Bezpečnost a soukromí
+Uživatele můžeš nahlásit nebo zablokovat podržením zprávy. Funguje filtr vulgarismů a odkazy na dropy vyprší 24 hodin po začátku setkání. Účet můžeš kdykoli smazat v nastavení aplikace. Aplikace je určena pro osoby od 13 let (od 13 do 16 let se souhlasem rodiče nebo zákonného zástupce).
+
+Squad je zdarma a je dostupný v polštině, angličtině, španělštině, němčině, francouzštině, italštině, češtině a ukrajinštině.
+
+Svolej partu a domluvte se během pár vteřin."
+"uk-UA","Squad: зустрічі з друзями","Плануй зустрічі з друзями: одне посилання, груповий чат, відповіді IN/LATE/OUT.","Squad — застосунок для організації зустрічей з друзями. Ти створюєш запрошення (дроп) із місцем і часом, надсилаєш посилання й одразу бачиш, хто прийде. Більше не потрібно узгоджувати деталі в кількох чатах одночасно.
+
+Як це працює
+• Створи дроп: що робите, де й коли.
+• Надішли посилання в месенджері чи SMS або покажи QR-код.
+• Друзі відповідають одним дотиком: IN (я йду), LATE (запізнюся) або OUT (не зможу). Щоб відповісти, застосунок встановлювати не потрібно.
+• Ти бачиш список учасників наживо, хто запізниться і на скільки хвилин.
+
+Планувальник на будь-яку нагоду
+Вечірка вдома, вихід у місто, клуб, піца після тренування, матч, кіно, ігри, прогулянка, поїздка, день народження, вісімнадцятиріччя чи річниця. Зустріч можна повторювати щотижня, раз на два тижні чи щомісяця або зробити сюрпризом: місце відкриється за годину до початку.
+
+Груповий чат для компанії
+У кожного дропу є свій груповий чат. Зроби в ньому опитування «куди йдемо?», додавай реакції й дивись, хто прочитав повідомлення. Чати лише групові, без приватних повідомлень.
+
+Постійні групи та контакти
+Створи групу з чатом, який не зникає: клас, команда, компанія друзів. Додавай людей до контактів, запрошуй їх одним дотиком і надсилай дропи просто у свої групи.
+
+Публічні дропи поруч
+Переглядай відкриті зустрічі в радіусі до 20 км списком або на мапі. Долучайся до них або створюй власні з обмеженою кількістю місць. Публічні дропи доступні від 16 років.
+
+Графіка для поширення
+Надсилай запрошення як готову картинку: для сторіс в Instagram, WhatsApp, Messenger або SMS. Обирай із кількох стилів і зберігай зображення в галереї.
+
+3D-аватари та відзнаки
+Обери свій 3D-аватар і здобувай відзнаки за активність: організовані зустрічі, присутність, пунктуальність та інше.
+
+Нагадування, календар і віджети
+Ти отримаєш сповіщення, коли хтось відповість чи напише, а вся компанія — нагадування за 30 хвилин до початку. Зустріч додаси до календаря одним дотиком. На головному екрані можна додати віджет у трьох розмірах із найближчим дропом і зворотним відліком та швидкими кнопками «Новий дроп» і «Чати».
+
+Альбом і колаж
+Коли дроп починається, відкривається спільний альбом. Фото зі зустрічі зібрані в одному місці, а з них створюється готовий колаж.
+
+Безпека та приватність
+Поскаржитися на користувача чи заблокувати його можна, утримуючи повідомлення. Працює фільтр нецензурної лексики, а посилання на дропи втрачають чинність через 24 години після початку зустрічі. Видалити обліковий запис можна будь-коли в налаштуваннях застосунку. Застосунок призначений для осіб від 13 років (від 13 до 16 років — за згодою батьків або опікунів).
+
+Squad безкоштовний і доступний польською, англійською, іспанською, німецькою, французькою, італійською, чеською та українською мовами.
+
+Збери компанію й домовтеся про план за лічені секунди."
