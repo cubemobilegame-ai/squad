@@ -104,11 +104,13 @@ public class SquadWidgetProvider extends AppWidgetProvider {
             long ts = f.optLong("ts");
             v.setTextViewText(R.id.emoji, f.optString("e", "✨"));
             v.setTextViewText(R.id.title, f.optString("t"));
-            if (mode == 2) {
-                v.setTextViewText(R.id.kind, "host".equals(f.optString("r")) ? c.getString(R.string.w_host).toUpperCase() : "SQUAD");
+            v.setTextViewText(R.id.kind, "host".equals(f.optString("r")) ? c.getString(R.string.w_host).toUpperCase() : "SQUAD");
+            if (mode > 0) {
                 String pl = f.optString("pl");
                 v.setTextViewText(R.id.place, pl.isEmpty() ? "" : "📍 " + pl);
                 v.setViewVisibility(R.id.place, pl.isEmpty() ? View.GONE : View.VISIBLE);
+            }
+            if (mode == 2) {
                 int n = f.optInt("n", 0);
                 v.setTextViewText(R.id.inn, "👥 " + n + " IN");
                 v.setViewVisibility(R.id.inn, n > 0 ? View.VISIBLE : View.GONE);
