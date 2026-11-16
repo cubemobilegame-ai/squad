@@ -2541,7 +2541,7 @@ async function dropView(code){
 /* ---------- CZAT GRUPOWY (drop albo grupa) – zero DM, reakcje, zgłaszanie i blokowanie ---------- */
 const RX=["🔥","😂","👀","❤️","👍","😮"];
 async function chatView(code,g){
-  window.__co=window.__co||{};const BK=(()=>{if(!g&&window.__from==="/d/"+code)return window.__co[code]||"/d/"+code;window.__co[code]="/chats";return"/chats"})();
+  window.__co=window.__co||{};const BK=(()=>{if(!g&&window.__from==="/d/"+code)return window.__co[code]||"/d/"+code;const bt=window.__from==="/"?"/":"/chats";window.__co[code]=bt;return bt})();
   view(`<div class="scr"><p class="mut">${t("load")}</p></div>`);
   /* szybki start: dane dropa/grupy mamy już z listy (na żywo) – nie czekamy na serwer */
   let R=null;const C0=g?S.groups.get(code):S.items.get(code);
