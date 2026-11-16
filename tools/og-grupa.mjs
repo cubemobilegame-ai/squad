@@ -5,7 +5,7 @@ const R = [
   [/<title>[^<]*<\/title>/, "<title>Squad – dołącz do ekipy</title>"],
   [/(<meta property="og:title" content=")[^"]*/, "$1👋 Zaproszenie do ekipy na Squad"],
   [/(<meta property="og:description" content=")[^"]*/, "$1Twoi znajomi mają stałą ekipę z czatem. Kliknij i dołącz – bez instalowania."],
-  [/zaproszenie-v7\.jpg/g, "zaproszenie-grupa-v5.jpg"],
+  [/zaproszenie-v7\.jpg/g, "zaproszenie-grupa-v6.jpg"],
   [/(<meta property="og:image:alt" content=")[^"]*/, "$1SQUAD – zaproszenie do ekipy"],
 ];
 for (const [a, b] of R) s = s.replace(a, b);
