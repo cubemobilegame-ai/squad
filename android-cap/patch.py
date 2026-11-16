@@ -94,7 +94,7 @@ import shutil
 W = os.path.join(root, "android-cap/widget")
 pk = os.path.dirname(ma)
 for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java", "SquadWidgetMedium.java", "SquadWidgetLarge.java"): shutil.copy(os.path.join(W, f), pk)
-for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml")):
+for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml"), ("drawable-nodpi", "squad_preview_s.png"), ("drawable-nodpi", "squad_preview_m.png"), ("drawable-nodpi", "squad_preview_l.png")):
     o = os.path.join(A, "src/main/res", d); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, f), o)
 STR = {
  "w_now":   {"en":"HAPPENING NOW","pl":"TRWA TERAZ","es":"EN CURSO","de":"LÄUFT JETZT","fr":"EN COURS","it":"IN CORSO","cs":"PROBÍHÁ","uk":"ТРИВАЄ ЗАРАЗ"},

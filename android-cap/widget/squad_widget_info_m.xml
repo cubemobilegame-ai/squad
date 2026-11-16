@@ -3,5 +3,5 @@
     android:minWidth="250dp" android:minHeight="180dp" android:targetCellWidth="4" android:targetCellHeight="3"
     android:minResizeWidth="250dp" android:minResizeHeight="180dp"
     android:resizeMode="horizontal|vertical" android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/squad_widget"
+    android:initialLayout="@layout/squad_widget" android:previewImage="@drawable/squad_preview_m"
     android:description="@string/w_desc_m" android:widgetCategory="home_screen" />
