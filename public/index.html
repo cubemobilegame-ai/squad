@@ -74,6 +74,19 @@ html:has(.scr.chl),body:has(.scr.chl){background:#06060b!important}
 .mapr:not(.hx)::after{content:"";margin:0 4px 0 auto;width:8px;height:8px;border-right:2px solid rgba(255,255,255,.35);border-top:2px solid rgba(255,255,255,.35);transform:rotate(45deg);flex:none}
 .mapr .mexp{position:static;margin-left:auto;width:40px;height:40px;box-shadow:none}
 .scr.dv .map#dmw:not(.hd){position:absolute;left:-9999px;top:0;width:320px;height:240px;visibility:hidden;pointer-events:none}
+.dv #alb:not(:empty){padding:0!important;border:0!important}.dv #alb:not(:empty)~.acts4{margin-top:14px!important}
+.alc4{background:#0f0f17;border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:14px;margin-bottom:0}.alc4 .sech{margin:0 0 10px!important;padding:0!important}.alc4 .sech h3{margin:0!important;padding:0!important;font-size:15px}
+.alc4 .hint.s{margin:10px 2px 0;font-size:12px;line-height:1.4;text-align:left}
+.amos{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-auto-rows:84px;gap:8px}
+.amos .aph{position:relative;padding:0;border:0;border-radius:14px;overflow:hidden;transform:none;box-shadow:none;background:#1a1a24;animation:none}
+.amos .aph i{position:absolute;inset:0;background:center/cover;filter:none}.amos .aph span{position:absolute;left:6px;right:6px;bottom:5px;font:800 9px Brico,BricoCyr,system-ui;color:#fff;background:rgba(0,0,0,.45);border-radius:99px;padding:2px 7px;width:fit-content;max-width:calc(100% - 12px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.amos .aph.big{grid-row:span 2}.amos.n1 .aph.big{grid-column:1/-1;grid-row:span 3}.amos.n2 .aph.big{grid-column:span 2}
+.amos .amore b{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.5);font:900 20px Brico,BricoCyr,system-ui;color:#fff}
+.amos .aadd{min-height:0;border-radius:14px;border-width:2px}.amos .aadd svg{width:26px;height:26px}
+.aadd.wide{width:100%;height:56px;min-height:0;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px 0 10px;border-radius:18px;font:800 15px Brico,BricoCyr,system-ui;text-transform:none;color:#fff;border-width:1.5px}
+.aadd.wide i{width:36px;height:36px;border-radius:11px;background:rgba(var(--accr),.16);color:var(--acc);display:grid;place-items:center}.aadd.wide i svg{width:19px;height:19px}
+.alc4 #col{margin:12px 0 0!important;height:52px!important;min-height:52px!important;border-radius:18px!important;box-shadow:none!important;font:900 13.5px Brico,BricoCyr,system-ui!important;letter-spacing:.04em;text-transform:uppercase;padding:0 16px}
+.alc4 #rnd{margin:8px 0 0!important;height:52px!important;min-height:52px!important;border-radius:18px!important;background:rgba(255,255,255,.05)!important;border:0!important;font:800 15px Brico,BricoCyr,system-ui!important;text-transform:none!important;letter-spacing:0!important}
 .chat{display:flex;align-items:center;gap:14px;padding:10px 0;cursor:pointer}.chat>div:nth-child(2){flex:1;min-width:0}.chat b{display:block;font-size:15px}.chat small{display:block;color:rgba(255,255,255,.55);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.chat>i{color:rgba(255,255,255,.4);font-style:normal;font-size:12px;font-weight:900}
 .gbadge{display:inline-block;margin:0 0 10px;padding:6px 12px;border-radius:99px;border:0;background:rgba(255,255,255,.09);color:rgba(255,255,255,.62);font:900 10px Brico,BricoCyr,system-ui;letter-spacing:.12em}
 .bd{position:absolute;top:0;left:calc(50% + 4px);min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:#ff3b4e;color:#fff;font:900 11px Brico,BricoCyr,system-ui;display:grid;place-items:center;box-shadow:0 0 0 2px #0b0b12;font-style:normal}.bd[hidden]{display:none}
@@ -2382,9 +2395,12 @@ async function dropView(code){
   const drawAlbum=()=>{const el=$("#alb");if(!el)return;
     if(!closed()){el.innerHTML="";return}
     const my=PH.filter(p=>p.authorId===me()),can=!!mine&&my.length<1;
-    el.innerHTML=`<div class="sech"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span></div><p class="hint s">${t("alHint")}</p>
-    <div class="agrid">${PH.map((p,i)=>`<button class="aph" data-i="${i}" style="--r:${(hs(p.id)%7)-3}deg"><div class="phw"><i style="background-image:url('${esc(p.url)}')"></i><img src="${esc(p.url)}" alt=""></div><span>${esc(p.nickname)}</span></button>`).join("")}${can?`<button class="aadd" id="aadd">${sv(SI.cam)}<b>${t("alAdd")}</b><small>${t("alLeft",3-my.length)}</small></button>`:""}</div>
-    ${can?`<p class="hint s">${t("alNote")}</p>`:""}${PH.length?`<button class="cta" id="col" style="margin-top:4px">${t("alCol")}</button>`:can?"":`<p class="mut">${t("alEmpty")}</p>`}${PH.length>1?`<button class="ghost" id="rnd" style="margin-top:8px">${t("alRnd")}</button>`:""}<input type="file" id="af" accept="image/*" hidden>`;
+    const CAMI=sv(SI.cam),MAXT=can?4:5,shown=PH.length>MAXT?MAXT-1:Math.min(PH.length,MAXT),extra=PH.length-shown,
+      ph=(p,i)=>`<button class="aph${i===0?" big":""}" data-i="${i}"><i style="background-image:url('${esc(p.url)}')"></i><span>${esc(p.nickname)}</span></button>`,
+      tiles=PH.slice(0,shown).map(ph).join("")+(extra>0?`<button class="aph amore" data-i="${shown}"><i style="background-image:url('${esc(PH[shown].url)}')"></i><b>+${extra+1}</b></button>`:"")+(can?`<button class="aadd" id="aadd">${sv('<path d="M12 5v14M5 12h14"/>')}</button>`:"");
+    el.innerHTML=`<div class="alc4"><div class="sech"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span></div>
+    ${PH.length?`<div class="amos n${Math.min(PH.length+(can?1:0),5)}">${tiles}</div>`:can?`<button class="aadd wide" id="aadd"><i>${CAMI}</i><b>${t("alAdd")}</b></button>`:`<p class="mut">${t("alEmpty")}</p>`}
+    ${PH.length?`<button class="cta" id="col">${t("alCol")}</button>`:""}${PH.length>1?`<button class="ghost" id="rnd">${t("alRnd")}</button>`:""}<p class="hint s">${t("alHint")}</p></div><input type="file" id="af" accept="image/*" hidden>`;
     el.querySelectorAll(".aph").forEach(b=>b.onclick=()=>{vib(8);lightbox(PH,+b.dataset.i,{ref,code})});
     const ad=el.querySelector("#aadd");if(ad){ad.onclick=()=>{vib(8);el.querySelector("#af").click()};el.querySelector("#af").onchange=async e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;
       const u=await (stor?compressImg(f,1080):compressImg(f,900,.7)).catch(()=>null);if(!u)return toast(t("phErr"));
