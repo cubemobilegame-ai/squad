@@ -96,6 +96,8 @@ pk = os.path.dirname(ma)
 for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java", "SquadWidgetMedium.java", "SquadWidgetLarge.java"): shutil.copy(os.path.join(W, f), pk)
 for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml"), ("layout", "squad_widget_m.xml"), ("layout", "squad_widget_l.xml"), ("drawable", "squad_orb.xml"), ("drawable", "squad_pill.xml"), ("drawable", "squad_btn.xml"), ("drawable-nodpi", "squad_preview_s.png"), ("drawable-nodpi", "squad_preview_m.png"), ("drawable-nodpi", "squad_preview_l.png")):
     o = os.path.join(A, "src/main/res", d); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, f), o)
+for _f in os.listdir(os.path.join(W, "icons")):
+    o = os.path.join(A, "src/main/res/drawable-nodpi"); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, "icons", _f), o)
 STR = {
  "w_now":   {"en":"HAPPENING NOW","pl":"TRWA TERAZ","es":"EN CURSO","de":"LÄUFT JETZT","fr":"EN COURS","it":"IN CORSO","cs":"PROBÍHÁ","uk":"ТРИВАЄ ЗАРАЗ"},
  "w_none":  {"en":"No upcoming drops","pl":"Brak nadchodzących dropów","es":"No hay drops próximos","de":"Keine anstehenden Drops","fr":"Aucun drop à venir","it":"Nessun drop in arrivo","cs":"Žádné nadcházející dropy","uk":"Немає майбутніх дропів"},

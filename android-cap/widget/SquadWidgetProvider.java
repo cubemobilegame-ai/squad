@@ -68,13 +68,20 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         p.addRoundRect(rc, r, r, android.graphics.Path.Direction.CW);
         cv.clipPath(p);
         android.graphics.Paint pt = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
-        pt.setShader(new android.graphics.LinearGradient(0, 0, bw, bh, c1, c2, android.graphics.Shader.TileMode.CLAMP));
+        pt.setShader(new android.graphics.LinearGradient(0, 0, bw, bh, 0xFF101018, 0xFF1A1A26, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
-        pt.setShader(new android.graphics.RadialGradient(bw * 0.18f, bh * 0.02f, Math.max(bw, bh) * 0.85f, 0x38FFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP));
+        pt.setShader(new android.graphics.RadialGradient(bw * 0.12f, bh * 0.0f, Math.max(bw, bh) * 0.95f, (c1 & 0x00FFFFFF) | 0x66000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
         cv.drawRect(rc, pt);
-        pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x99FFFFFF);
+        pt.setShader(new android.graphics.RadialGradient(bw * 1.0f, bh * 1.0f, Math.max(bw, bh) * 0.7f, (c2 & 0x00FFFFFF) | 0x40000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
+        cv.drawRect(rc, pt);
+        pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x26FFFFFF);
         cv.drawRoundRect(new android.graphics.RectF(pt.getStrokeWidth() / 2, pt.getStrokeWidth() / 2, bw - pt.getStrokeWidth() / 2, bh - pt.getStrokeWidth() / 2), r, r, pt);
         return b;
+    }
+
+    static int ic(Context c, String k) {
+        int r = k == null || k.isEmpty() ? 0 : c.getResources().getIdentifier("ic3d_" + k, "drawable", c.getPackageName());
+        return r != 0 ? r : c.getResources().getIdentifier("ic3d_other", "drawable", c.getPackageName());
     }
 
     static void draw(Context c, AppWidgetManager m, int id, int mode) {
@@ -102,7 +109,7 @@ public class SquadWidgetProvider extends AppWidgetProvider {
             v.setViewVisibility(R.id.card, View.VISIBLE);
             v.setViewVisibility(R.id.empty, View.GONE);
             long ts = f.optLong("ts");
-            v.setTextViewText(R.id.emoji, f.optString("e", "✨"));
+            v.setImageViewResource(R.id.emoji, ic(c, f.optString("k")));
             v.setTextViewText(R.id.title, f.optString("t"));
             v.setTextViewText(R.id.kind, "host".equals(f.optString("r")) ? c.getString(R.string.w_host).toUpperCase() : "SQUAD");
             if (mode > 0) {
@@ -135,7 +142,7 @@ public class SquadWidgetProvider extends AppWidgetProvider {
                 if (idx < L.size()) {
                     JSONObject d = L.get(idx);
                     v.setViewVisibility(rowIds[k], View.VISIBLE);
-                    v.setTextViewText(rowE[k], d.optString("e", "✨"));
+                    v.setImageViewResource(rowE[k], ic(c, d.optString("k")));
                     v.setTextViewText(rowT[k], d.optString("t"));
                     v.setTextViewText(rowW[k], day(c, d.optLong("ts")));
                     v.setOnClickPendingIntent(rowIds[k], open(c, "/d/" + d.optString("id"), id * 10 + idx));
