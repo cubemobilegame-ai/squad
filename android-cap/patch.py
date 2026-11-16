@@ -94,7 +94,7 @@ import shutil
 W = os.path.join(root, "android-cap/widget")
 pk = os.path.dirname(ma)
 for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java", "SquadWidgetMedium.java", "SquadWidgetLarge.java"): shutil.copy(os.path.join(W, f), pk)
-for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml"), ("drawable-nodpi", "squad_preview_s.png"), ("drawable-nodpi", "squad_preview_m.png"), ("drawable-nodpi", "squad_preview_l.png")):
+for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml"), ("layout", "squad_widget_m.xml"), ("layout", "squad_widget_l.xml"), ("drawable", "squad_orb.xml"), ("drawable", "squad_pill.xml"), ("drawable", "squad_btn.xml"), ("drawable-nodpi", "squad_preview_s.png"), ("drawable-nodpi", "squad_preview_m.png"), ("drawable-nodpi", "squad_preview_l.png")):
     o = os.path.join(A, "src/main/res", d); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, f), o)
 STR = {
  "w_now":   {"en":"HAPPENING NOW","pl":"TRWA TERAZ","es":"EN CURSO","de":"LÄUFT JETZT","fr":"EN COURS","it":"IN CORSO","cs":"PROBÍHÁ","uk":"ТРИВАЄ ЗАРАЗ"},
@@ -108,6 +108,8 @@ STR = {
  "w_desc_s": {"en":"Your next drop with a countdown.","pl":"Najbliższy drop z odliczaniem.","es":"Tu próximo drop con cuenta atrás.","de":"Dein nächster Drop mit Countdown.","fr":"Ton prochain drop avec compte à rebours.","it":"Il tuo prossimo drop con conto alla rovescia.","cs":"Tvůj nejbližší drop s odpočtem.","uk":"Твій найближчий дроп із відліком."},
  "w_desc_m": {"en":"Your next drop plus one more.","pl":"Najbliższy drop i jeszcze jeden.","es":"Tu próximo drop y uno más.","de":"Dein nächster Drop und ein weiterer.","fr":"Ton prochain drop et un autre.","it":"Il tuo prossimo drop e un altro.","cs":"Tvůj nejbližší drop a ještě jeden.","uk":"Твій найближчий дроп і ще один."},
  "w_desc_l": {"en":"Your next drop plus three more.","pl":"Najbliższy drop i jeszcze trzy.","es":"Tu próximo drop y tres más.","de":"Dein nächster Drop und drei weitere.","fr":"Ton prochain drop et trois autres.","it":"Il tuo prossimo drop e altri tre.","cs":"Tvůj nejbližší drop a další tři.","uk":"Твій найближчий дроп і ще три."},
+ "w_new": {"en":"New drop","pl":"Nowy drop","es":"Nuevo drop","de":"Neuer Drop","fr":"Nouveau drop","it":"Nuovo drop","cs":"Nový drop","uk":"Новий дроп"},
+ "w_chats": {"en":"Chats","pl":"Czaty","es":"Chats","de":"Chats","fr":"Discussions","it":"Chat","cs":"Chaty","uk":"Чати"},
  "w_name_s": {"en":"Squad · small","pl":"Squad · mały","es":"Squad · pequeño","de":"Squad · klein","fr":"Squad · petit","it":"Squad · piccolo","cs":"Squad · malý","uk":"Squad · малий"},
  "w_name_m": {"en":"Squad · medium","pl":"Squad · średni","es":"Squad · mediano","de":"Squad · mittel","fr":"Squad · moyen","it":"Squad · medio","cs":"Squad · střední","uk":"Squad · середній"},
  "w_name_l": {"en":"Squad · large","pl":"Squad · duży","es":"Squad · grande","de":"Squad · groß","fr":"Squad · grand","it":"Squad · grande","cs":"Squad · velký","uk":"Squad · великий"},

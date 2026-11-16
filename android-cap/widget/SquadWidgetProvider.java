@@ -56,34 +56,63 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         return PendingIntent.getActivity(c, req, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
+    static android.graphics.Bitmap bg(Context c, int wdp, int hdp, int c1, int c2) {
+        float d = c.getResources().getDisplayMetrics().density;
+        float w = wdp * d, h = hdp * d, k = Math.min(1f, 640f / Math.max(w, h));
+        int bw = Math.max(40, Math.round(w * k)), bh = Math.max(40, Math.round(h * k));
+        android.graphics.Bitmap b = android.graphics.Bitmap.createBitmap(bw, bh, android.graphics.Bitmap.Config.ARGB_8888);
+        android.graphics.Canvas cv = new android.graphics.Canvas(b);
+        float r = 26 * d * k;
+        android.graphics.RectF rc = new android.graphics.RectF(0, 0, bw, bh);
+        android.graphics.Path p = new android.graphics.Path();
+        p.addRoundRect(rc, r, r, android.graphics.Path.Direction.CW);
+        cv.clipPath(p);
+        android.graphics.Paint pt = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        pt.setShader(new android.graphics.LinearGradient(0, 0, bw, bh, c1, c2, android.graphics.Shader.TileMode.CLAMP));
+        cv.drawRect(rc, pt);
+        pt.setShader(new android.graphics.RadialGradient(bw * 0.18f, bh * 0.02f, Math.max(bw, bh) * 0.85f, 0x66FFFFFF, 0x00FFFFFF, android.graphics.Shader.TileMode.CLAMP));
+        cv.drawRect(rc, pt);
+        pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x99FFFFFF);
+        cv.drawRoundRect(new android.graphics.RectF(pt.getStrokeWidth() / 2, pt.getStrokeWidth() / 2, bw - pt.getStrokeWidth() / 2, bh - pt.getStrokeWidth() / 2), r, r, pt);
+        return b;
+    }
+
     static void draw(Context c, AppWidgetManager m, int id, int mode) {
-        RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.squad_widget);
+        int lay = mode == 0 ? R.layout.squad_widget : (mode == 1 ? R.layout.squad_widget_m : R.layout.squad_widget_l);
+        RemoteViews v = new RemoteViews(c.getPackageName(), lay);
         Bundle o = m.getAppWidgetOptions(id);
-        int h = o == null ? 110 : o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110);
-        int rows = mode == 0 ? 0 : (mode == 1 ? 1 : 3);   // mały: jeden drop, średni: + 1, duży: + 3
+        int wd = o == null ? 0 : o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0), hd = o == null ? 0 : o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0);
+        if (wd < 60) wd = mode == 0 ? 110 : 250;
+        if (hd < 60) hd = mode == 0 ? 110 : (mode == 1 ? 130 : 300);
         JSONArray arr = new JSONArray();
         try { arr = new JSONArray(c.getSharedPreferences("squad_widget", Context.MODE_PRIVATE).getString("drops", "[]")); } catch (Exception e) { }
         long now = System.currentTimeMillis();
-        // pomijamy dropy, które skończyły się dawno (start + 2 h)
         java.util.ArrayList<JSONObject> L = new java.util.ArrayList<>();
         for (int i = 0; i < arr.length(); i++) { JSONObject d = arr.optJSONObject(i); if (d != null && d.optLong("ts") + 2 * 3600000L > now) L.add(d); }
         int[] rowIds = {R.id.row1, R.id.row2, R.id.row3}, rowE = {R.id.e1, R.id.e2, R.id.e3}, rowT = {R.id.t1, R.id.t2, R.id.t3}, rowW = {R.id.w1, R.id.w2, R.id.w3};
-        if (L.isEmpty()) {
+        int rows = mode == 0 ? 0 : (mode == 1 ? 2 : 3);
+        JSONObject f = L.isEmpty() ? null : L.get(0);
+        int p1 = f == null ? 0xFFFFD0DC : col(f.optString("p1"), 0xFFFFD0DC), p2 = f == null ? 0xFFD7ECFF : col(f.optString("p2"), 0xFFD7ECFF);
+        v.setImageViewBitmap(R.id.bg, bg(c, wd, hd, p1, p2));
+        if (f == null) {
             v.setViewVisibility(R.id.card, View.GONE);
             v.setViewVisibility(R.id.empty, View.VISIBLE);
-            v.setOnClickPendingIntent(R.id.root, open(c, "/", 0));
+            v.setOnClickPendingIntent(R.id.root, open(c, "/new", 0));
         } else {
             v.setViewVisibility(R.id.card, View.VISIBLE);
             v.setViewVisibility(R.id.empty, View.GONE);
-            JSONObject f = L.get(0);
             long ts = f.optLong("ts");
-            v.setInt(R.id.acc, "setBackgroundColor", col(f.optString("c1"), 0xFFFF4F86));
-            v.setTextViewText(R.id.kind, "host".equals(f.optString("r")) ? c.getString(R.string.w_host) : "SQUAD");
             v.setTextViewText(R.id.emoji, f.optString("e", "✨"));
             v.setTextViewText(R.id.title, f.optString("t"));
-            String pl = f.optString("pl");
-            v.setTextViewText(R.id.place, pl.isEmpty() ? "" : "📍 " + pl);
-            v.setViewVisibility(R.id.place, pl.isEmpty() || rows == 0 && h < 100 ? View.GONE : View.VISIBLE);
+            if (mode == 2) {
+                v.setTextViewText(R.id.kind, "host".equals(f.optString("r")) ? c.getString(R.string.w_host).toUpperCase() : "SQUAD");
+                String pl = f.optString("pl");
+                v.setTextViewText(R.id.place, pl.isEmpty() ? "" : "📍 " + pl);
+                v.setViewVisibility(R.id.place, pl.isEmpty() ? View.GONE : View.VISIBLE);
+                int n = f.optInt("n", 0);
+                v.setTextViewText(R.id.inn, "👥 " + n + " IN");
+                v.setViewVisibility(R.id.inn, n > 0 ? View.VISIBLE : View.GONE);
+            }
             if (ts <= now) {
                 v.setViewVisibility(R.id.chrono, View.GONE);
                 v.setViewVisibility(R.id.when, View.VISIBLE);
@@ -99,9 +128,9 @@ public class SquadWidgetProvider extends AppWidgetProvider {
                 v.setTextViewText(R.id.when, day(c, ts));
             }
             v.setOnClickPendingIntent(R.id.root, open(c, "/d/" + f.optString("id"), id * 10));
-            for (int k = 0; k < 3; k++) {
+            if (mode > 0) for (int k = 0; k < rows; k++) {
                 int idx = k + 1;
-                if (k < rows && idx < L.size()) {
+                if (idx < L.size()) {
                     JSONObject d = L.get(idx);
                     v.setViewVisibility(rowIds[k], View.VISIBLE);
                     v.setTextViewText(rowE[k], d.optString("e", "✨"));
@@ -110,7 +139,10 @@ public class SquadWidgetProvider extends AppWidgetProvider {
                     v.setOnClickPendingIntent(rowIds[k], open(c, "/d/" + d.optString("id"), id * 10 + idx));
                 } else v.setViewVisibility(rowIds[k], View.GONE);
             }
-            v.setViewVisibility(R.id.more, rows == 3 && L.size() > 4 ? View.VISIBLE : View.GONE);
+            if (mode == 2) {
+                v.setOnClickPendingIntent(R.id.btnNew, open(c, "/new", id * 10 + 7));
+                v.setOnClickPendingIntent(R.id.btnChat, open(c, "/chats", id * 10 + 8));
+            }
         }
         m.updateAppWidget(id, v);
     }
