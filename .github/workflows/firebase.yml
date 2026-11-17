@@ -57,6 +57,10 @@ jobs:
           PROJECT=$(node -e 'console.log(require(process.env.RUNNER_TEMP+"/sa.json").project_id)')
           npx -y firebase-tools@13 deploy --project "$PROJECT" --non-interactive --force --only hosting,firestore
 
+      - name: Sprzątanie starych wersji Hostingu (oszczędza pamięć)
+        continue-on-error: true
+        run: KEEP=5 node tools/hosting-clean.mjs
+
       - name: Sprawdzenie po wdrożeniu
         run: |
           sleep 5
