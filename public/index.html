@@ -874,6 +874,92 @@ nav button span{white-space:nowrap}
 .pwr{margin-left:auto;position:relative;display:flex;align-items:center;flex:none}.pwr .ppl{white-space:nowrap}.pwr .pcc{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);margin-right:6px;flex:none}.pwho{gap:8px;font-size:14px}.pwho b{font-size:14px}.pst .av{width:28px!important;height:28px!important;margin-left:-9px}.pwr .ppl{padding:9px 13px}.pwr .pcc .bd{top:-4px;left:auto;right:-4px}.pwho>span:not(.pwr){white-space:nowrap;min-width:0}.pwr .ppl{padding:9px 16px;font-size:14px;margin:0}
 .ppl.g{background:#7ff0b4!important;color:#15151c!important}.ppl.pk{background:linear-gradient(100deg,#ffb88f,#ff8fb3)!important;color:#17171f!important}.ppl.h{background:#f4f2ee!important;color:#14141b!important}
 .pact .pic:not(.psur),.pact .psp{display:none!important}.pact:not(:has(.pse,.psur)){display:none}.pact{padding:8px 2px 0}.pmcard .pfr{height:150px}.pmcard .pfr h3{font-size:19px;top:54px}
+
+/* ===== CIEMNY PREMIUM – wygląd z makiety (nadpisania; funkcje i ikony dropów bez zmian) ===== */
+:root{--pk:#f3f1ec;--pkt:#0b0b0d;--hair:rgba(255,255,255,.075);--s1:#0f0f13;--s2:#15151a;--s3:#1c1c22;--ok2:#3fcf8e}
+html,body{background:#08080a}
+html:has(.scr.chl),body:has(.scr.chl){background:#08080a!important}
+body{-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+/* typografia */
+h1,h2{font-weight:700}
+.logo{font-weight:700;letter-spacing:-.035em}
+h3{color:rgba(255,255,255,.55);letter-spacing:.16em}
+.hint{color:rgba(255,255,255,.5)}
+/* nagłówek: okrągłe przyciski */
+.bell,.bk{background:var(--s1);border:1px solid var(--hair);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);color:#cfcfd6}
+.bk{font-weight:700}
+/* przycisk „Nowy drop" */
+.newbtn.nb2{background:var(--pk)!important;box-shadow:0 14px 30px -14px rgba(243,241,236,.38)!important;color:#0b0b0d}
+.nb2 .gr{display:none!important}
+.nbp{background:#0b0b0d;box-shadow:none}
+.nba{background:rgba(11,11,13,.1);color:#0b0b0d}
+.nbt small{color:rgba(11,11,13,.55)}
+/* zakładki Zaproszenia / Moje / Publiczne */
+.tabs{background:var(--s1)!important;border:1px solid var(--hair)!important;box-shadow:none}
+.tabs button{color:#80808b}
+.tabs button.on{background:var(--pk)!important;color:#0b0b0d!important}
+.tabs .bd{background:#ff5a7a;box-shadow:0 0 0 2px #0f0f13}
+/* karta dropa (ramka wokół ilustracji; sama ilustracja bez zmian) */
+.pc{background:linear-gradient(180deg,#131318 0%,#0f0f13 100%)!important;border:1px solid var(--hair)!important;border-radius:28px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 16px 36px -20px rgba(0,0,0,.9)!important}
+.pwho{color:rgba(255,255,255,.55)}
+.pwho b{color:#f4f3f1;font-weight:700}
+.pic{border-radius:14px}
+.pic.pcc,.pmo{background:var(--s3);box-shadow:inset 0 0 0 1px var(--hair)}
+.pic .bd{border-color:#111115}
+.ppl{background:rgba(255,255,255,.07)!important;color:#e6e6ec!important;box-shadow:inset 0 0 0 1px var(--hair)}
+.ppl.on{background:var(--pk)!important;color:var(--pkt)!important;font-weight:800;box-shadow:0 8px 20px -10px rgba(243,241,236,.55)!important}
+.ptg{background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px var(--hair)}
+.ptg.h{background:rgba(255,216,74,.1);color:#f3cf63}
+/* powierzchnie */
+.glass,.slist{background:var(--s1)!important;border:1px solid var(--hair)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+.srow{border-bottom-color:var(--hair)}
+.sheet{background:#101014!important;border-top:1px solid var(--hair)!important;box-shadow:0 -20px 60px rgba(0,0,0,.6)}
+input{background:#0c0c0f;border:1px solid var(--hair);box-shadow:none}
+input:focus{border-color:rgba(255,255,255,.3)}
+.sheet input:not([type=checkbox]):not([type=file]){background:#09090b;border:1px solid var(--hair)}
+.sheet input:focus{box-shadow:none;border-color:rgba(255,255,255,.3)}
+/* przyciski główne, chipy, kafelki, przełączniki */
+.cta{background:var(--pk)!important;color:var(--pkt)!important;box-shadow:0 12px 28px -14px rgba(243,241,236,.5)!important;font-weight:800;letter-spacing:.02em}
+.chip{border-color:var(--hair);background:#0c0c0f;color:#d4d4da}
+.chip.on,.sheet .chip.on,.eds .chips .chip.on{background:var(--pk)!important;color:var(--pkt)!important;border-color:transparent!important}
+.tile{background:var(--s1);border:1px solid var(--hair)}
+.tile.sel{border-color:rgba(243,241,236,.85);background:rgba(243,241,236,.07)}
+.tg{background:#2a2a31;box-shadow:inset 0 0 0 1px var(--hair)}
+.tg:after{background:#e9e7e2}
+.tg.on{background:var(--pk)}
+.tg.on:after{background:#0b0b0d}
+.dayb button{background:var(--s3)}
+.dayb .sel{background:var(--pk)!important;color:var(--pkt)!important;border-color:transparent!important}
+/* wiersze akcji (styl C): neutralne ikonki */
+.scr.dv .acts4 button svg,.scr.dv #rp svg,.mapr i,.scr.dv .chp .chi,.scr.dv .bugl svg,.aadd.wide i,.cmenu .cmb:not(.cmx) .cmi{background:var(--s3)!important;color:#c9c9d1!important}
+.scr.dv .acts4 button,.scr.dv #dx,.scr.dv #rp,.scr.dv .mapr,.scr.dv .chp,.scr.dv .bugl,.cmenu .cmb:not(.cmx){background:var(--s1)!important;box-shadow:inset 0 0 0 1px var(--hair)}
+/* lista czatów */
+.chf{gap:6px}
+.chf button{background:var(--s1);border-color:var(--hair);color:#80808b;font-weight:700}
+.chf button.on{background:#1f1f26!important;border-color:var(--hair)!important;color:#fff!important}
+.chrow{border-bottom-color:var(--hair)}
+.cr1 b{letter-spacing:-.01em}
+.cr1 .gtg{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--hair)}
+/* czat */
+.sk .bub{background:#17171c!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.035)}
+.sk .m.me .bub{box-shadow:0 8px 20px -12px rgba(var(--accr),.7)!important}
+.sk #mf{background:#101014!important;box-shadow:inset 0 0 0 1px var(--hair)}
+.sk #mf .mpl{background:var(--s3)}
+.sk .dsep span,.sk .nsep span{background:#101014;box-shadow:inset 0 0 0 1px var(--hair)}
+/* dolny pasek */
+nav{background:#000!important;border-top:1px solid rgba(255,255,255,.09)!important;-webkit-backdrop-filter:none;backdrop-filter:none}
+nav button{color:#82828d}
+nav button.on{color:#fff!important}
+/* toast */
+.toast{background:var(--pk);color:#0b0b0d}
+/* kontakty / profil / drobne akcenty */
+.kshb i{background:var(--s3)!important;color:#c9c9d1!important}
+.mbtn,.ppl.mb{background:var(--pk)!important;color:var(--pkt)!important;font-weight:800}
+.kn{color:#a0a0ab!important}
+.kr.hi{background:rgba(255,255,255,.04)!important}
+.dayb .sel{box-shadow:none!important}
+.cam,.phb{background:var(--s3)!important;color:#d0d0d6!important;box-shadow:inset 0 0 0 1px var(--hair)}
+.sech h3 svg,.srow>svg{color:#a9a9b3}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
