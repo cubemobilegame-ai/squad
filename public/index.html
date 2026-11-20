@@ -1345,7 +1345,9 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .sheet:has(.kadd) .hint{color:#8e8e8e;font-size:14.5px;line-height:1.45}
 .sheet:has(.kadd) .ghost{height:54px;border-radius:99px;background:#181818!important;border:0!important;color:#8e8e8e;font:600 15px Brico,BricoCyr,system-ui;margin-top:10px}
 /* EKRAN LOGOWANIA – lobby z kartą (wariant B) */
-.scr.deco .logo.bigl{font-size:64px;text-shadow:none;margin:0}.scr.deco>p.mut{font-size:17px;line-height:1.35;margin:14px 0 40px!important;padding:0 36px;max-width:340px;color:#8e8e8e}
+.scr.deco{position:relative;isolation:isolate}
+.scr.deco::before{content:"";position:absolute;left:-20px;right:-20px;top:0;height:350px;z-index:-1;background:url(/e/login-bg.webp) center 78%/cover no-repeat;-webkit-mask-image:linear-gradient(#000 0,#000 34%,transparent 92%);mask-image:linear-gradient(#000 0,#000 34%,transparent 92%);pointer-events:none}
+.scr.deco .logo.bigl{font-size:64px;text-shadow:0 2px 24px rgba(0,0,0,.65);margin:26px 0 0}.scr.deco>p.mut{font-size:17px;line-height:1.35;margin:14px 0 40px!important;padding:0 36px;max-width:340px;color:#a8a8a8;text-shadow:0 1px 12px #000}
 .lgc{margin-top:auto;width:100%;background:#131313;border-radius:26px;padding:14px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px}
 .lgc .orl{display:none!important}
 .lgc>.cta,.lgc>.ghost{margin:0!important;width:100%;height:52px;padding:0 14px 0 8px!important;border-radius:99px!important;background:#181818!important;border:0!important;box-shadow:none!important;color:#fff!important;display:flex!important;align-items:center;justify-content:flex-start;gap:12px;font:600 15px Brico,BricoCyr,system-ui!important;text-transform:none!important;letter-spacing:0!important;text-align:left;position:relative}
@@ -1358,7 +1360,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .lgc #fbl{background:#1877f2!important;color:#fff!important}
 .lgc #fbl svg path:first-child{fill:#fff}
 .lgc #fbl svg path:last-child{fill:#1877f2}
-.lgc #eml{background:#242424!important;color:#fff!important}
+.lgc #eml{background:#1a1a1a!important;color:#fff!important}
 .lgc #eml svg{color:#fff}
 .lgc #g::after{border-color:#9a9a9a}
 .lgc #apl::after,.lgc #eml::after{border-color:#bdbdbd}
