@@ -1133,6 +1133,19 @@ html:has(.scr.hm),body:has(.scr.hm){background:#0b0b0b}
 .scr.hm .hmn button.on{background:#1c1c1c;color:#fff;font-weight:800}
 .scr.pmx .htl,.scr.pmx .hmn{display:none!important}
 .nsec{margin:6px 6px 10px;font:800 12px Brico,BricoCyr,system-ui;letter-spacing:.2em;color:#8e8e8e;text-transform:uppercase}
+
+/* Mapa: stabilny układ – mapa od tytułu do dołu ekranu (pod dolnym menu), bez przerwy */
+.scr.pmx{position:relative;height:100dvh;overflow:hidden;border-radius:0!important;--nb:calc(59px + max(0px,env(safe-area-inset-bottom,0px) - 7px))}
+.scr.pmx .pmt{height:32px;margin-bottom:14px}
+.scr.pmx #list{position:static!important}
+.scr.pmx .pmw{position:absolute!important;left:0;right:0;top:calc(68px + env(safe-area-inset-top,0px));bottom:0;height:auto!important;z-index:1}
+.scr.pmx .pmcard{bottom:calc(var(--nb) + 14px)}
+.scr.pmx .pmw .leaflet-bottom{bottom:var(--nb)}
+.scr.pmx .pmw .pmme,.scr.pmx .pmw .pmadd{width:52px;height:52px;top:12px;margin:0}
+.scr.pmx .pmw .pmme{right:12px;left:auto}
+.scr.pmx .pmw .pmadd{left:12px}
+.scr.pmx .pmw .pmme svg,.scr.pmx .pmw .pmadd svg{width:26px;height:26px}
+.scr.pmx .pmw .pmh{top:12px;height:52px;left:76px;right:76px;transform:none;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:0 14px}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
