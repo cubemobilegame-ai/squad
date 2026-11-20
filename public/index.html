@@ -1080,6 +1080,19 @@ html:has(.scr.pf),body:has(.scr.pf){background:#0b0b0b}
 
 /* okna QR: przyciski w pełni okrągłe (pigułka) i węższe o 15 px */
 .sheet:has(.qrbox) .qbtn{width:calc(100% - 15px)!important;margin-left:auto!important;margin-right:auto!important;border-radius:999px!important}
+
+/* ===== DOLNE MENU – wg makiety: 5 ikon, aktywna w ciemnym kółku ===== */
+nav.nv5{left:50%!important;transform:translateX(-50%)!important;bottom:0!important;width:100%!important;max-width:480px!important;height:auto!important;box-sizing:border-box;display:flex!important;align-items:center;justify-content:space-around;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))!important;background:#0b0b0b!important;border:0!important;border-top:1px solid rgba(255,255,255,.07)!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+nav.nv5 button{position:relative;flex:1;display:flex!important;align-items:center;justify-content:center;padding:0!important;background:none!important;border:0;color:#8e8e8e!important;gap:0!important;cursor:pointer;-webkit-tap-highlight-color:transparent}
+nav.nv5 .ni{display:grid;place-items:center;width:50px;height:50px;border-radius:50%;transition:background .2s,color .2s,transform .12s}
+nav.nv5 button:active .ni{transform:scale(.92)}
+nav.nv5 button.on{color:#fff!important}
+nav.nv5 button.on .ni{background:#1c1c1c}
+nav.nv5 .ni svg{width:25px;height:25px}
+nav.nv5 .nav-av{display:block;width:32px;height:32px;border-radius:50%;overflow:hidden}
+nav.nv5 .nav-av .av{width:32px!important;height:32px!important;min-width:32px;display:block}
+nav.nv5 button.on .nav-av{box-shadow:0 0 0 2px #0b0b0b}
+nav.nv5 .bd{position:absolute;top:2px;left:calc(50% + 6px);box-shadow:0 0 0 2px #0b0b0b}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -1914,9 +1927,14 @@ if(DEMO){document.body.classList.add("demo");A.insertAdjacentHTML("beforebegin",
   window.__host=async()=>{if(!isH()){if(sget("nickH"))sset("nick",sget("nickH"));sset("photo",sget("photoH"));await signInWithPopup(auth)}go("/")};
   window.__friend=async()=>{if(isH()){sset("nickH",sget("nick"));sset("photoH",sget("photo"))}sset("nick","");sset("photo","");await signOut(auth);go("/d/DEMO1")};setInterval(demoBd,1500);demoBd()}
 window.msgs=()=>{if(gp()==="/"&&$("#gc"))$("#gc").scrollIntoView({behavior:"smooth"});else{go("/");setTimeout(()=>$("#gc")?.scrollIntoView({behavior:"smooth"}),350)}};
-let _nk=null;const NVK=["h","c","k","p"];
+let _nk=null;const NVK=["h","c","m","k","p"];
 const navAnim=(f,to)=>{try{const n=document.querySelector("nav"),l=n&&n.querySelector(".lens"),B=n&&n.querySelectorAll(":scope > button");if(!l||!B||!B[0])return;if(f==null||f==to||matchMedia("(prefers-reduced-motion:reduce)").matches)return;if(n._r)cancelAnimationFrame(n._r);const ls=l.querySelector(".ls"),lg=l.querySelector(".lg"),lc=l.querySelector(".lc");lc.innerHTML=[...B].map(b=>`<button>${b.innerHTML.replace(/<b[^>]*><\/b>/g,"")}</button>`).join("");const bw=B[to].offsetWidth,lh=l.offsetHeight,lt=l.offsetTop,x1=B[to].offsetLeft,x0=B[f].offsetLeft,D=x1-x0,NW=n.clientWidth,NH=n.clientHeight,sg=Math.sign(D);let x=x0,v=sg*500,t0=performance.now(),tp=t0;const K=300,C=23,mx=Math.min;l.style.left="0";const fr=now=>{let dt=mx(.032,(now-tp)/1e3);tp=now;const a=K*(x1-x)-C*v;v+=a*dt;x+=v*dt;const pr=mx(1,mx(1,Math.abs(x-x0)/Math.abs(D))),sp=Math.abs(v),g=Math.max(0,mx(1,sp/650+.85*Math.sin(Math.PI*pr))),w=bw*(1+mx(.3,sp/2600)),cx0=x+bw/2,L=Math.max(3,mx(NW-3-w,cx0-w/2)),cx=L+w/2;l.style.transform=`translateX(${L}px) scale(${1+.08*g},${1+.13*g})`;l.style.width=w+"px";ls.style.opacity=1-g;lg.style.opacity=g;const m=1+.16*g;lc.style.cssText=`left:${-L}px;top:${-lt}px;width:${NW}px;height:${NH}px;transform-origin:${cx}px ${lt+lh/2}px;transform:scale(${m})`;n.style.scale=1+.035*g;const done=Math.abs(x1-x)<.3&&sp<8&&now-t0>150;if(done||now-t0>1600){l.style.cssText="";lc.style.cssText="";ls.style.opacity="";lg.style.opacity="";n.style.scale="";n._r=0}else n._r=requestAnimationFrame(fr)};n._r=requestAnimationFrame(fr)}catch(e){}};
-const nav=a=>{const f=_nk==null?null:NVK.indexOf(_nk),to=NVK.indexOf(a);_nk=a;queueMicrotask(()=>navAnim(f,to));return`<nav style="--ni:${to}"><i class="lens"><i class="ls"></i><i class="lg"><span class="lc"></span></i></i>${[["h","/",I.home,"nHome"],["c","/chats",I.chat,"nCh","bdc"],["k","/k",I.con,"nK","bdk"],["p","/me",I.user,"nMe"]].map(([k,h,i,l,b])=>`<button class="${a==k?"on":""}" onclick="go('${h}')">${i}<span>${t(l)}</span>${b?`<b class="bd" id="${b}" hidden></b>`:""}</button>`).join("")}</nav>`};
+const NI5={h:'<path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4.500v-6h-5v6H5a1 1 0 0 1-1-1z"/>',m:'<path d="M3.500 6.500 9 4l6 2.500L20.500 4v13.500L15 20l-6-2.500L3.500 20z"/><path d="M9 4v13.500M15 6.500V20"/>',k:'<circle cx="9.500" cy="8" r="3.600"/><path d="M3 20.500a6.500 6.500 0 0 1 13 0"/><path d="M18.500 8.500v6M15.500 11.500h6"/>'};
+window.navHome=()=>{if(homeTab==="pub"&&pvMode()==="map")homeTab="";go("/");if(gp()==="/")try{redraw()}catch{}navSync()};
+window.navMap=()=>{homeTab="pub";sset("pubv","map");if(gp()==="/"){try{redraw()}catch{}navSync()}else go("/")};
+const navOn=()=>gp()==="/"&&homeTab==="pub"&&pvMode()==="map"?"m":null;
+window.navSync=()=>{const n=document.querySelector("nav.nv5");if(!n||gp()!=="/")return;const on=navOn()||"h";n.querySelectorAll(":scope > button").forEach(b=>{if(["h","m"].includes(b.dataset.k))b.classList.toggle("on",b.dataset.k===on)})};
+const nav=a=>{const f=_nk==null?null:NVK.indexOf(_nk),to=NVK.indexOf(a);_nk=a;const on=a==="h"&&homeTab==="pub"&&pvMode()==="map"?"m":a;return`<nav class="nv5">${[["h","navHome()",`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${NI5.h}</svg>`,"nHome"],["c","go('/chats')",I.chat,"nCh","bdc"],["m","navMap()",`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${NI5.m}</svg>`,"pvMap"],["k","go('/k')",`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${NI5.k}</svg>`,"nK","bdk"],["p","go('/me')",`<span class="nav-av">${avc("",meAv())}</span>`,"nMe"]].map(([k,h,i,l,b])=>`<button data-k="${k}" class="${on==k?"on":""}" onclick="${h}" aria-label="${esc(t(l))}"><span class="ni">${i}</span>${b?`<b class="bd" id="${b}" hidden></b>`:""}</button>`).join("")}</nav>`};
 
 const loadDrop=async code=>{const pr=window.__pre;if(pr&&pr.code===code&&Date.now()-pr.t<60000){window.__pre=null;try{const [d,P]=await Promise.all([pr.d,pr.P.catch(()=>null)]);if(d&&d.expiresAt&&d.startsAt){if(P)window.__preP={code,list:P};return d.expiresAt.toMillis()<=Date.now()?null:{ref:doc(db,"drops",code),d}}}catch{}}try{const r=doc(db,"drops",code),s=await getDocR(r);if(!s.exists())return null;const d=s.data();return d.expiresAt.toMillis()<=Date.now()?null:{ref:r,d}}catch{return null}};
 const getDocR=async r=>{for(let i=0;i<3;i++){try{return await Promise.race([getDoc(r),new Promise((_,j)=>setTimeout(()=>j(new Error("timeout")),i?8000:5000))])}catch(e){if(i===2)throw e}}};
@@ -2182,7 +2200,7 @@ function home(){
     $("#list").innerHTML=GI+G[tab].map(d=>postCard(d,S.ppl[d.id]||[],r(d))).join("")||(tab==="mine"?`<div class="how">${[1,2,3].map(i=>`<div><b>${i}</b><span>${t("how"+i)}</span></div>`).join("")}</div>`:(tab==="inv"?`<div class="emp">${t("eInv")}</div>`:`<p class="mut">${t("eOut")}</p>`));{const em=!GI&&!G[tab].length;if(tab==="inv")$("#hint").hidden=em}
     document.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{vib(8);go("/g/"+b.dataset.gv)});document.querySelectorAll("[data-gx]").forEach(b=>b.onclick=()=>{vib(10);deleteDoc(doc(db,"users",me(),"invites",b.dataset.gx)).catch(()=>{});S.ginv=S.ginv.filter(i=>i.id!==b.dataset.gx);draw()});
     tick()};
-  window.__pubSk=1;  redraw=draw;draw();badges();every(tick,1000);
+  window.__pubSk=1;  redraw=draw;draw();navSync();badges();every(tick,1000);
 }
 
 /* ---------- PUBLICZNE DROPY (16+): w promieniu 30 km, ograniczona liczba miejsc ---------- */
@@ -2240,7 +2258,7 @@ function pubTab(el,redraw){
       const u=auth.currentUser;if(u&&!DEMO)setDoc(doc(db,"users",u.uid),{pub16:ok},{merge:true}).catch(()=>{});vib(ok?[20,30,20]:[50,30,50]);redraw()};return}
   if(sget("pubRules")!=="1"){el.innerHTML=pubRulesHtml();bindPubRules(redraw);return}
   const safe=pvToggle();
-  el.onclick=e=>{const b=e.target.closest&&e.target.closest(".pvt button");if(b){vib(8);sset("pubv",b.dataset.pv);redraw()}};
+  el.onclick=e=>{const b=e.target.closest&&e.target.closest(".pvt button");if(b){vib(8);sset("pubv",b.dataset.pv);redraw();navSync()}};
   if(pvMode()==="map")return pubMap(el,safe);
   if(PUB.err&&!PUB.list){el.innerHTML=safe+`<div class="pubg"><img src="/e/pin.webp" alt=""><h3>${t("pubLocT")}</h3><p>${t(PUB.err==="deny"?"pubLocDeny":"pubLocD")}</p><button class="cta" id="pgo">${t("pubLocBtn")}</button></div>`;$("#pgo").onclick=()=>{PUB.err=null;PUB.pos=null;el.innerHTML=`<p class="mut">${t("load")}</p>`;loadPub().then(redraw)};return}
   const BOX=!!(PUB.M&&PUB.M.map),have=BOX?!!PUB.bat:!!PUB.list,stale=!have||Date.now()-(BOX?PUB.bat:PUB.at)>60e3||(BOX&&PUB.bkey!==pubBoxKey());
