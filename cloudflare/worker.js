@@ -126,9 +126,9 @@ async function handle(env, uid, b) {
   const db = fs(env);
   if (b.kind === "msg" && isCode(b.code) && isCode(b.id)) {           // nowa wiadomość w czacie dropa albo grupy
     const G = !!b.group, root = G ? `groups/${b.code}` : `drops/${b.code}`;
-    const m = await db.get(`${root}/messages/${b.id}`); if (!m || m.authorId !== uid) return 0;
-    if (m.notified) return 0; if (!(await db.patch(`${root}/messages/${b.id}`, { notified: true }, m._ut))) return 0;   // to samo wywołanie nie wyśle drugiego powiadomienia
-    const chat = await db.get(root); if (!chat) return 0;
+    const m = await db.get(`${root}/messages/${b.id}`); if (!m) { env.why = "msg: nie znaleziono wiadomości"; return 0; } if (m.authorId !== uid) { env.why = "msg: autor inny niż nadawca"; return 0; }
+    if (m.notified) { env.why = "msg: już wysłane"; return 0; } if (!(await db.patch(`${root}/messages/${b.id}`, { notified: true }, m._ut))) { env.why = "msg: zajęte przez inne wywołanie"; return 0; }   // to samo wywołanie nie wyśle drugiego powiadomienia
+    const chat = await db.get(root); if (!chat) { env.why = "msg: brak czatu"; return 0; }
     const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => p.id !== uid);
     const title = G ? chat.name : chat.title;
     return notify(env, db, ppl.map((p) => p.id), "chat", () => [`${m.nickname} · ${title}`, cut(m.text, 140)], G ? `/gc/${b.code}` : `/c/${b.code}`, uid, (G ? "g_" : "") + b.code);
@@ -331,7 +331,7 @@ export default {
         ctx.waitUntil(logEv(env, { kind: "test", from: uid.slice(0, 8), sent: n, to: 1, toks: env.stats.toks, errs: env.stats.errs.join(" | ") }));
         return json(r, 200, cors);
       }
-      ctx.waitUntil(handle(env, uid, body).then((n) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), sent: n || 0, to: env.stats ? env.stats.to : 0, toks: env.stats ? env.stats.toks : 0, errs: env.stats ? env.stats.errs.join(" | ") : "brak odbiorców / odrzucone" })).catch((e) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), err: e.message })));
+      ctx.waitUntil(handle(env, uid, body).then((n) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), sent: n || 0, to: env.stats ? env.stats.to : 0, toks: env.stats ? env.stats.toks : 0, errs: env.stats ? env.stats.errs.join(" | ") : (env.why || "brak odbiorców / odrzucone") })).catch((e) => logEv(env, { kind: body.kind, code: body.code, from: uid.slice(0, 8), err: e.message })));
       return json({ ok: true }, 202, cors);
     } catch (e) { return json({ error: "auth" }, 401, cors); }
   },
