@@ -1201,7 +1201,8 @@ html:has(.scr.dv),body:has(.scr.dv){background:#0b0b0b}
 .scr.hm .pmf .hch{flex:none;margin-top:3px;transition:transform .2s}
 .scr.hm .pmf[aria-expanded=true] .hch{transform:rotate(180deg)}
 .scr.hm:not(.pmx) .pmm2{display:none!important}
-.scr.pmx .pmcard{max-height:calc(100% - 86px);overflow:auto;border-radius:26px}
+.scr.pmx .pmcard .pc{max-height:calc(100dvh - var(--nb) - 190px);overflow:auto}
+.scr.pmx .pmcard>.pmx{position:absolute;top:-52px;right:10px;left:auto;width:40px;height:40px;border-radius:50%;background:#15151e;border:1px solid rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;z-index:7;padding:0;font-size:16px}
 .scr.pmx .pmm2{position:absolute;left:12px;right:12px;top:calc(64px + env(safe-area-inset-top,0px));z-index:30;padding:6px;border-radius:22px;background:#131313;border:1px solid rgba(255,255,255,.08);box-shadow:0 14px 40px rgba(0,0,0,.55);display:flex;flex-direction:column}
 .scr.pmx .pmm2[hidden]{display:none!important}
 .scr.pmx .pmm2 button{height:48px;padding:0 16px;border:0;border-radius:16px;background:none;color:#c9c9c9;text-align:left;font:500 16px Brico,BricoCyr,system-ui;cursor:pointer}
