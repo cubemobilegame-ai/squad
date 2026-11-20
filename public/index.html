@@ -874,6 +874,86 @@ nav button span{white-space:nowrap}
 .pwr{margin-left:auto;position:relative;display:flex;align-items:center;flex:none}.pwr .ppl{white-space:nowrap}.pwr .pcc{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.08);margin-right:6px;flex:none}.pwho{gap:8px;font-size:14px}.pwho b{font-size:14px}.pst .av{width:28px!important;height:28px!important;margin-left:-9px}.pwr .ppl{padding:9px 13px}.pwr .pcc .bd{top:-4px;left:auto;right:-4px}.pwho>span:not(.pwr){white-space:nowrap;min-width:0}.pwr .ppl{padding:9px 16px;font-size:14px;margin:0}
 .ppl.g{background:#7ff0b4!important;color:#15151c!important}.ppl.pk{background:linear-gradient(100deg,#ffb88f,#ff8fb3)!important;color:#17171f!important}.ppl.h{background:#f4f2ee!important;color:#14141b!important}
 .pact .pic:not(.psur),.pact .psp{display:none!important}.pact:not(:has(.pse,.psur)){display:none}.pact{padding:8px 2px 0}.pmcard .pfr{height:150px}.pmcard .pfr h3{font-size:19px;top:54px}
+
+/* ===== PROFIL – nowy wygląd (wzór użytkownika) ===== */
+.scr.prf.pf{display:block!important;--pbg:#0b0b0b;--pc:#131313;--pc2:#161616;--pch:#0e0e0e;--pdv:rgba(255,255,255,.07);padding:calc(26px + env(safe-area-inset-top,0px)) 12px 120px;background:var(--pbg)}
+html:has(.scr.pf),body:has(.scr.pf){background:#0b0b0b}
+.pf .pfh{display:flex;justify-content:space-between;align-items:flex-start;margin:0}
+.pf .pft{font:800 34px/1.03 Brico,BricoCyr,system-ui;letter-spacing:-.035em;margin:0 0 0 1px;text-transform:none}
+.pf .pft span{display:block;color:#8e8e8e}
+.pf .bk.ic{width:44px;height:44px;background:#141414;border:1px solid rgba(255,255,255,.08);color:#e8e8e8;box-shadow:none;margin-top:0}
+.pf .prfc.glass{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0 0 0;position:relative;text-align:center}
+.pf .phw{width:115px;height:115px;margin:-12px auto 0;position:relative}
+.pf .phw .av,.pf .phav .av{width:115px!important;height:115px!important}
+.pf .phb{width:28px;height:28px;right:-1px;bottom:-1px;background:#1b1b1b;color:#fff;border:3px solid #0b0b0b;box-shadow:none}
+.pf .phb svg{width:14px;height:14px}
+.pf .pedit{top:6px;right:14px;width:38px;height:38px;background:#1c1c1c;color:#e8e8e8}
+.pf .pedit.on{background:#2a2a2a;color:#fff}
+.pf .pnm{font:800 22px Brico,BricoCyr,system-ui;letter-spacing:-.02em;margin:15px 0 0;line-height:1.2}
+.pf #ped{margin:16px 0 0;padding:16px;border-radius:26px;background:var(--pc);text-align:left}
+.pf #ped input{background:#0b0b0b;border:1px solid rgba(255,255,255,.08)}
+.pf .actc{margin-top:36px;padding:18px 12px 14px;border-radius:26px;background:var(--pc2)}
+.pf .actc h2{font:800 19px Brico,BricoCyr,system-ui;letter-spacing:-.02em;margin:0 0 14px 7px}
+.pf .acts{display:flex;padding:4px;border-radius:99px;background:var(--pch);margin:0 2px}
+.pf .acts button{flex:1;height:33px;border:0;border-radius:99px;background:none;color:#8e8e8e;font:800 14px Brico,BricoCyr,system-ui;cursor:pointer;transition:background .2s,color .2s}
+.pf .acts button.on{background:#2a2a2a;color:#fff}
+.pf .aval{display:flex;align-items:baseline;gap:9px;margin:22px 0 0 7px}
+.pf .aval b{font:800 40px/1 Brico,BricoCyr,system-ui;letter-spacing:-.03em}
+.pf .aval span{font:500 15px Brico,BricoCyr,system-ui;color:#8e8e8e}
+.pf .ach{position:relative;display:flex;margin:22px 0 0;height:118px}
+.pf .ach>i{position:absolute;left:2px;right:2px;height:1px;background:rgba(255,255,255,.1)}
+.pf .ach>i:nth-child(1){top:0}.pf .ach>i:nth-child(2){top:45px}.pf .ach>i:nth-child(3){top:90px}
+.pf .acol{position:relative;flex:1;display:flex;flex-direction:column;align-items:center}
+.pf .abw{height:90px;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.pf .abar{position:relative;width:32px;border-radius:13px 13px 8px 8px;background:linear-gradient(180deg,#5b2aa8,#3a1670)}
+.pf .abar.z{height:6px;border-radius:6px;background:#2a2a2a}
+.pf .acol.td .abar:not(.z){background:linear-gradient(180deg,#b65cff,#7a2cf0);box-shadow:0 0 22px rgba(160,70,255,.55)}
+.pf .abar em{position:absolute;left:50%;top:-30px;transform:translateX(-50%);width:23px;height:23px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font:800 13px Brico,BricoCyr,system-ui;font-style:normal}
+.pf .acol>span{margin-top:16px;font:700 14px Brico,BricoCyr,system-ui;color:#6e6e6e}
+.pf .acol.td>span{color:#fff}
+.pf .acol.td>span::after{content:"";display:block;width:5px;height:5px;margin:5px auto 0;border-radius:50%;background:#b65cff}
+.pf .sgrp{margin-top:20px}
+.pf .sgrp>h3{margin:0 0 10px 6px;font:800 12px Brico,BricoCyr,system-ui;letter-spacing:.2em;color:#8e8e8e;text-transform:uppercase}
+.pf .actc+.sgrp{margin-top:22px}
+.scr.prf.pf .slist{background:var(--pc)!important;border:0!important;border-radius:26px;box-shadow:none!important;overflow:hidden}
+.pf .srow{position:relative;gap:14px;min-height:54px;padding:8px 14px 8px 12px;border:0;font:500 16px Brico,BricoCyr,system-ui;color:#fff}
+.pf .srow>svg:first-child{box-sizing:border-box;width:38px;height:38px;padding:9px;border-radius:50%;background:var(--pch);color:#dcdcdc;flex:none}
+.pf .srow .rl{flex:1;min-width:0;line-height:1.25;font-weight:500}
+.pf .srow .rl small{display:block;font:500 14px Brico,BricoCyr,system-ui;color:#8e8e8e;margin-top:2px}
+.pf .srow em{font:500 16px Brico,BricoCyr,system-ui;color:#8e8e8e}
+.pf .srow:not(:last-child)::after,.pf #nbd .srow:not(:last-child)::after{content:"";position:absolute;left:64px;right:0;bottom:0;height:1px;background:var(--pdv)}
+.pf .srow.nhd:not(:last-child)::after{left:64px}
+.pf #bhd.op::after,.pf #bgr:not([hidden])~.srow::before{content:none}
+.pf .pcv{display:grid;place-items:center;color:#fff}
+.pf .pcv svg{width:22px;height:22px;stroke-width:2.6}
+.pf .alc{font:500 16px Brico,BricoCyr,system-ui;letter-spacing:0;color:#8e8e8e}
+.pf .bgrid{padding:6px 14px 16px}
+.pf #nbd .srow:last-child::after{content:none}
+.pf .tg.s{width:50px;height:30px;background:#3a3a3a;box-shadow:none}
+.pf .tg.s:after{top:3px;left:3px;width:24px;height:24px;background:#fff}
+.pf .tg.s.on{background:#34d17a}
+.pf .tg.s.on:after{left:23px}
+.pf .pfn{margin:12px 0 0 6px;font:500 14px/1.4 Brico,BricoCyr,system-ui;color:#6f6f6f}
+.pf .slist .thsw{margin:10px 0}
+.pf .more{margin:26px auto 0;color:#8e8e8e;font:800 15px Brico,BricoCyr,system-ui}
+.pf .more svg{width:18px;height:18px}
+.pf .srow.danger,.pf .srow.danger>svg:first-child{color:#ff6b7a}
+.pf .srow.danger>svg:first-child{background:#241214}
+
+.scr.prf.pf,.scr.prf.pf .pft,.scr.prf.pf .pnm,.scr.prf.pf .actc h2,.scr.prf.pf .aval b,.scr.prf.pf .srow{color:#fff!important}
+.scr.prf.pf .pft span{color:#8e8e8e!important}
+.scr.prf.pf .pft{opacity:1!important;background:none!important;-webkit-text-fill-color:currentColor!important}
+.pf .acts button{text-align:center;justify-content:center;display:flex;align-items:center;padding:0}
+.pf .phw{margin:22px auto 0!important}
+.pf .pnm{margin:16px 0 0!important}
+.pf .actc{margin-top:30px!important}
+.pf .ach{height:112px}
+.pf .abw{height:84px}
+.pf .ach>i:nth-child(2){top:42px}.pf .ach>i:nth-child(3){top:84px}
+
+.pf .srow{min-height:58px!important;font-size:15px!important}
+.pf .srow .rl{font-size:15px!important}
+.pf .srow:not(:last-child)::after{left:64px}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -954,7 +1034,7 @@ h_mine:"Dropy, które tworzysz, i te, na które się zapisujesz (IN / LATE). Tu 
 h_out:"Tu lądują dropy, na które odpowiadasz OUT. Do startu możesz jeszcze zmienić zdanie.",
 eInv:"Brak zaproszeń do dropów",eOut:"Pusto. Tu trafią dropy, na które odpowiesz OUT.",
 how1:"Stwórz drop – wybierz co, kiedy i gdzie",how2:"Udostępnij link ekipie: Messenger, Insta, WhatsApp albo SMS",how3:"Znajomi klikają IN / LATE / OUT – nie muszą nic instalować",
-roleHost:"TWÓJ DROP",roleInv:"ZAPROSZENIE",roleMe:s=>"TY: "+s,shareShort:"UDOSTĘPNIJ",yourLink:"Twój link – wyślij go ekipie",copyShort:"KOPIUJ",members:n=>n+" os.",profile:"Profil",color:"Kolor dropa",you2:"ty",
+roleHost:"TWÓJ DROP",roleInv:"ZAPROSZENIE",roleMe:s=>"TY: "+s,shareShort:"UDOSTĘPNIJ",yourLink:"Twój link – wyślij go ekipie",copyShort:"KOPIUJ",members:n=>n+" os.",profile:"Profil",pSub:"konto i ustawienia",pAcc:"Konto",actT:"Moja aktywność",actD:"Dropy",actP:"Udział",actC:"Kontakty",actCd:"Dodane dropy · ostatnie 7 dni",actCp:"Dropy, w których byłeś · ostatnie 7 dni",actCc:"Nowe kontakty · ostatnie 7 dni",color:"Kolor dropa",you2:"ty",
 asYou:"Odpowiadasz jako",change:"zmień",toMine:"Dodano do „Moje dropy” ✓",toOut:"Przeniesiono do „Odrzucone”",savedG:"Zapisano ✓",
 obT:"Jaką masz ksywkę?",obD:"Ustawiasz ją raz – pokażemy ją we wszystkich dropach i czatach. Zmienisz ją później w profilu.",obGo:"Zapisz i wchodzę",
 grT:"Grupy",grHint:"Stałe ekipy z czatem, który nie znika. Znajomych zapraszasz linkiem.",dcT:"Czaty dropów",dcHint:"Każdy drop ma własny czat. Znika razem z dropem – 24 h po starcie.",
@@ -991,7 +1071,7 @@ h_mine:"Drops you create and the ones you join (IN / LATE). Details and chat are
 h_out:"Drops you answered OUT land here. You can change your mind until the start.",
 eInv:"No drop invites",eOut:"Empty. Drops you answer OUT will land here.",
 how1:"Create a drop – pick what, when and where",how2:"Share the link with your crew: Messenger, Insta, WhatsApp or SMS",how3:"Friends tap IN / LATE / OUT – no install needed",
-roleHost:"YOUR DROP",roleInv:"INVITE",roleMe:s=>"YOU: "+s,shareShort:"SHARE",yourLink:"Your link – send it to your crew",copyShort:"COPY",members:n=>n+(n==1?" person":" people"),profile:"Profile",color:"Drop color",you2:"you",
+roleHost:"YOUR DROP",roleInv:"INVITE",roleMe:s=>"YOU: "+s,shareShort:"SHARE",yourLink:"Your link – send it to your crew",copyShort:"COPY",members:n=>n+(n==1?" person":" people"),profile:"Profile",pSub:"account & settings",pAcc:"Account",actT:"My activity",actD:"Drops",actP:"Joined",actC:"Contacts",actCd:"Drops added · last 7 days",actCp:"Drops you joined · last 7 days",actCc:"New contacts · last 7 days",color:"Drop color",you2:"you",
 asYou:"Replying as",change:"change",toMine:"Added to “My drops” ✓",toOut:"Moved to “Declined”",savedG:"Saved ✓",
 obT:"What's your nickname?",obD:"Set it once – we'll show it in every drop and chat. You can change it later in your profile.",obGo:"Save & enter",
 grT:"Groups",grHint:"Standing crews with a chat that never disappears. Invite friends with a link.",dcT:"Drop chats",dcHint:"Every drop has its own chat. It disappears with the drop – 24 h after the start.",
@@ -1031,7 +1111,7 @@ h_mine:"Los drops que creas y a los que te apuntas (IN / LATE). Aquí tienes los
 h_out:"Aquí van los drops a los que respondiste OUT. Puedes cambiar de idea hasta el inicio.",
 eInv:"Sin invitaciones a drops",eOut:"Vacío. Aquí irán los drops a los que respondas OUT.",
 how1:"Crea un drop: elige qué, cuándo y dónde",how2:"Comparte el enlace con tu crew: Messenger, Insta, WhatsApp o SMS",how3:"Tus amigos tocan IN / LATE / OUT, sin instalar nada",
-roleHost:"TU DROP",roleInv:"INVITACIÓN",roleMe:s=>"TÚ: "+s,shareShort:"COMPARTIR",yourLink:"Tu enlace: mándalo a tu crew",copyShort:"COPIAR",members:n=>n+(n==1?" persona":" personas"),profile:"Perfil",color:"Color del drop",you2:"tú",
+roleHost:"TU DROP",roleInv:"INVITACIÓN",roleMe:s=>"TÚ: "+s,shareShort:"COMPARTIR",yourLink:"Tu enlace: mándalo a tu crew",copyShort:"COPIAR",members:n=>n+(n==1?" persona":" personas"),profile:"Perfil",pSub:"cuenta y ajustes",pAcc:"Cuenta",actT:"Mi actividad",actD:"Drops",actP:"Asistencia",actC:"Contactos",actCd:"Drops creados · últimos 7 días",actCp:"Drops a los que fuiste · últimos 7 días",actCc:"Contactos nuevos · últimos 7 días",color:"Color del drop",you2:"tú",
 asYou:"Respondes como",change:"cambiar",toMine:"Añadido a «Mis drops» ✓",toOut:"Movido a «Rechazados»",savedG:"Guardado ✓",
 obT:"¿Cuál es tu apodo?",obD:"Lo pones una vez y lo mostraremos en todos los drops y chats. Puedes cambiarlo luego en tu perfil.",obGo:"Guardar y entrar",
 grT:"Grupos",grHint:"Crews fijas con un chat que no desaparece. Invita a tus amigos con un enlace.",dcT:"Chats de drops",dcHint:"Cada drop tiene su propio chat. Desaparece con el drop, 24 h después del inicio.",
@@ -1082,7 +1162,7 @@ h_mine:"Drops, die du erstellst, und die, bei denen du dabei bist (IN / LATE). H
 h_out:"Hier landen Drops, bei denen du OUT getippt hast. Du kannst es dir bis zum Start anders überlegen.",
 eInv:"Keine Drop-Einladungen",eOut:"Leer. Drops, bei denen du OUT tippst, landen hier.",
 how1:"Erstell einen Drop – wähl was, wann und wo",how2:"Teil den Link mit deiner Crew: Messenger, Insta, WhatsApp oder SMS",how3:"Freunde tippen IN / LATE / OUT – ganz ohne Installation",
-roleHost:"DEIN DROP",roleInv:"EINLADUNG",roleMe:s=>"DU: "+s,shareShort:"TEILEN",yourLink:"Dein Link – schick ihn deiner Crew",copyShort:"KOPIEREN",members:n=>n+(n==1?" Person":" Personen"),profile:"Profil",color:"Drop-Farbe",you2:"du",
+roleHost:"DEIN DROP",roleInv:"EINLADUNG",roleMe:s=>"DU: "+s,shareShort:"TEILEN",yourLink:"Dein Link – schick ihn deiner Crew",copyShort:"KOPIEREN",members:n=>n+(n==1?" Person":" Personen"),profile:"Profil",pSub:"Konto & Einstellungen",pAcc:"Konto",actT:"Meine Aktivität",actD:"Drops",actP:"Teilnahme",actC:"Kontakte",actCd:"Erstellte Drops · letzte 7 Tage",actCp:"Besuchte Drops · letzte 7 Tage",actCc:"Neue Kontakte · letzte 7 Tage",color:"Drop-Farbe",you2:"du",
 asYou:"Du antwortest als",change:"ändern",toMine:"Zu „Meine Drops“ hinzugefügt ✓",toOut:"Nach „Abgesagt“ verschoben",savedG:"Gespeichert ✓",
 obT:"Wie ist dein Spitzname?",obD:"Einmal festlegen – wir zeigen ihn in allen Drops und Chats. Du kannst ihn später im Profil ändern.",obGo:"Speichern & los",
 grT:"Gruppen",grHint:"Feste Crews mit einem Chat, der bleibt. Lade Freunde per Link ein.",dcT:"Drop-Chats",dcHint:"Jeder Drop hat einen eigenen Chat. Er verschwindet mit dem Drop – 24 Std. nach dem Start.",
@@ -1133,7 +1213,7 @@ h_mine:"Les drops que tu crées et ceux que tu rejoins (IN / LATE). Tu y trouves
 h_out:"Les drops auxquels tu as répondu OUT arrivent ici. Tu peux changer d'avis jusqu'au début.",
 eInv:"Aucune invitation à un drop",eOut:"Vide. Les drops auxquels tu réponds OUT arriveront ici.",
 how1:"Crée un drop : choisis quoi, quand et où",how2:"Partage le lien avec ta team : Messenger, Insta, WhatsApp ou SMS",how3:"Tes potes répondent IN / LATE / OUT, sans rien installer",
-roleHost:"TON DROP",roleInv:"INVITATION",roleMe:s=>"TOI : "+s,shareShort:"PARTAGER",yourLink:"Ton lien : envoie-le à ta team",copyShort:"COPIER",members:n=>n+(n==1?" personne":" personnes"),profile:"Profil",color:"Couleur du drop",you2:"toi",
+roleHost:"TON DROP",roleInv:"INVITATION",roleMe:s=>"TOI : "+s,shareShort:"PARTAGER",yourLink:"Ton lien : envoie-le à ta team",copyShort:"COPIER",members:n=>n+(n==1?" personne":" personnes"),profile:"Profil",pSub:"compte et réglages",pAcc:"Compte",actT:"Mon activité",actD:"Drops",actP:"Présence",actC:"Contacts",actCd:"Drops créés · 7 derniers jours",actCp:"Drops où tu étais · 7 derniers jours",actCc:"Nouveaux contacts · 7 derniers jours",color:"Couleur du drop",you2:"toi",
 asYou:"Tu réponds en tant que",change:"changer",toMine:"Ajouté à « Mes drops » ✓",toOut:"Déplacé dans « Refusés »",savedG:"Enregistré ✓",
 obT:"C'est quoi ton pseudo ?",obD:"Tu le choisis une fois, il s'affichera dans tous les drops et chats. Tu pourras le changer dans ton profil.",obGo:"Enregistrer et entrer",
 grT:"Groupes",grHint:"Des teams fixes avec un chat qui ne disparaît pas. Invite tes potes avec un lien.",dcT:"Chats des drops",dcHint:"Chaque drop a son propre chat. Il disparaît avec le drop, 24 h après le début.",
@@ -1184,7 +1264,7 @@ h_mine:"I drop che crei e quelli a cui partecipi (IN / LATE). Qui trovi dettagli
 h_out:"Qui finiscono i drop a cui hai risposto OUT. Puoi cambiare idea fino all'inizio.",
 eInv:"Nessun invito ai drop",eOut:"Vuoto. Qui finiranno i drop a cui rispondi OUT.",
 how1:"Crea un drop: scegli cosa, quando e dove",how2:"Condividi il link con la tua crew: Messenger, Insta, WhatsApp o SMS",how3:"Gli amici toccano IN / LATE / OUT, senza installare niente",
-roleHost:"IL TUO DROP",roleInv:"INVITO",roleMe:s=>"TU: "+s,shareShort:"CONDIVIDI",yourLink:"Il tuo link: mandalo alla crew",copyShort:"COPIA",members:n=>n+(n==1?" persona":" persone"),profile:"Profilo",color:"Colore del drop",you2:"tu",
+roleHost:"IL TUO DROP",roleInv:"INVITO",roleMe:s=>"TU: "+s,shareShort:"CONDIVIDI",yourLink:"Il tuo link: mandalo alla crew",copyShort:"COPIA",members:n=>n+(n==1?" persona":" persone"),profile:"Profilo",pSub:"account e impostazioni",pAcc:"Account",actT:"La mia attività",actD:"Drop",actP:"Presenze",actC:"Contatti",actCd:"Drop creati · ultimi 7 giorni",actCp:"Drop a cui hai partecipato · ultimi 7 giorni",actCc:"Nuovi contatti · ultimi 7 giorni",color:"Colore del drop",you2:"tu",
 asYou:"Rispondi come",change:"cambia",toMine:"Aggiunto a «I miei drop» ✓",toOut:"Spostato in «Rifiutati»",savedG:"Salvato ✓",
 obT:"Qual è il tuo nickname?",obD:"Lo scegli una volta e lo mostriamo in tutti i drop e le chat. Puoi cambiarlo dopo nel profilo.",obGo:"Salva ed entra",
 grT:"Gruppi",grHint:"Crew fisse con una chat che non sparisce. Invita gli amici con un link.",dcT:"Chat dei drop",dcHint:"Ogni drop ha la sua chat. Sparisce con il drop, 24 h dopo l'inizio.",
@@ -1235,7 +1315,7 @@ h_mine:"Dropy, které vytváříš, a ty, na které jdeš (IN / LATE). Najdeš t
 h_out:"Sem padají dropy, na které jsi odpověděl/a OUT. Do začátku si to můžeš rozmyslet.",
 eInv:"Žádné pozvánky na dropy",eOut:"Prázdno. Sem padnou dropy, na které odpovíš OUT.",
 how1:"Vytvoř drop – vyber co, kdy a kde",how2:"Pošli odkaz své partě: Messenger, Insta, WhatsApp nebo SMS",how3:"Kamarádi kliknou IN / LATE / OUT – bez instalace",
-roleHost:"TVŮJ DROP",roleInv:"POZVÁNKA",roleMe:s=>"TY: "+s,shareShort:"SDÍLET",yourLink:"Tvůj odkaz – pošli ho partě",copyShort:"KOPÍROVAT",members:n=>n+(n==1?" člověk":n<5?" lidi":" lidí"),profile:"Profil",color:"Barva dropu",you2:"ty",
+roleHost:"TVŮJ DROP",roleInv:"POZVÁNKA",roleMe:s=>"TY: "+s,shareShort:"SDÍLET",yourLink:"Tvůj odkaz – pošli ho partě",copyShort:"KOPÍROVAT",members:n=>n+(n==1?" člověk":n<5?" lidi":" lidí"),profile:"Profil",pSub:"účet a nastavení",pAcc:"Účet",actT:"Moje aktivita",actD:"Dropy",actP:"Účast",actC:"Kontakty",actCd:"Přidané dropy · posledních 7 dní",actCp:"Dropy, kde jsi byl · posledních 7 dní",actCc:"Nové kontakty · posledních 7 dní",color:"Barva dropu",you2:"ty",
 asYou:"Odpovídáš jako",change:"změnit",toMine:"Přidáno do „Moje dropy“ ✓",toOut:"Přesunuto do „Odmítnuté“",savedG:"Uloženo ✓",
 obT:"Jakou máš přezdívku?",obD:"Nastavíš ji jednou – ukážeme ji ve všech dropech a chatech. Později ji změníš v profilu.",obGo:"Uložit a vstoupit",
 grT:"Skupiny",grHint:"Stálé party s chatem, který nezmizí. Kamarády pozveš odkazem.",dcT:"Chaty dropů",dcHint:"Každý drop má vlastní chat. Zmizí s dropem – 24 h po začátku.",
@@ -1286,7 +1366,7 @@ h_mine:"Дропи, які ти створюєш, і ті, куди йдеш (IN
 h_out:"Сюди потрапляють дропи, на які ти відповів(-ла) OUT. До початку можна передумати.",
 eInv:"Немає запрошень на дропи",eOut:"Порожньо. Сюди потраплять дропи, на які ти відповіси OUT.",
 how1:"Створи дроп – обери що, коли й де",how2:"Поділись посиланням з компанією: Messenger, Insta, WhatsApp або SMS",how3:"Друзі тиснуть IN / LATE / OUT – без встановлення",
-roleHost:"ТВІЙ ДРОП",roleInv:"ЗАПРОШЕННЯ",roleMe:s=>"ТИ: "+s,shareShort:"ПОДІЛИТИСЯ",yourLink:"Твоє посилання – надішли його компанії",copyShort:"КОПІЮВАТИ",members:n=>n+(n%10==1&&n%100!=11?" людина":n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?" людини":" людей"),profile:"Профіль",color:"Колір дропу",you2:"ти",
+roleHost:"ТВІЙ ДРОП",roleInv:"ЗАПРОШЕННЯ",roleMe:s=>"ТИ: "+s,shareShort:"ПОДІЛИТИСЯ",yourLink:"Твоє посилання – надішли його компанії",copyShort:"КОПІЮВАТИ",members:n=>n+(n%10==1&&n%100!=11?" людина":n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?" людини":" людей"),profile:"Профіль",pSub:"акаунт і налаштування",pAcc:"Акаунт",actT:"Моя активність",actD:"Дропи",actP:"Участь",actC:"Контакти",actCd:"Додані дропи · останні 7 днів",actCp:"Дропи, де ти був · останні 7 днів",actCc:"Нові контакти · останні 7 днів",color:"Колір дропу",you2:"ти",
 asYou:"Відповідаєш як",change:"змінити",toMine:"Додано в «Мої дропи» ✓",toOut:"Переміщено у «Відхилені»",savedG:"Збережено ✓",
 obT:"Який у тебе нікнейм?",obD:"Обираєш один раз – ми показуватимемо його в усіх дропах і чатах. Потім можна змінити в профілі.",obGo:"Зберегти й увійти",
 grT:"Групи",grHint:"Постійні компанії з чатом, який не зникає. Запрошуй друзів посиланням.",dcT:"Чати дропів",dcHint:"Кожен дроп має власний чат. Він зникає разом із дропом – через 24 год після початку.",
@@ -2143,22 +2223,29 @@ const demoPub=pos=>{const n=Date.now(),mk=(id,ti,cat,km,h,seats,tk)=>({id,code:i
 function profileView(){
   const u=authed();if(!u)return;
   const nick=sget("nick")||u.displayName?.split(" ")[0]||t("you"),ch="<em>›</em>";
-  const row=(ic,label,end,attr)=>`<button class="srow" ${attr}>${sv(ic)}<span>${label}</span>${end}</button>`;
-  view(`<div class="scr prf"><div class="hdr" style="display:flex;align-items:center;justify-content:space-between">${bk("/")}<button class="bk ic" id="pqr" aria-label="QR">${QRI.replace('width="15" height="15"','width="21" height="21"')}</button></div><h1 class="logo" style="font-size:34px">${t("profile")}</h1>
+  const row=(ic,label,end,attr,sub)=>`<button class="srow" ${attr}>${sv(ic)}<span class="rl">${label}${sub?`<small>${sub}</small>`:""}</span>${end}</button>`;
+  const I=(d,w)=>sv(d,w),CV='<path d="M9.500 5.500 16 12l-6.500 6.500"/>',CU='<path d="M6 14.500 12 8.500l6 6"/>';
+  const IC={aw:'<circle cx="12" cy="9" r="5.500"/><path d="M8.800 13.600 7.500 21l4.500-2.600 4.500 2.600-1.300-7.400"/>',bell:'<path d="M6 16.500V11a6 6 0 0 1 12 0v5.500l1.500 2h-15z"/><path d="M10 21a2.100 2.100 0 0 0 4 0"/>',msg:'<path d="M4 5h16v11.500H9.500L4 20.500z"/><path d="M8 9.500h8M8 13h5"/>',rep:'<path d="M9.500 14.500 4 9l5.500-5.500"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/>',usr:'<circle cx="9" cy="8.500" r="3.500"/><path d="M2.500 20.500a6.500 6.500 0 0 1 13 0"/><circle cx="17.200" cy="9.500" r="2.500"/><path d="M17.500 14.500a4.800 4.800 0 0 1 4 5"/>',clk:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',spk:'<path d="M4 9.500v5h4l5 4v-13l-5 4z"/><path d="M16.500 9.200a4 4 0 0 1 0 5.600M19 6.800a7.500 7.500 0 0 1 0 10.400"/>',glb:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.600 2.700 2.600 15.300 0 18M12 3c-2.600 2.700-2.600 15.300 0 18"/>'};
+  const NI={chat:IC.msg,rsp:IC.rep,grp:IC.usr,rem:IC.clk,snd:IC.spk};
+  const trN=trusted().map(id=>S.con.get(id)?.nickname||"").filter(Boolean).join(", ");
+  const bI=bdgInner();
+  view(`<div class="scr prf pf"><div class="pfh"><h1 class="pft">${t("profile")}<span>${t("pSub")}</span></h1><button class="bk ic" id="pqr" aria-label="QR">${QRI.replace('width="15" height="15"','width="21" height="21"')}</button></div>
   ${u.isAnonymous?`<div class="gcard"><b>${t("guCardT")}</b><small>${t("guCardD")}</small><button class="cta" onclick="guestUp('/me')" style="margin:12px 0 0">${t("guCardB")}</button></div>`:""}<div class="glass prfc"><button class="pedit" id="pe" aria-label="${t("nick")}">${sv('<path d="M4 20h4L19 9l-4-4L4 16zM13.500 6.500l4 4"/>')}</button><div class="phw" id="phw"></div><div class="pnm" id="pnm">${esc(nick)}</div>
   <div id="ped" hidden><div class="phl" id="phl"></div><input type="file" id="pf" accept="image/*" hidden>
   <label class="lbl" for="pn">${t("nick")}</label><div class="lr2"><input id="pn" value="${esc(nick)}" maxlength="20" autocomplete="off"><button class="mbtn" id="ps">${t("save")}</button></div><p class="nkh">${t("nickHint")}</p>
   <button class="ghost kmk" id="kmk">${t("avMake")}</button></div></div>
-  ${badgesHtml()}
-  ${SAFE?`<div class="sgrp"><h3>${t("trT")}</h3><div class="slist">${row(SI.shield,trusted().map(id=>S.con.get(id)?.nickname||"").filter(Boolean).join(", ")||t("trAdd"),`<em>${trusted().length}/3 ›</em>`,`onclick="trustSheet()"`)}</div></div>`:""}
-  <div class="sgrp"><h3>${t("sNotif")}</h3><div class="slist">${NK.map(k=>`<div class="srow"><span>${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div><p class="hint s" style="margin:8px 4px 0">${t("nHint")}</p></div>
+  <div class="actc" id="act"><h2>${t("actT")}</h2><div class="acts" role="tablist">${[["d","actD"],["p","actP"],["c","actC"]].map(([k,n],i)=>`<button role="tab" data-ak="${k}" class="${i?"":"on"}">${t(n)}</button>`).join("")}</div><div id="actb"></div></div>
+  <div class="sgrp"><h3>${t("pAcc")}</h3><div class="slist">${bI.row}${bI.grid}${SAFE?row(SI.shield,t("trT"),`<em>${trusted().length}/3</em>`,`onclick="trustSheet()"`,esc(trN)||t("trAdd")):""}</div></div>
+  <div class="sgrp"><div class="slist"><button class="srow nhd" id="nhd" aria-expanded="true">${I(IC.bell)}<span class="rl">${t("sNotif")}</span><em class="pcv">${I(CU)}</em></button><div id="nbd">${NK.map(k=>`<div class="srow">${I(NI[k])}<span class="rl">${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div></div><p class="hint s pfn">${t("nHint")}</p></div>
   <div class="sgrp"><div class="slist" style="padding:6px 14px">${thSw()}</div></div>
-  <div class="sgrp"><h3>${t("lang")}</h3><div class="slist"><button class="srow" id="lgb">${sv('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.600 2.700 2.600 15.300 0 18M12 3c-2.600 2.700-2.600 15.300 0 18"/>')}<span>${(LANGS.find(x=>x[0]==LANG)||LANGS[0])[1]}</span><em>›</em></button></div></div>
-  <div class="sgrp"><h3>${t("sSafe")}</h3><div class="slist">${row(SI.shield,t("safety"),ch,`onclick="go('/safety')"`)}${row(SI.shield,t("chS"),ch,`onclick="go('/child-safety')"`)}${row(BAN,t("blocked"),`<em>${blockedL().length||""} ›</em>`,`onclick="go('/blocked')"`)}</div></div>
-  <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),ch,`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),ch,`onclick="go('/privacy')"`)}<button class="srow" id="hlp">${sv(SI.help)}<span>${t("help")}</span>${ch}</button><button class="srow" id="bug">${sv(SI.bug)}<span>${t("bugT")}</span>${ch}</button><a class="srow" href="https://getsquad.web.app" target="_blank" rel="noopener">${sv('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.700 2.600 15.300 0 18M12 3c-2.600 2.700-2.600 15.300 0 18"/>')}<span>${t("webSite")}</span><em>›</em></a><div class="srow">${sv(SI.info)}<span>${t("version")}</span><em>${VER_TXT}</em></div><a class="srow" href="/e/LICENSE.txt" target="_blank" rel="noopener">${sv(SI.user)}<span>${t("avCredit")}</span><em>›</em></a></div></div>
+  <div class="sgrp"><h3>${t("lang")}</h3><div class="slist"><button class="srow" id="lgb">${I(IC.glb)}<span class="rl">${(LANGS.find(x=>x[0]==LANG)||LANGS[0])[1]}</span><em class="pcv">${I(CV)}</em></button></div></div>
+  <div class="sgrp"><h3>${t("sSafe")}</h3><div class="slist">${row(SI.shield,t("safety"),"",`onclick="go('/safety')"`)}${row(SI.shield,t("chS"),"",`onclick="go('/child-safety')"`)}${row(BAN,t("blocked"),`<em>${blockedL().length||""}</em>`,`onclick="go('/blocked')"`)}</div></div>
+  <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),"",`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),"",`onclick="go('/privacy')"`)}<button class="srow" id="hlp">${sv(SI.help)}<span class="rl">${t("help")}</span></button><button class="srow" id="bug">${sv(SI.bug)}<span class="rl">${t("bugT")}</span></button><a class="srow" href="https://getsquad.web.app" target="_blank" rel="noopener">${I(IC.glb)}<span class="rl">${t("webSite")}</span></a><div class="srow">${sv(SI.info)}<span class="rl">${t("version")}</span><em>${VER_TXT}</em></div><a class="srow" href="/e/LICENSE.txt" target="_blank" rel="noopener">${sv(SI.user)}<span class="rl">${t("avCredit")}</span></a></div></div>
   <button class="more" id="mo">${t("more")} ${sv(SI.down)}</button>
-  <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span>${t("delAcc")}</span></button></div></div>
+  <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span class="rl">${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
+  {let ak="d";const dr=()=>{$("#actb").innerHTML=actHtml(ak);document.querySelectorAll("#act [data-ak]").forEach(b=>b.classList.toggle("on",b.dataset.ak===ak))};dr();document.querySelectorAll("#act [data-ak]").forEach(b=>b.onclick=()=>{ak=b.dataset.ak;vib(8);dr()})}
+  $("#nhd").onclick=()=>{const o=$("#nhd").getAttribute("aria-expanded")!=="true";$("#nhd").setAttribute("aria-expanded",String(o));$("#nbd").hidden=!o;vib(8)};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");
     $("#phl").innerHTML=`<button class="lnk" data-ph>${ph?t("sChPh"):t("sAddPh")}</button>${ph?`<button class="lnk" id="phr">${t("sRmPh")}</button>`:""}`;
     document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));
@@ -2838,6 +2925,20 @@ function celebrate(b){if(b)CQ.push(b);if(celOn||!CQ.length)return;celOn=true;con
 const badgesHtml=()=>{const sn=seenB(),n=BADGES.filter(b=>sn.includes(b[0])||bProg(b)[0]>=b[3]).length;
   return`<div class="sgrp bcol"><button class="bhd" id="bhd" aria-expanded="false"><h3 style="margin:0">${t("bT")}</h3><span class="bst">${BADGES.filter(b=>sn.includes(b[0])||bProg(b)[0]>=b[3]).slice(0,6).map(b=>`<i>${b[1]}</i>`).join("")}</span><span class="alc">${n} / ${BADGES.length}</span><em class="bch">${sv(SI.down)}</em></button><div class="bgrid" id="bgr" hidden>${BADGES.map(b=>{const[c,m]=bProg(b),on=sn.includes(b[0])||c>=m;
     return`<button class="bdg ${on?"on":""}" data-b="${b[0]}"><i>${b[1]}</i><span>${t("b_"+b[0])}</span>${on?"":`<em><u style="width:${c/m*100}%"></u></em>`}</button>`}).join("")}</div></div>`};
+
+/* ---------- PROFIL: karta „Moja aktywność” (7 dni, z realnych danych) + wiersz odznak ---------- */
+const actDays=()=>{const d=new Date();d.setHours(0,0,0,0);return[...Array(7)].map((_,i)=>d.getTime()-(6-i)*864e5)};
+const actCalc=k=>{const ds=actDays(),b=Array(7).fill(0),ix=ms=>{if(!ms)return-1;const x=new Date(ms);x.setHours(0,0,0,0);return ds.indexOf(x.getTime())},now=Date.now();
+  if(k==="d")S.items.forEach(d=>{if(d.hostId===me()){const i=ix(d.createdAt?.toMillis?.()||d.startsAt?.toMillis?.());if(i>=0)b[i]++}});
+  else if(k==="p")S.items.forEach(d=>{const st=d.startsAt?.toMillis?.();if(st&&st<=now&&["host","in","late"].includes(roleOf(d))){const i=ix(st);if(i>=0)b[i]++}});
+  else S.con.forEach(c=>{const i=ix(c.at?.toMillis?.());if(i>=0)b[i]++});
+  return b};
+const actWd=ms=>{const d=new Date(ms),w=d.getDay();if(LANG==="pl")return["Nd","Pn","Wt","Śr","Cz","Pt","So"][w];let x=d.toLocaleDateString(LANG,{weekday:"short"}).replace(".","");return x.charAt(0).toUpperCase()+x.slice(1,2)};
+const actHtml=k=>{const b=actCalc(k),tot=b.reduce((a,c)=>a+c,0),mx=Math.max(...b,1),u=mx<=2?30:64/mx,ds=actDays(),cap={d:"actCd",p:"actCp",c:"actCc"}[k];
+  return`<div class="aval"><b>${tot}</b><span>${t(cap)}</span></div><div class="ach"><i></i><i></i><i></i>${b.map((v,i)=>`<div class="acol${i===6?" td":""}"><div class="abw"><div class="abar${v?"":" z"}"${v?` style="height:${Math.max(14,Math.round(v*u))}px"`:""}>${i===6&&v?`<em>${v}</em>`:""}</div></div><span>${actWd(ds[i])}</span></div>`).join("")}</div>`};
+const bdgInner=()=>{const sn=seenB(),n=BADGES.filter(b=>sn.includes(b[0])||bProg(b)[0]>=b[3]).length;
+  return{row:`<button class="srow" id="bhd" aria-expanded="false">${sv('<circle cx="12" cy="9" r="5.500"/><path d="M8.800 13.600 7.500 21l4.500-2.600 4.500 2.600-1.300-7.400"/>')}<span class="rl">${t("bT")}</span><em class="alc">${n} / ${BADGES.length}</em></button>`,
+    grid:`<div class="bgrid" id="bgr" hidden>${BADGES.map(b=>{const[c,m]=bProg(b),on=sn.includes(b[0])||c>=m;return`<button class="bdg ${on?"on":""}" data-b="${b[0]}"><i>${b[1]}</i><span>${t("b_"+b[0])}</span>${on?"":`<em><u style="width:${c/m*100}%"></u></em>`}</button>`}).join("")}</div>`}};
 function bindBadges(){const bh=$("#bhd");if(bh)bh.onclick=()=>{const g=$("#bgr");g.hidden=!g.hidden;bh.classList.toggle("op",!g.hidden);bh.setAttribute("aria-expanded",String(!g.hidden));vib(8)};document.querySelectorAll(".bdg").forEach(el=>el.onclick=()=>{vib(10);const b=BADGES.find(x=>x[0]===el.dataset.b),[c,m]=bProg(b),on=el.classList.contains("on");
   sheet(`<div class="bbig ${on?"":"lock"}">${b[1]}</div><h2>${t("b_"+b[0])}</h2><p class="hint">${t("bd_"+b[0])}</p><p class="hint" style="color:${on?"#FF4F86":"rgba(255,255,255,.55)"};font-weight:900">${on?t("bGot"):t("bProg",c,m)}</p>`);if(on)sfx("react")})}
 
