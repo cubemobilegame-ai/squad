@@ -1277,6 +1277,17 @@ html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 .scr.nw .sb{background:#131313;border-radius:18px}
 .scr.nw .mut,.scr.nw .hint.s{color:#8e8e8e}
 .scr.nw .cta{box-shadow:none;margin-top:22px!important}
+
+/* ===== MAPA: fala szukania z ikony lokalizacji + wskakiwanie pinów ===== */
+.pmmw{position:relative;width:46px;height:46px}
+.pmmw .pms{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.75);background:rgba(255,255,255,.13);opacity:0;transform:scale(1);pointer-events:none;z-index:0}
+.pmmw .pmme2{position:relative;z-index:1}
+.pmmw.scan .pms{animation:pmscan 1.9s cubic-bezier(.2,.6,.3,1) forwards}
+.pmmw.scan .pms.d{animation-delay:.5s}
+@keyframes pmscan{0%{opacity:.9;transform:scale(1)}70%{opacity:.35}100%{opacity:0;transform:scale(11)}}
+.leaflet-marker-icon .pmk{animation:pmpop .42s cubic-bezier(.3,1.6,.5,1) backwards}
+@keyframes pmpop{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pmmw.scan .pms,.leaflet-marker-icon .pmk{animation:none}}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -2382,7 +2393,7 @@ function home(){
   view(`<div class="scr hm"><h1 class="pmt"><button type="button" class="pmf" id="pmf" aria-haspopup="true" aria-expanded="false"><span>${t(MFL()==="mine"?"mf_mine":"pMapT")}</span><svg class="hch" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h1><div class="pmm2" id="pmm2" hidden>${["all","mine"].map(k=>`<button data-m="${k}" class="${MFL()===k?"on":""}"><span>${t("mf_"+k)}</span></button>`).join("")}</div><div class="top hd2"><h1 class="logo lg2">Squad<span>✦</span></h1><div class="tr"><button class="bell" id="qrh" aria-label="QR">${QRI.replace('width="15" height="15"','width="22" height="22"')}</button><button class="bell" id="nd" aria-label="${esc(t("newDrop").replace(/^\+\s*/,""))}">${PLUS}</button><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button></div></div>
   ${u.isAnonymous?accBox():""}<button class="htl" id="hfl" aria-haspopup="true" aria-expanded="false"><span id="hft">${hTit()}</span><svg class="hch" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="hmn" id="hmn" hidden>${["all","host","in","pub"].map(k=>`<button data-f="${k}" class="${HFL()===k?"on":""}"><span>${k==="all"?t("hAll"):HFT(k)+" "+t(HFK[k])}</span></button>`).join("")}</div><div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
   $("#pmf").onclick=()=>{vib(8);const m=$("#pmm2");m.hidden=!m.hidden;$("#pmf").setAttribute("aria-expanded",String(!m.hidden))};
-  document.querySelectorAll("#pmm2 [data-m]").forEach(b=>b.onclick=()=>{vib(8);sset("mflt",b.dataset.m);if(PUB.M)PUB.M.fitMine=b.dataset.m==="mine";try{const cd=PUB.M&&PUB.M.wrap.querySelector("#pmcard");if(cd)cd.hidden=true}catch{}$("#pmf span").textContent=t(b.dataset.m==="mine"?"mf_mine":"pMapT");$("#pmm2").hidden=true;$("#pmf").setAttribute("aria-expanded","false");document.querySelectorAll("#pmm2 [data-m]").forEach(x=>x.classList.toggle("on",x===b));const P=PUB.M;if(P&&P.map){pubMapLoad(P,m=>{const h=P.wrap.querySelector("#pmh");if(h){h.hidden=!m;h.textContent=m||""}});if(b.dataset.m!=="mine"&&PUB.pos)pmFit(P,PUB.pos)}});
+  document.querySelectorAll("#pmm2 [data-m]").forEach(b=>b.onclick=()=>{vib(8);sset("mflt",b.dataset.m);if(PUB.M)PUB.M.fitMine=b.dataset.m==="mine";try{const cd=PUB.M&&PUB.M.wrap.querySelector("#pmcard");if(cd)cd.hidden=true}catch{}$("#pmf span").textContent=t(b.dataset.m==="mine"?"mf_mine":"pMapT");$("#pmm2").hidden=true;$("#pmf").setAttribute("aria-expanded","false");document.querySelectorAll("#pmm2 [data-m]").forEach(x=>x.classList.toggle("on",x===b));const P=PUB.M;if(P&&P.map){pubMapLoad(P,m=>{const h=P.wrap.querySelector("#pmh");if(h){h.hidden=!m;h.textContent=m||""}});if(b.dataset.m!=="mine"&&PUB.pos){P.scanReq=1;pmFit(P,PUB.pos)}}});
   if($("#acc"))$("#acc").onclick=()=>{vib(10);guestUp("/")};
   $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#bel").onclick=()=>{vib(8);go("/n")};$("#qrh").onclick=()=>qrContact();$("#hfl").onclick=()=>{vib(8);const m=$("#hmn");m.hidden=!m.hidden;$("#hfl").setAttribute("aria-expanded",String(!m.hidden))};document.querySelectorAll("#hmn [data-f]").forEach(b=>b.onclick=()=>{vib(8);sset("hflt",b.dataset.f);$("#hmn").hidden=true;$("#hfl").setAttribute("aria-expanded","false");$("#hft").innerHTML=hTit();document.querySelectorAll("#hmn [data-f]").forEach(x=>x.classList.toggle("on",x===b));try{redraw()}catch{}});setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
   const draw=()=>{
@@ -2500,10 +2511,11 @@ function pubMap(el,safe){
     const fs=(on,keep)=>{P.isFs=on;{const cd=w.querySelector("#pmcard");if(cd&&!keep)cd.hidden=true}w.classList.toggle("fs",on);document.documentElement.classList.toggle("pmlock",on);w.querySelector("#pmbk").hidden=!on;w.querySelector("#pmfs").hidden=on;if(!on)w.style.top="";setTimeout(()=>{try{P.map&&P.map.invalidateSize()}catch{}},60);vib(8)};P.fs=fs;
     w.querySelector("#pmadd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};
     w.querySelector("#pmfs").onclick=()=>fs(true);w.querySelector("#pmbk").onclick=()=>fs(false);
-    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;pmFit(P,p)}catch(e){if(PUB.pos&&P.map&&e&&e.code!==1)pmFit(P,PUB.pos);else toast(t(e&&e.code===1?"pubLocDeny":"pmGeoErr")+" ["+(e&&(e.code??e.message))+"]")}};
+    w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.scanReq=1;pmFit(P,p)}catch(e){if(PUB.pos&&P.map&&e&&e.code!==1)pmFit(P,PUB.pos);else toast(t(e&&e.code===1?"pubLocDeny":"pmGeoErr")+" ["+(e&&(e.code??e.message))+"]")}};
 }
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
+  if(sget("mflt")!=="mine")P.scanReq=1;
   const wasFs=!!P.isFs;w.classList.remove("fs");w.querySelector("#pmbk").hidden=true;w.querySelector("#pmfs").hidden=false;
   if(!wasFs){const cd=w.querySelector("#pmcard");if(cd)cd.hidden=true}
   {const nt=document.querySelector("nav")?.getBoundingClientRect().top||innerHeight-70;w.style.height=Math.max(300,Math.round(nt-w.getBoundingClientRect().top))+"px"}
@@ -2530,9 +2542,13 @@ function pubMap(el,safe){
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
 const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${ic(d.category)}</div></div>`})};
-function pmMe(P){try{const m=P.map,p=PUB.pos;if(!m||!p||!window.L)return;const ic=window.L.divIcon({className:"",iconSize:[46,46],iconAnchor:[23,23],html:`<div class="pmme2">${avc("",meAv())}</div>`});
-  if(P.me){P.me.setLatLng([p.la,p.lo]);P.me.setIcon(ic)}else P.me=window.L.marker([p.la,p.lo],{icon:ic,interactive:false,keyboard:false,zIndexOffset:2000}).addTo(m)}catch(e){console.warn("me",e)}}
-function pmFit(P,p){const m=P.map;if(!m)return;pmMe(P);const sz=m.getSize(),px=Math.max(Math.min(sz.x,sz.y),200),mpp=60000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp);m.setView([p.la,p.lo],Math.max(8,Math.min(17,z)),{animate:true})}
+function pmMe(P){try{const m=P.map,p=PUB.pos;if(!m||!p||!window.L)return;const key=JSON.stringify(meAv()),ic=window.L.divIcon({className:"",iconSize:[46,46],iconAnchor:[23,23],html:`<div class="pmmw"><i class="pms"></i><i class="pms d"></i><div class="pmme2">${avc("",meAv())}</div></div>`});
+  if(P.me){P.me.setLatLng([p.la,p.lo]);if(P.meKey!==key){P.me.setIcon(ic);P.meKey=key}}else{P.me=window.L.marker([p.la,p.lo],{icon:ic,interactive:false,keyboard:false,zIndexOffset:2000}).addTo(m);P.meKey=key}
+  if(P.scanReq&&P.me){P.scanReq=0;P.scanEnd=Date.now()+2300;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}}catch(e){console.warn("me",e)}}
+function pmFit(P,p){const m=P.map;if(!m)return;pmMe(P);const sz=m.getSize(),px=Math.max(Math.min(sz.x,sz.y),200),mpp=60000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp),zz=Math.max(8,Math.min(17,z));
+  /* ikona lokalizacji w środku widocznego obszaru (mapa sięga pod dolne menu) */
+  let off=0;try{if(!(P.wrap&&P.wrap.classList.contains("fs"))){const nv=document.querySelector("nav");if(nv)off=Math.round(nv.getBoundingClientRect().height/2)}}catch{}
+  if(off){const pt=m.project([p.la,p.lo],zz).add([0,off]);m.setView(m.unproject(pt,zz),zz,{animate:true})}else m.setView([p.la,p.lo],zz,{animate:true})}
 async function pubMapLoad(P,hint){try{await pubMapLoad0(P,hint)}catch(e){console.warn("map",e)}}
 /* pobranie dropów dla komórek geohash do wspólnego magazynu P.items (mapa i lista czytają z tego samego) */
 async function pubFetch(P,cs){const m=P.map,now=Date.now(),need=cs.filter(c=>!(P.loaded.get(c)>now-120e3));
@@ -2562,10 +2578,11 @@ async function pubMapLoad0(P,hint){pmMe(P);const m=P.map;if(!m)return;
     vis=[...C.values()];
     if(need.length&&!DEMO){P.gc=P.gc||new Map();need.slice(0,12).forEach(async d=>{P.gc.set(d.id,null);try{const g=await placeGeo(clean(d.place),PUB.pos||null);if(g){P.gc.set(d.id,{la:g.la,lo:g.lo});if(sget("mflt")==="mine")pubMapLoad(P,hint)}}catch{}})}}
   else vis=[...P.items.values()].filter(d=>d.startsAt?.toMillis?.()>now&&d.geo&&d.hostId!==me()&&!isBlk(d.hostId));
-  vis.forEach(d=>{if(P.mk.has(d.id))return;const k=window.L.marker(dmp(d),{icon:pubMapIcon(d)});k.on("click",()=>pubMapCard(P,d));P.mk.set(d.id,k);P.cl.addLayer(k)});
+  {let n=0;const wt=Math.max(0,(P.scanEnd||0)-Date.now()-500);vis.forEach(d=>{if(P.mk.has(d.id))return;const k=window.L.marker(dmp(d),{icon:pubMapIcon(d)});k.on("click",()=>pubMapCard(P,d));P.mk.set(d.id,k);if(wt>0){const dl=wt+(n++)*80;setTimeout(()=>{if(P.mk.get(d.id)===k)P.cl.addLayer(k)},dl)}else P.cl.addLayer(k)})}
   const ids=new Set(vis.map(d=>d.id));P.mk.forEach((k,id)=>{if(!ids.has(id)){P.cl.removeLayer(k);P.mk.delete(id)}});
   if(mf==="mine"&&P.fitMine&&vis.length){P.fitMine=0;try{m.fitBounds(window.L.latLngBounds(vis.map(dmp)),{padding:[60,60],maxZoom:15,animate:true})}catch{}}
-  const inV=vis.filter(d=>m.getBounds().contains(dmp(d))).length;hint(inV?"":t("pmNo"))}
+  const inV=vis.filter(d=>m.getBounds().contains(dmp(d))).length,sw=(P.scanEnd||0)-Date.now();
+  clearTimeout(P.hT);if(!inV&&sw>0){hint("");P.hT=setTimeout(()=>{try{if(!P.wrap.isConnected)return;const n=[...P.mk.values()].filter(k=>m.getBounds().contains(k.getLatLng())).length;hint(n?"":t("pmNo"))}catch{}},sw+80)}else hint(inV?"":t("pmNo"))}
 async function pubMapCard(P,d){try{await pubMapCard0(P,d)}catch(e){console.warn("card",e)}}
 async function pubMapCard0(P,d){const c=P.wrap.querySelector("#pmcard");if(!c)return;vib(8);
   if(!d.P){try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}}catch{d.P=[]}}
