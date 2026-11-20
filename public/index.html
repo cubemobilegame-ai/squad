@@ -959,6 +959,16 @@ html:has(.scr.pf),body:has(.scr.pf){background:#0b0b0b}
 .pf #thb .thsw .tht>span{display:none}
 .pf #thb .thsw .tht{justify-content:flex-end}
 .pf #thh:not(:last-child)::after{content:none}
+
+/* arkusz wyboru języka – styl profilu */
+.sheet:has(.lgl){background:#0b0b0b;border-top:1px solid rgba(255,255,255,.08)}
+.sheet:has(.lgl) h2{font:800 19px Brico,BricoCyr,system-ui;letter-spacing:-.02em;color:#fff}
+.sheet .slist.lgl{background:#131313!important;border:0!important;border-radius:26px;box-shadow:none!important;overflow:hidden;padding:0}
+.sheet .lgl .srow{position:relative;display:flex;align-items:center;min-height:56px;padding:8px 18px;border:0;background:none;color:#fff;font:500 16px Brico,BricoCyr,system-ui;text-align:left;gap:12px}
+.sheet .lgl .srow>span{flex:1}
+.sheet .lgl .srow:not(:last-child)::after{content:"";position:absolute;left:18px;right:0;bottom:0;height:1px;background:rgba(255,255,255,.07)}
+.sheet .lgl .srow.sel{font-weight:800}
+.sheet .lgl .srow em{font:800 18px Brico,BricoCyr,system-ui;font-style:normal;color:#34d17a}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
