@@ -1406,6 +1406,23 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .scr.deco{position:relative;isolation:isolate}.scr.deco::before{content:"";position:absolute;left:-20px;right:-20px;top:-98px;height:770px;z-index:-1;background:url(/e/login-bg.webp) center top/100% auto no-repeat;filter:brightness(.88);-webkit-mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);pointer-events:none}
 .scr.deco .legal a{color:#fff!important;text-decoration-color:rgba(255,255,255,.45)}
 .scr.deco .gstb{color:#4da3ff!important;font:700 14.5px Brico,BricoCyr,system-ui!important;height:46px;display:flex;align-items:center;justify-content:center;text-decoration:none!important}
+/* ankiety: słupki jak w aktywności profilu (kolor systemowy) */
+.poll,.m.pollm .poll,.gpl{background:#131313!important;border:0!important;border-radius:26px!important;padding:18px 18px 14px!important}
+.poll .pq,.gpl h4{font:700 18px/1.3 Brico,BricoCyr,system-ui;color:#fff}
+.gpl h4{margin:0}.gpl p{color:#8e8e8e!important;font:500 13px Brico,BricoCyr,system-ui!important;margin:4px 0 8px!important}
+.po,.m.pollm .po,.gpo{position:static!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px;width:100%;height:auto!important;margin:0!important;padding:13px 0 0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;color:#fff;font:500 16px Brico,BricoCyr,system-ui!important;text-align:left}
+.po .pt,.gpo span{font:500 16px Brico,BricoCyr,system-ui;white-space:normal;overflow:visible;text-overflow:clip;min-width:0}
+.po.my .pt,.gpo.my span{font-weight:800}
+.po .pr,.gpo em{font:500 14px Brico,BricoCyr,system-ui;font-style:normal;color:#8e8e8e;opacity:1}
+.po .pr em,.pollm .po em{font:800 16px Brico,BricoCyr,system-ui;color:#fff;opacity:1;margin-left:8px}
+.gpo em{font:800 16px Brico,BricoCyr,system-ui;color:#fff;opacity:1}
+.po .pr .av,.pollm .po .pr .av{border-color:#131313}
+.po .pb,.gpo .pb{grid-column:1/-1;display:block;height:10px;border-radius:99px;background:#0e0e0e;margin:10px 0 3px;overflow:hidden}
+.po .pb i,.po.lead .pb i,.gpo .pb i{position:static!important;display:block;height:100%;border-radius:99px;transition:width .35s;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.26) 0 7px,rgba(255,255,255,0) 7px 14px),linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%),var(--acc);background-size:20px 20px,100% 100%,100% 100%;animation:abst 1.6s linear infinite;box-shadow:inset 0 -1px 0 rgba(0,0,0,.12)}
+:root.acw .po .pb i,:root.acw .gpo .pb i{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.14) 0 7px,rgba(0,0,0,0) 7px 14px),var(--acc)}
+@media (prefers-reduced-motion:reduce){.po .pb i,.gpo .pb i{animation:none}}
+.poll .pf{color:#8e8e8e;font:500 13px Brico,BricoCyr,system-ui;margin-top:12px}.gpx{color:#8e8e8e;font:500 13px Brico,BricoCyr,system-ui}
+.gph em{color:#8e8e8e;font:500 13px Brico,BricoCyr,system-ui}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -2919,7 +2936,7 @@ async function groupView(code){
   const drawPoll=()=>{const el=$("#gpol");if(!el)return;if(!isM()){el.innerHTML="";return}
     if(!PO){el.innerHTML=`<h3>${t("gpPol")}</h3><button class="gpn ed add" id="gpa"><i>＋</i><div><b>${t("gpPolAdd")}</b></div></button>`;$("#gpa").onclick=newPoll;return}
     const pl=PO.poll,V=PO.v||{},cnt=pl.o.map((_,i)=>Object.values(V).filter(x=>x===i).length),mx=Math.max(1,...cnt),my=V[me()],tot=Object.keys(V).length;
-    el.innerHTML=`<h3 class="gph">${t("gpPol")}<em>${t("gpVotes",tot)}</em></h3><div class="gpl"><h4>${esc(clean(pl.q))}</h4><p>${t("gpPolD")}</p>${pl.o.map((o,i)=>`<button class="gpo${my===i?" my":""}" data-i="${i}"><i style="width:${cnt[i]?Math.round(cnt[i]/mx*100):0}%"></i><span>${my===i?"✓ ":""}${esc(clean(o))}</span><em>${cnt[i]}</em></button>`).join("")}<button class="gpx" id="gpa">${t("gpPolNew")}</button></div>`;
+    el.innerHTML=`<h3 class="gph">${t("gpPol")}<em>${t("gpVotes",tot)}</em></h3><div class="gpl"><h4>${esc(clean(pl.q))}</h4><p>${t("gpPolD")}</p>${pl.o.map((o,i)=>`<button class="gpo${my===i?" my":""}" data-i="${i}"><span>${my===i?"✓ ":""}${esc(clean(o))}</span><em>${cnt[i]}</em><u class="pb"><i style="width:${cnt[i]?Math.round(cnt[i]/mx*100):0}%"></i></u></button>`).join("")}<button class="gpx" id="gpa">${t("gpPolNew")}</button></div>`;
     el.querySelectorAll(".gpo").forEach(b=>b.onclick=async()=>{if(!isM())return;vib(10);const i=+b.dataset.i,cur=(PO.v||{})[me()];try{await updateDoc(doc(ref,"messages",PO.id),{["v."+me()]:cur===i?deleteField():i})}catch{toast(t("err"))}});$("#gpa").onclick=newPoll};
   const newPoll=()=>{vib(8);const row=()=>`<input class="popt" maxlength="40" placeholder="${esc(t("gpOptPh"))}" autocomplete="off">`;
     const s2=sheet(`<div class="cmenu"><h2>📊 ${t("gpPol")}</h2><label class="lbl">${t("pQ")}</label><input id="pq" maxlength="80" autocomplete="off" placeholder="${esc(t("gpPolQ"))}"><label class="lbl">${t("pOpts")}</label><div id="pos">${row()+row()+row()}</div><button class="ghost cmb cmx" id="padd" style="margin-top:12px">＋ ${t("pAdd")}</button><button class="cta" id="pgo" style="margin-top:12px">${t("pSend")}</button><button class="ghost cmb cmx" id="pcn">${t("cancel")}</button></div>`);
@@ -3079,7 +3096,7 @@ async function dropView(code){
   let dpOn=false,DPO=null;
   const drawDpo=()=>{const el=$("#dpo");if(!el)return;if(!DPO){el.innerHTML="";return}
     const pl=DPO.poll,V=DPO.v||{},cnt=pl.o.map((_,i)=>Object.values(V).filter(x=>x===i).length),mx=Math.max(1,...cnt),my=V[me()],tot=Object.keys(V).length;
-    el.innerHTML=`<h3 class="gph">${t("gpPol")}<em>${t("gpVotes",tot)}</em></h3><div class="gpl"><h4>${esc(clean(pl.q))}</h4><p>${t("gpPolD")}</p>${pl.o.map((o,i)=>`<button class="gpo${my===i?" my":""}" data-i="${i}"><i style="width:${cnt[i]?Math.round(cnt[i]/mx*100):0}%"></i><span>${my===i?"✓ ":""}${esc(clean(o))}</span><em>${cnt[i]}</em></button>`).join("")}</div>`;
+    el.innerHTML=`<h3 class="gph">${t("gpPol")}<em>${t("gpVotes",tot)}</em></h3><div class="gpl"><h4>${esc(clean(pl.q))}</h4><p>${t("gpPolD")}</p>${pl.o.map((o,i)=>`<button class="gpo${my===i?" my":""}" data-i="${i}"><span>${my===i?"✓ ":""}${esc(clean(o))}</span><em>${cnt[i]}</em><u class="pb"><i style="width:${cnt[i]?Math.round(cnt[i]/mx*100):0}%"></i></u></button>`).join("")}</div>`;
     el.querySelectorAll(".gpo").forEach(b=>b.onclick=async()=>{vib(10);const i=+b.dataset.i,cur=(DPO.v||{})[me()];try{await updateDoc(doc(ref,"messages",DPO.id),{["v."+me()]:cur===i?deleteField():i})}catch{toast(t("err"))}})};
   const drawChp=()=>{const el=$("#chp");if(!el||el.hidden)return;const un=unreadOf({id:code});
     const lm=[...CM].reverse().find(m=>!isBlk(m.authorId)||isMe(m.authorId)),lp=lm&&(P.find(p=>p.id===lm.authorId)||{});
@@ -3206,7 +3223,7 @@ async function chatView(code,g){
     const who=i=>Object.entries(V).filter(([,x])=>x===i).map(([u])=>P.find(p=>p.id===u)).filter(Boolean);
     const canSet=!g&&owner===me()&&(pl.k==="place"||pl.k==="time")&&lead>=0&&(d.startsAt?.toMillis?.()||0)>Date.now();
     return`<div class="poll"><div class="pq"><span>${pl.k==="place"?"📍":pl.k==="time"?"🕒":"📊"}</span><b>${esc(clean(pl.q||""))}</b></div>
-    ${o.map((x,i)=>{const pc=n?Math.round(cnt[i]/n*100):0,w=who(i);return`<button class="po${my===i?" my":""}${i===lead&&mx>0?" lead":""}" data-pv="${esc(m.id)}:${i}"><i style="width:${pc}%"></i><span class="pt">${my===i?"✓ ":""}${esc(clean(x))}</span><span class="pr">${w.slice(0,3).map(p=>avc("mini",avIdx(p))).join("")}<em>${cnt[i]}</em></span></button>`}).join("")}
+    ${o.map((x,i)=>{const pc=n?Math.round(cnt[i]/n*100):0,w=who(i);return`<button class="po${my===i?" my":""}${i===lead&&mx>0?" lead":""}" data-pv="${esc(m.id)}:${i}"><span class="pt">${my===i?"✓ ":""}${esc(clean(x))}</span><span class="pr">${w.slice(0,3).map(p=>avc("mini",avIdx(p))).join("")}<em>${cnt[i]}</em></span><u class="pb"><i style="width:${pc}%"></i></u></button>`}).join("")}
     <div class="pf">${t("votes",n)} · ${esc(m.nickname||"")}${canSet?`<button class="pset" data-pa="${esc(m.id)}:${lead}">✅ ${t(pl.k==="place"?"pSetP":"pSetT")}: ${esc(clean(o[lead]))}</button>`:""}</div></div>`};
   const vote=async(id,i)=>{const m=M.find(x=>x.id===id);if(!m||!mine){return toast(t("chOut"))}vib(10);const cur=(m.v||{})[me()];try{await updateDoc(doc(ref,"messages",id),{["v."+me()]:cur===i?deleteField():i})}catch{toast(t("err"))}};
   const applyPoll=async(id,i)=>{const m=M.find(x=>x.id===id);if(!m||g)return;const pl=m.poll,val=String(pl.o[i]||"");vib(12);
