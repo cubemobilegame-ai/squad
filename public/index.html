@@ -1267,7 +1267,7 @@ html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 .scr.nw .nrep{border-top:1px solid rgba(255,255,255,.07);padding:14px 0 2px}
 .scr.nw .nrep .nl{display:block;margin:0 0 10px 18px;font:800 12px Brico,BricoCyr,system-ui;letter-spacing:.2em;text-transform:uppercase;color:#8e8e8e}
 .scr.nw .nrep .chips{margin:0;padding:0 14px 12px}
-.scr.nw .nopt{margin-top:12px}.scr.nw .nopt:empty{display:none}
+.scr.nw #pubw.off .sw{opacity:.4}.scr.nw #pubw.off .tg{pointer-events:auto}.scr.nw .nopt{margin-top:12px}.scr.nw .nopt:empty{display:none}
 .scr.nw .sw{margin:0;min-height:60px;padding:8px 16px 8px 18px;font:500 16px Brico,BricoCyr,system-ui;text-transform:none;color:#fff}
 .scr.nw .tg{background:#0e0e0e}.scr.nw .tg:after{background:#6f6f6f}.scr.nw .tg.on{background:var(--acc)}.scr.nw .tg.on:after{background:#fff}
 .scr.nw .nopt .hint{margin:0;padding:0 18px 14px;color:#8e8e8e;font-size:13px}
@@ -1879,6 +1879,14 @@ Object.assign(L.fr,{tmTom:"DÉBUT DEMAIN",tmD:w=>`DÉBUT: ${w}`});
 Object.assign(L.it,{tmTom:"INIZIA DOMANI",tmD:w=>`INIZIA: ${w}`});
 Object.assign(L.cs,{tmTom:"ZAČÁTEK ZÍTRA",tmD:w=>`ZAČÁTEK: ${w}`});
 Object.assign(L.uk,{tmTom:"ПОЧАТОК ЗАВТРА",tmD:w=>`ПОЧАТОК: ${w}`});
+Object.assign(L.pl,{pubCatX:"Dla tej kategorii drop nie może być publiczny."});
+Object.assign(L.en,{pubCatX:"This category cannot be a public drop."});
+Object.assign(L.es,{pubCatX:"Esta categoría no puede ser un drop público."});
+Object.assign(L.de,{pubCatX:"Diese Kategorie kann kein öffentlicher Drop sein."});
+Object.assign(L.fr,{pubCatX:"Cette catégorie ne peut pas être un drop public."});
+Object.assign(L.it,{pubCatX:"Questa categoria non può essere un drop pubblico."});
+Object.assign(L.cs,{pubCatX:"Tato kategorie nemůže být veřejný drop."});
+Object.assign(L.uk,{pubCatX:"Ця категорія не може бути публічним дропом."});
 Object.assign(L.pl,{aMeet:"Spotkania w tym miesiącu",aHost:"Zorganizowane przez Ciebie",aFr:"Znajomi"});Object.assign(L.en,{aMeet:"Meetups this month",aHost:"Hosted by you",aFr:"Friends"});Object.assign(L.es,{aMeet:"Quedadas este mes",aHost:"Organizadas por ti",aFr:"Amigos"});Object.assign(L.de,{aMeet:"Treffen diesen Monat",aHost:"Von dir organisiert",aFr:"Freunde"});Object.assign(L.fr,{aMeet:"Rencontres ce mois-ci",aHost:"Organisées par toi",aFr:"Amis"});Object.assign(L.it,{aMeet:"Incontri questo mese",aHost:"Organizzati da te",aFr:"Amici"});Object.assign(L.cs,{aMeet:"Setkání tento měsíc",aHost:"Uspořádané tebou",aFr:"Přátelé"});Object.assign(L.uk,{aMeet:"Зустрічі цього місяця",aHost:"Організовано тобою",aFr:"Друзі"});
 Object.assign(L.pl,{nAct:"Aktywność"});Object.assign(L.en,{nAct:"Activity"});Object.assign(L.es,{nAct:"Actividad"});Object.assign(L.de,{nAct:"Aktivität"});Object.assign(L.fr,{nAct:"Activité"});Object.assign(L.it,{nAct:"Attività"});Object.assign(L.cs,{nAct:"Aktivita"});Object.assign(L.uk,{nAct:"Активність"});
 Object.assign(L.es,{mf_all:"Todos los drops públicos",mf_mine:"Todos mis drops",dvMore:"Más"});
@@ -2858,8 +2866,8 @@ function newView(){
   <h3>${t("when")}</h3><div class="ncd"><div class="when"><div class="wheels"><div class="wh" id="hh">${[...Array(24)].map((_,i)=>`<div>${pad(i)}</div>`).join("")}</div><b style="font-size:26px">:</b><div class="wh" id="mm">${[...Array(12)].map((_,i)=>`<div>${pad(i*5)}</div>`).join("")}</div></div>
   <div class="dayb"><button class="sel" data-d="0">${t("today")}</button><button data-d="1">${t("tomorrow")}</button><button data-d="x" class="dpb"><span id="dlab">${t("pickD")}</span><input type="date" id="dpk" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></button></div></div>
   <div class="nrep"><span class="nl">${t("rep")}</span><div class="chips" id="rp">${REP.map((k,i)=>`<button class="chip ${i?"":"on"}" data-r="${k}">${t("rep_"+k)}</button>`).join("")}</div></div></div>
-  <div class="ncd nopt">${pubOk()?`<div id="pubw"${cat==="biz"?" hidden":""}><div class="sw">🌍 ${t("pubMk")}<div class="tg" id="pbs"></div></div><p class="hint s">${t("pubMkD")}</p><p class="hint s">${t("pubRl")}</p>
-  <div id="seatw" hidden><h3>${t("seats")}</h3><div class="chips" id="seats">${[4,6,8,10,15,20,30].map(n=>`<button class="chip ${n===8?"on":""}" data-n="${n}">${n}</button>`).join("")}</div></div></div>`:""}
+  <div class="ncd nopt">${`<div id="pubw"${NOPUB.includes(cat)?" class=\"off\"":""}><div class="sw">🌍 ${t("pubMk")}<div class="tg" id="pbs"></div></div><p class="hint s" id="pubx">${t(NOPUB.includes(cat)?"pubCatX":"pubMkD")}</p><p class="hint s">${t("pubRl")}</p>
+  <div id="seatw" hidden><h3>${t("seats")}</h3><div class="chips" id="seats">${[4,6,8,10,15,20,30].map(n=>`<button class="chip ${n===8?"on":""}" data-n="${n}">${n}</button>`).join("")}</div></div></div>`}
 <div id="surw"><div class="sw">${t("sur")}<div class="tg" id="sw"></div></div><p class="hint s">${t("surD")}</p></div>
   </div>
   <h3>${t("where")}</h3><div class="map" id="cmw"><div class="pin">${PIN}</div><button type="button" class="mexp" id="cmx" aria-label="map">${PVI.fs}</button><label class="sb">${sv('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>')}<input id="pl" placeholder="${t("search")}" maxlength="80" autocomplete="off"></label></div><div class="sug" id="sug"></div><p class="mut cmst" id="cmst"></p><p class="mut maph">${t("mapHint")}</p>
@@ -2869,14 +2877,14 @@ function newView(){
   $("#tmore").onclick=()=>{vib(8);$("#tmore").parentElement.classList.add("open")};
   const wheel=(el,i)=>{const mark=()=>{const k=Math.round(el.scrollTop/40);[...el.children].forEach((c,j)=>c.classList.toggle("on",j===k))};el.scrollTop=i*40;mark();el.onscroll=mark};
   wheel($("#hh"),t0.getHours());wheel($("#mm"),Math.min(11,Math.round(t0.getMinutes()/5)));
-  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;if(cat!=="occ")occK=null;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";$("#spc").hidden=cat!=="sport";if(cat==="sport")document.querySelectorAll("#spc .chip").forEach(x=>x.classList.remove("on"));if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").hidden=oc;if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();if(typeof cmPin==="function")cmPin();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
+  document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;if(cat!=="occ")occK=null;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";$("#spc").hidden=cat!=="sport";if(cat==="sport")document.querySelectorAll("#spc .chip").forEach(x=>x.classList.remove("on"));if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").classList.toggle("off",oc);$("#pubx").textContent=t(oc?"pubCatX":"pubMkD");if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();if(typeof cmPin==="function")cmPin();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
   const selDay=b=>document.querySelectorAll(".dayb button").forEach(x=>x.classList.toggle("sel",x===b));
   document.querySelectorAll(".dayb button").forEach(b=>b.onclick=e=>{vib(8);if(b.dataset.d==="x")return;day=+b.dataset.d;dsel=null;$("#dlab").textContent=t("pickD");selDay(b)});
   $("#dpk").onclick=e=>{e.stopPropagation();try{e.target.showPicker()}catch{}};
   $("#dpk").onchange=()=>{const v=$("#dpk").value;if(!v)return;dsel=v;day=-1;$("#dlab").textContent=new Date(v+"T12:00").toLocaleDateString(LANG,{weekday:"short",day:"numeric",month:"short"});selDay($("#dpk").parentElement)};
   document.querySelectorAll("#spc .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#spc .chip").forEach(x=>x.classList.toggle("on",x===c));cat=c.dataset.s;$("#ti").value=t("sp_"+cat)+" ";$("#ti").focus()});
   document.querySelectorAll("#occ .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#occ .chip").forEach(x=>x.classList.toggle("on",x===c));occK=OCC[+c.dataset.o];$("#ti").value=t("o_"+OCC[+c.dataset.o])+" ";$("#ti").focus()});
-  if($("#pbs"))$("#pbs").onclick=()=>{if(!pub&&sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}if(!pub&&sur){vib([50,30,50]);return toast(t("surPubX"))}vib(10);pub=!pub;$("#pbs").classList.toggle("on",pub);$("#seatw").hidden=!pub;$("#sw").parentElement.style.opacity=pub?".4":""};
+  if($("#pbs"))$("#pbs").onclick=()=>{if(NOPUB.includes(cat)){vib([50,30,50]);return toast(t("pubCatX"))}if(!pubOk()){vib([50,30,50]);homeTab="pub";toast(t(sget("pub16")==="no"?"pubLockT":"pubAgeT"));return go("/")}if(!pub&&sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}if(!pub&&sur){vib([50,30,50]);return toast(t("surPubX"))}vib(10);pub=!pub;$("#pbs").classList.toggle("on",pub);$("#seatw").hidden=!pub;$("#sw").parentElement.style.opacity=pub?".4":""};
   /* nowy drop z zakładki Publiczne: od razu publiczny (bez ręcznego przełączania) */
   /* publiczny drop: domyślnie wyłączony – włącza go dopiero przełącznik w formularzu (bez automatu z zakładki Publiczne) */
   document.querySelectorAll("#seats .chip").forEach(c=>c.onclick=()=>{vib(8);seats=+c.dataset.n;document.querySelectorAll("#seats .chip").forEach(x=>x.classList.toggle("on",x===c))});
