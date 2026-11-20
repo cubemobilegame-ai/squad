@@ -1280,11 +1280,11 @@ html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 
 /* ===== MAPA: fala szukania z ikony lokalizacji + wskakiwanie pinów ===== */
 .pmmw{position:relative;width:46px;height:46px}
-.pmmw .pms{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.8);background:rgba(255,255,255,.12);opacity:0;transform:scale(.12);pointer-events:none;z-index:2}
+.pmmw .pms{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;box-sizing:border-box;border:5px solid #a8ff3e;background:radial-gradient(circle,rgba(168,255,62,0) 52%,rgba(168,255,62,.16) 100%);box-shadow:0 0 14px rgba(168,255,62,.45),inset 0 0 10px rgba(168,255,62,.35);opacity:0;transform:scale(.12);pointer-events:none;z-index:2;will-change:transform,opacity,filter}
 .pmmw .pmme2{position:relative;z-index:1}
 .pmmw.scan .pms{animation:pmscan 3.4s cubic-bezier(.25,.6,.3,1) forwards}
 .pmmw.scan .pms.d{animation-delay:.8s}.pmmw.scan .pms.d2{animation-delay:1.6s}
-@keyframes pmscan{0%{opacity:0;transform:scale(.12)}8%{opacity:.95}65%{opacity:.4}100%{opacity:0;transform:scale(5.5)}}
+@keyframes pmscan{0%{opacity:0;transform:scale(.12);border-width:5px;filter:blur(0)}10%{opacity:1}50%{opacity:.6;border-width:4px;filter:blur(1px)}100%{opacity:0;transform:scale(5.5);border-width:1px;filter:blur(6px)}}
 .leaflet-marker-icon .pmk{animation:pmpop .42s cubic-bezier(.3,1.6,.5,1) backwards}
 @keyframes pmpop{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pmmw.scan .pms,.leaflet-marker-icon .pmk{animation:none}}
