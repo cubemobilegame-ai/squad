@@ -1282,9 +1282,9 @@ html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 .pmmw{position:relative;width:46px;height:46px}
 .pmmw .pms{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;box-sizing:border-box;border:5px solid #0b0b0b;background:radial-gradient(circle,rgba(0,0,0,0) 52%,rgba(0,0,0,.22) 100%);box-shadow:0 0 0 1px rgba(255,255,255,.16),0 0 14px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.12);opacity:0;transform:scale(.12);pointer-events:none;z-index:2;will-change:transform,opacity,filter}
 .pmmw .pmme2{position:relative;z-index:1}
-.pmmw.scan .pms{animation:pmscan 3.4s cubic-bezier(.25,.6,.3,1) forwards}
+.pmmw.scan .pms{animation:pmscan 4.4s cubic-bezier(.25,.6,.3,1) forwards}
 .pmmw.scan .pms.d{animation-delay:.8s}.pmmw.scan .pms.d2{animation-delay:1.6s}
-@keyframes pmscan{0%{opacity:0;transform:scale(.12);border-width:5px;filter:blur(0)}10%{opacity:1}50%{opacity:.6;border-width:4px;filter:blur(1px)}100%{opacity:0;transform:scale(5.5);border-width:1px;filter:blur(6px)}}
+@keyframes pmscan{0%{opacity:0;transform:scale(.12);border-width:5px;filter:blur(0)}10%{opacity:1}50%{opacity:.6;border-width:4px;filter:blur(1px)}100%{opacity:0;transform:scale(6.3);border-width:1px;filter:blur(6px)}}
 .leaflet-marker-icon .pmk{animation:pmpop .42s cubic-bezier(.3,1.6,.5,1) backwards}
 @keyframes pmpop{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pmmw.scan .pms,.leaflet-marker-icon .pmk{animation:none}}
@@ -2580,7 +2580,7 @@ const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasA
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${ic(d.category)}</div></div>`})};
 function pmMe(P){try{const m=P.map,p=PUB.pos;if(!m||!p||!window.L)return;const key=JSON.stringify(meAv()),ic=window.L.divIcon({className:"",iconSize:[46,46],iconAnchor:[23,23],html:`<div class="pmmw"><i class="pms"></i><i class="pms d"></i><i class="pms d2"></i><div class="pmme2">${avc("",meAv())}</div></div>`});
   if(P.me){P.me.setLatLng([p.la,p.lo]);if(P.meKey!==key){P.me.setIcon(ic);P.meKey=key}}else{P.me=window.L.marker([p.la,p.lo],{icon:ic,interactive:false,keyboard:false,zIndexOffset:2000}).addTo(m);P.meKey=key}
-  if(P.scanReq&&P.me){P.scanReq=0;P.scanEnd=Date.now()+3000;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}}catch(e){console.warn("me",e)}}
+  if(P.scanReq&&P.me){P.scanReq=0;P.scanEnd=Date.now()+4000;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}}catch(e){console.warn("me",e)}}
 function pmScanAgain(P){try{if(!P.me)return;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}catch{}}
 function pmFit(P,p){const m=P.map;if(!m)return;pmMe(P);const sz=m.getSize(),px=Math.max(Math.min(sz.x,sz.y),200),mpp=60000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp),zz=Math.max(8,Math.min(17,z));
   /* ikona lokalizacji w środku widocznego obszaru (mapa sięga pod dolne menu) */
