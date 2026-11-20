@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl" style="background:#06060b;color:#fff">
+<html lang=",dvMore:"Більше",dvMore:"Více",dvMore:"Altro",dvMore:"Plus",dvMore:"Mehr",dvMore:"Más"pl" style="background:#06060b;color:#fff">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
@@ -1166,6 +1166,28 @@ html:has(.scr.dv),body:has(.scr.dv){background:#0b0b0b}
 .scr.dv .crew .pr,.scr.dv .crew .rowv{border-color:rgba(255,255,255,.07)}
 .scr.dv #rp{color:#ff6b7a!important}
 .scr.dv #rp svg{color:#ff6b7a!important;background:#241214!important}
+
+/* ===== PODGLĄD DROPA – grupy wierszy jak w profilu ===== */
+.scr.dv .dvl{background:#131313;border-radius:26px;overflow:hidden;margin:12px 0 0}
+.scr.dv .dvh{margin:22px 0 10px 6px;font:800 12px Brico,BricoCyr,system-ui!important;letter-spacing:.2em;text-transform:uppercase;color:#8e8e8e!important}
+.scr.dv .dvl>#chp,.scr.dv .dvl>.mapr,.scr.dv .dvl>.acts4 button,.scr.dv .dvl>button,.scr.dv .dvl>#rp,.scr.dv .dvl>.bugl{position:relative;box-sizing:border-box;display:flex;align-items:center;gap:14px;width:100%;min-height:54px;height:auto;margin:0!important;padding:8px 14px 8px 12px!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;text-align:left}
+.scr.dv .dvl>*:not(:last-child)::before{content:"";position:absolute;left:64px;right:0;bottom:0;height:1px;background:rgba(255,255,255,.07)}
+.scr.dv .dvl>#chp[hidden]{display:none!important}
+.scr.dv .dvl>.map{margin:0 12px 12px!important;width:auto}
+.scr.dv .dvl .bugl{font:500 16px Brico,BricoCyr,system-ui!important;color:#fff!important;text-decoration:none!important}
+.scr.dv .dvl .bugl svg{box-sizing:border-box;width:38px;height:38px;padding:9px;border-radius:50%;background:#0e0e0e;color:#dcdcdc}
+.scr.dv .dvl>#rp{color:#ff6b7a!important}
+.scr.dv .bugw{margin:0}
+.scr.dv .dvl>button svg{box-sizing:border-box!important;flex:none;width:38px!important;height:38px!important;padding:9px!important;border-radius:50%!important;background:#0e0e0e!important;color:#dcdcdc!important;stroke:currentColor}
+.scr.dv .dvl>button small{font:500 16px Brico,BricoCyr,system-ui!important;color:#fff!important;text-transform:none;letter-spacing:0}
+.scr.dv .dvl>button[hidden]{display:none!important}
+.scr.dv .dvl>button::after{content:"";margin:0 4px 0 auto;width:8px;height:8px;border-right:2px solid #fff;border-top:2px solid #fff;transform:rotate(45deg);flex:none}
+.scr.dv #dpw .gpn.ed.add{background:#131313!important;border:0!important;border-radius:26px!important;box-shadow:none!important}
+.scr.dv #dpw .gpn.ed.add i{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#0e0e0e;color:#dcdcdc;font-style:normal}
+.scr.dv #dpw .gpn.ed.add b{font:500 16px Brico,BricoCyr,system-ui;color:#fff}
+.scr.dv #dpw>h3{margin:22px 0 10px 6px}
+.scr.dv #dpw .gpn.ed.add{min-height:54px!important;padding:8px 14px 8px 12px!important;gap:14px}
+.scr.dv .dvl>.bugl::after{border-color:#fff!important}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -1246,7 +1268,7 @@ h_mine:"Dropy, które tworzysz, i te, na które się zapisujesz (IN / LATE). Tu 
 h_out:"Tu lądują dropy, na które odpowiadasz OUT. Do startu możesz jeszcze zmienić zdanie.",
 eInv:"Brak zaproszeń do dropów",eOut:"Pusto. Tu trafią dropy, na które odpowiesz OUT.",
 how1:"Stwórz drop – wybierz co, kiedy i gdzie",how2:"Udostępnij link ekipie: Messenger, Insta, WhatsApp albo SMS",how3:"Znajomi klikają IN / LATE / OUT – nie muszą nic instalować",
-roleHost:"TWÓJ DROP",roleInv:"ZAPROSZENIE",roleMe:s=>"TY: "+s,shareShort:"UDOSTĘPNIJ",yourLink:"Twój link – wyślij go ekipie",copyShort:"KOPIUJ",members:n=>n+" os.",profile:"Profil",hAll:"Wszystkie dropy, w których jesteś",hEmp:"Nie ma tu jeszcze żadnych dropów.",hT1:"Twoje dropy",hFa:"w których jesteś",hFh:"które organizujesz",hFi:"na które idziesz",nInv:"Zaproszenia",pMapT:"Dropy publiczne",shSys:"Inne aplikacje",kTitle:"Twoje kontakty",kSrch:"Szukaj po nicku lub ksywce",kNone:"Brak wyników",kSub:n=>n+(n==1?" osoba":(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?" osoby":" osób"),pSub:"konto i ustawienia",pAcc:"Konto",actT:"Moja aktywność",actD:"Dropy",actP:"Udział",actC:"Kontakty",actCd:"Dodane dropy · ostatnie 7 dni",actCp:"Dropy, w których byłeś · ostatnie 7 dni",actCc:"Twoje kontakty · stan w ostatnich 7 dniach",color:"Kolor dropa",you2:"ty",
+roleHost:"TWÓJ DROP",roleInv:"ZAPROSZENIE",roleMe:s=>"TY: "+s,shareShort:"UDOSTĘPNIJ",yourLink:"Twój link – wyślij go ekipie",copyShort:"KOPIUJ",members:n=>n+" os.",profile:"Profil",dvMore:"Więcej",hAll:"Wszystkie dropy, w których jesteś",hEmp:"Nie ma tu jeszcze żadnych dropów.",hT1:"Twoje dropy",hFa:"w których jesteś",hFh:"które organizujesz",hFi:"na które idziesz",nInv:"Zaproszenia",pMapT:"Dropy publiczne",shSys:"Inne aplikacje",kTitle:"Twoje kontakty",kSrch:"Szukaj po nicku lub ksywce",kNone:"Brak wyników",kSub:n=>n+(n==1?" osoba":(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?" osoby":" osób"),pSub:"konto i ustawienia",pAcc:"Konto",actT:"Moja aktywność",actD:"Dropy",actP:"Udział",actC:"Kontakty",actCd:"Dodane dropy · ostatnie 7 dni",actCp:"Dropy, w których byłeś · ostatnie 7 dni",actCc:"Twoje kontakty · stan w ostatnich 7 dniach",color:"Kolor dropa",you2:"ty",
 asYou:"Odpowiadasz jako",change:"zmień",toMine:"Dodano do „Moje dropy” ✓",toOut:"Przeniesiono do „Odrzucone”",savedG:"Zapisano ✓",
 obT:"Jaką masz ksywkę?",obD:"Ustawiasz ją raz – pokażemy ją we wszystkich dropach i czatach. Zmienisz ją później w profilu.",obGo:"Zapisz i wchodzę",
 grT:"Grupy",grHint:"Stałe ekipy z czatem, który nie znika. Znajomych zapraszasz linkiem.",dcT:"Czaty dropów",dcHint:"Każdy drop ma własny czat. Znika razem z dropem – 24 h po starcie.",
@@ -1283,7 +1305,7 @@ h_mine:"Drops you create and the ones you join (IN / LATE). Details and chat are
 h_out:"Drops you answered OUT land here. You can change your mind until the start.",
 eInv:"No drop invites",eOut:"Empty. Drops you answer OUT will land here.",
 how1:"Create a drop – pick what, when and where",how2:"Share the link with your crew: Messenger, Insta, WhatsApp or SMS",how3:"Friends tap IN / LATE / OUT – no install needed",
-roleHost:"YOUR DROP",roleInv:"INVITE",roleMe:s=>"YOU: "+s,shareShort:"SHARE",yourLink:"Your link – send it to your crew",copyShort:"COPY",members:n=>n+(n==1?" person":" people"),profile:"Profile",hAll:"All drops you're in",hEmp:"No drops here yet.",hT1:"Your drops",hFa:"you're in",hFh:"you host",hFi:"you joined",nInv:"Invitations",pMapT:"Public drops",shSys:"Other apps",kTitle:"Your contacts",kSrch:"Search by nickname",kNone:"No results",kSub:n=>n+(n==1?" person":" people"),pSub:"account & settings",pAcc:"Account",actT:"My activity",actD:"Drops",actP:"Joined",actC:"Contacts",actCd:"Drops added · last 7 days",actCp:"Drops you joined · last 7 days",actCc:"Your contacts · last 7 days",color:"Drop color",you2:"you",
+roleHost:"YOUR DROP",roleInv:"INVITE",roleMe:s=>"YOU: "+s,shareShort:"SHARE",yourLink:"Your link – send it to your crew",copyShort:"COPY",members:n=>n+(n==1?" person":" people"),profile:"Profile",dvMore:"More",hAll:"All drops you're in",hEmp:"No drops here yet.",hT1:"Your drops",hFa:"you're in",hFh:"you host",hFi:"you joined",nInv:"Invitations",pMapT:"Public drops",shSys:"Other apps",kTitle:"Your contacts",kSrch:"Search by nickname",kNone:"No results",kSub:n=>n+(n==1?" person":" people"),pSub:"account & settings",pAcc:"Account",actT:"My activity",actD:"Drops",actP:"Joined",actC:"Contacts",actCd:"Drops added · last 7 days",actCp:"Drops you joined · last 7 days",actCc:"Your contacts · last 7 days",color:"Drop color",you2:"you",
 asYou:"Replying as",change:"change",toMine:"Added to “My drops” ✓",toOut:"Moved to “Declined”",savedG:"Saved ✓",
 obT:"What's your nickname?",obD:"Set it once – we'll show it in every drop and chat. You can change it later in your profile.",obGo:"Save & enter",
 grT:"Groups",grHint:"Standing crews with a chat that never disappears. Invite friends with a link.",dcT:"Drop chats",dcHint:"Every drop has its own chat. It disappears with the drop – 24 h after the start.",
@@ -2778,6 +2800,10 @@ async function dropView(code){
   ${isHost?`<button class="ghost danger" id="dx">${t("del")}</button>`:""}
   ${logged?"":getAppBox()}
   ${isHost?"":`<button class="lnk rep" id="rp">${sv(SI.flag)} ${t("repDrop")}</button>`}${logged&&!closed()?`<div id="dpo"></div><div id="dpw"${isHost?"":" hidden"}><h3>${t("gpPol")}</h3><button class="gpn ed add" id="dpl"><i>＋</i><div><b>${t("gpPolAdd")}</b></div></button><p class="hint dph">${t("dpPollHint")}</p></div>`:""}<div class="bugw"><button class="lnk bugl" id="bug">${sv('<path d="M9 9h6v6a3 3 0 01-6 0zM9 6l1.500 2M15 6l-1.500 2M5 13h4M15 13h4M6 19l3-2M18 19l-3-2'+'"/>')}${t("bugL")}</button></div></div>`);
+  /* układ jak w profilu: wiersze zgrupowane w kartach z separatorami (elementy tylko przenoszone, funkcje bez zmian) */
+  (()=>{const sc=document.querySelector(".scr.dv");if(!sc)return;const g=id=>document.getElementById(id),mk=(els,lb)=>{els=els.filter(Boolean);if(!els.length)return;const w=document.createElement("div");w.className="dvl";els[0].before(w);els.forEach(e=>w.appendChild(e));if(lb){const h=document.createElement("h3");h.className="dvh";h.textContent=lb;w.before(h)}};
+   mk([g("chp"),g("mpr"),g("dmw"),...sc.querySelectorAll(".acts4 button")],"");
+   mk([g("rp"),sc.querySelector(".bugl")],t("dvMore"))})();
   /* podgląd czatu dropa: 3 ostatnie wiadomości + pole, które otwiera pełny czat */
   let chpOn=false,CM=[];
   let dpOn=false,DPO=null;
