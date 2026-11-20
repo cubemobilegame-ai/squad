@@ -1288,6 +1288,29 @@ html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 .leaflet-marker-icon .pmk{animation:pmpop .42s cubic-bezier(.3,1.6,.5,1) backwards}
 @keyframes pmpop{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pmmw.scan .pms,.leaflet-marker-icon .pmk{animation:none}}
+
+/* ===== CZATY – wygląd wg makiety (kolumna 02) ===== */
+html:has(.scr.chl),body:has(.scr.chl){background:#0b0b0b!important}
+.scr.chl .chtop{margin:8px 0 4px}
+.scr.chl .chtop h1{font:800 34px/1.05 Brico,BricoCyr,system-ui!important;letter-spacing:-.035em;margin:0!important}
+.scr.chl .ngb{height:44px;padding:0 18px 0 14px;background:#141414;border:1px solid rgba(255,255,255,.08);color:#fff;font:800 15px Brico,BricoCyr,system-ui;letter-spacing:0;text-transform:none}
+.scr.chl .ngb span{display:block;text-transform:lowercase}.scr.chl .ngb span::first-letter{text-transform:uppercase}
+.scr.chl .ngb svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.scr.chl .gbadge{display:block;margin:8px 0 18px 2px;padding:0;border-radius:0;background:none;font:500 15px Brico,BricoCyr,system-ui;letter-spacing:0;text-transform:none;color:#8e8e8e}
+.scr.chl .chf{display:flex;gap:0;margin:0 0 8px;padding:4px;border-radius:99px;background:#141414}
+.scr.chl .chf button{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 6px;white-space:nowrap;font-size:14px!important;border:0;border-radius:99px;background:none;color:#8e8e8e;font:800 15px Brico,BricoCyr,system-ui;position:relative}
+.scr.chl .chf button.on{background:#2a2a2a;color:#fff}
+.scr.chl .cfb{position:static;display:inline-grid;margin:0;min-width:19px;height:19px;padding:0 5px;background:rgba(255,255,255,.14);color:#fff;box-shadow:none;font:800 11.5px Brico,BricoCyr,system-ui}
+.scr.chl .chf button.on .cfb{background:var(--acc);color:#fff}
+.scr.chl .chrow{position:relative;gap:16px;padding:14px 4px;border-bottom:0}
+.scr.chl .chrow:not(:last-child)::after{content:"";position:absolute;left:74px;right:0;bottom:0;height:1px;background:rgba(255,255,255,.07)}
+.scr.chl .chrow .cav,.scr.chl .chrow .cav.gr{width:56px;height:56px;border-radius:50%}
+.scr.chl .cr1 b{font:700 17px Brico,BricoCyr,system-ui}
+.scr.chl .cr1 time{font:500 14px Brico,BricoCyr,system-ui;color:#8e8e8e}
+.scr.chl .chrow.un .cr1 time{color:var(--acc);font-weight:700}
+.scr.chl .cr2{margin-top:4px}.scr.chl .cr2 small{font:500 15px Brico,BricoCyr,system-ui;color:#8e8e8e}
+.scr.chl .cr2 small em{color:#8e8e8e}.scr.chl .chrow.un .cr2 small,.scr.chl .chrow.un .cr2 small em{color:#fff}
+.scr.chl .cr1 .gtg{margin-left:10px;padding:4px 11px;background:#1c1c1c;color:#8e8e8e;font:800 11px Brico,BricoCyr,system-ui;letter-spacing:.1em}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -1374,7 +1397,7 @@ obT:"Jaką masz ksywkę?",obD:"Ustawiasz ją raz – pokażemy ją we wszystkich
 grT:"Grupy",grHint:"Stałe ekipy z czatem, który nie znika. Znajomych zapraszasz linkiem.",dcT:"Czaty dropów",dcHint:"Każdy drop ma własny czat. Znika razem z dropem – 24 h po starcie.",
 grNew:"+ NOWA GRUPA",grName:"Nazwa grupy (np. Paczka z 3B)",grCreate:"Utwórz grupę",grInv:(o,n)=>o+" zaprasza cię do grupy „"+n+"”",grLink:"Link do grupy – wyślij go ekipie",grJoin:"Dołącz do grupy",grChH:"CZAT GRUPY · ZERO DM · WSZYSCY WIDZĄ WSZYSTKO",emptyG:"Nie masz jeszcze grup. Załóż grupę i wyślij link ekipie.",emptyDc:"Czaty dropów pojawią się, gdy stworzysz drop albo klikniesz IN / LATE.",grMembers:"Ekipa",grInfo:"EKIPA",grLeave:"Opuść grupę",grDel:"Usuń grupę",grLeft:"Opuszczono grupę",grDeleted:"Grupa usunięta",openGC:"Otwórz czat grupy",
 tag:"spontaniczne wypady ze znajomymi w 15 sekund",demoBtn:"Wejdź w tryb demo",gBtn:"Zaloguj się przez Google",accept:"Logując się, akceptujesz",and:"i",privacyAcc:"Politykę prywatności",
-newDrop:"+ Nowy drop",ticker:"TYLKO CZATY GRUPOWE ✦ ZERO DM ✦ LINK ZNIKA 24 H PO STARCIE ✦ ",gOnly:"TYLKO GRUPOWE · ZERO DM",noMsg:"Brak wiadomości – napisz pierwszą",
+newDrop:"+ Nowy drop",ticker:"TYLKO CZATY GRUPOWE ✦ ZERO DM ✦ LINK ZNIKA 24 H PO STARCIE ✦ ",gOnly:"Tylko grupowe · zero wiadomości prywatnych.",noMsg:"Brak wiadomości – napisz pierwszą",
 nHome:"Start",nNew:"Nowy drop",nNot:"Alerty",nCh:"Czaty",nMe:"Profil",
 what:"Co?",when:"Kiedy?",where:"Gdzie?",today:"DZISIAJ",tomorrow:"JUTRO",tonL:"dziś wieczorem",todL:"dziś",tmrL:"jutro",
 sur:"Miejsce niespodzianka?",surD:"Znajomi zobaczą miejsce dopiero na starcie.",search:"Wpisz miejsce, np. Pizzeria Na Rogu",nick:"Twoja ksywka",nameD:"Nazwa dropa (opcjonalnie)",otherPh:"Co robimy? (np. planszówki, spacer…)",note:"Odpowiedzi zbieramy do startu. Link i czat znikają 24 h po starcie.",send:"Stwórz drop i zbierz ekipę",
@@ -1411,7 +1434,7 @@ obT:"What's your nickname?",obD:"Set it once – we'll show it in every drop and
 grT:"Groups",grHint:"Standing crews with a chat that never disappears. Invite friends with a link.",dcT:"Drop chats",dcHint:"Every drop has its own chat. It disappears with the drop – 24 h after the start.",
 grNew:"+ NEW GROUP",grName:"Group name (e.g. The 3B crew)",grCreate:"Create group",grInv:(o,n)=>o+" invites you to the group “"+n+"”",grLink:"Group link – send it to your crew",grJoin:"Join the group",grChH:"GROUP CHAT · NO DMS · EVERYONE SEES EVERYTHING",emptyG:"No groups yet. Start one and send the link to your crew.",emptyDc:"Drop chats show up when you create a drop or tap IN / LATE.",grMembers:"Crew",grInfo:"CREW",grLeave:"Leave group",grDel:"Delete group",grLeft:"You left the group",grDeleted:"Group deleted",openGC:"Open group chat",
 tag:"spontaneous hangouts with friends in 15 seconds",demoBtn:"Enter demo mode",gBtn:"Sign in with Google",accept:"By signing in, you accept the",and:"and the",privacyAcc:"Privacy Policy",
-newDrop:"+ New drop",ticker:"GROUP CHATS ONLY ✦ NO DMS ✦ LINK DISAPPEARS 24 H AFTER THE START ✦ ",gOnly:"GROUP ONLY · NO DMS",noMsg:"No messages yet – say hi",
+newDrop:"+ New drop",ticker:"GROUP CHATS ONLY ✦ NO DMS ✦ LINK DISAPPEARS 24 H AFTER THE START ✦ ",gOnly:"Group chats only · no private messages.",noMsg:"No messages yet – say hi",
 nHome:"Home",nNew:"New drop",nNot:"Alerts",nCh:"Chats",nMe:"Profile",
 what:"What?",when:"When?",where:"Where?",today:"TODAY",tomorrow:"TOMORROW",tonL:"tonight",todL:"today",tmrL:"tomorrow",
 sur:"Surprise location?",surD:"Friends will see the place only at the start.",search:"Type a place, e.g. Corner Pizza",nick:"Your nickname",nameD:"Drop name (optional)",otherPh:"What's the plan? (e.g. board games, a walk…)",note:"Replies are open until the start. The link and chat disappear 24 h after the start.",send:"Create drop & gather the crew",
@@ -1451,7 +1474,7 @@ obT:"¿Cuál es tu apodo?",obD:"Lo pones una vez y lo mostraremos en todos los d
 grT:"Grupos",grHint:"Crews fijas con un chat que no desaparece. Invita a tus amigos con un enlace.",dcT:"Chats de drops",dcHint:"Cada drop tiene su propio chat. Desaparece con el drop, 24 h después del inicio.",
 grNew:"+ NUEVO GRUPO",grName:"Nombre del grupo (p. ej. La crew de 3.º B)",grCreate:"Crear grupo",grInv:(o,n)=>o+" te invita al grupo «"+n+"»",grLink:"Enlace del grupo: mándalo a tu crew",grJoin:"Unirme al grupo",grChH:"CHAT DE GRUPO · SIN MENSAJES PRIVADOS · TODOS LO VEN TODO",emptyG:"Aún no tienes grupos. Crea uno y manda el enlace a tu crew.",emptyDc:"Los chats de drops aparecen cuando creas un drop o tocas IN / LATE.",grMembers:"Crew",grInfo:"CREW",grLeave:"Salir del grupo",grDel:"Eliminar grupo",grLeft:"Has salido del grupo",grDeleted:"Grupo eliminado",openGC:"Abrir chat del grupo",
 tag:"planes espontáneos con amigos en 15 segundos",demoBtn:"Entrar en modo demo",gBtn:"Entrar con Google",accept:"Al entrar, aceptas los",and:"y la",privacyAcc:"Política de privacidad",
-newDrop:"+ Nuevo drop",ticker:"SOLO CHATS DE GRUPO ✦ SIN MENSAJES PRIVADOS ✦ EL ENLACE DESAPARECE 24 H DESPUÉS DEL INICIO ✦ ",gOnly:"SOLO GRUPOS · SIN PRIVADOS",noMsg:"Aún no hay mensajes, ¡saluda!",
+newDrop:"+ Nuevo drop",ticker:"SOLO CHATS DE GRUPO ✦ SIN MENSAJES PRIVADOS ✦ EL ENLACE DESAPARECE 24 H DESPUÉS DEL INICIO ✦ ",gOnly:"Solo grupos · sin mensajes privados.",noMsg:"Aún no hay mensajes, ¡saluda!",
 nHome:"Inicio",nNew:"Nuevo drop",nNot:"Avisos",nCh:"Chats",nMe:"Perfil",
 what:"¿Qué?",when:"¿Cuándo?",where:"¿Dónde?",today:"HOY",tomorrow:"MAÑANA",tonL:"esta noche",todL:"hoy",tmrL:"mañana",
 sur:"¿Lugar sorpresa?",surD:"Tus amigos verán el lugar solo al inicio.",search:"Escribe un lugar, p. ej. Pizzería de la esquina",nick:"Tu apodo",nameD:"Nombre del drop (opcional)",otherPh:"¿Cuál es el plan? (p. ej. juegos de mesa, un paseo…)",note:"Se puede responder hasta el inicio. El enlace y el chat desaparecen 24 h después del inicio.",send:"Crear drop y reunir a la crew",
@@ -1502,7 +1525,7 @@ obT:"Wie ist dein Spitzname?",obD:"Einmal festlegen – wir zeigen ihn in allen 
 grT:"Gruppen",grHint:"Feste Crews mit einem Chat, der bleibt. Lade Freunde per Link ein.",dcT:"Drop-Chats",dcHint:"Jeder Drop hat einen eigenen Chat. Er verschwindet mit dem Drop – 24 Std. nach dem Start.",
 grNew:"+ NEUE GRUPPE",grName:"Gruppenname (z. B. Die 9b-Crew)",grCreate:"Gruppe erstellen",grInv:(o,n)=>o+" lädt dich in die Gruppe „"+n+"“ ein",grLink:"Gruppenlink – schick ihn deiner Crew",grJoin:"Gruppe beitreten",grChH:"GRUPPENCHAT · KEINE DMS · ALLE SEHEN ALLES",emptyG:"Noch keine Gruppen. Erstell eine und schick den Link an deine Crew.",emptyDc:"Drop-Chats erscheinen, wenn du einen Drop erstellst oder IN / LATE tippst.",grMembers:"Crew",grInfo:"CREW",grLeave:"Gruppe verlassen",grDel:"Gruppe löschen",grLeft:"Du hast die Gruppe verlassen",grDeleted:"Gruppe gelöscht",openGC:"Gruppenchat öffnen",
 tag:"spontane Treffen mit Freunden in 15 Sekunden",demoBtn:"Demo-Modus starten",gBtn:"Mit Google anmelden",accept:"Mit der Anmeldung akzeptierst du die",and:"und die",privacyAcc:"Datenschutzerklärung",
-newDrop:"+ Neuer Drop",ticker:"NUR GRUPPENCHATS ✦ KEINE DMS ✦ LINK VERSCHWINDET 24 STD. NACH DEM START ✦ ",gOnly:"NUR GRUPPEN · KEINE DMS",noMsg:"Noch keine Nachrichten – sag hi",
+newDrop:"+ Neuer Drop",ticker:"NUR GRUPPENCHATS ✦ KEINE DMS ✦ LINK VERSCHWINDET 24 STD. NACH DEM START ✦ ",gOnly:"Nur Gruppen · keine privaten Nachrichten.",noMsg:"Noch keine Nachrichten – sag hi",
 nHome:"Start",nNew:"Neuer Drop",nNot:"Alerts",nCh:"Chats",nMe:"Profil",
 what:"Was?",when:"Wann?",where:"Wo?",today:"HEUTE",tomorrow:"MORGEN",tonL:"heute Abend",todL:"heute",tmrL:"morgen",
 sur:"Überraschungsort?",surD:"Deine Freunde sehen den Ort erst zum Start.",search:"Ort eingeben, z. B. Pizzeria an der Ecke",nick:"Dein Spitzname",nameD:"Name des Drops (optional)",otherPh:"Was ist der Plan? (z. B. Brettspiele, ein Spaziergang…)",note:"Antworten bis zum Start möglich. Link und Chat verschwinden 24 Std. nach dem Start.",send:"Drop erstellen & Crew sammeln",
@@ -1553,7 +1576,7 @@ obT:"C'est quoi ton pseudo ?",obD:"Tu le choisis une fois, il s'affichera dans t
 grT:"Groupes",grHint:"Des teams fixes avec un chat qui ne disparaît pas. Invite tes potes avec un lien.",dcT:"Chats des drops",dcHint:"Chaque drop a son propre chat. Il disparaît avec le drop, 24 h après le début.",
 grNew:"+ NOUVEAU GROUPE",grName:"Nom du groupe (ex. La team de 3e B)",grCreate:"Créer le groupe",grInv:(o,n)=>o+" t'invite dans le groupe « "+n+" »",grLink:"Lien du groupe : envoie-le à ta team",grJoin:"Rejoindre le groupe",grChH:"CHAT DE GROUPE · PAS DE MP · TOUT LE MONDE VOIT TOUT",emptyG:"Pas encore de groupes. Crées-en un et envoie le lien à ta team.",emptyDc:"Les chats des drops apparaissent quand tu crées un drop ou que tu réponds IN / LATE.",grMembers:"Team",grInfo:"TEAM",grLeave:"Quitter le groupe",grDel:"Supprimer le groupe",grLeft:"Tu as quitté le groupe",grDeleted:"Groupe supprimé",openGC:"Ouvrir le chat du groupe",
 tag:"des sorties spontanées entre potes en 15 secondes",demoBtn:"Lancer le mode démo",gBtn:"Se connecter avec Google",accept:"En te connectant, tu acceptes les",and:"et la",privacyAcc:"Politique de confidentialité",
-newDrop:"+ Nouveau drop",ticker:"CHATS DE GROUPE UNIQUEMENT ✦ PAS DE MP ✦ LE LIEN DISPARAÎT 24 H APRÈS LE DÉBUT ✦ ",gOnly:"GROUPES UNIQUEMENT · PAS DE MP",noMsg:"Pas encore de messages, dis salut",
+newDrop:"+ Nouveau drop",ticker:"CHATS DE GROUPE UNIQUEMENT ✦ PAS DE MP ✦ LE LIEN DISPARAÎT 24 H APRÈS LE DÉBUT ✦ ",gOnly:"Groupes uniquement · aucun message privé.",noMsg:"Pas encore de messages, dis salut",
 nHome:"Accueil",nNew:"Nouveau drop",nNot:"Alertes",nCh:"Chats",nMe:"Profil",
 what:"Quoi ?",when:"Quand ?",where:"Où ?",today:"AUJOURD'HUI",tomorrow:"DEMAIN",tonL:"ce soir",todL:"aujourd'hui",tmrL:"demain",
 sur:"Lieu surprise ?",surD:"Tes potes ne verront le lieu qu'au début.",search:"Tape un lieu, ex. La pizzeria du coin",nick:"Ton pseudo",nameD:"Nom du drop (facultatif)",otherPh:"C'est quoi le plan ? (ex. jeux de société, balade…)",note:"On peut répondre jusqu'au début. Le lien et le chat disparaissent 24 h après le début.",send:"Créer le drop et réunir la team",
@@ -1604,7 +1627,7 @@ obT:"Qual è il tuo nickname?",obD:"Lo scegli una volta e lo mostriamo in tutti 
 grT:"Gruppi",grHint:"Crew fisse con una chat che non sparisce. Invita gli amici con un link.",dcT:"Chat dei drop",dcHint:"Ogni drop ha la sua chat. Sparisce con il drop, 24 h dopo l'inizio.",
 grNew:"+ NUOVO GRUPPO",grName:"Nome del gruppo (es. La crew della 3B)",grCreate:"Crea gruppo",grInv:(o,n)=>o+" ti invita nel gruppo «"+n+"»",grLink:"Link del gruppo: mandalo alla crew",grJoin:"Entra nel gruppo",grChH:"CHAT DI GRUPPO · NIENTE DM · TUTTI VEDONO TUTTO",emptyG:"Ancora nessun gruppo. Creane uno e manda il link alla crew.",emptyDc:"Le chat dei drop compaiono quando crei un drop o tocchi IN / LATE.",grMembers:"Crew",grInfo:"CREW",grLeave:"Esci dal gruppo",grDel:"Elimina gruppo",grLeft:"Sei uscito dal gruppo",grDeleted:"Gruppo eliminato",openGC:"Apri la chat del gruppo",
 tag:"uscite spontanee con gli amici in 15 secondi",demoBtn:"Entra in modalità demo",gBtn:"Accedi con Google",accept:"Accedendo, accetti i",and:"e l'",privacyAcc:"Informativa sulla privacy",
-newDrop:"+ Nuovo drop",ticker:"SOLO CHAT DI GRUPPO ✦ NIENTE DM ✦ IL LINK SPARISCE 24 H DOPO L'INIZIO ✦ ",gOnly:"SOLO GRUPPI · NIENTE DM",noMsg:"Ancora nessun messaggio: saluta!",
+newDrop:"+ Nuovo drop",ticker:"SOLO CHAT DI GRUPPO ✦ NIENTE DM ✦ IL LINK SPARISCE 24 H DOPO L'INIZIO ✦ ",gOnly:"Solo gruppi · nessun messaggio privato.",noMsg:"Ancora nessun messaggio: saluta!",
 nHome:"Home",nNew:"Nuovo drop",nNot:"Avvisi",nCh:"Chat",nMe:"Profilo",
 what:"Cosa?",when:"Quando?",where:"Dove?",today:"OGGI",tomorrow:"DOMANI",tonL:"stasera",todL:"oggi",tmrL:"domani",
 sur:"Luogo a sorpresa?",surD:"Gli amici vedranno il luogo solo all'inizio.",search:"Scrivi un posto, es. Pizzeria all'angolo",nick:"Il tuo nickname",nameD:"Nome del drop (facoltativo)",otherPh:"Qual è il piano? (es. giochi da tavolo, una passeggiata…)",note:"Si può rispondere fino all'inizio. Link e chat spariscono 24 h dopo l'inizio.",send:"Crea il drop e raduna la crew",
@@ -1655,7 +1678,7 @@ obT:"Jakou máš přezdívku?",obD:"Nastavíš ji jednou – ukážeme ji ve vš
 grT:"Skupiny",grHint:"Stálé party s chatem, který nezmizí. Kamarády pozveš odkazem.",dcT:"Chaty dropů",dcHint:"Každý drop má vlastní chat. Zmizí s dropem – 24 h po začátku.",
 grNew:"+ NOVÁ SKUPINA",grName:"Název skupiny (např. Parta ze 3.B)",grCreate:"Vytvořit skupinu",grInv:(o,n)=>o+" tě zve do skupiny „"+n+"“",grLink:"Odkaz na skupinu – pošli ho partě",grJoin:"Přidat se do skupiny",grChH:"SKUPINOVÝ CHAT · ŽÁDNÉ DM · VŠICHNI VIDÍ VŠECHNO",emptyG:"Zatím nemáš skupiny. Založ si jednu a pošli odkaz partě.",emptyDc:"Chaty dropů se objeví, když vytvoříš drop nebo klikneš IN / LATE.",grMembers:"Parta",grInfo:"PARTA",grLeave:"Opustit skupinu",grDel:"Smazat skupinu",grLeft:"Opustil/a jsi skupinu",grDeleted:"Skupina smazána",openGC:"Otevřít chat skupiny",
 tag:"spontánní akce s kamarády za 15 sekund",demoBtn:"Spustit demo",gBtn:"Přihlásit se přes Google",accept:"Přihlášením souhlasíš s",and:"a",privacyAcc:"Zásadami ochrany soukromí",
-newDrop:"+ Nový drop",ticker:"JEN SKUPINOVÉ CHATY ✦ ŽÁDNÉ DM ✦ ODKAZ ZMIZÍ 24 H PO ZAČÁTKU ✦ ",gOnly:"JEN SKUPINY · ŽÁDNÉ DM",noMsg:"Zatím žádné zprávy – pozdrav",
+newDrop:"+ Nový drop",ticker:"JEN SKUPINOVÉ CHATY ✦ ŽÁDNÉ DM ✦ ODKAZ ZMIZÍ 24 H PO ZAČÁTKU ✦ ",gOnly:"Jen skupiny · žádné soukromé zprávy.",noMsg:"Zatím žádné zprávy – pozdrav",
 nHome:"Domů",nNew:"Nový drop",nNot:"Upozornění",nCh:"Chaty",nMe:"Profil",
 what:"Co?",when:"Kdy?",where:"Kde?",today:"DNES",tomorrow:"ZÍTRA",tonL:"dnes večer",todL:"dnes",tmrL:"zítra",
 sur:"Místo jako překvapení?",surD:"Kamarádi uvidí místo až při začátku.",search:"Napiš místo, např. Pizzerie na rohu",nick:"Tvoje přezdívka",nameD:"Název dropu (nepovinné)",otherPh:"Jaký je plán? (např. deskovky, procházka…)",note:"Odpovídat jde do začátku. Odkaz i chat zmizí 24 h po začátku.",send:"Vytvořit drop a svolat partu",
@@ -1706,7 +1729,7 @@ obT:"Який у тебе нікнейм?",obD:"Обираєш один раз �
 grT:"Групи",grHint:"Постійні компанії з чатом, який не зникає. Запрошуй друзів посиланням.",dcT:"Чати дропів",dcHint:"Кожен дроп має власний чат. Він зникає разом із дропом – через 24 год після початку.",
 grNew:"+ НОВА ГРУПА",grName:"Назва групи (напр. Компанія з 9-Б)",grCreate:"Створити групу",grInv:(o,n)=>o+" запрошує тебе до групи «"+n+"»",grLink:"Посилання на групу – надішли його компанії",grJoin:"Приєднатися до групи",grChH:"ГРУПОВИЙ ЧАТ · БЕЗ ОСОБИСТИХ · УСІ БАЧАТЬ УСЕ",emptyG:"Груп поки немає. Створи свою й надішли посилання компанії.",emptyDc:"Чати дропів з'являються, коли ти створюєш дроп або тиснеш IN / LATE.",grMembers:"Компанія",grInfo:"КОМПАНІЯ",grLeave:"Вийти з групи",grDel:"Видалити групу",grLeft:"Ти вийшов(-ла) з групи",grDeleted:"Групу видалено",openGC:"Відкрити чат групи",
 tag:"спонтанні зустрічі з друзями за 15 секунд",demoBtn:"Увійти в демо",gBtn:"Увійти через Google",accept:"Входячи, ти приймаєш",and:"і",privacyAcc:"Політику конфіденційності",
-newDrop:"+ Новий дроп",ticker:"ЛИШЕ ГРУПОВІ ЧАТИ ✦ БЕЗ ОСОБИСТИХ ✦ ПОСИЛАННЯ ЗНИКАЄ ЧЕРЕЗ 24 ГОД ПІСЛЯ ПОЧАТКУ ✦ ",gOnly:"ЛИШЕ ГРУПИ · БЕЗ ОСОБИСТИХ",noMsg:"Повідомлень ще немає – привітайся",
+newDrop:"+ Новий дроп",ticker:"ЛИШЕ ГРУПОВІ ЧАТИ ✦ БЕЗ ОСОБИСТИХ ✦ ПОСИЛАННЯ ЗНИКАЄ ЧЕРЕЗ 24 ГОД ПІСЛЯ ПОЧАТКУ ✦ ",gOnly:"Лише групи · без особистих повідомлень.",noMsg:"Повідомлень ще немає – привітайся",
 nHome:"Головна",nNew:"Новий дроп",nNot:"Сповіщення",nCh:"Чати",nMe:"Профіль",
 what:"Що?",when:"Коли?",where:"Де?",today:"СЬОГОДНІ",tomorrow:"ЗАВТРА",tonL:"сьогодні ввечері",todL:"сьогодні",tmrL:"завтра",
 sur:"Місце-сюрприз?",surD:"Друзі побачать місце лише на початку.",search:"Введи місце, напр. Піцерія на розі",nick:"Твій нікнейм",nameD:"Назва дропу (необов'язково)",otherPh:"Який план? (напр. настолки, прогулянка…)",note:"Відповідати можна до початку. Посилання й чат зникають через 24 год після початку.",send:"Створити дроп і зібрати компанію",
@@ -2694,7 +2717,7 @@ function avEditor(done){let o=kDec(avCode(myAv()));
 /* ---------- CZATY: grupy ogólne + czaty dropów ---------- */
 function chatsView(){
   const u=authed();if(!u)return;
-  view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>${t("grNew").replace(/^\+\s*/,"")}</button></div><span class="gbadge">${t("gOnly")}</span>
+  view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNew").replace(/^\+\s*/,"")}</span></button></div><span class="gbadge">${t("gOnly")}</span>
   <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta" id="gk" style="margin-top:8px">${t("grCreate")}</button></div>
   <div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
