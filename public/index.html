@@ -1332,6 +1332,18 @@ html:has(.scr.chl),body:has(.scr.chl){background:#0b0b0b!important}
 :root.acw .bdg em u{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.16) 0 4px,rgba(0,0,0,0) 4px 8px),var(--acc)}
 :root.acw .scr.chl .chrow .cr1 time.un{color:#fff}
 h1,h2,h3,.pnm,.pft{word-spacing:.04em}
+/* ZAPROSZENIA Z LINKU (kreator nicku + dodanie do znajomych) – niebieskie przyciski, nowy styl */
+.scr.ob .cta,.sheet:has(.kadd) .cta{background:#4da3ff!important;color:#0b0b12!important;box-shadow:none!important;height:54px;padding:0 16px!important;border-radius:99px!important;display:flex;align-items:center;justify-content:center;text-transform:none!important;font:700 16px 'Brico',system-ui!important;letter-spacing:0}
+.scr.ob .logo.bigl{font-size:34px!important}
+.scr.ob h1.logo{font:800 28px Brico,BricoCyr,system-ui!important;letter-spacing:-.01em}
+.scr.ob .hint{color:#8e8e8e}
+.scr.ob #pn{background:#131313!important;border:0!important;border-radius:18px;height:54px;padding:0 16px}
+.scr.ob .kmk{background:#181818!important;border:0!important;border-radius:99px;height:48px;color:#dcdcdc;font:600 15px Brico,BricoCyr,system-ui}
+.sheet:has(.kadd){background:#101010;border-top:1px solid rgba(255,255,255,.08)}
+.sheet:has(.kadd) .kadd{display:grid;place-items:center;width:84px;height:84px;margin:10px auto 6px;border-radius:50%;background:#181818}
+.sheet:has(.kadd) h2{font:800 22px Brico,BricoCyr,system-ui;letter-spacing:-.01em;margin:8px 0 6px}
+.sheet:has(.kadd) .hint{color:#8e8e8e;font-size:14.5px;line-height:1.45}
+.sheet:has(.kadd) .ghost{height:54px;border-radius:99px;background:#181818!important;border:0!important;color:#8e8e8e;font:600 15px Brico,BricoCyr,system-ui;margin-top:10px}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -2718,7 +2730,7 @@ const syncMine=()=>{const u=auth.currentUser;if(!u||DEMO)return;const nk=sget("n
 async function loadProfile(u){try{const x=await getDoc(doc(db,"users",u.uid));if(x.exists()){const d=x.data();if(d.nick)sset("nick",d.nick);if(d.nickAt?.toMillis)sset("nickAt",Math.max(+sget("nickAt")||0,d.nickAt.toMillis()));if(d.av!=null)sset("avatar",d.av);if(thOk(d.th))sset("theme",d.th);if(d.ph)sset("photo",d.ph);if(d.blocked)sset("blocked",JSON.stringify(d.blocked));if(d.st){const lo=jget("st",{}),m={...d.st};for(const k in lo){const x=lo[k],y=m[k];m[k]=(typeof x==="number"&&typeof y==="number")?Math.max(x,y):(y===undefined?x:y)}sset("st",JSON.stringify(m))}if(d.hist)sset("hist",JSON.stringify({...d.hist,...hist()}));if(d.badges)sset("badges",JSON.stringify([...new Set([...(d.badges||[]),...seenB()])]));const un=(a,b)=>[...new Set([...(a||[]),...(b||[])])].slice(-50);if(d.drops)sset("joined",JSON.stringify(un(d.drops,joined())));if(d.groups)sset("groups",JSON.stringify(un(d.groups,joinedG())));if(d.notif)Object.entries(d.notif).forEach(([k,v])=>sset("n_"+k,v?"1":"0"));if(d.muted){Object.keys(localStorage).filter(k=>k.startsWith("mut_")).forEach(k=>localStorage.removeItem(k));Object.entries(d.muted).forEach(([k,v])=>{if(v)sset("mut_"+k,"1")})}if(d.cleared){const c=clrMap();Object.entries(d.cleared).forEach(([k,v])=>{if(+v>(+c[k]||0))c[k]=+v});sset("clrc",JSON.stringify(c))}if(d.pub16===true){sset("pub16","1");sset("pubU18",d.pubU18?"1":"0")}if(d.pubRulesOk||d.pubRulesAt)sset("pubRules","1");if(d.age13||d.nick)sset("age13","1");if(d.lang&&L[d.lang]){sset("lang",d.lang);LANG=d.lang}}}catch{}try{setTheme()}catch{}}
 function onboard(){
   const u=auth.currentUser;
-  view(`<div class="scr"><button class="lnk" id="obk" style="margin:4px 0 0;padding:6px 0">← ${t("back")}</button><div class="logo bigl" style="font-size:44px;margin-top:8px">Squad</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
+  view(`<div class="scr ob"><button class="lnk" id="obk" style="margin:4px 0 0;padding:6px 0">← ${t("back")}</button><div class="logo bigl" style="font-size:44px;margin-top:8px">Squad</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
   <div class="phw" id="phw"></div><input type="file" id="pf" accept="image/*" hidden>
   <input id="pn" placeholder="${t("nick")}" value="${esc(u.displayName?.split(" ")[0]||"")}" maxlength="20" autocomplete="off">
   <button class="ghost kmk" id="kmk">${t("avMake")}</button>${thSw()}<small class="thh">${t("thH")}</small>
