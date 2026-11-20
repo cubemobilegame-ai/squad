@@ -41,6 +41,18 @@ console.log("— enforce = false (faza 1: tylko liczniki, nic nie blokuje)");
   await check("wiadomość bez licznika: OK", assertSucceeds(setDoc(doc(db, "drops", "d1", "messages", "zz"), { authorId: "u1", nickname: "x", text: "hej", createdAt: serverTimestamp() })));
   await check("licznik z cudzym uid: ODMOWA", assertFails(setDoc(doc(db, "users", "u2", "lim", "m"), { at: serverTimestamp() })));
   await check("licznik z cofniętym n: ODMOWA", (async () => { await seed(t, async (d) => setDoc(doc(d, "users", "u1", "lim", "d"), { at: old(), day: day(), n: 5, pub: 1 })); await assertFails(setDoc(doc(db, "users", "u1", "lim", "d"), { at: serverTimestamp(), day: day(), n: 1, pub: 0 })); })());
+  // --- bezpieczeństwo: kształt wiadomości, identyfikatory, uid członka, blokada ponownego dołączenia
+  await check("wiadomość z obcym polem r (XSS): ODMOWA", assertFails(setDoc(doc(db, "drops", "d1", "messages", "x1"), { authorId: "u1", nickname: "x", text: "hej", r: { u9: "<img src=x onerror=alert(1)>" }, createdAt: serverTimestamp() })));
+  await check("wiadomość z datą klienta zamiast serwera: ODMOWA", assertFails(setDoc(doc(db, "drops", "d1", "messages", "x2"), { authorId: "u1", nickname: "x", text: "hej", createdAt: Timestamp.fromMillis(1) })));
+  await check("karta dropa z kodem ze znakami specjalnymi: ODMOWA", assertFails(setDoc(doc(db, "drops", "d1", "messages", "x3"), { authorId: "u1", nickname: "x", text: "🔥 x", drop: { code: "');alert(1);//", title: "t" }, createdAt: serverTimestamp() })));
+  await check("karta dropa ze zwykłym kodem: OK", assertSucceeds(setDoc(doc(db, "drops", "d1", "messages", "x4"), { authorId: "u1", nickname: "x", text: "🔥 x", drop: { code: "ABC123", title: "t" }, createdAt: serverTimestamp() })));
+  await check("drop z identyfikatorem ze znakami specjalnymi: ODMOWA", assertFails(setDoc(doc(db, "drops", "a'b\"c"), dropData("u1", false))));
+  await seed(t, async (d) => { await setDoc(doc(d, "groups", "g1"), { ownerId: "o1", name: "G" }); await setDoc(doc(d, "groups", "g1", "banned", "u2"), { at: 1 }); });
+  const db2 = t.authenticatedContext("u2", G).firestore(), db3 = t.authenticatedContext("u3", G).firestore();
+  await check("zablokowany nie dołączy ponownie: ODMOWA", assertFails(setDoc(doc(db2, "groups", "g1", "members", "u2"), { nickname: "B", uid: "u2" })));
+  await check("inny użytkownik dołącza: OK", assertSucceeds(setDoc(doc(db3, "groups", "g1", "members", "u3"), { nickname: "C", uid: "u3" })));
+  await check("członek z cudzym polem uid: ODMOWA", assertFails(setDoc(doc(db3, "groups", "g1", "members", "u3"), { nickname: "C", uid: "u1" })));
+  await check("zwykły użytkownik nie zapisuje listy zablokowanych: ODMOWA", assertFails(setDoc(doc(db3, "groups", "g1", "banned", "u9"), { at: 1 })));
   await t.cleanup();
 }
 

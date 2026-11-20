@@ -56,15 +56,18 @@ async function access(sa) {
 // ---------- Firestore (REST) ----------
 const val = (v) => v == null ? null : "stringValue" in v ? v.stringValue : "integerValue" in v ? +v.integerValue : "doubleValue" in v ? v.doubleValue : "booleanValue" in v ? v.booleanValue
   : "timestampValue" in v ? Date.parse(v.timestampValue) : "nullValue" in v ? null : "mapValue" in v ? obj(v.mapValue.fields || {}) : "arrayValue" in v ? (v.arrayValue.values || []).map(val) : null;
+// UWAGA: id dokumentu zawsze po rozwinięciu danych ({ ...dane, id }), żeby pole „id” z bazy nie podmieniło tożsamości
 const obj = (f) => Object.fromEntries(Object.entries(f || {}).map(([k, v]) => [k, val(v)]));
 function fs(env) {
   const base = `https://firestore.googleapis.com/v1/projects/${env.PID}/databases/(default)/documents/`;
   const H = async () => ({ Authorization: "Bearer " + (await access(env.SA)) });
   return {
-    get: async (path) => { const r = await fetch(base + path, { headers: await H() }); if (!r.ok) return null; const d = await r.json(); return { ...obj(d.fields), id: d.name.split("/").pop() }; },
+    get: async (path) => { const r = await fetch(base + path, { headers: await H() }); if (!r.ok) return null; const d = await r.json(); return { ...obj(d.fields), id: d.name.split("/").pop(), _ut: d.updateTime }; },
     list: async (path) => { const r = await fetch(base + path + "?pageSize=300", { headers: await H() }); if (!r.ok) return []; const d = await r.json(); return (d.documents || []).map((x) => ({ ...obj(x.fields), id: x.name.split("/").pop() })); },
-    patch: async (path, kv) => { const f = {}; for (const k in kv) f[k] = typeof kv[k] === "boolean" ? { booleanValue: kv[k] } : { integerValue: String(kv[k]) };
-      await fetch(base + path + "?" + Object.keys(kv).map((k) => "updateMask.fieldPaths=" + k).join("&"), { method: "PATCH", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => {}); },
+    patch: async (path, kv, ut) => { const f = {}; for (const k in kv) f[k] = typeof kv[k] === "boolean" ? { booleanValue: kv[k] } : { integerValue: String(kv[k]) };
+      // ut = updateTime odczytanego dokumentu: zapis przejdzie tylko, jeśli nikt go w międzyczasie nie zmienił (atomowe „zajęcie” zdarzenia)
+      const r = await fetch(base + path + "?" + Object.keys(kv).map((k) => "updateMask.fieldPaths=" + k).join("&") + (ut ? "&currentDocument.updateTime=" + encodeURIComponent(ut) : ""), { method: "PATCH", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => null);
+      return !!(r && r.ok); },
     add: async (path, kv) => { const f = {}; for (const k in kv) f[k] = k === "at" ? { timestampValue: kv[k] } : { stringValue: String(kv[k] ?? "").slice(0, 300) };
       await fetch(base + path, { method: "POST", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => {}); },
     del: async (path) => { await fetch(base + path, { method: "DELETE", headers: await H() }).catch(() => {}); },
@@ -110,12 +113,21 @@ const verGE = (v, min) => { const a = String(v || "0").split(".").map(Number), b
 const hhmm = (ms) => new Date(ms).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" });
 const isCode = (s) => typeof s === "string" && /^[A-Za-z0-9_-]{3,40}$/.test(s);
 
+// prosty limit: do 40 żądań na minutę na użytkownika (pamięć instancji workera – ogranicza nadużycia, nie jest twardym limitem globalnym)
+const RL = new Map();
+function rateOk(uid) {
+  const now = Date.now(), a = (RL.get(uid) || []).filter((t) => now - t < 60000);
+  if (a.length >= 40) { RL.set(uid, a); return false; }
+  a.push(now); RL.set(uid, a); if (RL.size > 5000) for (const k of RL.keys()) { RL.delete(k); if (RL.size < 2500) break; }
+  return true;
+}
 async function handle(env, uid, b) {
+  if (!rateOk(uid)) return 0;
   const db = fs(env);
   if (b.kind === "msg" && isCode(b.code) && isCode(b.id)) {           // nowa wiadomość w czacie dropa albo grupy
     const G = !!b.group, root = G ? `groups/${b.code}` : `drops/${b.code}`;
     const m = await db.get(`${root}/messages/${b.id}`); if (!m || m.authorId !== uid) return 0;
-    if (m.notified) return 0; await db.patch(`${root}/messages/${b.id}`, { notified: true });   // to samo wywołanie nie wyśle drugiego powiadomienia
+    if (m.notified) return 0; if (!(await db.patch(`${root}/messages/${b.id}`, { notified: true }, m._ut))) return 0;   // to samo wywołanie nie wyśle drugiego powiadomienia
     const chat = await db.get(root); if (!chat) return 0;
     const ppl = (await db.list(`${root}/${G ? "members" : "participants"}`)).filter((p) => p.id !== uid);
     const title = G ? chat.name : chat.title;
@@ -142,6 +154,7 @@ async function handle(env, uid, b) {
   }
   if (b.kind === "report" && typeof b.id === "string" && /^[A-Za-z0-9]{10,40}$/.test(b.id)) {   // zgłoszenie -> e-mail do administratora
     const r = await db.get(`reports/${b.id}`); if (!r || r.reporterId !== uid || r.mailed) return 0;
+    if (!(await db.patch(`reports/${b.id}`, { mailed: true }, r._ut))) return 0;   // atomowe zajęcie zgłoszenia: drugie wywołanie nie wyśle drugiego maila
     const R = { hate: "Hejt / nękanie", sex: "Treści seksualne", vio: "Przemoc", danger: "Niebezpieczne / nielegalne", spam: "Spam / oszustwo", other: "Inne" };
     const T = { message: "wiadomość na czacie", drop: "drop", group: "grupa", photo: "zdjęcie w albumie" };
     const where = r.code ? (r.chat === "group" || r.target === "group" ? `https://${env.PID}.web.app/g/${r.code}` : `https://${env.PID}.web.app/d/${r.code}`) : "-";
@@ -152,7 +165,7 @@ async function handle(env, uid, b) {
         "Szczegóły (Firebase)": `https://console.firebase.google.com/project/${env.PID}/firestore/data/~2Freports~2F${b.id}`,
         "Czas": new Date().toLocaleString("pl-PL", { timeZone: "Europe/Warsaw" }) }) });
     const txt = await res.text().catch(() => ""); env.stats = { to: 1, toks: 0, errs: res.ok ? [] : ["mail " + res.status + " " + txt.slice(0, 120)] };
-    if (res.ok) await db.patch(`reports/${b.id}`, { mailed: true });
+    if (!res.ok) await db.patch(`reports/${b.id}`, { mailed: false });   // wysyłka nieudana: zwolnij, żeby dało się spróbować ponownie
     return res.ok ? 1 : 0;
   }
   const isUid = (x) => typeof x === "string" && /^[A-Za-z0-9]{10,40}$/.test(x);
