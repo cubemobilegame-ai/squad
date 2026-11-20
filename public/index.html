@@ -1325,6 +1325,12 @@ html:has(.scr.chl),body:has(.scr.chl){background:#0b0b0b!important}
 .sheet .cmenu .cmb.cmd:not(.cmx)::after{border-color:#5a5a5a}
 .sheet .cmenu .cmb.cmx{height:58px;border-radius:99px;background:#181818!important;color:#8e8e8e;font:500 16px Brico,BricoCyr,system-ui;margin-top:14px;justify-content:center}
 .sheet .cmenu .hint{color:#8e8e8e;font-size:14px;line-height:1.35;margin:8px 8px 4px;text-align:left}
+:root.acw .scr.chl .chf button.on,:root.acw .scr.nw .dayb .sel,:root.acw .scr.nw .ncd .chip.on{color:#0b0b12!important}
+:root.acw .scr.chl .chf button.on .cfb{background:rgba(0,0,0,.14);color:#0b0b12}
+:root.acw .scr.nw .tg.on:after{background:#0b0b12}
+:root.acw .pf .abar2 i{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.14) 0 7px,rgba(0,0,0,0) 7px 14px),var(--acc)}
+:root.acw .bdg em u{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.16) 0 4px,rgba(0,0,0,0) 4px 8px),var(--acc)}
+:root.acw .scr.chl .chrow .cr1 time.un{color:#fff}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -2074,13 +2080,13 @@ const XTH=[["#E9A98A","#C98BA3"],["#4DB6A6","#5C86B8"],["#86B3A2"],["#CDAA70"]];
 const x2r=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16)),mixc=(a,b)=>hx(x2r(a).map((v,i)=>Math.round((v+x2r(b)[i])/2))),dk=c=>hx(x2r(c).map(v=>Math.round(v*.5)));
 const cVars=v=>{const [h,sa]=v.slice(2).split(",").map(Number),a=hx(hsl(h,sa,62)),q=hsl(h,sa,65),d=hsl(h,sa*.7,32);return{"--acc":hx(q),"--accr":q.join(","),"--acc2":hx(d),"--g1":a,"--g2":a,"--g3":a}};
 const xVars=i=>{const [a,b]=XTH[i],z=b||a;return{"--acc":a,"--accr":x2r(a).join(","),"--acc2":dk(z),"--g1":a,"--g2":b?mixc(a,b):a,"--g3":z}};
-const NT={green:["#3DDC84","#1FBF6B","#3DDC84","#A8FF3E","#14703F"],orange:["#FF9F43","#FF7A1A","#FF9F43","#FFC53D","#9A4F0E"],purple:["#A27BFF","#7A4DFF","#A27BFF","#D07BFF","#4B2A9E"]};
+const NT={green:["#3DDC84","#1FBF6B","#3DDC84","#A8FF3E","#14703F"],orange:["#FF9F43","#FF7A1A","#FF9F43","#FFC53D","#9A4F0E"],purple:["#A27BFF","#7A4DFF","#A27BFF","#D07BFF","#4B2A9E"],white:["#F2F2F5","#FFFFFF","#F2F2F5","#D9D9E2","#8A8A94"]};
 const nVars=v=>{const[a,g1,g2,g3,d]=NT[v];return{"--acc":a,"--accr":x2r(a).join(","),"--acc2":d,"--g1":g1,"--g2":g2,"--g3":g3}};
 const thOk=v=>v==="pink"||v==="blue"||!!NT[v]||/^h:\d{1,3}$/.test(v||"")||/^x:[0-3]$/.test(v||"")||/^c:\d{1,3},\d{1,3}$/.test(v||"");
 const thCur=()=>{const v=sget("theme");return thOk(v)?v:(avBoy(myAv())?"blue":"pink")};
-const setTheme=()=>{try{const r=document.documentElement,v=thCur(),st=r.style;["--acc","--accr","--acc2","--g1","--g2","--g3"].forEach(k=>st.removeProperty(k));if(NT[v]){r.classList.remove("boy");const o=nVars(v);for(const k in o)st.setProperty(k,o[k])}else if(v[0]==="h"||v[0]==="x"||v[0]==="c"){r.classList.remove("boy");const o=v[0]==="c"?cVars(v):v[0]==="x"?xVars(+v.slice(2)):thVars(+v.slice(2));for(const k in o)st.setProperty(k,o[k])}else r.classList.toggle("boy",v==="blue")}catch{}};
+const setTheme=()=>{try{const r=document.documentElement,v=thCur(),st=r.style;r.classList.toggle("acw",v==="white");["--acc","--accr","--acc2","--g1","--g2","--g3"].forEach(k=>st.removeProperty(k));if(NT[v]){r.classList.remove("boy");const o=nVars(v);for(const k in o)st.setProperty(k,o[k])}else if(v[0]==="h"||v[0]==="x"||v[0]==="c"){r.classList.remove("boy");const o=v[0]==="c"?cVars(v):v[0]==="x"?xVars(+v.slice(2)):thVars(+v.slice(2));for(const k in o)st.setProperty(k,o[k])}else r.classList.toggle("boy",v==="blue")}catch{}};
 const thBg=v=>{if(v==="pink")return"linear-gradient(135deg,#FF3D7F,#FF6A4D 55%,#FFA53D)";if(v==="blue")return"linear-gradient(135deg,#3D6BFF,#3DA2FF 55%,#3DDCCB)";const o=NT[v]?nVars(v):v[0]==="c"?cVars(v):v[0]==="x"?xVars(+v.slice(2)):thVars(+v.slice(2));return`linear-gradient(135deg,${o["--g1"]},${o["--g2"]} 55%,${o["--g3"]})`};
-const thSw=()=>{const c=thCur(),dot=v=>`<i role="button" tabindex="0" data-th="${v}" aria-label="${v}" style="background:${thBg(v)}" class="thd ${c===v?"on":""}"></i>`;return`<div class="thsw"><div class="tht"><span>${t("thT")}</span><div class="thr">${["blue","pink","green","orange","purple"].map(dot).join("")}</div></div></div>`};
+const thSw=()=>{const c=thCur(),dot=v=>`<i role="button" tabindex="0" data-th="${v}" aria-label="${v}" style="background:${thBg(v)}" class="thd ${c===v?"on":""}"></i>`;return`<div class="thsw"><div class="tht"><span>${t("thT")}</span><div class="thr">${["blue","pink","green","orange","purple","white"].map(dot).join("")}</div></div></div>`};
 document.addEventListener("click",e=>{const T=e.target.closest&&e.target.closest(".thsw [data-tg]");if(T){vib(8);const m=T.closest(".thsw").querySelector(".thm");m.hidden=!m.hidden;return}const b=e.target.closest&&e.target.closest(".thsw [data-th]");if(!b)return;vib(10);sset("theme",b.dataset.th);setTheme();const w=b.closest(".thsw");w.querySelectorAll("[data-th]").forEach(x=>x.classList.toggle("on",x.dataset.th===b.dataset.th));try{saveProfile()}catch{}});
 {let dr=null;const pk=(e,P)=>{const r=P.getBoundingClientRect(),x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height)),h=Math.round(x*359),sa=Math.round(100-y*80),v="c:"+h+","+sa,k=P.querySelector(".thk");k.style.left=x*100+"%";k.style.top=y*100+"%";k.style.background=thBg(v);sset("theme",v);setTheme();const w=P.closest(".thsw");w.querySelectorAll("[data-th]").forEach(z=>z.classList.remove("on"));w.querySelector(".rb").classList.add("on")};
 document.addEventListener("pointerdown",e=>{const P=e.target.closest&&e.target.closest(".thp");if(!P)return;dr=P;try{P.setPointerCapture(e.pointerId)}catch{}pk(e,P);e.preventDefault()});
