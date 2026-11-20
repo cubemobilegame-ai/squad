@@ -1280,11 +1280,11 @@ html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 
 /* ===== MAPA: fala szukania z ikony lokalizacji + wskakiwanie pinów ===== */
 .pmmw{position:relative;width:46px;height:46px}
-.pmmw .pms{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.75);background:rgba(255,255,255,.13);opacity:0;transform:scale(1);pointer-events:none;z-index:0}
+.pmmw .pms{position:absolute;left:0;top:0;width:46px;height:46px;border-radius:50%;border:2px solid rgba(255,255,255,.8);background:rgba(255,255,255,.12);opacity:0;transform:scale(.12);pointer-events:none;z-index:2}
 .pmmw .pmme2{position:relative;z-index:1}
-.pmmw.scan .pms{animation:pmscan 1.9s cubic-bezier(.2,.6,.3,1) forwards}
-.pmmw.scan .pms.d{animation-delay:.5s}
-@keyframes pmscan{0%{opacity:.9;transform:scale(1)}70%{opacity:.35}100%{opacity:0;transform:scale(11)}}
+.pmmw.scan .pms{animation:pmscan 3.4s cubic-bezier(.25,.6,.3,1) forwards}
+.pmmw.scan .pms.d{animation-delay:.8s}.pmmw.scan .pms.d2{animation-delay:1.6s}
+@keyframes pmscan{0%{opacity:0;transform:scale(.12)}8%{opacity:.95}65%{opacity:.4}100%{opacity:0;transform:scale(12)}}
 .leaflet-marker-icon .pmk{animation:pmpop .42s cubic-bezier(.3,1.6,.5,1) backwards}
 @keyframes pmpop{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pmmw.scan .pms,.leaflet-marker-icon .pmk{animation:none}}
@@ -2533,12 +2533,13 @@ function pubMap(el,safe){
     w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmfs" id="pmfs" aria-label="Fullscreen">${PVI.fs}</button><button class="pmme" id="pmme" aria-label="${t("pmMy")}">${PVI.loc}</button><button class="pmbk" id="pmbk" aria-label="${t("back")}" hidden>${PVI.bk}</button><button class="pmadd" id="pmadd" aria-label="${esc(t("newDrop").replace(/^\+\s*/,""))}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
     const fs=(on,keep)=>{P.isFs=on;{const cd=w.querySelector("#pmcard");if(cd&&!keep)cd.hidden=true}w.classList.toggle("fs",on);document.documentElement.classList.toggle("pmlock",on);w.querySelector("#pmbk").hidden=!on;w.querySelector("#pmfs").hidden=on;if(!on)w.style.top="";setTimeout(()=>{try{P.map&&P.map.invalidateSize()}catch{}},60);vib(8)};P.fs=fs;
     w.querySelector("#pmadd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};
-    w.querySelector("#pmfs").onclick=()=>fs(true);w.querySelector("#pmbk").onclick=()=>fs(false);
+    w.querySelector("#pmfs").onclick=()=>{fs(true);setTimeout(()=>{try{if(PUB.pos)pmFit(P,PUB.pos)}catch{}pmScanAgain(P)},380)};w.querySelector("#pmbk").onclick=()=>{fs(false);setTimeout(()=>{try{if(PUB.pos)pmFit(P,PUB.pos)}catch{}pmScanAgain(P)},380)};
     w.querySelector("#pmme").onclick=async()=>{vib(8);try{const p=await getPos();PUB.pos=p;P.scanReq=1;pmFit(P,p)}catch(e){if(PUB.pos&&P.map&&e&&e.code!==1)pmFit(P,PUB.pos);else toast(t(e&&e.code===1?"pubLocDeny":"pmGeoErr")+" ["+(e&&(e.code??e.message))+"]")}};
 }
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
   if(sget("mflt")!=="mine")P.scanReq=1;
+  try{let zt;P.map.on("zoomend",()=>{clearTimeout(zt);zt=setTimeout(()=>pmScanAgain(P),120)})}catch{}
   const wasFs=!!P.isFs;w.classList.remove("fs");w.querySelector("#pmbk").hidden=true;w.querySelector("#pmfs").hidden=false;
   if(!wasFs){const cd=w.querySelector("#pmcard");if(cd)cd.hidden=true}
   {const nt=document.querySelector("nav")?.getBoundingClientRect().top||innerHeight-70;w.style.height=Math.max(300,Math.round(nt-w.getBoundingClientRect().top))+"px"}
@@ -2565,9 +2566,10 @@ function pubMap(el,safe){
     pubMapLoad(P,hint)}).catch(()=>hint(t("pmErr")))}
 const pubMapIcon=d=>{const [c1,c2]=thm(d),hasAv=d.hostAv!=null||d.hostPh,av=hasAv?avc("",avIdx({id:d.hostId,av:d.hostAv,ph:d.hostPh})):"";
   return window.L.divIcon({className:"",iconSize:[46,54],iconAnchor:[23,54],html:`<div class="pmk" style="--c1:${c1};--c2:${c2}"><div class="pmi">${ic(d.category)}</div></div>`})};
-function pmMe(P){try{const m=P.map,p=PUB.pos;if(!m||!p||!window.L)return;const key=JSON.stringify(meAv()),ic=window.L.divIcon({className:"",iconSize:[46,46],iconAnchor:[23,23],html:`<div class="pmmw"><i class="pms"></i><i class="pms d"></i><div class="pmme2">${avc("",meAv())}</div></div>`});
+function pmMe(P){try{const m=P.map,p=PUB.pos;if(!m||!p||!window.L)return;const key=JSON.stringify(meAv()),ic=window.L.divIcon({className:"",iconSize:[46,46],iconAnchor:[23,23],html:`<div class="pmmw"><i class="pms"></i><i class="pms d"></i><i class="pms d2"></i><div class="pmme2">${avc("",meAv())}</div></div>`});
   if(P.me){P.me.setLatLng([p.la,p.lo]);if(P.meKey!==key){P.me.setIcon(ic);P.meKey=key}}else{P.me=window.L.marker([p.la,p.lo],{icon:ic,interactive:false,keyboard:false,zIndexOffset:2000}).addTo(m);P.meKey=key}
-  if(P.scanReq&&P.me){P.scanReq=0;P.scanEnd=Date.now()+2300;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}}catch(e){console.warn("me",e)}}
+  if(P.scanReq&&P.me){P.scanReq=0;P.scanEnd=Date.now()+3000;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}}catch(e){console.warn("me",e)}}
+function pmScanAgain(P){try{if(!P.me)return;const e=P.me.getElement&&P.me.getElement(),w=e&&e.querySelector(".pmmw");if(w){w.classList.remove("scan");void w.offsetWidth;w.classList.add("scan")}}catch{}}
 function pmFit(P,p){const m=P.map;if(!m)return;pmMe(P);const sz=m.getSize(),px=Math.max(Math.min(sz.x,sz.y),200),mpp=60000/px,z=Math.log2(156543.03*Math.cos(p.la*Math.PI/180)/mpp),zz=Math.max(8,Math.min(17,z));
   /* ikona lokalizacji w środku widocznego obszaru (mapa sięga pod dolne menu) */
   let off=0;try{if(!(P.wrap&&P.wrap.classList.contains("fs"))){const nv=document.querySelector("nav");if(nv)off=Math.round(nv.getBoundingClientRect().height/2)}}catch{}
