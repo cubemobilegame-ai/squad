@@ -2561,7 +2561,6 @@ function pubMap(el,safe){
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
   if(sget("mflt")!=="mine")P.scanReq=1;
-  try{let zt;P.map.on("zoomend moveend",()=>{clearTimeout(zt);zt=setTimeout(()=>pmScanAgain(P),160)})}catch{}
   const wasFs=!!P.isFs;w.classList.remove("fs");w.querySelector("#pmbk").hidden=true;w.querySelector("#pmfs").hidden=false;
   if(!wasFs){const cd=w.querySelector("#pmcard");if(cd)cd.hidden=true}
   {const nt=document.querySelector("nav")?.getBoundingClientRect().top||innerHeight-70;w.style.height=Math.max(300,Math.round(nt-w.getBoundingClientRect().top))+"px"}
@@ -2574,6 +2573,7 @@ function pubMap(el,safe){
       P.cl=window.L.markerClusterGroup({animate:false,animateAddingMarkers:false,maxClusterRadius:60,showCoverageOnHover:false,spiderfyOnMaxZoom:true,iconCreateFunction:c=>window.L.divIcon({html:`<div class="pmc"><b>${c.getChildCount()}</b></div>`,className:"",iconSize:[46,46]})});
       P.map.addLayer(P.cl);
       P.map.on("moveend",()=>{clearTimeout(P.tm);P.tm=setTimeout(()=>{if(P.wrap&&P.wrap.isConnected)pubMapLoad(P,hint)},350)});
+      {let zt;P.map.on("zoomend moveend",()=>{clearTimeout(zt);zt=setTimeout(()=>pmScanAgain(P),160)})}
       P.map.on("click",()=>{const c=P.wrap.querySelector("#pmcard");if(c)c.hidden=true});
       /* dwa szybkie stuknięcia = przybliżenie x2 (wokół palca); własna obsługa, bo iOS nie wysyła dblclick z dotyku */
       {const mc=P.map.getContainer();let t0=0,tx=0,ty=0,sx=0,sy=0,tz=0;const bad=e=>e.target.closest&&e.target.closest(".leaflet-marker-icon,.pmfs,.pmme,.pmbk,.pmcard,.pmh,.leaflet-control");
