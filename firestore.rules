@@ -54,6 +54,22 @@ service cloud.firestore {
             || request.resource.data.r[request.auth.uid] in ['🔥', '😂', '👀', '❤️', '👍', '😮']);
     }
 
+    // kształt nowej wiadomości: tylko znane pola, kod dropa w karcie to zwykły identyfikator, emoji/odpowiedź krótkie (brak obcego HTML-a w polach renderowanych)
+    function okMsgShape() {
+      return request.resource.data.keys().hasOnly(['authorId', 'nickname', 'text', 'poll', 'v', 'em', 're', 'drop', 'createdAt'])
+        && request.resource.data.get('createdAt', null) == request.time
+        && okNick(request.resource.data.get('nickname', ''))
+        && (!('em' in request.resource.data) || (request.resource.data.em is string && request.resource.data.em.size() <= 12))
+        && (!('drop' in request.resource.data) || (request.resource.data.drop is map
+            && request.resource.data.drop.get('code', '') is string
+            && request.resource.data.drop.get('code', '').matches('^[A-Za-z0-9_]{3,40}$')))
+        && (!('poll' in request.resource.data) || (request.resource.data.poll is map
+            && request.resource.data.poll.get('o', []) is list && request.resource.data.poll.get('o', []).size() <= 6))
+        && (!('re' in request.resource.data) || request.resource.data.re is map);
+    }
+    // identyfikator dropa / grupy: tylko litery, cyfry i _ (bez cudzysłowów i znaków specjalnych)
+    function okId(i) { return i is string && i.matches('^[A-Za-z0-9_]{1,40}$'); }
+
     // głos w ankiecie: zmienia się tylko własny wpis w mapie v (v.<uid>) = numer odpowiedzi 0–5
     function okVote() {
       return resource.data.get('poll', null) != null
@@ -138,7 +154,7 @@ service cloud.firestore {
     match /drops/{code} {
       allow get: if resource.data.expiresAt > request.time;
       allow list: if signedIn() && (resource.data.hostId == request.auth.uid || resource.data.get('public', false) == true);
-      allow create: if signedIn() && !isGuest()
+      allow create: if signedIn() && !isGuest() && okId(code)
         && request.resource.data.hostId == request.auth.uid
         && request.resource.data.expiresAt > request.time
         && request.resource.data.expiresAt < request.time + duration.value(400, 'd')
@@ -156,7 +172,7 @@ service cloud.firestore {
         allow create, update: if signedIn() && request.auth.uid == uid
           && drop(code).startsAt > request.time
           && (drop(code).get('public', false) != true || drop(code).hostId == uid || is16())
-          && !('id' in request.resource.data)
+          && !('id' in request.resource.data) && request.resource.data.get('uid', uid) == uid
           && request.resource.data.status in ['in', 'late', 'out']
           && okNick(request.resource.data.nickname);
         // po starcie: tylko "przeczytane", "pisze…" i aktualna ksywka / awatar / zdjęcie
@@ -177,6 +193,7 @@ service cloud.firestore {
           && request.resource.data.authorId == request.auth.uid
           && !('r' in request.resource.data) && request.resource.data.get('v', {}).size() == 0
           && okText(request.resource.data.text)
+          && okMsgShape()
           && msgLimOk();
         allow update: if signedIn() && drop(code).expiresAt > request.time
           && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
@@ -233,7 +250,7 @@ service cloud.firestore {
     match /groups/{g} {
       allow get: if true;
       allow list: if signedIn() && resource.data.ownerId == request.auth.uid;
-      allow create: if signedIn() && !isGuest()
+      allow create: if signedIn() && !isGuest() && okId(g)
         && request.resource.data.ownerId == request.auth.uid
         && request.resource.data.name.size() <= 40;
       allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
@@ -247,8 +264,15 @@ service cloud.firestore {
       match /members/{uid} {
         allow read: if true;
         allow create, update: if signedIn() && request.auth.uid == uid && okNick(request.resource.data.nickname)
-          && !('id' in request.resource.data) && exists(/databases/$(db)/documents/groups/$(g));
+          && !('id' in request.resource.data) && request.resource.data.get('uid', uid) == uid
+          && exists(/databases/$(db)/documents/groups/$(g))
+          && !exists(/databases/$(db)/documents/groups/$(g)/banned/$(uid));
         allow delete: if signedIn() && (request.auth.uid == uid || grp(g).ownerId == request.auth.uid);
+      }
+
+      // zablokowani przez właściciela nie wrócą linkiem (egzekwowane tu, nie tylko w aplikacji)
+      match /banned/{uid} {
+        allow read, create, update, delete: if signedIn() && grp(g).ownerId == request.auth.uid;
       }
 
       match /messages/{m} {
@@ -260,6 +284,7 @@ service cloud.firestore {
           && request.resource.data.authorId == request.auth.uid
           && !('r' in request.resource.data) && request.resource.data.get('v', {}).size() == 0
           && okText(request.resource.data.text)
+          && okMsgShape()
           && msgLimOk();
         allow update: if signedIn()
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
