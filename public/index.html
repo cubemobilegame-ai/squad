@@ -2559,7 +2559,7 @@ function pubMap(el,safe){
   if(el.contains(P.wrap))return;
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
   if(sget("mflt")!=="mine")P.scanReq=1;
-  try{let zt;P.map.on("zoomend",()=>{clearTimeout(zt);zt=setTimeout(()=>pmScanAgain(P),120)})}catch{}
+  try{let zt;P.map.on("zoomend moveend",()=>{clearTimeout(zt);zt=setTimeout(()=>pmScanAgain(P),160)})}catch{}
   const wasFs=!!P.isFs;w.classList.remove("fs");w.querySelector("#pmbk").hidden=true;w.querySelector("#pmfs").hidden=false;
   if(!wasFs){const cd=w.querySelector("#pmcard");if(cd)cd.hidden=true}
   {const nt=document.querySelector("nav")?.getBoundingClientRect().top||innerHeight-70;w.style.height=Math.max(300,Math.round(nt-w.getBoundingClientRect().top))+"px"}
