@@ -67,7 +67,7 @@ function fs(env) {
     patch: async (path, kv, ut) => { const f = {}; for (const k in kv) f[k] = typeof kv[k] === "boolean" ? { booleanValue: kv[k] } : { integerValue: String(kv[k]) };
       // ut = updateTime odczytanego dokumentu: zapis przejdzie tylko, jeśli nikt go w międzyczasie nie zmienił (atomowe „zajęcie” zdarzenia)
       const r = await fetch(base + path + "?" + Object.keys(kv).map((k) => "updateMask.fieldPaths=" + k).join("&") + (ut ? "&currentDocument.updateTime=" + encodeURIComponent(ut) : ""), { method: "PATCH", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => null);
-      return !!(r && r.ok); },
+      return !!(r && r.ok) || !(r && [400, 404, 409, 412].includes(r.status)); },   // false tylko gdy zdarzenie zajął już ktoś inny; błąd sieci/limitu nie blokuje powiadomienia
     add: async (path, kv) => { const f = {}; for (const k in kv) f[k] = k === "at" ? { timestampValue: kv[k] } : { stringValue: String(kv[k] ?? "").slice(0, 300) };
       await fetch(base + path, { method: "POST", headers: { ...(await H()), "Content-Type": "application/json" }, body: JSON.stringify({ fields: f }) }).catch(() => {}); },
     del: async (path) => { await fetch(base + path, { method: "DELETE", headers: await H() }).catch(() => {}); },
