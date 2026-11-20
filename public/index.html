@@ -1112,6 +1112,13 @@ nav.nv5 .bd{position:absolute;top:2px;left:calc(50% + 6px);box-shadow:0 0 0 2px 
 .pmadd:active{transform:scale(.92)}
 .scr.pmx .pmw:not(.fs) .pmadd{display:grid}
 .pmw.fs .pmadd{display:none}
+
+html:has(.scr.pmx){overflow:hidden;overscroll-behavior:none}
+.scr.pmx .pmw{overflow:hidden}
+.scr.pmx .pmcard{bottom:14px;left:0;right:0}
+.scr.pmx .pmcard .pc{margin:0 10px;background:#15151e!important;border:1px solid rgba(255,255,255,.16)}
+.scr.pmx .pmx{top:8px;right:18px}
+nav.nv5 .nav-av,nav.nv5 .nav-av .av{width:30.4px!important;height:30.4px!important;min-width:30.4px}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -2326,7 +2333,7 @@ function pubMap(el,safe){
   el.innerHTML=pvToggle();el.append(P.wrap);const w=P.wrap;
   const wasFs=!!P.isFs;w.classList.remove("fs");w.querySelector("#pmbk").hidden=true;w.querySelector("#pmfs").hidden=false;
   if(!wasFs){const cd=w.querySelector("#pmcard");if(cd)cd.hidden=true}
-  w.style.height=Math.max(300,innerHeight-Math.round(w.getBoundingClientRect().top)-(document.querySelector("nav")?.offsetHeight||70))+"px";
+  {const nt=document.querySelector("nav")?.getBoundingClientRect().top||innerHeight-70;w.style.height=Math.max(300,Math.round(nt-w.getBoundingClientRect().top))+"px"}
   if(wasFs)P.fs(true,true);
   const hint=m=>{const h=w.querySelector("#pmh");if(!h)return;h.hidden=!m;h.textContent=m||""};
   loadLeaflet().then(()=>{
