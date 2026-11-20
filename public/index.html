@@ -2615,13 +2615,14 @@ const getPos0=async()=>{const rd=v=>Math.round(v*100)/100,GL=NATAPP&&NP("Geoloca
 const getPos=async()=>{const p=await getPos0();try{localStorage.setItem("lastPos",JSON.stringify({la:p.la,lo:p.lo}))}catch{}return p};
 const lastPos=()=>{try{const p=JSON.parse(localStorage.getItem("lastPos")||"null");return p&&isFinite(p.la)&&isFinite(p.lo)?{la:+p.la,lo:+p.lo}:null}catch{return null}};
 const warmPos=()=>{if(PUB.pos||warmPos.b)return;warmPos.b=1;getPos().then(p=>{PUB.pos=PUB.pos||p}).catch(()=>{}).finally(()=>{warmPos.b=0})};
+const PPC=new Map(),pubPs=async id=>{const c=PPC.get(id);if(c&&Date.now()-c.t<18e4)return c.P;const ps=await getDocs(collection(db,"drops",id,"participants")),P=ps.docs.map(x=>({...x.data(),id:x.id}));PPC.set(id,{t:Date.now(),P});if(PPC.size>200)PPC.delete(PPC.keys().next().value);return P};
 async function loadPub(){if(PUB.busy)return;PUB.busy=true;try{
   if(!PUB.pos)PUB.pos=await getPos();
   if(DEMO){PUB.list=demoPub(PUB.pos)}else{
   const q=await getDocs(query(collection(db,"drops"),where("public","==",true),where("gh4","in",cells(PUB.pos.la,PUB.pos.lo)),limit(100)));
   const now=Date.now();let L=q.docs.map(x=>({...x.data(),id:x.id})).filter(d=>d.startsAt?.toMillis?.()>now&&d.geo).map(d=>({...d,km:kmTo(PUB.pos,dpt(d))})).filter(d=>d.km<=30&&!isBlk(d.hostId)&&!isHid(d.id));
   L.sort((a,b)=>a.startsAt.toMillis()-b.startsAt.toMillis());L=L.slice(0,40);
-  await Promise.all(L.map(async d=>{try{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}catch{d.P=[]}}));
+  await Promise.all(L.map(async d=>{try{d.P=await pubPs(d.id)}catch{d.P=[]}}));
   PUB.list=L.sort((a,b)=>a.startsAt.toMillis()-b.startsAt.toMillis())}
   /* własnych dropów nie pokazujemy w Publicznych – są w Moich dropach */
   PUB.list=(PUB.list||[]).filter(d=>d.hostId!==me());
@@ -2746,7 +2747,7 @@ const pubBoxCells=m=>{const b=m.getBounds();let cs=cellsBox(b.getSouth(),b.getWe
 const pubBoxList=()=>{const P=PUB.M,b=P.map.getBounds(),now=Date.now();return[...P.items.values()].filter(d=>d.startsAt?.toMillis?.()>now&&d.geo&&d.hostId!==me()&&!isBlk(d.hostId)&&b.contains(dmp(d))).sort((a,c)=>a.startsAt.toMillis()-c.startsAt.toMillis())};
 const pubBoxKey=()=>{const b=PUB.M.map.getBounds(),f=v=>v.toFixed(3);return[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()].map(f).join(",")};
 async function pubBoxLoad(){const P=PUB.M;if(!P||!P.map)return;try{await pubFetch(P,pubBoxCells(P.map));const L=pubBoxList().slice(0,40);
-  await Promise.all(L.map(async d=>{if(d.P)return;try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}}catch{d.P=[]}}));
+  await Promise.all(L.map(async d=>{if(d.P)return;try{if(DEMO)d.P=d.P||[];else d.P=await pubPs(d.id)}catch{d.P=[]}}));
   }catch(e){console.warn("box",e)}finally{try{PUB.bat=Date.now();PUB.bkey=pubBoxKey()}catch{}}}
 const pubLoadAny=()=>PUB.M&&PUB.M.map?pubBoxLoad():loadPub();
 async function pubMapLoad0(P,hint){pmMe(P);const m=P.map;if(!m)return;
@@ -2769,7 +2770,7 @@ async function pubMapLoad0(P,hint){pmMe(P);const m=P.map;if(!m)return;
   clearTimeout(P.hT);if(!inV&&sw>0){hint("");P.hT=setTimeout(()=>{try{if(!P.wrap.isConnected)return;const n=[...P.mk.values()].filter(k=>m.getBounds().contains(k.getLatLng())).length;hint(n?"":t("pmNo"))}catch{}},sw+80)}else hint(inV?"":t("pmNo"))}
 async function pubMapCard(P,d){try{await pubMapCard0(P,d)}catch(e){console.warn("card",e)}}
 async function pubMapCard0(P,d){const c=P.wrap.querySelector("#pmcard");if(!c)return;vib(8);
-  if(!d.P){try{if(DEMO)d.P=d.P||[];else{const ps=await getDocs(collection(db,"drops",d.id,"participants"));d.P=ps.docs.map(x=>({...x.data(),id:x.id}))}}catch{d.P=[]}}
+  if(!d.P){try{if(DEMO)d.P=d.P||[];else d.P=await pubPs(d.id)}catch{d.P=[]}}
   const tk=taken(d.P),free=Math.max(0,(d.seats||0)-tk),role=(d.P.find(p=>p.id===me())?.status)||"inv",km=PUB.pos?kmTo(PUB.pos,dpt(d)):null;
   const [c1,c2]=thm(d),st=d.startsAt.toMillis(),ins=(d.P||[]).filter(p=>p.status==="in").length,pl=plc(d);
   {c.innerHTML=`<button class="pmx" aria-label="${t("close")}">✕</button>`+postCard(d,d.P,role,{km,seats:d.seats,free});c.hidden=false;c.querySelector(".pmx").onclick=e=>{e.stopPropagation();c.hidden=true};try{P.map.panTo(dmp(d),{animate:true})}catch{}tick();return}
@@ -3188,6 +3189,7 @@ async function dropView(code){
   {const pp=window.__preP;if(pp&&pp.code===code){window.__preP=null;P=pp.list.sort((a,b)=>(a.updatedAt?.seconds||9e9)-(b.updatedAt?.seconds||9e9));mine=P.find(p=>p.id===me())||null}
    try{$("#cb").innerHTML=card({...d,id:code},P,false,logged?(isHost?"host":mine?mine.status:"inv"):null,true);{const ib=$("#invb");if(ib)ib.style.display=mine&&(mine.status==="in"||mine.status==="late")?"none":""}{const pw=isHost||(mine&&(mine.status==="in"||mine.status==="late"));const a=$("#dpw");if(a)a.hidden=!pw}try{wxApply()}catch{}tick();{const cr=$("#crew");if(cr)cr.innerHTML=crewHtml(d,P)}}catch{}}
   unsubs.push(onSnapshot(collection(ref,"participants"),sn=>{
+    PPC.delete(code);
     P=dedupP(sn.docs.map(x=>({...x.data(),id:x.id})));fixMine(code,P);P=P.sort((a,b)=>(a.updatedAt?.seconds||9e9)-(b.updatedAt?.seconds||9e9));
     mine=P.find(p=>p.id===me())||null;
     if(SAFE&&logged&&mine&&mine.status!=="out")safeBtn(d,code,P);
