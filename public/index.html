@@ -1365,6 +1365,29 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .lgc #g::after{border-color:#9a9a9a}
 .lgc #apl::after,.lgc #eml::after{border-color:#bdbdbd}
 .lgc #fbl::after{border-color:rgba(255,255,255,.75)}
+.sheet:has(.lgc){background:#0b0b0b;border-top:1px solid rgba(255,255,255,.08)}
+.sheet:has(.lgc) h2{font:800 20px Brico,BricoCyr,system-ui;letter-spacing:-.008em;color:#fff;text-align:center;margin:6px 0 8px}
+.sheet:has(.lgc) .hint{color:#8e8e8e;font:500 14.5px/1.45 Brico,BricoCyr,system-ui;text-align:center;margin:0 8px 18px}
+.sheet .lgc{margin:0}
+.sheet .lgc>button{font:600 15px Brico,BricoCyr,system-ui!important;padding:0 14px 0 8px!important;gap:12px!important;height:52px!important;justify-content:flex-start!important;text-transform:none!important;letter-spacing:0!important;margin:0!important;width:100%!important;border-radius:99px!important;display:flex!important;align-items:center!important;text-align:left!important}
+.sheet .lgc>#gug,.sheet .lgc>#guf,.sheet .lgc>#gue,.sheet .lgc>#gua{border:0!important;font-weight:600!important;padding:0 14px 0 8px!important;letter-spacing:0!important}
+.sheet .lgc>button svg{width:26px!important;height:26px!important;margin:0 6px 0 4px!important;vertical-align:0!important;flex:none}
+.sheet .lgc .iosn,.sheet .iosn{background:none;border:0;border-radius:0;padding:0 14px;margin:14px 0 0;text-align:center}
+.sheet .iosn b{font:700 13.5px Brico,BricoCyr,system-ui;color:#cfcfcf}.sheet .iosn small{color:#8e8e8e;font-size:12.5px}
+.sheet .iosn .lnk{color:#fff!important;text-decoration:underline;text-decoration-color:rgba(255,255,255,.45)}
+.gux{display:block;margin:14px auto 4px;background:none!important;border:0!important;box-shadow:none!important;color:#4da3ff!important;font:700 15px Brico,BricoCyr,system-ui!important;text-transform:none!important;height:44px;padding:0 20px}
+.lgc #gug{background:#fff!important;color:#111!important}
+.lgc #gua{background:#000!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09)!important}
+.lgc #gua svg{color:#fff}
+.lgc #guf{background:#1877f2!important;color:#fff!important}
+.lgc #guf svg path:first-child{fill:#fff}
+.lgc #guf svg path:last-child{fill:#1877f2}
+.lgc #gue{background:#1a1a1a!important;color:#fff!important}
+.lgc #gue svg{color:#fff}
+.lgc #gug::after{border-color:#9a9a9a}
+.lgc #gua::after,.lgc #gue::after{border-color:#bdbdbd}
+.lgc #guf::after{border-color:rgba(255,255,255,.75)}
+
 .scr.deco{position:relative;isolation:isolate}.scr.deco::before{content:"";position:absolute;left:-20px;right:-20px;top:-98px;height:770px;z-index:-1;background:url(/e/login-bg.webp) center top/100% auto no-repeat;filter:brightness(.88);-webkit-mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);pointer-events:none}
 .scr.deco .legal a{color:#fff!important;text-decoration-color:rgba(255,255,255,.45)}
 .scr.deco .gstb{color:#4da3ff!important;font:700 14.5px Brico,BricoCyr,system-ui!important;height:46px;display:flex;align-items:center;justify-content:center;text-decoration:none!important}
@@ -2353,7 +2376,8 @@ function wander(){const box=document.querySelector(".scr.deco");if(!box)return;c
 /* gość po wypadzie: raz na drop proponujemy konto, żeby nie zgubić ekipy */
 function guestAfter(){const u=auth.currentUser;if(!u||!u.isAnonymous||document.querySelector(".sheetbg"))return;const now=Date.now();
   const d=[...S.items.values()].find(x=>x.startsAt&&x.startsAt.toMillis()<now&&!sget("ga_"+x.id));if(!d)return;sset("ga_"+d.id,"1");vib(10);guestUp(null,t("gaT"),t("gaD"))}
-function guestUp(next,TT,TD){const s=sheet(`<h2>${TT||t("guUpT")}</h2><p class="hint">${TD||t("guUpD")}</p>${IOSB&&!STDL&&!DEMO?`<div class="iosn"><b>${t("iosNT")}</b><small>${t("iosND")}</small><button class="lnk" onclick="installSheet()">${t("iosNB")}</button></div>`:""}<div class="acts"><button class="cta" id="gug" style="margin:0">${t("gBtn")}</button>${DEMO?"":`<button class="ghost" id="guf">${t("fbBtn")}</button><button class="ghost" id="gue">${t("mailBtn")}</button>`}${IOSAPP?`<button class="ghost" id="gua"><svg viewBox="0 0 24 24" width="22" height="22" style="vertical-align:-5px;margin-right:10px"><path fill="currentColor" d="M16.4 12.6c0-2.500 2-3.700 2.100-3.800-1.200-1.700-3-1.900-3.600-1.900-1.500-.2-3 .9-3.800.9-.8 0-2-.9-3.300-.9-1.700 0-3.300 1-4.200 2.500-1.800 3.100-.5 7.700 1.300 10.200.9 1.200 1.900 2.600 3.200 2.500 1.300-.1 1.800-.8 3.300-.8s2 .8 3.300.8c1.400 0 2.300-1.200 3.100-2.500 1-1.400 1.400-2.800 1.400-2.900-.1 0-2.800-1.100-2.800-4.100zM13.900 5.200c.7-.9 1.200-2 1-3.200-1 0-2.300.7-3 1.600-.7.800-1.200 2-1.100 3.100 1.200.1 2.300-.6 3.100-1.500z"/></svg>${t("apBtn")}</button>`:""}<button id="gux">${t("cancel")}</button></div>`);
+const PI_G=`<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="12" fill="#fff"/><path fill="#4285F4" d="M20.6 12.2c0-.6-.1-1.1-.2-1.6H12v3.1h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.6 2.7-3.9 2.7-6.4z"/><path fill="#34A853" d="M12 21c2.4 0 4.5-.8 5.9-2.2L15 16.6c-.8.5-1.8.9-3 .9-2.3 0-4.3-1.6-5-3.7H4v2.300A9 9 0 0 0 12 21z"/><path fill="#FBBC05" d="M7 13.800a5.400 5.400 0 0 1 0-3.600V8H4a9 9 0 0 0 0 8z"/><path fill="#EA4335" d="M12 6.600c1.300 0 2.500.5 3.400 1.300L18 5.300A9 9 0 0 0 4 8l3 2.300c.7-2.100 2.700-3.700 5-3.700z"/></svg>`,PI_F=`<svg viewBox="0 0 24 24" width="22" height="22"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/><path fill="#fff" d="M16.7 15.5l.5-3.5h-3.4V9.8c0-1 .5-1.9 2-1.9h1.5v-3s-1.4-.2-2.7-.2c-2.7 0-4.5 1.7-4.5 4.7V12h-3v3.5h3v8.4a12 12 0 0 0 3.7 0v-8.4z"/></svg>`,PI_M=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>`,PI_A=`<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M16.4 12.6c0-2.500 2-3.700 2.100-3.800-1.200-1.700-3-1.900-3.600-1.900-1.500-.2-3 .9-3.800.9-.8 0-2-.9-3.300-.9-1.700 0-3.300 1-4.200 2.500-1.800 3.100-.5 7.700 1.300 10.200.9 1.200 1.900 2.600 3.200 2.500 1.300-.1 1.800-.8 3.300-.8s2 .8 3.300.8c1.400 0 2.300-1.200 3.100-2.500 1-1.400 1.400-2.800 1.400-2.900-.1 0-2.800-1.100-2.800-4.100zM13.900 5.200c.7-.9 1.200-2 1-3.200-1 0-2.300.7-3 1.600-.7.800-1.200 2-1.100 3.100 1.200.1 2.300-.6 3.100-1.500z"/></svg>`;
+function guestUp(next,TT,TD){const s=sheet(`<h2>${TT||t("guUpT")}</h2><p class="hint">${TD||t("guUpD")}</p><div class="lgc"><button class="cta" id="gug">${PI_G}${t("gBtn")}</button>${DEMO?"":`<button class="ghost" id="guf">${PI_F}${t("fbBtn")}</button>`}${IOSAPP?`<button class="ghost" id="gua">${PI_A}${t("apBtn")}</button>`:""}${DEMO?"":`<button class="ghost" id="gue">${PI_M}${t("mailBtn")}</button>`}</div>${IOSB&&!STDL&&!DEMO?`<div class="iosn"><b>${t("iosNT")}</b><small>${t("iosND")}</small><button class="lnk" onclick="installSheet()">${t("iosNB")}</button></div>`:""}<button id="gux" class="gux">${t("cancel")}</button>`);
   const fin=async()=>{s.close();sset("guest","");const cu=auth.currentUser;if(cu&&!cu.isAnonymous){try{await Promise.race([loadProfile(cu),new Promise(r=>setTimeout(r,4000))])}catch{}}try{saveProfile();syncAvatar()}catch{}try{badges()}catch{}if(next&&next!==location.pathname)go(next);else route()};
   s.querySelector("#gux").onclick=()=>s.close();
   s.querySelector("#gug").onclick=async()=>{try{await signInSmart(gProv());fin()}catch(e){const c=e?.code||"";if(!/popup-closed|cancelled-popup/.test(c))toast(t("oops")+(e?.message||e))}};
