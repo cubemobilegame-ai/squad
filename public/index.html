@@ -1220,6 +1220,16 @@ html:has(.scr.dv),body:has(.scr.dv){background:#0b0b0b}
 #nl .nlist .chat small:last-child{font-size:12.5px;line-height:16px;color:#6f6f6f;margin-top:3px;opacity:1!important}
 #nl .nlist .chat .bdi{align-self:center}
 #nl .nlist .chat .av{margin-top:2px}
+
+/* ===== PROFIL: aktywność jako wiersze z postępem ===== */
+.pf .actg{margin-top:22px}
+.pf .arow{cursor:default;align-items:center}
+.pf .arow .rl{min-width:0}
+.pf .arow .art{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font:500 16px Brico,BricoCyr,system-ui;color:#fff}
+.pf .arow .art em{font:500 14px Brico,BricoCyr,system-ui;font-style:normal;color:#8e8e8e;white-space:nowrap}
+.pf .arow .art em b{font:800 16px Brico,BricoCyr,system-ui;color:#fff}
+.pf .abar2{height:3px;border-radius:3px;background:#0e0e0e;margin-top:9px;overflow:hidden}
+.pf .abar2 i{display:block;height:100%;border-radius:3px;background:#dcdcdc}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -1776,6 +1786,7 @@ Object.assign(L.fr,{tmTom:"DÉBUT DEMAIN",tmD:w=>`DÉBUT: ${w}`});
 Object.assign(L.it,{tmTom:"INIZIA DOMANI",tmD:w=>`INIZIA: ${w}`});
 Object.assign(L.cs,{tmTom:"ZAČÁTEK ZÍTRA",tmD:w=>`ZAČÁTEK: ${w}`});
 Object.assign(L.uk,{tmTom:"ПОЧАТОК ЗАВТРА",tmD:w=>`ПОЧАТОК: ${w}`});
+Object.assign(L.pl,{aMeet:"Spotkania w tym miesiącu",aHost:"Zorganizowane przez Ciebie",aFr:"Znajomi"});Object.assign(L.en,{aMeet:"Meetups this month",aHost:"Hosted by you",aFr:"Friends"});Object.assign(L.es,{aMeet:"Quedadas este mes",aHost:"Organizadas por ti",aFr:"Amigos"});Object.assign(L.de,{aMeet:"Treffen diesen Monat",aHost:"Von dir organisiert",aFr:"Freunde"});Object.assign(L.fr,{aMeet:"Rencontres ce mois-ci",aHost:"Organisées par toi",aFr:"Amis"});Object.assign(L.it,{aMeet:"Incontri questo mese",aHost:"Organizzati da te",aFr:"Amici"});Object.assign(L.cs,{aMeet:"Setkání tento měsíc",aHost:"Uspořádané tebou",aFr:"Přátelé"});Object.assign(L.uk,{aMeet:"Зустрічі цього місяця",aHost:"Організовано тобою",aFr:"Друзі"});
 Object.assign(L.pl,{nAct:"Aktywność"});Object.assign(L.en,{nAct:"Activity"});Object.assign(L.es,{nAct:"Actividad"});Object.assign(L.de,{nAct:"Aktivität"});Object.assign(L.fr,{nAct:"Activité"});Object.assign(L.it,{nAct:"Attività"});Object.assign(L.cs,{nAct:"Aktivita"});Object.assign(L.uk,{nAct:"Активність"});
 Object.assign(L.es,{mf_all:"Todos los drops públicos",mf_mine:"Todos mis drops",dvMore:"Más"});
 Object.assign(L.de,{mf_all:"Alle öffentlichen Drops",mf_mine:"Alle meine Drops",dvMore:"Mehr"});
@@ -2532,7 +2543,7 @@ function profileView(){
   <div id="ped" hidden><div class="phl" id="phl"></div><input type="file" id="pf" accept="image/*" hidden>
   <label class="lbl" for="pn">${t("nick")}</label><div class="lr2"><input id="pn" value="${esc(nick)}" maxlength="20" autocomplete="off"><button class="mbtn" id="ps">${t("save")}</button></div><p class="nkh">${t("nickHint")}</p>
   <button class="ghost kmk" id="kmk">${t("avMake")}</button></div></div>
-  <div class="actc" id="act"><h2>${t("actT")}</h2><div class="acts" role="tablist">${[["d","actD"],["p","actP"],["c","actC"]].map(([k,n],i)=>`<button role="tab" data-ak="${k}" class="${i?"":"on"}">${t(n)}</button>`).join("")}</div><div id="actb"></div></div>
+  <div class="sgrp actg" id="act"><h3>${t("actT")}</h3><div class="slist" id="actb"></div></div>
   <div class="sgrp"><h3>${t("pAcc")}</h3><div class="slist">${bI.row}${bI.grid}${SAFE?row(SI.shield,t("trT"),`<em>${trusted().length}/3</em>`,`onclick="trustSheet()"`,esc(trN)||t("trAdd")):""}</div></div>
   <div class="sgrp"><div class="slist"><button class="srow nhd" id="nhd" aria-expanded="false">${I(IC.bell)}<span class="rl">${t("sNotif")}</span><em class="pcv">${I(CV)}</em></button><div id="nbd" hidden>${NK.map(k=>`<div class="srow">${I(NI[k])}<span class="rl">${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div></div><p class="hint s pfn">${t("nHint")}</p></div>
   <div class="sgrp"><div class="slist"><button class="srow nhd" id="thh" aria-expanded="false">${I('<circle cx="12" cy="12" r="9"/><circle cx="8.500" cy="10" r="1.200"/><circle cx="12" cy="7.500" r="1.200"/><circle cx="15.500" cy="10" r="1.200"/><path d="M12 21c-1.500 0-2-1.200-1.200-2.200.8-1 .2-2.300-1-2.300H8"/>')}<span class="rl">${t("thT")}</span><em class="pcv">${I(CV)}</em></button><div id="thb" hidden style="padding:0 14px 8px">${thSw()}</div></div></div>
@@ -2542,7 +2553,7 @@ function profileView(){
   <button class="more" id="mo">${t("more")} ${sv(SI.down)}</button>
   <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span class="rl">${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
-  {let ak="d";const dr=()=>{$("#actb").innerHTML=actHtml(ak);document.querySelectorAll("#act [data-ak]").forEach(b=>b.classList.toggle("on",b.dataset.ak===ak))};dr();document.querySelectorAll("#act [data-ak]").forEach(b=>b.onclick=()=>{ak=b.dataset.ak;vib(8);dr()})}
+  $("#actb").innerHTML=actRows();
   $("#thh").onclick=()=>{const o=$("#thh").getAttribute("aria-expanded")!=="true";$("#thh").setAttribute("aria-expanded",String(o));$("#thb").hidden=!o;vib(8)};
   $("#nhd").onclick=()=>{const o=$("#nhd").getAttribute("aria-expanded")!=="true";$("#nhd").setAttribute("aria-expanded",String(o));$("#nbd").hidden=!o;vib(8)};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");
@@ -3240,6 +3251,11 @@ const actCalc=k=>{const ds=actDays(),b=Array(7).fill(0),ix=ms=>{if(!ms)return-1;
 const actWd=ms=>{const d=new Date(ms),w=d.getDay();if(LANG==="pl")return["Nd","Pn","Wt","Śr","Cz","Pt","So"][w];let x=d.toLocaleDateString(LANG,{weekday:"short"}).replace(".","");return x.charAt(0).toUpperCase()+x.slice(1,2)};
 const actHtml=k=>{const b=actCalc(k),tot=k==="c"?b[6]:b.reduce((a,c)=>a+c,0),mx=Math.max(...b,1),u=mx<=2?30:64/mx,ds=actDays(),cap={d:"actCd",p:"actCp",c:"actCc"}[k];
   return`<div class="aval"><b>${tot}</b><span>${t(cap)}</span></div><div class="ach"><i></i><i></i><i></i>${b.map((v,i)=>`<div class="acol${i===6?" td":""}"><div class="abw"><div class="abar${v?"":" z"}"${v?` style="height:${Math.max(14,Math.round(v*u))}px"`:""}>${i===6&&v?`<em>${v}</em>`:""}</div></div><span>${actWd(ds[i])}</span></div>`).join("")}</div>`};
+const actGoal=v=>[3,5,8,10,15,20,30,50,75,100,150,200,300,500,1000].find(x=>x>v)||v+100;
+const actRows=()=>{const n=new Date(),m0=new Date(n.getFullYear(),n.getMonth(),1).getTime(),m1=new Date(n.getFullYear(),n.getMonth()+1,1).getTime(),now=Date.now();let mt=0,ho=0;
+  S.items.forEach(d=>{const st=d.startsAt?.toMillis?.();if(st&&st>=m0&&st<m1&&st<=now&&["host","in","late"].includes(roleOf(d)))mt++;const c=d.createdAt?.toMillis?.()||st;if(d.hostId===me()&&c&&c>=m0&&c<m1)ho++});
+  const fr=S.con.size!=null?S.con.size:(S.con.length||0),I=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  return[[I('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/>'),"aMeet",mt],[I('<path d="M12 4l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L4.8 9.3l5-.7z"/>'),"aHost",ho],[I('<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M16 5.500a3 3 0 010 5.600M18 14.300c1.600.6 2.600 2.200 3 4.700"/>'),"aFr",fr]].map(([ic,k,v])=>{const g=actGoal(v);return`<div class="srow arow">${ic}<div class="rl"><div class="art"><span>${t(k)}</span><em><b>${v}</b> / ${g}</em></div><div class="abar2"><i style="width:${Math.round(v/g*100)}%"></i></div></div></div>`}).join("")};
 const bdgInner=()=>{const sn=seenB(),n=BADGES.filter(b=>sn.includes(b[0])||bProg(b)[0]>=b[3]).length;
   return{row:`<button class="srow" id="bhd" aria-expanded="false">${sv('<circle cx="12" cy="9" r="5.500"/><path d="M8.800 13.600 7.500 21l4.500-2.600 4.500 2.600-1.300-7.400"/>')}<span class="rl">${t("bT")}</span><em class="alc">${n} / ${BADGES.length}</em></button>`,
     grid:`<div class="bgrid" id="bgr" hidden>${BADGES.map(b=>{const[c,m]=bProg(b),on=sn.includes(b[0])||c>=m;return`<button class="bdg ${on?"on":""}" data-b="${b[0]}"><i>${b[1]}</i><span>${t("b_"+b[0])}</span>${on?"":`<em><u style="width:${c/m*100}%"></u></em>`}</button>`}).join("")}</div>`}};
