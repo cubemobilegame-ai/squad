@@ -535,7 +535,7 @@ nav button{padding:7px 0 6px!important}nav button.on{background:#1c1c1c!importan
 .pscr h1{font-size:40px;line-height:1.02;margin:16px 0 10px}.pscr p{color:rgba(255,255,255,.72);font-size:15px;line-height:1.45;margin:0 0 18px}
 .pex{display:grid;gap:10px;margin:0 0 6px;text-align:left}.pex div{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);font-weight:700;font-size:14px}.pex img{width:34px;height:34px;flex:none}
 input,textarea,select{font-size:16px!important}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.spl{position:fixed;inset:0;z-index:200;background:radial-gradient(circle at 50% 40%,rgba(255,79,134,.18),transparent 55%),#0b0b12;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:opacity .35s}
+.spl{position:fixed;inset:0;z-index:200;background:radial-gradient(70% 50% at 100% 0%,rgba(255,255,255,.17),transparent 72%),#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:opacity .35s}
 .spl.out{opacity:0;pointer-events:none}
 .sbar{width:min(56vw,220px);height:6px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:26px}
 .sbar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#FF3D7F,#FF6A4D,#FFA53D);animation:sbar 1.9s cubic-bezier(.4,0,.2,1) forwards}
@@ -673,7 +673,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;bac
 
 /* start aplikacji: animacje tylko na transform/opacity (płynne nawet przy obciążonym procesorze) */
 .spl .hi5 img,.boot .hi5 img{filter:none!important}
-.spl .hi5::before{content:"";position:absolute;left:50%;top:50%;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;background:radial-gradient(circle,rgba(255,180,150,.16),transparent 65%);pointer-events:none}
+.spl .hi5::before{content:"";position:absolute;left:50%;top:50%;width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 65%);pointer-events:none}
 .spl .hi5 .hl,.spl .hi5 .hr,.spl .hi5 .bm{will-change:transform,opacity}
 .spl .hi5{animation:hbr 2.6s ease-in-out 1.7s infinite}@keyframes hbr{50%{transform:scale(1.045)}}
 .sbar i{width:100%!important;animation:none!important;transform:scaleX(0);transform-origin:0 50%;will-change:transform}
@@ -1477,11 +1477,17 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .pcm h3{top:54px}
 .pfr h3{top:68px}
 .pmcard .pfr h3{top:62px}
+.bd,.cfb{background:var(--acc)!important;color:#fff!important}
+:root.acw .bd,:root.acw .cfb{color:#0b0b0b!important}
+.bootl,.brand,.logo.bigl,.logo.lg2,.scr.deco.lgs .lgl,.scr.ob h1.logo{font-family:Brico,BricoCyr,system-ui!important;font-weight:800!important;letter-spacing:-.08em!important}
+.lg2 span,.scr.deco.lgs .lgl span{letter-spacing:0!important;margin-left:4px!important}
+.spl .spt{font:600 16px Brico,BricoCyr,system-ui;letter-spacing:-.005em;color:rgba(255,255,255,.62);margin-top:10px;text-align:center;padding:0 24px}
+.spl .sbar{margin-top:30px}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="ng" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF4F86"/><stop offset="1" stop-color="#38BDF8"/></linearGradient></defs></svg>
-<div class="spl" id="spl"><div class="cma">Cube Mobile Apps</div><div class="hi5" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><img class="bm" src="/e/boom.webp" alt=""></div><div class="bootl">Squad</div><div class="sbar"><i></i></div></div>
+<div class="spl" id="spl"><div class="cma">Cube Mobile Apps</div><div class="hi5" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><img class="bm" src="/e/boom.webp" alt=""></div><div class="bootl">Squad</div><div class="spt" id="spt"></div><div class="sbar"><i></i></div></div><script>try{var T={pl:"Spotkania w 15 minut",en:"Meetups in 15 minutes",es:"Quedadas en 15 minutos",de:"Treffen in 15 Minuten",fr:"Rendez-vous en 15 minutes",it:"Incontri in 15 minuti",cs:"Schůzky za 15 minut",uk:"Зустрічі за 15 хвилин"},l=localStorage.lang||"";if(!T[l]){var q=navigator.languages||[navigator.language||""];for(var i=0;i<q.length;i++){var c=String(q[i]).slice(0,2).toLowerCase();if(T[c]){l=c;break}}}document.getElementById("spt").textContent=T[l]||T.en}catch(e){}</script>
 <div id="app"><div class="boot"><div class="hi5" aria-hidden="true"><img class="hl" src="/e/hand-l.webp" alt=""><img class="hr" src="/e/hand-r.webp" alt=""><img class="bm" src="/e/boom.webp" alt=""></div><div class="bootl">Squad</div></div></div>
 <script src="/config.js"></script>
 <script>
