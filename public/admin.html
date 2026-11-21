@@ -9,7 +9,7 @@
 <link rel="icon" href="/favicon.png">
 <style>
 @font-face{font-family:Brico;src:url(/fonts/plus-jakarta.woff2) format("woff2");font-weight:200 800;font-display:swap}
-:root{--bg:#0b0b0b;--s1:rgba(255,255,255,.035);--s2:rgba(255,255,255,.055);--line:rgba(255,255,255,.09);--tx:#fff;--mu:rgba(255,255,255,.62);--bl:#4DA3FF;--or:#ff8a3d;--ios:#4DA3FF;--and:#ff8a3d;--web:#a78bfa;--pwa:#2fd8b8;--ok:#3ddc97;--r:24px;color-scheme:dark}
+:root{--bg:#0b0b0b;--s1:rgba(255,255,255,.035);--s2:rgba(255,255,255,.055);--line:rgba(255,255,255,.09);--tx:#fff;--mu:rgba(255,255,255,.62);--bl:#4DA3FF;--or:#ff8a3d;--ios:#4DA3FF;--and:#ff8a3d;--web:#a78bfa;--pwa:#2fd8b8;--unk:#7c8094;--ok:#3ddc97;--r:24px;color-scheme:dark}
 *{box-sizing:border-box;margin:0}
 html{background:var(--bg)}
 body{font:500 16px/1.5 Brico,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--tx);background:radial-gradient(800px 420px at 92% -10%,#4DA3FF1c,transparent 70%),var(--bg);min-height:100vh;padding-block:0 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-font-smoothing:antialiased}
@@ -39,6 +39,10 @@ main{padding-top:22px;display:grid;gap:14px}
 .sub{color:var(--mu);font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px}
 #kpis{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:820px){#kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tp{position:relative;cursor:help}.tp:focus-visible{outline:2px solid var(--bl);outline-offset:2px}
+.tp::after{content:attr(data-tip);position:absolute;left:12px;right:12px;top:calc(100% - 8px);z-index:20;background:#1b1c26;border:1px solid rgba(255,255,255,.16);color:#fff;font:500 13.5px/1.45 Brico,system-ui,sans-serif;padding:12px 14px;border-radius:14px;box-shadow:0 14px 34px rgba(0,0,0,.6);pointer-events:none;opacity:0;transform:translateY(4px);transition:.15s;min-width:200px;white-space:normal;text-align:left}
+.tp:hover::after,.tp:focus::after{opacity:1;transform:none}
+.chip.tp::after{left:0;right:auto;width:240px;top:calc(100% + 8px)}
 .k .v{font-size:34px;font-weight:800;letter-spacing:-.03em;margin-top:6px;font-variant-numeric:tabular-nums}
 .k .d{font-size:13.5px;color:var(--mu);margin-top:2px}
 .up{color:var(--ok)}.dn{color:#ff6b6b}
@@ -91,35 +95,35 @@ td:first-child i{width:9px;height:9px;border-radius:50%}
 </div></header>
 <div class="w"><main>
   <section class="hero">
-    <div class="card"><div class="lbl">Online teraz (ostatnie 6 min)</div><div class="big" id="onl">–</div><div class="sub" id="onlS"> </div></div>
-    <div class="card"><div class="hd"><h2>Aktywni dziennie – 30 dni</h2><div class="lg"><span id="dauNow"></span></div></div><div id="spark"></div></div>
+    <div class="card tp" tabindex="0" data-tip="Osoby, które były aktywne w aplikacji w ciągu ostatnich 6 minut. Aplikacja zgłasza się mniej więcej co 4 minuty, gdy jest otwarta."><div class="lbl">Online teraz (ostatnie 6 min)</div><div class="big" id="onl">–</div><div class="sub" id="onlS"> </div></div>
+    <div class="card"><div class="hd tp" tabindex="0" data-tip="Ile różnych osób było aktywnych każdego dnia przez ostatnie 30 dni (dni liczone w UTC). Wykres rozpędzi się z czasem, bo dane zbieramy od wdrożenia."><h2>Aktywni dziennie – 30 dni</h2><div class="lg"><span id="dauNow"></span></div></div><div id="spark"></div></div>
   </section>
 
   <section class="grid" id="kpis"></section>
 
   <section class="card">
-    <div class="hd"><h2>Aktywność i nowe konta – 30 dni</h2><div class="lg"><span><b style="background:var(--bl)"></b>aktywni dnia</span><span><b style="background:var(--or)"></b>nowi</span></div></div>
+    <div class="hd tp" tabindex="0" data-tip="Niebieska linia: ile osób było aktywnych danego dnia. Pomarańczowe słupki: ile nowych kont pojawiło się tego dnia. Najedź na punkt, żeby zobaczyć dokładną liczbę."><h2>Aktywność i nowe konta – 30 dni</h2><div class="lg"><span><b style="background:var(--bl)"></b>aktywni dnia</span><span><b style="background:var(--or)"></b>nowi</span></div></div>
     <div class="scroll"><div id="chart" style="min-width:720px"></div></div>
   </section>
 
   <section class="two">
-    <div class="card"><div class="hd"><h2>Platformy</h2><span class="sub">aktywni w 30 dni</span></div>
+    <div class="card"><div class="hd tp" tabindex="0" data-tip="Podział aktywnych w 30 dni na iOS (App Store), Androida (Google Play), zwykłą przeglądarkę i stronę dodaną do ekranu głównego telefonu."><h2>Platformy</h2><span class="sub">aktywni w 30 dni</span></div>
       <div class="split" id="split"></div>
       <div class="scroll"><table id="tbl"></table></div>
     </div>
-    <div class="card"><div class="hd"><h2>Ubytki i ryzyko</h2><span class="sub">po dacie ostatniej aktywności</span></div>
+    <div class="card"><div class="hd tp" tabindex="0" data-tip="Ilu użytkowników przestaje wracać. Liczone po dacie ostatniej aktywności konta."><h2>Ubytki i ryzyko</h2><span class="sub">po dacie ostatniej aktywności</span></div>
       <div class="grid" id="churn" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div>
       <div class="note" id="churnN"></div>
     </div>
   </section>
 
   <section class="card">
-    <div class="hd"><h2>Pobrania ze sklepów</h2><span class="sub" id="dlSub">wpisz z App Store Connect i Google Play Console</span></div>
+    <div class="hd tp" tabindex="0" data-tip="Ile razy aplikację pobrano z App Store i Google Play. Dane ze sklepów mają 1–3 dni opóźnienia. Na razie wpisujesz je ręcznie."><h2>Pobrania ze sklepów</h2><span class="sub" id="dlSub">wpisz z App Store Connect i Google Play Console</span></div>
     <div class="dl">
       <label>App Store (iOS)<input id="dIos" inputmode="numeric" placeholder="0"></label>
       <label>Google Play (Android)<input id="dAnd" inputmode="numeric" placeholder="0"></label>
-      <label>Razem<input id="dSum" readonly></label>
-      <label>Konta na 100 pobrań<input id="dRat" readonly></label>
+      <label class="tp" tabindex="0" data-tip="Suma pobrań z App Store i Google Play."><span>Razem</span><input id="dSum" readonly></label>
+      <label class="tp" tabindex="0" data-tip="Na każde 100 pobrań tyle kont faktycznie otworzyło aplikację. Wynik poniżej 100 znaczy, że nie każdy pobierający się zalogował."><span>Konta na 100 pobrań</span><input id="dRat" readonly></label>
     </div>
     <div class="note" id="dlN"></div>
   </section>
@@ -134,7 +138,7 @@ const C=self.SQUAD_CONFIG,g="https://www.gstatic.com/firebasejs/10.12.2/";
 const [A,AU,F]=await Promise.all(["app","auth","firestore"].map(n=>import(g+"firebase-"+n+".js")));
 const app=A.initializeApp(C),auth=AU.getAuth(app),db=F.getFirestore(app);
 const $=id=>document.getElementById(id);
-const PF=[{k:"ios",n:"iOS (App Store)",c:"var(--ios)"},{k:"android",n:"Android (Play)",c:"var(--and)"},{k:"web",n:"Przeglądarka",c:"var(--web)"},{k:"pwa",n:"Strona na ekranie",c:"var(--pwa)"}];
+const PF=[{k:"ios",n:"iOS (App Store)",c:"var(--ios)"},{k:"android",n:"Android (Play)",c:"var(--and)"},{k:"web",n:"Przeglądarka",c:"var(--web)"},{k:"pwa",n:"Strona na ekranie",c:"var(--pwa)"},{k:"unk",n:"Nieznana (starsze konta)",c:"#7c8094"}];
 const sel=new Set(PF.map(p=>p.k));
 const R={},D={};            // R[pf]=liczniki, D[pf][i]={a,n} dla ostatnich 30 dni (i=0 najstarszy)
 PF.forEach(p=>{R[p.k]={};D[p.k]=Array.from({length:30},()=>({a:null,n:null}))});
@@ -197,15 +201,15 @@ function chart(){const a=series("a"),nw=series("n"),w=1000,h=260,pl=34,pb=26,iw=
   $("chart").innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Aktywni dziennie i nowe konta">${s}</svg>`}
 
 function kpis(){const dau=sum("d1"),wau=sum("d7"),mau=sum("d30"),tot=sum("tot"),st=mau?Math.round(dau/mau*100):0;
-  const k=(l,v,d)=>`<div class="card k"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d||"&nbsp;"}</div></div>`;
-  $("kpis").innerHTML=k("Aktywni dziś (24 h)",fmt(dau),tot?Math.round(dau/tot*100)+"% wszystkich kont":"")+k("Aktywni 7 dni",fmt(wau),tot?Math.round(wau/tot*100)+"% kont":"")+k("Aktywni 30 dni",fmt(mau),tot?Math.round(mau/tot*100)+"% kont":"")+k("Przywiązanie (DAU/MAU)",st+"%","jak często wracają")+k("Nowi 24 h",`<span class="up">+${fmt(sum("n1"))}</span>`,"7 dni: +"+fmt(sum("n7")))+k("Nowi 30 dni",`<span class="up">+${fmt(sum("n30"))}</span>`,"")+k("Wszystkie konta",fmt(tot),"widziane od wdrożenia statystyk")+k("Dropy i grupy",fmt(R.drops),"grup: "+fmt(R.groups))}
+  const k=(l,v,d,tip)=>`<div class="card k tp" tabindex="0" data-tip="${tip}"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d||"&nbsp;"}</div></div>`;
+  $("kpis").innerHTML=k("Aktywni dziś (24 h)",fmt(dau),tot?Math.round(dau/tot*100)+"% wszystkich kont":"","Ile różnych osób otworzyło aplikację w ciągu ostatnich 24 godzin (liczone od teraz wstecz).")+k("Aktywni 7 dni",fmt(wau),tot?Math.round(wau/tot*100)+"% kont":"","Ile różnych osób otworzyło aplikację choć raz w ostatnich 7 dniach. Każda osoba liczy się raz.")+k("Aktywni 30 dni",fmt(mau),tot?Math.round(mau/tot*100)+"% kont":"","Ile różnych osób otworzyło aplikację choć raz w ostatnich 30 dniach. To podstawowa miara wielkości społeczności.")+k("Przywiązanie (24 h / 30 dni)",st+"%","jak często wracają","Aktywni w ciągu 24 godzin podzieleni przez aktywnych w ciągu 30 dni. 30% znaczy, że co trzecia osoba z miesiąca korzysta z aplikacji codziennie. Powyżej 20% jest dobrze. Wynik będzie wiarygodny po 30 dniach zbierania danych.")+k("Nowi 24 h",`<span class="up">+${fmt(sum("n1"))}</span>`,"7 dni: +"+fmt(sum("n7")),"Konta, które po raz pierwszy pojawiły się w aplikacji w ciągu ostatnich 24 godzin. Pod spodem suma z 7 dni.")+k("Nowi 30 dni",`<span class="up">+${fmt(sum("n30"))}</span>`,"","Konta, które po raz pierwszy pojawiły się w aplikacji w ostatnich 30 dniach.")+k("Wszystkie konta",fmt(tot),"widziane od wdrożenia statystyk","Wszystkie konta, które otworzyły aplikację od momentu włączenia statystyk. Starsze konta dopisują się, gdy ktoś pierwszy raz otworzy aplikację po wdrożeniu.")+k("Dropy i grupy",fmt(R.drops),"grup: "+fmt(R.groups),"Łączna liczba dropów (wydarzeń) i osobno grup, które istnieją teraz w bazie.")}
 function platforms(){const rows=PF.map(p=>({...p,m:R[p.k].d30||0,t:R[p.k].tot||0,d1:R[p.k].d1||0,d7:R[p.k].d7||0,n7:R[p.k].n7||0}));
   const tm=rows.reduce((s,r)=>s+r.m,0)||1;
   $("split").innerHTML=rows.filter(r=>r.m>0).map(r=>`<span style="flex:${r.m};background:${r.c}" title="${r.n}: ${r.m}"></span>`).join("")||`<span style="flex:1;background:var(--line)"></span>`;
   $("tbl").innerHTML=`<tr><th></th><th>konta</th><th>24 h</th><th>7 dni</th><th>30 dni</th><th>udział</th></tr>`+rows.map(r=>`<tr><td><i style="background:${r.c}"></i>${r.n}</td><td>${fmt(r.t)}</td><td>${fmt(r.d1)}</td><td>${fmt(r.d7)}</td><td>${fmt(r.m)}</td><td>${Math.round(r.m/tm*100)}%</td></tr>`).join("")}
 function churn(){const tot=sum("tot"),i7=sum("idle7"),lost=sum("lost"),risk=Math.max(0,i7-lost),m=sum("d30");
-  const k=(l,v,d)=>`<div class="card k" style="padding:16px"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
-  $("churn").innerHTML=k("Wygasają (7–30 dni)",fmt(risk),tot?Math.round(risk/tot*100)+"% kont":"")+k("Utraceni (&gt;30 dni)",`<span class="dn">${fmt(lost)}</span>`,tot?Math.round(lost/tot*100)+"% kont":"")+k("Aktywni 30 dni",fmt(m),"zostali w aplikacji");
+  const k=(l,v,d,tip)=>`<div class="card k tp" tabindex="0" data-tip="${tip}" style="padding:16px"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+  $("churn").innerHTML=k("Wygasają (7–30 dni)",fmt(risk),tot?Math.round(risk/tot*100)+"% kont":"","Konta, które nie otworzyły aplikacji od 7 do 30 dni. Jeszcze można je odzyskać, np. powiadomieniem.")+k("Utraceni (&gt;30 dni)",`<span class="dn">${fmt(lost)}</span>`,tot?Math.round(lost/tot*100)+"% kont":"","Konta, które nie otworzyły aplikacji od ponad 30 dni. Uznajemy je za utracone, choć ktoś może jeszcze wrócić.")+k("Aktywni 30 dni",fmt(m),"zostali w aplikacji","Konta aktywne w ostatnich 30 dniach, czyli te, które nie odpadły.");
   $("churnN").textContent="Przybyli w ostatnich 30 dniach: +"+fmt(sum("n30"))+". Saldo wzrostu konta w tym okresie liczy się jako nowi minus utraceni."}
 function downloads(){const a=+dl.ios||0,b=+dl.android||0,s=a+b,tot=PF.reduce((x,p)=>x+(R[p.k].tot||0),0);
   $("dSum").value=s?fmt(s):"";$("dRat").value=s&&tot?Math.round(tot/s*100):"";
@@ -214,7 +218,7 @@ function render(){spark();chart();kpis();platforms();churn();downloads();
   $("onl").textContent=fmt(sum("onl"));$("onlS").textContent=sum("d1")?`z ${fmt(sum("d1"))} aktywnych w ciągu doby`:"czekamy na pierwszych użytkowników";
   $("foot").textContent="Dni liczone w UTC. Statystyki zbierane od wdrożenia śledzenia – starsze konta pojawią się po pierwszym otwarciu aplikacji. Drops łącznie: "+fmt(R.drops)+", grupy: "+fmt(R.groups)+"."}
 
-function chips(){$("chips").innerHTML=PF.map(p=>`<button class="chip" data-k="${p.k}" aria-pressed="${sel.has(p.k)}" style="--c:${p.c}"><i></i>${p.n.split(" ")[0]}</button>`).join("");
+function chips(){$("chips").innerHTML=PF.map(p=>`<button class="chip tp" tabindex="0" data-tip="Pokaż lub ukryj w statystykach: ${p.n}. Wyłączona platforma nie liczy się do sum." data-k="${p.k}" aria-pressed="${sel.has(p.k)}" style="--c:${p.c}"><i></i>${p.n.split(" ")[0]}</button>`).join("");
   $("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const k=b.dataset.k;if(sel.has(k)&&sel.size>1)sel.delete(k);else sel.add(k);chips();if(ready)render()}}
 
 async function tick(){if(busy)return;busy=true;try{await loadCore();await loadDays();ready=true;render();$("upd").textContent="na żywo · "+new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}

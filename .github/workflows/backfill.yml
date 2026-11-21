@@ -1,0 +1,17 @@
+name: Wczytanie istniejących kont do statystyk
+on:
+  workflow_dispatch:
+    inputs:
+      apply: { description: "Zapisz do bazy (domyślnie tylko podgląd)", type: boolean, default: false }
+jobs:
+  backfill:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - env: { SA: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}", APPLY: "${{ inputs.apply && '1' || '0' }}" }
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npm install --prefix tools --no-audit --no-fund >/dev/null
+          node tools/backfill.cjs
