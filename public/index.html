@@ -1557,10 +1557,10 @@ window.__pre.d.catch(function(){});window.__pre.P.catch(function(){});}catch(e){
 /* ekran ładowania: piątka + pasek postępu; znika, gdy pierwszy ekran aplikacji jest gotowy.
    Pasek jedzie animacją CSS (wątek kompozytora) – nie zacina się, nawet gdy telefon mieli JavaScript. */
 (function(){var S=document.getElementById("spl");if(!S)return;var t0=Date.now(),B=S.querySelector(".sbar i"),done=false;
-var deep=(location.pathname!=="/"&&location.pathname!=="")||(function(){try{var a=+localStorage.actT||0;return a>0&&Date.now()-a<30*60e3}catch(e){return false}})();if(deep){S.style.transition="opacity .2s"}
+var deep=(location.pathname!=="/"&&location.pathname!=="");var quick=(function(){try{var a=+localStorage.actT||0;return a>0&&Date.now()-a<30*60e3}catch(e){return false}})();if(deep){S.style.transition="opacity .2s"}
 if(B){B.getBoundingClientRect();B.style.transition="transform 7s cubic-bezier(.15,.75,.35,1)";B.style.transform="scaleX(.92)"}
 window.__splP=function(){};
-window.__splDone=function(){if(done)return;done=true;var w=deep?0:Math.max(0,1300-(Date.now()-t0));
+window.__splDone=function(){if(done)return;done=true;var w=deep?0:Math.max(0,(quick?600:1300)-(Date.now()-t0));
   setTimeout(function(){if(B){var m=getComputedStyle(B).transform;B.style.transition="none";B.style.transform=m==="none"?"scaleX(0)":m;B.getBoundingClientRect();B.style.transition="transform .3s ease-out";B.style.transform="scaleX(1)"}
     if(deep){S.classList.add("out");setTimeout(function(){S.remove()},400);return}
     setTimeout(function(){var M=document.getElementById("spm");if(M){M.getBoundingClientRect();S.classList.add("zm");M.style.transform="scale(70)"}else S.classList.add("zm");
