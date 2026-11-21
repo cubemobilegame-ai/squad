@@ -1453,6 +1453,12 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .pcm.pcp .pblob{display:none}.pcm.pcp h3{color:#fff;right:16px;z-index:2;text-shadow:0 2px 14px rgba(0,0,0,.5)}.pcm.pcp .pmeta,.pcm.pcp .pcd,.pcm.pcp .pmq{z-index:2}
 .pcm.pcp .pcd{background:rgba(0,0,0,.4);color:#fff}.pcm.pcp .pcd.live{background:#ff3b5c}.pcm.pcp .pmq{z-index:3}
 .pcm.pcp.pdk::after{background:linear-gradient(180deg,rgba(0,0,0,.62) 0,rgba(0,0,0,.3) 36%,rgba(0,0,0,0) 62%,rgba(0,0,0,.45) 100%)}
+.dph2{display:none}.dpn{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}.dpn b{font:800 17px Brico,BricoCyr,system-ui}
+.dpa{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font:700 22px system-ui;cursor:pointer;line-height:1}.dpa:disabled{opacity:.25}
+.dpg{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}.dpw{font:800 11px Brico,BricoCyr,system-ui;text-align:center;color:rgba(255,255,255,.45);font-style:normal;padding:4px 0;text-transform:uppercase}
+.dpd{aspect-ratio:1;border-radius:14px;border:1px solid transparent;background:rgba(255,255,255,.05);color:#fff;font:800 16px Brico,BricoCyr,system-ui;cursor:pointer;padding:0}.dpd:disabled{opacity:.22;cursor:default}
+.dpd.td{border-color:rgba(var(--accr),.7)}.dpd.on{background:linear-gradient(120deg,color-mix(in oklab,var(--g1) 50%,#fff),color-mix(in oklab,var(--g2) 38%,#fff));color:#15151c;border-color:transparent}
+.eddb{width:100%;height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font:700 16px Brico,BricoCyr,system-ui;cursor:pointer;text-transform:capitalize}.edt .eddb{flex:0 0 132px}.eds .edt .eddb{flex:none}
 </style>
 </head>
 <body style="background:#06060b;margin:0">
@@ -3036,7 +3042,7 @@ function newView(){
   <div class="chips spc" id="spc" hidden>${SPK.map(k=>`<button class="chip" data-s="${k}"><img src="${e3(k)}" alt="">${t("sp_"+k)}</button>`).join("")}</div>
   <input id="cu" placeholder="${t("otherPh")}" maxlength="30" hidden><input id="ti" placeholder="${t("nameD")}" maxlength="40"></div>
   <h3>${t("when")}</h3><div class="ncd"><div class="when"><div class="wheels"><div class="wh" id="hh">${[...Array(24)].map((_,i)=>`<div>${pad(i)}</div>`).join("")}</div><b style="font-size:26px">:</b><div class="wh" id="mm">${[...Array(12)].map((_,i)=>`<div>${pad(i*5)}</div>`).join("")}</div></div>
-  <div class="dayb"><button class="sel" data-d="0">${t("today")}</button><button data-d="1">${t("tomorrow")}</button><button data-d="x" class="dpb"><span id="dlab">${t("pickD")}</span><input type="date" id="dpk" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></button></div></div>
+  <div class="dayb"><button class="sel" data-d="0">${t("today")}</button><button data-d="1">${t("tomorrow")}</button><button data-d="x" class="dpb"><span id="dlab">${t("pickD")}</span></button></div></div>
   <div class="nrep"><span class="nl">${t("rep")}</span><div class="chips" id="rp">${REP.map((k,i)=>`<button class="chip ${i?"":"on"}" data-r="${k}">${t("rep_"+k)}</button>`).join("")}</div></div></div>
   <div class="ncd nopt">${`<div id="pubw"${NOPUB.includes(cat)?" class=\"off\"":""}><div class="sw">🌍 ${t("pubMk")}<div class="tg" id="pbs"></div></div><p class="hint s" id="pubx">${t(NOPUB.includes(cat)?"pubCatX":"pubMkD")}</p><p class="hint s">${t("pubRl")}</p>
   <div id="seatw" hidden><h3>${t("seats")}</h3><div class="chips" id="seats">${[4,6,8,10,15,20,30].map(n=>`<button class="chip ${n===8?"on":""}" data-n="${n}">${n}</button>`).join("")}</div></div></div>`}
@@ -3052,8 +3058,7 @@ function newView(){
   document.querySelectorAll(".tile").forEach(c=>c.onclick=()=>{vib(10);cat=c.dataset.c;if(cat!=="occ")occK=null;$("#cu").hidden=cat!=="other";$("#occ").hidden=cat!=="occ";$("#spc").hidden=cat!=="sport";if(cat==="sport")document.querySelectorAll("#spc .chip").forEach(x=>x.classList.remove("on"));if($("#surw")){$("#surw").hidden=cat==="biz";if(cat==="biz"&&sur){sur=false;$("#sw").classList.remove("on");if($("#pbs"))$("#pbs").parentElement.style.opacity=""}}if($("#pubw")){const oc=NOPUB.includes(cat);$("#pubw").classList.toggle("off",oc);$("#pubx").textContent=t(oc?"pubCatX":"pubMkD");if(oc&&pub){pub=false;$("#pbs").classList.remove("on");$("#seatw").hidden=true;if($("#sw"))$("#sw").parentElement.style.opacity=""}}if(cat==="other")$("#cu").focus();if(typeof cmPin==="function")cmPin();document.querySelectorAll(".tile").forEach(x=>x.classList.toggle("sel",x===c))});
   const selDay=b=>document.querySelectorAll(".dayb button").forEach(x=>x.classList.toggle("sel",x===b));
   document.querySelectorAll(".dayb button").forEach(b=>b.onclick=e=>{vib(8);if(b.dataset.d==="x")return;day=+b.dataset.d;dsel=null;$("#dlab").textContent=t("pickD");selDay(b)});
-  $("#dpk").onclick=e=>{e.stopPropagation();try{e.target.showPicker()}catch{}};
-  $("#dpk").onchange=()=>{const v=$("#dpk").value;if(!v)return;dsel=v;day=-1;$("#dlab").textContent=new Date(v+"T12:00").toLocaleDateString(LANG,{weekday:"short",day:"numeric",month:"short"});selDay($("#dpk").parentElement)};
+  $(".dayb .dpb").onclick=()=>{vib(8);datePick(dsel,v=>{dsel=v;day=-1;$("#dlab").textContent=new Date(v+"T12:00").toLocaleDateString(LANG,{weekday:"short",day:"numeric",month:"short"});selDay($(".dayb .dpb"))})};
   document.querySelectorAll("#spc .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#spc .chip").forEach(x=>x.classList.toggle("on",x===c));cat=c.dataset.s;$("#ti").value=t("sp_"+cat)+" ";$("#ti").focus()});
   document.querySelectorAll("#occ .chip").forEach(c=>c.onclick=()=>{vib(8);document.querySelectorAll("#occ .chip").forEach(x=>x.classList.toggle("on",x===c));occK=OCC[+c.dataset.o];$("#ti").value=t("o_"+OCC[+c.dataset.o])+" ";$("#ti").focus()});
   if($("#pbs"))$("#pbs").onclick=()=>{if(NOPUB.includes(cat)){vib([50,30,50]);return toast(t("pubCatX"))}if(!pubOk()){vib([50,30,50]);homeTab="pub";toast(t(sget("pub16")==="no"?"pubLockT":"pubAgeT"));return go("/")}if(!pub&&sget("pubRules")!=="1"){vib([50,30,50]);homeTab="pub";toast(t("prNeed"));return go("/")}if(!pub&&sur){vib([50,30,50]);return toast(t("surPubX"))}vib(10);pub=!pub;$("#pbs").classList.toggle("on",pub);$("#seatw").hidden=!pub;$("#sw").parentElement.style.opacity=pub?".4":""};
@@ -3435,6 +3440,17 @@ const loadImg=src=>new Promise((ok,no)=>{const i=new Image();if(/^https?:/.test(
 /* ---------- ARKUSZ OD DOŁU ---------- */
 function sheet(h){try{const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))a.blur()}catch{}const bg=document.createElement("div");bg.className="sheetbg";bg.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${h}</div>`;
   bg.close=()=>bg.remove();bg.onclick=e=>{if(e.target===bg)bg.close()};document.body.append(bg);swipeClose(bg.firstChild,()=>bg.close(),bg);return bg}
+/* własny kalendarz wyboru daty (zamiast natywnego <input type=date>, który na Androidzie bywa uciążliwy) */
+function datePick(val,cb){const mn=new Date();mn.setHours(12,0,0,0);const mx=new Date(mn.getTime()+90*864e5),k=d=>ymd(d);let cur=new Date((val||k(mn))+"T12:00");cur.setDate(1);
+  const s=sheet(`<h2 class="dph2"></h2><div class="dpn"><button type="button" class="dpa" id="dpp" aria-label="‹">‹</button><b id="dpm"></b><button type="button" class="dpa" id="dpx" aria-label="›">›</button></div><div class="dpg" id="dpg"></div><button class="ghost" id="dpc">${t("cancel")}</button>`);
+  const wd=[...Array(7)].map((_,i)=>new Date(2024,0,1+i).toLocaleDateString(LANG,{weekday:"narrow"}));
+  const draw=()=>{const y=cur.getFullYear(),m=cur.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate();
+    s.querySelector("#dpm").textContent=cur.toLocaleDateString(LANG,{month:"long",year:"numeric"}).replace(/^./,c=>c.toUpperCase());
+    s.querySelector("#dpp").disabled=y*12+m<=mn.getFullYear()*12+mn.getMonth();s.querySelector("#dpx").disabled=y*12+m>=mx.getFullYear()*12+mx.getMonth();
+    let h=wd.map(x=>`<i class="dpw">${x}</i>`).join("")+'<span></span>'.repeat(first);
+    for(let d=1;d<=n;d++){const x=new Date(y,m,d,12),v=k(x),off=x<new Date(mn.getFullYear(),mn.getMonth(),mn.getDate())||x>mx;h+=`<button type="button" class="dpd${v===val?" on":""}${v===k(mn)?" td":""}" data-v="${v}"${off?" disabled":""}>${d}</button>`}
+    s.querySelector("#dpg").innerHTML=h;s.querySelectorAll(".dpd").forEach(b=>b.onclick=()=>{vib(8);s.close();cb(b.dataset.v)})};
+  s.querySelector("#dpp").onclick=()=>{vib(6);cur.setMonth(cur.getMonth()-1);draw()};s.querySelector("#dpx").onclick=()=>{vib(6);cur.setMonth(cur.getMonth()+1);draw()};s.querySelector("#dpc").onclick=s.close;draw();return s}
 /* przesunięcie w dół zamyka wysuwane okno (gdy jest przewinięte do góry) */
 function swipeClose(el,close,fade){let y0=null,dy=0,t0=0;
   el.addEventListener("touchstart",e=>{if(e.touches.length!==1||el.scrollTop>0||e.target.closest("input[type=range],.krow,.tiles,.chips"))return;y0=e.touches[0].clientY;dy=0;t0=Date.now();el.style.transition="none"},{passive:true});
@@ -3891,13 +3907,13 @@ function editDrop(code,ref,d){const sc=x=>{x=String(x).toLowerCase();return x.ch
   const s=sheet(`<h2>${t("edT")}</h2><div class="eds">
   <label class="lbl" for="et">${t("nameD")}</label><input id="et" maxlength="40" value="${esc(clean(d.title))}" autocomplete="off">
   <label class="lbl" for="ep">${t("where")}</label><input id="ep" maxlength="80" value="${esc(d.place)}" autocomplete="off">
-  <label class="lbl" for="eh">${t("when")}</label><div class="edt"><input id="eh" type="time" step="300" value="${pad(st.getHours())}:${pad(st.getMinutes())}"><input id="edd" type="date" value="${ymd(st)}" min="${ymd(new Date())}" max="${ymd(new Date(Date.now()+90*864e5))}"></div>
+  <label class="lbl" for="eh">${t("when")}</label><div class="edt"><input id="eh" type="time" step="300" value="${pad(st.getHours())}:${pad(st.getMinutes())}"><button type="button" id="edd" class="eddb" data-v="${ymd(st)}">${new Date(ymd(st)+"T12:00").toLocaleDateString(LANG,{weekday:"short",day:"numeric",month:"short"})}</button></div>
   <div class="chips" id="eq">${[-15,15,30,60].map(m=>`<button class="chip" data-m="${m}">${m>0?"+":"−"}${Math.abs(m)>=60?Math.abs(m)/60+" h":Math.abs(m)+" min"}</button>`).join("")}<button class="chip" data-dd="0">${sc(t("today"))}</button><button class="chip" data-dd="1">${sc(t("tomorrow"))}</button></div>
   <label class="lbl">${t("rep")}</label><div class="chips" id="erp">${REP.map(k=>`<button class="chip ${k===rep?"on":""}" data-r="${k}">${t("rep_"+k)}</button>`).join("")}</div>
   ${d.category==="biz"?"":`<div class="sw">${t("sur")}<div class="tg ${sur?"on":""}" id="es" role="switch"></div></div>`}
   <p class="hint s">${t("edNote")}</p><button class="cta" id="eok">${t("save")}</button><button class="ghost" id="ecn">${t("cancel")}</button></div>`);
-  const q=x=>s.querySelector(x),cur=()=>{const [h,m]=(q("#eh").value||"18:00").split(":").map(Number),x=new Date((q("#edd").value||ymd(new Date()))+"T00:00");x.setHours(h||0,m||0,0,0);return x},
-    put=x=>{q("#eh").value=pad(x.getHours())+":"+pad(x.getMinutes());q("#edd").value=ymd(x)};
+  const q=x=>s.querySelector(x),cur=()=>{const [h,m]=(q("#eh").value||"18:00").split(":").map(Number),x=new Date((q("#edd").dataset.v||ymd(new Date()))+"T00:00");x.setHours(h||0,m||0,0,0);return x},
+    put=x=>{q("#eh").value=pad(x.getHours())+":"+pad(x.getMinutes());q("#edd").dataset.v=ymd(x);q("#edd").textContent=x.toLocaleDateString(LANG,{weekday:"short",day:"numeric",month:"short"})};q("#edd").onclick=()=>{vib(8);datePick(q("#edd").dataset.v,v=>{const x=cur(),n=new Date(v+"T12:00");x.setFullYear(n.getFullYear(),n.getMonth(),n.getDate());put(x)})};
   s.querySelectorAll("#eq .chip").forEach(c=>c.onclick=()=>{vib(8);if(c.dataset.dd!=null){const x=cur(),n=new Date();n.setDate(n.getDate()+(+c.dataset.dd));x.setFullYear(n.getFullYear(),n.getMonth(),n.getDate());return put(x)}put(new Date(cur().getTime()+(+c.dataset.m)*6e4))});
   s.querySelectorAll("#erp .chip").forEach(c=>c.onclick=()=>{vib(8);rep=c.dataset.r;s.querySelectorAll("#erp .chip").forEach(x=>x.classList.toggle("on",x===c))});
   if(q("#es"))q("#es").onclick=()=>{if(!sur&&d.public){vib([50,30,50]);return toast(t("surPubX"))}vib(8);sur=!sur;q("#es").classList.toggle("on",sur)};q("#ecn").onclick=s.close;
