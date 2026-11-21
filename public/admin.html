@@ -232,7 +232,7 @@ $("login").onclick=async()=>{$("err").textContent="";try{await AU.signInWithPopu
 $("out").onclick=()=>AU.signOut(auth);
 chips();
 AU.onAuthStateChanged(auth,async u=>{
-  if(u&&!u.isAnonymous){$("gate").hidden=true;$("app").hidden=false;await loadDl();tick();clearInterval(timer);timer=setInterval(tick,45000)}
+  if(u&&!u.isAnonymous){$("gate").hidden=true;$("app").hidden=false;await loadDl();tick();clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)tick()},180000)}
   else{clearInterval(timer);$("app").hidden=true;$("gate").hidden=false}});
 </script>
 </body>
