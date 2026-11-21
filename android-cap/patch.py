@@ -93,12 +93,18 @@ if "NotificationChannel" not in j:
 import shutil
 W = os.path.join(root, "android-cap/widget")
 pk = os.path.dirname(ma)
-for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java", "SquadWidgetMedium.java", "SquadWidgetLarge.java"): shutil.copy(os.path.join(W, f), pk)
-for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("xml", "squad_widget_info_l.xml"), ("layout", "squad_widget_m.xml"), ("layout", "squad_widget_l.xml"), ("drawable", "squad_orb.xml"), ("drawable", "squad_pill.xml"), ("drawable", "squad_btn.xml"), ("drawable-nodpi", "squad_preview_s.png"), ("drawable-nodpi", "squad_preview_m.png"), ("drawable-nodpi", "squad_preview_l.png")):
+for f in ("SquadWidgetPlugin.java", "SquadWidgetProvider.java", "SquadWidgetMedium.java"): shutil.copy(os.path.join(W, f), pk)
+for d, f in (("layout", "squad_widget.xml"), ("drawable", "squad_widget_bg.xml"), ("xml", "squad_widget_info.xml"), ("xml", "squad_widget_info_m.xml"), ("layout", "squad_widget_m.xml"), ("drawable", "squad_orb.xml"), ("drawable", "squad_pill.xml"), ("drawable", "squad_badge.xml"), ("drawable", "squad_av1.xml"), ("drawable", "squad_av2.xml"), ("drawable", "squad_av3.xml"), ("drawable-nodpi", "squad_preview_s.png"), ("drawable-nodpi", "squad_preview_m.png")):
     o = os.path.join(A, "src/main/res", d); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, f), o)
 for _f in os.listdir(os.path.join(W, "icons")):
     o = os.path.join(A, "src/main/res/drawable-nodpi"); os.makedirs(o, exist_ok=True); shutil.copy(os.path.join(W, "icons", _f), o)
 STR = {
+ "w_pre": {"en": "in", "pl": "za", "es": "en", "de": "in", "fr": "dans", "it": "tra", "cs": "za", "uk": "через"},
+ "w_live": {"en": "NOW", "pl": "TERAZ", "es": "AHORA", "de": "JETZT", "fr": "ICI", "it": "ORA", "cs": "TEĎ", "uk": "ЗАРАЗ"},
+ "w_today_up": {"en": "TODAY", "pl": "DZISIAJ", "es": "HOY", "de": "HEUTE", "fr": "AUJ.", "it": "OGGI", "cs": "DNES", "uk": "СЬОГОДНІ"},
+ "w_around": {"en": "nearby", "pl": "w okolicy", "es": "cerca", "de": "in der Nähe", "fr": "à proximité", "it": "nelle vicinanze", "cs": "v okolí", "uk": "поблизу"},
+ "w_going": {"en": "going", "pl": "w drodze", "es": "van", "de": "dabei", "fr": "partants", "it": "in arrivo", "cs": "jde", "uk": "йдуть"},
+ "w_next": {"en": "Next drop", "pl": "Najbliższy drop", "es": "Próximo drop", "de": "Nächster Drop", "fr": "Prochain drop", "it": "Prossimo drop", "cs": "Nejbližší drop", "uk": "Найближчий дроп"},
  "w_now":   {"en":"HAPPENING NOW","pl":"TRWA TERAZ","es":"EN CURSO","de":"LÄUFT JETZT","fr":"EN COURS","it":"IN CORSO","cs":"PROBÍHÁ","uk":"ТРИВАЄ ЗАРАЗ"},
  "w_none":  {"en":"No upcoming drops","pl":"Brak nadchodzących dropów","es":"No hay drops próximos","de":"Keine anstehenden Drops","fr":"Aucun drop à venir","it":"Nessun drop in arrivo","cs":"Žádné nadcházející dropy","uk":"Немає майбутніх дропів"},
  "w_none_hint": {"en":"Create a drop and get the crew ✨","pl":"Stwórz drop i zbierz ekipę ✨","es":"Crea un drop y reúne a la crew ✨","de":"Erstelle einen Drop und hol die Crew ✨","fr":"Crée un drop et rassemble la bande ✨","it":"Crea un drop e raduna la crew ✨","cs":"Vytvoř drop a seber partu ✨","uk":"Створи дроп і збери компанію ✨"},
@@ -108,7 +114,7 @@ STR = {
  "w_more":  {"en":"More drops soon","pl":"Więcej dropów wkrótce","es":"Más drops pronto","de":"Bald mehr Drops","fr":"Bientôt d'autres drops","it":"Presto altri drop","cs":"Brzy další dropy","uk":"Скоро більше дропів"},
  "w_desc":  {"en":"Your next drop with a countdown.","pl":"Najbliższy drop z odliczaniem.","es":"Tu próximo drop con cuenta atrás.","de":"Dein nächster Drop mit Countdown.","fr":"Ton prochain drop avec compte à rebours.","it":"Il tuo prossimo drop con conto alla rovescia.","cs":"Tvůj nejbližší drop s odpočtem.","uk":"Твій найближчий дроп із відліком."},
  "w_desc_s": {"en":"Your next drop with a countdown.","pl":"Najbliższy drop z odliczaniem.","es":"Tu próximo drop con cuenta atrás.","de":"Dein nächster Drop mit Countdown.","fr":"Ton prochain drop avec compte à rebours.","it":"Il tuo prossimo drop con conto alla rovescia.","cs":"Tvůj nejbližší drop s odpočtem.","uk":"Твій найближчий дроп із відліком."},
- "w_desc_m": {"en":"Your next drop plus one more.","pl":"Najbliższy drop i jeszcze jeden.","es":"Tu próximo drop y uno más.","de":"Dein nächster Drop und ein weiterer.","fr":"Ton prochain drop et un autre.","it":"Il tuo prossimo drop e un altro.","cs":"Tvůj nejbližší drop a ještě jeden.","uk":"Твій найближчий дроп і ще один."},
+ "w_desc_m": {"en":"Your next drop plus one more.","pl":"Dzisiejsze dropy i najbliższy drop.","es":"Tu próximo drop y uno más.","de":"Dein nächster Drop und ein weiterer.","fr":"Ton prochain drop et un autre.","it":"Il tuo prossimo drop e un altro.","cs":"Tvůj nejbližší drop a ještě jeden.","uk":"Твій найближчий дроп і ще один."},
  "w_desc_l": {"en":"Your next drop plus three more.","pl":"Najbliższy drop i jeszcze trzy.","es":"Tu próximo drop y tres más.","de":"Dein nächster Drop und drei weitere.","fr":"Ton prochain drop et trois autres.","it":"Il tuo prossimo drop e altri tre.","cs":"Tvůj nejbližší drop a další tři.","uk":"Твій найближчий дроп і ще три."},
  "w_new": {"en":"New drop","pl":"Nowy drop","es":"Nuevo drop","de":"Neuer Drop","fr":"Nouveau drop","it":"Nuovo drop","cs":"Nový drop","uk":"Новий дроп"},
  "w_chats": {"en":"Chats","pl":"Czaty","es":"Chats","de":"Chats","fr":"Discussions","it":"Chat","cs":"Chaty","uk":"Чати"},
@@ -121,10 +127,10 @@ for lang in ["en","pl","es","de","fr","it","cs","uk"]:
     d = os.path.join(A, "src/main/res", "values" if lang == "en" else "values-" + lang); os.makedirs(d, exist_ok=True)
     open(os.path.join(d, "squad_widget_strings.xml"), "w", encoding="utf-8").write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n' + "".join('    <string name="%s">%s</string>\n' % (k, esc(v[lang])) for k, v in STR.items()) + '</resources>\n')
 x = open(m).read()
-if "SquadWidgetLarge" not in x:
+if True:
     x = re.sub(r'\s*<receiver android:name="\.SquadWidget[A-Za-z]*"[\s\S]*?</receiver>', "", x)
     rc = ""
-    for cls, info, lab in ((".SquadWidgetProvider", "squad_widget_info", "w_name_s"), (".SquadWidgetMedium", "squad_widget_info_m", "w_name_m"), (".SquadWidgetLarge", "squad_widget_info_l", "w_name_l")):
+    for cls, info, lab in ((".SquadWidgetProvider", "squad_widget_info", "w_name_s"), (".SquadWidgetMedium", "squad_widget_info_m", "w_name_m")):
         rc += '''    <receiver android:name="%s" android:label="@string/%s" android:exported="false">
             <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/%s" />

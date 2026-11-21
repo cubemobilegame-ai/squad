@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/root" android:layout_width="match_parent" android:layout_height="match_parent">
 <ImageView android:id="@+id/bg" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitXY" />
-<LinearLayout android:id="@+id/empty" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="14dp" android:visibility="gone">
-<TextView android:id="@+id/x1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Squad" android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" />
-<TextView android:id="@+id/x2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/w_none" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" android:layout_marginTop="4dp" android:gravity="center" />
-<TextView android:id="@+id/x3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/w_none_hint" android:textColor="#B3FFFFFF" android:textSize="11sp" android:layout_marginTop="2dp" android:gravity="center" />
+<LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal" android:padding="12dp">
+<LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="0.8" android:orientation="vertical" android:paddingLeft="4dp">
+<TextView android:id="@+id/kind" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:textColor="#8E8E93" android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.04" />
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+<TextView android:id="@+id/cnt" android:layout_width="wrap_content" android:layout_height="wrap_content" android:includeFontPadding="false" android:textColor="#FFFFFF" android:textSize="32sp" android:textStyle="bold" />
+<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginLeft="8dp">
+<TextView android:id="@+id/cw1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:includeFontPadding="false" android:textColor="#8E8E93" android:textSize="12sp" />
+<TextView android:id="@+id/cw2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:includeFontPadding="false" android:textColor="#8E8E93" android:textSize="12sp" />
 </LinearLayout>
-<LinearLayout android:id="@+id/card" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="horizontal" android:gravity="center_vertical" android:padding="14dp">
-<LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical"><ImageView android:id="@+id/emoji" android:layout_width="34dp" android:layout_height="34dp" android:padding="5dp" android:scaleType="fitCenter" android:background="@drawable/squad_orb" /><TextView android:id="@+id/kind" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginLeft="8dp" android:maxLines="1" android:ellipsize="end" android:textColor="#B3FFFFFF" android:textSize="10sp" android:textStyle="bold" android:letterSpacing="0.08" /></LinearLayout>
-<TextView android:id="@+id/title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:maxLines="2" android:ellipsize="end" android:textColor="#FFFFFF" android:textSize="15sp" android:textStyle="bold" />
-<TextView android:id="@+id/place" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:maxLines="1" android:ellipsize="end" android:textColor="#B3FFFFFF" android:textSize="11sp" />
-<Chronometer android:id="@+id/chrono" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="#FFFFFF" android:textSize="26sp" android:textStyle="bold" />
-<TextView android:id="@+id/when" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="#FF6B9A" android:textSize="14sp" android:textStyle="bold" android:visibility="gone" />
 </LinearLayout>
-<LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginLeft="12dp">
-<LinearLayout android:id="@+id/row1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/squad_pill" android:paddingLeft="10dp" android:paddingRight="10dp" android:paddingTop="7dp" android:paddingBottom="7dp" android:layout_marginTop="0dp" android:visibility="gone">
-<ImageView android:id="@+id/e1" android:layout_width="28dp" android:layout_height="28dp" android:scaleType="fitCenter" />
-<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginLeft="9dp">
-<TextView android:id="@+id/t1" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
-<TextView android:id="@+id/w1" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:textColor="#B3FFFFFF" android:textSize="11sp" android:textStyle="bold" />
-</LinearLayout></LinearLayout>
-<LinearLayout android:id="@+id/row2" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/squad_pill" android:paddingLeft="10dp" android:paddingRight="10dp" android:paddingTop="7dp" android:paddingBottom="7dp" android:layout_marginTop="6dp" android:visibility="gone">
-<ImageView android:id="@+id/e2" android:layout_width="28dp" android:layout_height="28dp" android:scaleType="fitCenter" />
-<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginLeft="9dp">
-<TextView android:id="@+id/t2" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
-<TextView android:id="@+id/w2" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:textColor="#B3FFFFFF" android:textSize="11sp" android:textStyle="bold" />
-</LinearLayout></LinearLayout>
+<FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
+<ImageView android:id="@+id/btnNew" android:layout_width="38dp" android:layout_height="38dp" android:padding="10dp" android:scaleType="fitCenter" android:src="@drawable/widget_plus" android:background="@drawable/squad_orb" android:contentDescription="@string/w_new" />
+</LinearLayout>
+<LinearLayout android:id="@+id/card" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1.2" android:orientation="vertical" android:gravity="center_vertical" android:background="@drawable/squad_pill" android:paddingLeft="12dp" android:paddingRight="10dp" android:paddingTop="8dp" android:paddingBottom="8dp">
+<TextView android:id="@+id/nxt" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/w_next" android:maxLines="1" android:includeFontPadding="false" android:layout_marginBottom="3dp" android:textColor="#8E8E93" android:textSize="10sp" android:textStyle="bold" />
+<TextView android:id="@+id/pill" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/squad_badge" android:paddingLeft="9dp" android:paddingRight="9dp" android:paddingTop="2dp" android:paddingBottom="2dp" android:maxLines="1" android:textColor="#5E9CFF" android:textSize="11sp" android:textStyle="bold" />
+<TextView android:id="@+id/title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:maxLines="1" android:ellipsize="end" android:textColor="#FFFFFF" android:textSize="15sp" android:textStyle="bold" />
+<TextView android:id="@+id/place" android:layout_width="match_parent" android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end" android:textColor="#8E8E93" android:textSize="11sp" />
+<LinearLayout android:id="@+id/going" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:orientation="horizontal" android:gravity="center_vertical">
+<ImageView android:id="@+id/a1" android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/squad_av1" />
+<ImageView android:id="@+id/a2" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginLeft="-7dp" android:src="@drawable/squad_av2" />
+<ImageView android:id="@+id/a3" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginLeft="-7dp" android:src="@drawable/squad_av3" />
+<TextView android:id="@+id/gtx" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8dp" android:maxLines="1" android:textColor="#8E8E93" android:textSize="11sp" android:textStyle="bold" />
+</LinearLayout>
 </LinearLayout>
 </LinearLayout>
 </FrameLayout>

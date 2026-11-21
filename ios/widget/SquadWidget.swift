@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 // Widżet Squad: najbliższy drop z odliczaniem. Dane zapisuje aplikacja (wtyczka SquadWidget) w App Group.
 private let appGroup = "group.com.cubemobilegames.squad"
@@ -14,6 +15,7 @@ struct WDrop: Codable, Identifiable {
     let c1: String     // kolory motywu
     let c2: String
     let r: String?     // rola: host / in / late
+    let n: Int?        // ile osób „in”
     var start: Date { Date(timeIntervalSince1970: ts / 1000) }
 }
 
@@ -36,6 +38,13 @@ private let lang: String = {
 }()
 private let loc = Locale(identifier: Locale.preferredLanguages.first ?? "en")
 private let STR: [String: [String: String]] = [
+    "pre": ["pl": "za", "en": "in", "es": "en", "de": "in", "fr": "dans", "it": "tra", "cs": "za", "uk": "через"],
+    "live": ["pl": "TERAZ", "en": "NOW", "es": "AHORA", "de": "JETZT", "fr": "ICI", "it": "ORA", "cs": "TEĎ", "uk": "ЗАРАЗ"],
+    "todayUp": ["pl": "DZISIAJ", "en": "TODAY", "es": "HOY", "de": "HEUTE", "fr": "AUJ.", "it": "OGGI", "cs": "DNES", "uk": "СЬОГОДНІ"],
+    "around": ["pl": "w okolicy", "en": "nearby", "es": "cerca", "de": "in der Nähe", "fr": "à proximité", "it": "nelle vicinanze", "cs": "v okolí", "uk": "поблизу"],
+    "going": ["pl": "w drodze", "en": "going", "es": "van", "de": "dabei", "fr": "partants", "it": "in arrivo", "cs": "jde", "uk": "йдуть"],
+    "newDrop": ["pl": "Nowy drop", "en": "New drop", "es": "Nuevo drop", "de": "Neuer Drop", "fr": "Nouveau drop", "it": "Nuovo drop", "cs": "Nový drop", "uk": "Новий дроп"],
+    "next": ["en": "Next drop", "pl": "Najbliższy drop", "es": "Próximo drop", "de": "Nächster Drop", "fr": "Prochain drop", "it": "Prossimo drop", "cs": "Nejbližší drop", "uk": "Найближчий дроп"],
     "now": ["pl": "TRWA TERAZ", "en": "HAPPENING NOW", "es": "EN CURSO", "de": "LÄUFT JETZT", "fr": "EN COURS", "it": "IN CORSO", "cs": "PROBÍHÁ", "uk": "ТРИВАЄ ЗАРАЗ"],
     "none": ["pl": "Brak nadchodzących dropów", "en": "No upcoming drops", "es": "No hay drops próximos", "de": "Keine anstehenden Drops", "fr": "Aucun drop à venir", "it": "Nessun drop in arrivo", "cs": "Žádné nadcházející dropy", "uk": "Немає майбутніх дропів"],
     "noneHint": ["pl": "Stwórz drop i zbierz ekipę ✨", "en": "Create a drop and get the crew ✨", "es": "Crea un drop y reúne a la crew ✨", "de": "Erstelle einen Drop und trommle die Crew zusammen ✨", "fr": "Crée un drop et rassemble la team ✨", "it": "Crea un drop e raduna la crew ✨", "cs": "Vytvoř drop a svolej partu ✨", "uk": "Створи дроп і зібери компанію ✨"],
@@ -57,7 +66,7 @@ private enum Tx {
 
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> WEntry {
-        WEntry(date: Date(), drops: [WDrop(id: "x", t: "Skate session", ts: Date().addingTimeInterval(5400).timeIntervalSince1970 * 1000, pl: "West Skatepark", e: "🛹", c1: "#7c3aed", c2: "#ec4899", r: "host")])
+        WEntry(date: Date(), drops: [WDrop(id: "x", t: "Skate session", ts: Date().addingTimeInterval(5400).timeIntervalSince1970 * 1000, pl: "West Skatepark", e: "🛹", c1: "#7c3aed", c2: "#ec4899", r: "host", n: 3)])
     }
     func getSnapshot(in context: Context, completion: @escaping (WEntry) -> Void) {
         completion(context.isPreview ? placeholder(in: context) : WEntry(date: Date(), drops: loadDrops(now: Date())))
@@ -127,89 +136,160 @@ struct CountdownText: View {
     }
 }
 
-struct DropGradient: View {
-    let d: WDrop
-    var body: some View {
-        ZStack {
-            LinearGradient(colors: [Color(hex: d.c1), Color(hex: d.c2)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            Color.white.opacity(0.5)
-            RadialGradient(colors: [Color.white.opacity(0.55), .clear], center: .topTrailing, startRadius: 4, endRadius: 150)
-        }
+private let gray = Color(red: 0.557, green: 0.557, blue: 0.576)
+private let blue = Color(red: 0.369, green: 0.612, blue: 1.0)
+private let cardBG = Color(red: 0.078, green: 0.078, blue: 0.078)
+
+/// „+” z małego widżetu: iOS 17+ uruchamia aplikację i zapisuje znacznik, który aplikacja odczytuje (małe widżety nie obsługują Link).
+@available(iOS 17.0, *)
+struct NewDropIntent: AppIntent {
+    static let title: LocalizedStringResource = "New drop"
+    static let openAppWhenRun: Bool = true
+    func perform() async throws -> some IntentResult {
+        UserDefaults(suiteName: appGroup)?.set(true, forKey: "pendingNew")
+        return .result()
     }
 }
 
-struct EmojiBubble: View {
-    let e: String
+struct PlusGlyph: View {
     let size: CGFloat
     var body: some View {
         ZStack {
-            Circle().fill(Color.white.opacity(0.55))
-            Circle().stroke(Color.white.opacity(0.8), lineWidth: 1)
-            Text(e).font(.system(size: size * 0.55))
+            Circle().fill(Color(red: 0.169, green: 0.169, blue: 0.176))
+            Image(systemName: "plus").font(.system(size: size * 0.42, weight: .bold)).foregroundColor(.white)
         }
         .frame(width: size, height: size)
     }
 }
 
-struct BigCard: View {
+struct PlusButton: View {
+    let size: CGFloat
+    let small: Bool
+    var body: some View {
+        if small {
+            if #available(iOS 17.0, *) {
+                Button(intent: NewDropIntent()) { PlusGlyph(size: size) }.buttonStyle(.plain)
+            } else {
+                PlusGlyph(size: size)
+            }
+        } else {
+            Link(destination: URL(string: siteURL + "/new")!) { PlusGlyph(size: size) }
+        }
+    }
+}
+
+/// „za 42 min” (żywo), w dniu startu; później data.
+struct RelText: View {
     let d: WDrop
+    let now: Date
+    let cap: Bool
+    var body: some View {
+        if d.start <= now {
+            Text(Tx.now)
+        } else if d.start.timeIntervalSince(now) < 24 * 3600 {
+            let p0 = tr("pre")
+            let pre = cap ? p0.prefix(1).uppercased() + String(p0.dropFirst()) : p0
+            Text(pre + " ") + Text(d.start, style: .relative)
+        } else {
+            Text(dayLabel(d.start))
+        }
+    }
+}
+
+private func hhmm(_ d: Date) -> String {
+    let f = DateFormatter(); f.locale = loc; f.dateFormat = "HH:mm"; return f.string(from: d)
+}
+
+private func dropsWord(_ n: Int) -> String {
+    if lang == "pl" {
+        if n == 1 { return "drop" }
+        let a = n % 10, b = n % 100
+        return (a >= 2 && a <= 4 && !(b >= 12 && b <= 14)) ? "dropy" : "dropów"
+    }
+    return n == 1 ? "drop" : "drops"
+}
+
+struct SmallA: View {
+    let d: WDrop?
     let now: Date
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top) {
-                Text(d.r == "host" ? Tx.host : "SQUAD")
-                    .font(.system(size: 9, weight: .heavy, design: .rounded)).tracking(1.4)
-                    .foregroundColor(ink.opacity(0.55))
+                Text("DROP").font(.system(size: 12, weight: .bold, design: .rounded)).tracking(0.5).foregroundColor(gray)
                 Spacer()
-                EmojiBubble(e: d.e, size: 34)
+                PlusButton(size: 32, small: true)
             }
-            Spacer(minLength: 4)
-            Text(d.t)
-                .font(.system(size: 17, weight: .heavy, design: .rounded))
-                .foregroundColor(ink).lineLimit(2).minimumScaleFactor(0.8)
-            if let p = d.pl, !p.isEmpty {
-                Text("📍 " + p).font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundColor(ink.opacity(0.6)).lineLimit(1).padding(.top, 1)
+            Spacer(minLength: 2)
+            if let d = d {
+                Text(d.start <= now ? tr("live") : hhmm(d.start))
+                    .font(.system(size: 36, weight: .bold, design: .rounded)).foregroundColor(blue)
+                    .lineLimit(1).minimumScaleFactor(0.5)
+                Text(d.t).font(.system(size: 14, weight: .bold, design: .rounded)).foregroundColor(.white).lineLimit(1).padding(.top, 2)
+                RelText(d: d, now: now, cap: false).font(.system(size: 12, weight: .bold, design: .rounded)).foregroundColor(gray).lineLimit(1)
+            } else {
+                Text(Tx.none).font(.system(size: 14, weight: .bold, design: .rounded)).foregroundColor(.white).lineLimit(2)
+                Text(Tx.noneHint).font(.system(size: 11, weight: .semibold, design: .rounded)).foregroundColor(gray).lineLimit(2)
             }
-            HStack(spacing: 5) {
-                Image(systemName: d.start <= now ? "bolt.fill" : "clock.fill").font(.system(size: 10, weight: .bold))
-                CountdownText(drop: d, now: now).font(.system(size: 13, weight: .heavy, design: .rounded)).lineLimit(1).minimumScaleFactor(0.7)
-            }
-            .foregroundColor(ink)
-            .padding(.horizontal, 10).padding(.vertical, 5)
-            .background(Capsule().fill(Color.white.opacity(0.62)))
-            .padding(.top, 7)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 
-struct EmptyView2: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("Squad").font(.system(size: 22, weight: .black, design: .rounded)).foregroundColor(.white)
-            Spacer()
-            Text(Tx.none).font(.system(size: 14, weight: .heavy, design: .rounded)).foregroundColor(.white)
-            Text(Tx.noneHint).font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(.white.opacity(0.6))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-}
-
-struct MiniRow: View {
-    let d: WDrop
+struct MediumA: View {
+    let drops: [WDrop]
     let now: Date
     var body: some View {
-        HStack(spacing: 9) {
-            Text(d.e).font(.system(size: 16))
-                .frame(width: 30, height: 30)
-                .background(Circle().fill(Color.white.opacity(0.10)))
-            VStack(alignment: .leading, spacing: 1) {
-                Text(d.t).font(.system(size: 12, weight: .bold, design: .rounded)).foregroundColor(.white).lineLimit(1)
-                CountdownText(drop: d, now: now).font(.system(size: 10.5, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white.opacity(0.6)).lineLimit(1)
+        let today = drops.filter { Calendar.current.isDate($0.start, inSameDayAs: now) }.count
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(tr("todayUp")).font(.system(size: 11, weight: .bold, design: .rounded)).tracking(0.5).foregroundColor(gray)
+                HStack(spacing: 8) {
+                    Text("\(today)").font(.system(size: 32, weight: .bold, design: .rounded)).foregroundColor(.white)
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(dropsWord(today)).font(.system(size: 12, design: .rounded)).foregroundColor(gray)
+                        Text(tr("around")).font(.system(size: 12, design: .rounded)).foregroundColor(gray)
+                    }.lineLimit(1)
+                }
+                Spacer(minLength: 0)
+                PlusButton(size: 38, small: false)
             }
-            Spacer(minLength: 0)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .layoutPriority(0)
+            if let f = drops.first {
+                Link(destination: URL(string: siteURL + "/d/" + f.id)!) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(tr("next")).font(.system(size: 10, weight: .bold, design: .rounded)).foregroundColor(gray).lineLimit(1).padding(.bottom, 3)
+                        RelText(d: f, now: now, cap: true).font(.system(size: 11, weight: .bold, design: .rounded)).foregroundColor(blue)
+                            .padding(.horizontal, 9).padding(.vertical, 3)
+                            .background(Capsule().fill(Color(red: 0.114, green: 0.165, blue: 0.251))).lineLimit(1)
+                        Text(f.t).font(.system(size: 15, weight: .bold, design: .rounded)).foregroundColor(.white).lineLimit(1).padding(.top, 4)
+                        if let p = f.pl, !p.isEmpty { Text(p).font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(gray).lineLimit(1) }
+                        if let n = f.n, n > 0 {
+                            HStack(spacing: 8) {
+                                HStack(spacing: -7) {
+                                    ForEach(0..<min(n, 3), id: \.self) { i in
+                                        Circle().fill([Color(red: 0.84, green: 0.80, blue: 0.98), Color(red: 0.98, green: 0.85, blue: 0.69), Color(red: 0.71, green: 0.84, blue: 0.98)][i])
+                                            .overlay(Circle().stroke(cardBG, lineWidth: 1.5)).frame(width: 20, height: 20)
+                                    }
+                                }
+                                Text("\(n) " + tr("going")).font(.system(size: 11, weight: .bold, design: .rounded)).foregroundColor(gray).lineLimit(1)
+                            }.padding(.top, 6)
+                        }
+                    }
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(cardBG))
+                }
+                .layoutPriority(1)
+            } else {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(Tx.none).font(.system(size: 14, weight: .bold, design: .rounded)).foregroundColor(.white).lineLimit(2)
+                    Text(Tx.noneHint).font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(gray).lineLimit(2)
+                }
+                .padding(.horizontal, 12).padding(.vertical, 8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(cardBG))
+            }
         }
     }
 }
@@ -218,40 +298,14 @@ struct SquadWidgetView: View {
     @Environment(\.widgetFamily) var family
     let entry: WEntry
     var body: some View {
-        let first = entry.drops.first
-        Group {
-            if let f = first {
-                if family == .systemSmall {
-                    BigCard(d: f, now: entry.date)
-                        .widgetBG(DropGradient(d: f))
-                        .widgetURL(URL(string: siteURL + "/d/" + f.id))
-                } else {
-                    HStack(spacing: 12) {
-                        BigCard(d: f, now: entry.date)
-                            .padding(12)
-                            .background(RoundedRectangle(cornerRadius: 20, style: .continuous).fill(Color.clear).overlay(DropGradient(d: f).clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))))
-                            .frame(maxWidth: .infinity)
-                        VStack(alignment: .leading, spacing: 8) {
-                            let rest = Array(entry.drops.dropFirst().prefix(3))
-                            if rest.isEmpty {
-                                Text(tr("more"))
-                                    .font(.system(size: 12, weight: .semibold, design: .rounded)).foregroundColor(.white.opacity(0.55))
-                            } else {
-                                ForEach(rest) { d in
-                                    Link(destination: URL(string: siteURL + "/d/" + d.id)!) { MiniRow(d: d, now: entry.date) }
-                                }
-                            }
-                            Spacer(minLength: 0)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                    }
-                    .widgetBG(night)
-                    .widgetURL(URL(string: siteURL + "/d/" + f.id))
-                }
-            } else {
-                EmptyView2().widgetBG(LinearGradient(colors: [night, Color(red: 0.16, green: 0.07, blue: 0.14)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .widgetURL(URL(string: siteURL + "/"))
-            }
+        let f = entry.drops.first
+        if family == .systemSmall {
+            SmallA(d: f, now: entry.date)
+                .widgetBG(Color.black)
+                .widgetURL(URL(string: siteURL + (f.map { "/d/" + $0.id } ?? "/new")))
+        } else {
+            MediumA(drops: entry.drops, now: entry.date)
+                .widgetBG(Color.black)
         }
     }
 }

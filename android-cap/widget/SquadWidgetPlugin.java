@@ -16,7 +16,7 @@ public class SquadWidgetPlugin extends Plugin {
         Context c = getContext();
         String json = call.getString("json", "[]");
         c.getSharedPreferences("squad_widget", Context.MODE_PRIVATE).edit().putString("drops", json).apply();
-        Class<?>[] cls = {SquadWidgetProvider.class, SquadWidgetMedium.class, SquadWidgetLarge.class};
+        Class<?>[] cls = {SquadWidgetProvider.class, SquadWidgetMedium.class};
         for (Class<?> k : cls) {
             int[] ids = AppWidgetManager.getInstance(c).getAppWidgetIds(new ComponentName(c, k));
             if (ids.length == 0) continue;
@@ -26,5 +26,12 @@ public class SquadWidgetPlugin extends Plugin {
             c.sendBroadcast(i);
         }
         call.resolve();
+    }
+
+    @PluginMethod
+    public void pending(PluginCall call) {
+        com.getcapacitor.JSObject r = new com.getcapacitor.JSObject();
+        r.put("v", false);
+        call.resolve(r);
     }
 }

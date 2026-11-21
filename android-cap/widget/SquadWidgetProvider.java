@@ -22,7 +22,7 @@ import org.json.JSONObject;
 public class SquadWidgetProvider extends AppWidgetProvider {
     static final String SITE = "https://squad-64cd5.web.app";
 
-    /** 0 = mały (jeden drop), 1 = średni (+1 drop), 2 = duży (+3 dropy) */
+    /** 0 = mały, 1 = średni */
     protected int mode() { return 0; }
 
     @Override
@@ -70,13 +70,8 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         p.addRoundRect(rc, r, r, android.graphics.Path.Direction.CW);
         cv.clipPath(p);
         android.graphics.Paint pt = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
-        pt.setShader(new android.graphics.LinearGradient(0, 0, sw, sh, 0xFF101018, 0xFF1A1A26, android.graphics.Shader.TileMode.CLAMP));
-        cv.drawRect(rc, pt);
-        pt.setShader(new android.graphics.RadialGradient(sw * 0.12f, sh * 0.0f, Math.max(sw, sh) * 0.95f, (c1 & 0x00FFFFFF) | 0x66000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
-        cv.drawRect(rc, pt);
-        pt.setShader(new android.graphics.RadialGradient(sw * 1.0f, sh * 1.0f, Math.max(sw, sh) * 0.7f, (c2 & 0x00FFFFFF) | 0x40000000, 0x00000000, android.graphics.Shader.TileMode.CLAMP));
-        cv.drawRect(rc, pt);
-        pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x26FFFFFF);
+        pt.setColor(0xFF000000); cv.drawRect(rc, pt);
+        pt.setShader(null); pt.setStyle(android.graphics.Paint.Style.STROKE); pt.setStrokeWidth(Math.max(1f, 1.2f * d * k)); pt.setColor(0x24FFFFFF);
         cv.drawRoundRect(new android.graphics.RectF(pt.getStrokeWidth() / 2, pt.getStrokeWidth() / 2, sw - pt.getStrokeWidth() / 2, sh - pt.getStrokeWidth() / 2), r, r, pt);
         return b;
     }
@@ -86,81 +81,99 @@ public class SquadWidgetProvider extends AppWidgetProvider {
         return r != 0 ? r : c.getResources().getIdentifier("ic3d_other", "drawable", c.getPackageName());
     }
 
+    static String rel(Context c, long ms) {
+        long mn = Math.max(1, (ms + 59999) / 60000);
+        String pre = c.getString(R.string.w_pre);
+        if (mn < 60) return pre + " " + mn + " min";
+        long h = mn / 60, r = mn % 60;
+        return pre + " " + h + " h" + (r >= 5 ? " " + r + " min" : "");
+    }
+
+    static String cap(String s) { return s.isEmpty() ? s : s.substring(0, 1).toUpperCase() + s.substring(1); }
+
+    static String dropsWord(Context c, int n) {
+        if ("pl".equals(Locale.getDefault().getLanguage())) {
+            if (n == 1) return "drop";
+            int a = n % 10, b = n % 100;
+            return a >= 2 && a <= 4 && !(b >= 12 && b <= 14) ? "dropy" : "dropów";
+        }
+        return n == 1 ? "drop" : "drops";
+    }
+
+    static boolean sameDay(long a, long b) {
+        Calendar x = Calendar.getInstance(), y = Calendar.getInstance();
+        x.setTimeInMillis(a); y.setTimeInMillis(b);
+        return x.get(Calendar.YEAR) == y.get(Calendar.YEAR) && x.get(Calendar.DAY_OF_YEAR) == y.get(Calendar.DAY_OF_YEAR);
+    }
+
     static void draw(Context c, AppWidgetManager m, int id, int mode) {
-        int lay = mode == 0 ? R.layout.squad_widget : (mode == 1 ? R.layout.squad_widget_m : R.layout.squad_widget_l);
-        RemoteViews v = new RemoteViews(c.getPackageName(), lay);
+        RemoteViews v = new RemoteViews(c.getPackageName(), mode == 0 ? R.layout.squad_widget : R.layout.squad_widget_m);
         Bundle o = m.getAppWidgetOptions(id);
         int wd = o == null ? 0 : o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0), hd = o == null ? 0 : o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, 0);
         if (wd < 60) wd = mode == 0 ? 110 : 250;
-        if (hd < 60) hd = mode == 0 ? 110 : (mode == 1 ? 130 : 300);
+        if (hd < 60) hd = mode == 0 ? 110 : 130;
         JSONArray arr = new JSONArray();
         try { arr = new JSONArray(c.getSharedPreferences("squad_widget", Context.MODE_PRIVATE).getString("drops", "[]")); } catch (Exception e) { }
         long now = System.currentTimeMillis();
         java.util.ArrayList<JSONObject> L = new java.util.ArrayList<>();
         for (int i = 0; i < arr.length(); i++) { JSONObject d = arr.optJSONObject(i); if (d != null && d.optLong("ts") + 2 * 3600000L > now) L.add(d); }
-        int[] rowIds = {R.id.row1, R.id.row2, R.id.row3, R.id.row4, R.id.row5}, rowE = {R.id.e1, R.id.e2, R.id.e3, R.id.e4, R.id.e5}, rowT = {R.id.t1, R.id.t2, R.id.t3, R.id.t4, R.id.t5}, rowW = {R.id.w1, R.id.w2, R.id.w3, R.id.w4, R.id.w5};
-        int rows = mode == 0 ? 0 : (mode == 1 ? 2 : (hd >= 430 ? 5 : (hd >= 350 ? 4 : 3)));
         JSONObject f = L.isEmpty() ? null : L.get(0);
-        int p1 = f == null ? 0xFFFFD0DC : col(f.optString("p1"), 0xFFFFD0DC), p2 = f == null ? 0xFFD7ECFF : col(f.optString("p2"), 0xFFD7ECFF);
-        v.setImageViewBitmap(R.id.bg, bg(c, wd, hd, p1, p2, mode == 0));
-        if (f == null) {
-            v.setViewVisibility(R.id.card, View.GONE);
-            v.setViewVisibility(R.id.empty, View.VISIBLE);
-            v.setOnClickPendingIntent(R.id.root, open(c, "/new", 0));
-        } else {
-            v.setViewVisibility(R.id.card, View.VISIBLE);
-            v.setViewVisibility(R.id.empty, View.GONE);
-            long ts = f.optLong("ts");
-            v.setImageViewResource(R.id.emoji, ic(c, f.optString("k")));
-            v.setTextViewText(R.id.title, f.optString("t"));
-            v.setTextViewText(R.id.kind, "host".equals(f.optString("r")) ? c.getString(R.string.w_host).toUpperCase() : "SQUAD");
-            if (mode > 0) {
-                String pl = f.optString("pl");
-                v.setTextViewText(R.id.place, pl.isEmpty() ? "" : "📍 " + pl);
-                v.setViewVisibility(R.id.place, pl.isEmpty() ? View.GONE : View.VISIBLE);
-            }
-            if (mode == 2) {
-                int n = f.optInt("n", 0);
-                v.setTextViewText(R.id.inn, "👥 " + n + " IN");
-                v.setViewVisibility(R.id.inn, n > 0 ? View.VISIBLE : View.GONE);
-            }
-            if (ts <= now) {
-                v.setViewVisibility(R.id.chrono, View.GONE);
-                v.setViewVisibility(R.id.when, View.VISIBLE);
-                v.setTextViewText(R.id.when, c.getString(R.string.w_now));
-            } else if (Build.VERSION.SDK_INT >= 24 && ts - now < 24 * 3600000L) {
-                v.setViewVisibility(R.id.when, View.GONE);
-                v.setViewVisibility(R.id.chrono, View.VISIBLE);
-                v.setChronometerCountDown(R.id.chrono, true);
-                v.setChronometer(R.id.chrono, SystemClock.elapsedRealtime() + (ts - now), null, true);
-            } else {
-                v.setViewVisibility(R.id.chrono, View.GONE);
-                v.setViewVisibility(R.id.when, View.VISIBLE);
-                v.setTextViewText(R.id.when, day(c, ts));
-            }
-            v.setOnClickPendingIntent(R.id.root, open(c, "/d/" + f.optString("id"), id * 10));
-            if (mode > 0) for (int k = 0; k < rows; k++) {
-                int idx = k + 1;
-                if (idx < L.size()) {
-                    JSONObject d = L.get(idx);
-                    v.setViewVisibility(rowIds[k], View.VISIBLE);
-                    v.setImageViewResource(rowE[k], ic(c, d.optString("k")));
-                    v.setTextViewText(rowT[k], d.optString("t"));
-                    v.setTextViewText(rowW[k], day(c, d.optLong("ts")));
-                    v.setOnClickPendingIntent(rowIds[k], open(c, "/d/" + d.optString("id"), id * 10 + idx));
-                } else v.setViewVisibility(rowIds[k], View.GONE);
-            }
-            if (mode == 2) {
-                v.setOnClickPendingIntent(R.id.btnNew, open(c, "/new", id * 10 + 7));
-                v.setOnClickPendingIntent(R.id.btnChat, open(c, "/chats", id * 10 + 8));
-            }
-        }
+        v.setImageViewBitmap(R.id.bg, bg(c, wd, hd, 0, 0, mode == 0));
+        v.setOnClickPendingIntent(R.id.root, open(c, f == null ? "/new" : "/d/" + f.optString("id"), id * 10));
+        v.setOnClickPendingIntent(R.id.btnNew, open(c, "/new", id * 10 + 7));
+        long ts = f == null ? 0 : f.optLong("ts");
+        boolean live = f != null && ts <= now, soon = f != null && !live && ts - now < 24 * 3600000L;
         if (mode == 0) {
+            v.setTextViewText(R.id.kind, "DROP");
+            if (f == null) {
+                v.setTextViewText(R.id.when, "+");
+                v.setTextViewText(R.id.title, c.getString(R.string.w_none));
+                v.setTextViewText(R.id.rel, c.getString(R.string.w_none_hint));
+            } else {
+                v.setTextViewText(R.id.when, live ? c.getString(R.string.w_live) : new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(ts)));
+                v.setTextViewText(R.id.title, f.optString("t"));
+                v.setTextViewText(R.id.rel, live ? c.getString(R.string.w_now) : soon ? rel(c, ts - now) : day(c, ts));
+            }
             float dn = c.getResources().getDisplayMetrics().density, side = Math.min(wd, hd);
-            int ph = Math.max(0, Math.round(((wd - side) / 2f + 12) * dn)), pv = Math.max(0, Math.round(((hd - side) / 2f + 12) * dn));
-            v.setViewPadding(R.id.card, ph, pv, ph, pv);
-            v.setViewPadding(R.id.empty, ph, pv, ph, pv);
+            int ph = Math.max(0, Math.round(((wd - side) / 2f) * dn)), pv = Math.max(0, Math.round(((hd - side) / 2f) * dn));
+            v.setViewPadding(R.id.card, ph + Math.round(14 * dn), pv + Math.round(14 * dn), ph + Math.round(14 * dn), pv + Math.round(14 * dn));
+        } else {
+            int today = 0;
+            for (JSONObject d : L) if (sameDay(now, d.optLong("ts"))) today++;
+            v.setTextViewText(R.id.kind, c.getString(R.string.w_today_up));
+            v.setTextViewText(R.id.cnt, String.valueOf(today));
+            v.setTextViewText(R.id.cw1, dropsWord(c, today));
+            v.setTextViewText(R.id.cw2, c.getString(R.string.w_around));
+            if (f == null) {
+                v.setTextViewText(R.id.pill, "+");
+                v.setTextViewText(R.id.title, c.getString(R.string.w_none));
+                v.setTextViewText(R.id.place, c.getString(R.string.w_none_hint));
+                v.setViewVisibility(R.id.going, View.GONE);
+            } else {
+                v.setTextViewText(R.id.pill, live ? c.getString(R.string.w_now) : soon ? cap(rel(c, ts - now)) : day(c, ts));
+                v.setTextViewText(R.id.title, f.optString("t"));
+                String pl = f.optString("pl");
+                v.setTextViewText(R.id.place, pl);
+                v.setViewVisibility(R.id.place, pl.isEmpty() ? View.GONE : View.VISIBLE);
+                int n = f.optInt("n", 0);
+                v.setViewVisibility(R.id.going, n > 0 ? View.VISIBLE : View.GONE);
+                v.setViewVisibility(R.id.a2, n > 1 ? View.VISIBLE : View.GONE);
+                v.setViewVisibility(R.id.a3, n > 2 ? View.VISIBLE : View.GONE);
+                v.setTextViewText(R.id.gtx, n + " " + c.getString(R.string.w_going));
+                v.setOnClickPendingIntent(R.id.card, open(c, "/d/" + f.optString("id"), id * 10 + 1));
+            }
         }
         m.updateAppWidget(id, v);
+        // odliczanie "za X min" odświeżamy co kilka minut, gdy start jest blisko
+        try {
+            android.app.AlarmManager am = (android.app.AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+            Class<?> k = mode == 0 ? SquadWidgetProvider.class : SquadWidgetMedium.class;
+            Intent i = new Intent(c, k);
+            i.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, new int[]{id});
+            PendingIntent pi = PendingIntent.getBroadcast(c, 900 + id, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            if (am != null && f != null && !live && ts - now < 24 * 3600000L) am.set(android.app.AlarmManager.RTC, now + (ts - now < 3600000L ? 60000L : 10 * 60000L), pi);
+            else if (am != null) am.cancel(pi);
+        } catch (Exception e) { }
     }
 }
