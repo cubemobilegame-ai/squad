@@ -222,11 +222,11 @@ function chips(){$("chips").innerHTML=PF.map(p=>`<button class="chip tp" tabinde
   $("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const k=b.dataset.k;if(sel.has(k)&&sel.size>1)sel.delete(k);else sel.add(k);chips();if(ready)render()}}
 
 async function tick(){if(busy)return;busy=true;try{await loadCore();await loadDays();ready=true;render();$("upd").textContent="na żywo · "+new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
-  catch(e){if(e&&e.code==="permission-denied")deny();else $("upd").textContent="błąd połączenia"}busy=false}
+  catch(e){if(e&&e.code==="permission-denied")deny();else $("upd").textContent="błąd: "+((e&&e.code)||"połączenie")}busy=false}
 let timer;
 function deny(){clearInterval(timer);$("app").hidden=true;$("gate").hidden=false;$("err").textContent="To konto nie ma dostępu. Zaloguj się kontem twórcy ze zweryfikowanym e-mailem.";AU.signOut(auth)}
 async function loadDl(){try{const s=await F.getDoc(F.doc(db,"adm","downloads"));if(s.exists()){dl=s.data();$("dIos").value=dl.ios||"";$("dAnd").value=dl.android||""}}catch{}}
-let sv;const save=()=>{dl={ios:+$("dIos").value.replace(/\D/g,"")||0,android:+$("dAnd").value.replace(/\D/g,"")||0};downloads();clearTimeout(sv);sv=setTimeout(()=>F.setDoc(F.doc(db,"adm","downloads"),{...dl,at:F.serverTimestamp()}).then(()=>$("dlSub").textContent="zapisano").catch(()=>$("dlSub").textContent="nie zapisano"),600)};
+let sv;const save=()=>{dl={ios:+$("dIos").value.replace(/\D/g,"")||0,android:+$("dAnd").value.replace(/\D/g,"")||0};downloads();clearTimeout(sv);sv=setTimeout(()=>F.setDoc(F.doc(db,"adm","downloads"),{...dl,at:F.serverTimestamp()}).then(()=>$("dlSub").textContent="zapisano").catch(e=>{$("dlSub").textContent="nie zapisano ("+((e&&e.code)||"błąd")+")"}),600)};
 ["dIos","dAnd"].forEach(i=>$(i).addEventListener("input",save));
 $("login").onclick=async()=>{$("err").textContent="";try{await AU.signInWithPopup(auth,new AU.GoogleAuthProvider())}catch(e){$("err").textContent="Logowanie nie powiodło się. Spróbuj ponownie."}};
 $("out").onclick=()=>AU.signOut(auth);
