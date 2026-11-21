@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#07070b">
+<title>Squad – statystyki</title>
+<link rel="icon" href="/favicon.png">
+<style>
+@font-face{font-family:Brico;src:url(/fonts/plus-jakarta.woff2) format("woff2");font-weight:200 800;font-display:swap}
+:root{--bg:#0b0b0b;--s1:rgba(255,255,255,.035);--s2:rgba(255,255,255,.055);--line:rgba(255,255,255,.09);--tx:#fff;--mu:rgba(255,255,255,.62);--bl:#4DA3FF;--or:#ff8a3d;--ios:#4DA3FF;--and:#ff8a3d;--web:#a78bfa;--pwa:#2fd8b8;--ok:#3ddc97;--r:24px;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{font:500 16px/1.5 Brico,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--tx);background:radial-gradient(800px 420px at 92% -10%,#4DA3FF1c,transparent 70%),var(--bg);min-height:100vh;padding-block:0 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-font-smoothing:antialiased}
+.w{max-width:1120px;margin:0 auto}
+header{position:sticky;top:0;z-index:5;margin:0 -16px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;background:#0b0b0bdd;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.01em}
+.brand img{width:30px;height:30px;border-radius:9px}
+.brand small{font-weight:600;color:var(--mu);font-size:13px}
+.sp{flex:1}
+.live{display:flex;align-items:center;gap:8px;color:var(--mu);font-size:13px;font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 #3ddc9788;animation:pl 2s infinite}
+@keyframes pl{70%{box-shadow:0 0 0 9px #3ddc9700}100%{box-shadow:0 0 0 0 #3ddc9700}}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{appearance:none;border:1px solid var(--line);background:var(--s1);color:var(--mu);font:inherit;font-size:13px;font-weight:700;padding:7px 12px;border-radius:99px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.15s}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c,var(--mu))}
+.chip[aria-pressed=true]{color:var(--tx);border-color:#3a3f5c;background:var(--s2)}
+.chip:not([aria-pressed=true]) i{opacity:.35}
+.chip:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--bl);outline-offset:2px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--s1);color:var(--tx);font:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:12px;cursor:pointer}
+.btn.pri{background:var(--bl);color:#0b0b12;border:0;font-size:18px;font-weight:800;padding:16px 26px;border-radius:18px;box-shadow:0 5px 0 #2a6db3;transition:transform .12s,box-shadow .12s}.btn.pri:active{transform:translateY(4px);box-shadow:0 1px 0 #2a6db3}
+main{padding-top:22px;display:grid;gap:14px}
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.5fr);gap:14px}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:var(--r);padding:22px;min-width:0}
+.lbl{color:var(--mu);font-size:14px;font-weight:700}
+.big{font-size:clamp(64px,11vw,108px);font-weight:800;letter-spacing:-.045em;line-height:.95;margin:10px 0 6px;font-variant-numeric:tabular-nums;background:linear-gradient(120deg,#fff 40%,#4DA3FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mu);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px}
+#kpis{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:820px){#kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.k .v{font-size:34px;font-weight:800;letter-spacing:-.03em;margin-top:6px;font-variant-numeric:tabular-nums}
+.k .d{font-size:13.5px;color:var(--mu);margin-top:2px}
+.up{color:var(--ok)}.dn{color:#ff6b6b}
+h2{font-size:17px;font-weight:800;letter-spacing:-.005em}
+.hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.lg{display:flex;gap:14px;font-size:13.5px;color:var(--mu);font-weight:600}
+.lg b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.split{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--s1);gap:2px}
+.split span{display:block;min-width:2px;transition:flex .5s}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:right;padding:11px 8px;border-top:1px solid var(--line);font-size:14.5px;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mu);font-weight:700;font-size:13px;border-top:0;padding-top:0}
+td:first-child{display:flex;align-items:center;gap:9px;font-weight:700}
+td:first-child i{width:9px;height:9px;border-radius:50%}
+.scroll{overflow-x:auto}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:6px}
+.dl label{display:grid;gap:6px;font-size:12.5px;color:var(--mu);font-weight:700}
+.dl input{background:var(--bg);border:1px solid var(--line);color:var(--tx);font:inherit;font-size:20px;font-weight:800;padding:10px 12px;border-radius:12px;width:100%;font-variant-numeric:tabular-nums}
+.note{color:var(--mu);font-size:13.5px;margin-top:14px;line-height:1.55}
+#gate{min-height:calc(100vh - 80px);display:grid;place-items:center;text-align:center}
+#gate .in{max-width:380px;display:grid;gap:14px;justify-items:center}
+#gate img{width:72px;height:72px;border-radius:20px}
+#gate h1{font-size:30px;font-weight:800;letter-spacing:-.03em}
+#gate p{color:var(--mu)}
+.err{color:#ff8e8e;font-size:13.5px;min-height:20px}
+[hidden]{display:none!important}
+@media(max-width:820px){.hero,.two{grid-template-columns:minmax(0,1fr)}.sp{display:none}.bar{gap:10px}}
+@media(prefers-reduced-motion:reduce){.dot{animation:none}.split span{transition:none}}
+</style>
+</head>
+<body>
+<div id="gate"><div class="in">
+  <img src="/e/splmark.webp" alt="" width="72" height="72">
+  <h1>Squad – panel</h1>
+  <p>Statystyki aplikacji na żywo. Dostęp tylko dla twórcy.</p>
+  <button class="btn pri" id="login">Zaloguj się przez Google</button>
+  <div class="err" id="err" role="alert"></div>
+</div></div>
+
+<div id="app" hidden>
+<header><div class="bar">
+  <div class="brand"><img src="/e/splmark.webp" alt="" width="30" height="30"><span>Squad <small>statystyki</small></span></div>
+  <div class="chips" id="chips" role="group" aria-label="Platformy"></div>
+  <div class="sp"></div>
+  <div class="live"><span class="dot"></span><span id="upd">łączenie…</span></div>
+  <button class="btn" id="out">Wyloguj</button>
+</div></header>
+<div class="w"><main>
+  <section class="hero">
+    <div class="card"><div class="lbl">Online teraz (ostatnie 6 min)</div><div class="big" id="onl">–</div><div class="sub" id="onlS"> </div></div>
+    <div class="card"><div class="hd"><h2>Aktywni dziennie – 30 dni</h2><div class="lg"><span id="dauNow"></span></div></div><div id="spark"></div></div>
+  </section>
+
+  <section class="grid" id="kpis"></section>
+
+  <section class="card">
+    <div class="hd"><h2>Aktywność i nowe konta – 30 dni</h2><div class="lg"><span><b style="background:var(--bl)"></b>aktywni dnia</span><span><b style="background:var(--or)"></b>nowi</span></div></div>
+    <div class="scroll"><div id="chart" style="min-width:720px"></div></div>
+  </section>
+
+  <section class="two">
+    <div class="card"><div class="hd"><h2>Platformy</h2><span class="sub">aktywni w 30 dni</span></div>
+      <div class="split" id="split"></div>
+      <div class="scroll"><table id="tbl"></table></div>
+    </div>
+    <div class="card"><div class="hd"><h2>Ubytki i ryzyko</h2><span class="sub">po dacie ostatniej aktywności</span></div>
+      <div class="grid" id="churn" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div>
+      <div class="note" id="churnN"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="hd"><h2>Pobrania ze sklepów</h2><span class="sub" id="dlSub">wpisz z App Store Connect i Google Play Console</span></div>
+    <div class="dl">
+      <label>App Store (iOS)<input id="dIos" inputmode="numeric" placeholder="0"></label>
+      <label>Google Play (Android)<input id="dAnd" inputmode="numeric" placeholder="0"></label>
+      <label>Razem<input id="dSum" readonly></label>
+      <label>Konta na 100 pobrań<input id="dRat" readonly></label>
+    </div>
+    <div class="note" id="dlN"></div>
+  </section>
+
+  <div class="note" id="foot"></div>
+</main></div>
+</div>
+
+<script src="/config.js"></script>
+<script type="module">
+const C=self.SQUAD_CONFIG,g="https://www.gstatic.com/firebasejs/10.12.2/";
+const [A,AU,F]=await Promise.all(["app","auth","firestore"].map(n=>import(g+"firebase-"+n+".js")));
+const app=A.initializeApp(C),auth=AU.getAuth(app),db=F.getFirestore(app);
+const $=id=>document.getElementById(id);
+const PF=[{k:"ios",n:"iOS (App Store)",c:"var(--ios)"},{k:"android",n:"Android (Play)",c:"var(--and)"},{k:"web",n:"Przeglądarka",c:"var(--web)"},{k:"pwa",n:"Strona na ekranie",c:"var(--pwa)"}];
+const sel=new Set(PF.map(p=>p.k));
+const R={},D={};            // R[pf]=liczniki, D[pf][i]={a,n} dla ostatnich 30 dni (i=0 najstarszy)
+PF.forEach(p=>{R[p.k]={};D[p.k]=Array.from({length:30},()=>({a:null,n:null}))});
+let dl={ios:0,android:0},ready=false,busy=false;
+const fmt=n=>n==null?"–":n.toLocaleString("pl-PL");
+const ts=ms=>F.Timestamp.fromMillis(ms);
+const day=i=>{const d=new Date();d.setUTCHours(0,0,0,0);d.setUTCDate(d.getUTCDate()-(29-i));return d};
+const iso=d=>d.toISOString().slice(0,10);
+
+async function cnt(col,...w){return (await F.getCountFromServer(F.query(F.collection(db,col),...w))).data().count}
+async function pool(jobs,n=10){let i=0;await Promise.all(Array.from({length:n},async()=>{while(i<jobs.length){const j=jobs[i++];try{await j()}catch(e){if(e&&e.code==="permission-denied")throw e}}}))}
+
+async function loadCore(){
+  const now=Date.now(),H=36e5,Dm=864e5,W=F.where;
+  const jobs=[];
+  for(const {k} of PF){
+    const p=W("pf","==",k),L=(o,v)=>W("ls",o,ts(v)),Fs=(o,v)=>W("fs",o,ts(v));
+    const set=(key,fn)=>jobs.push(async()=>{R[k][key]=await fn()});
+    set("tot",()=>cnt("presence",p));
+    set("onl",()=>cnt("presence",p,L(">=",now-6*60e3)));
+    set("d1",()=>cnt("presence",p,L(">=",now-Dm)));
+    set("d7",()=>cnt("presence",p,L(">=",now-7*Dm)));
+    set("d30",()=>cnt("presence",p,L(">=",now-30*Dm)));
+    set("n1",()=>cnt("presence",p,Fs(">=",now-Dm)));
+    set("n7",()=>cnt("presence",p,Fs(">=",now-7*Dm)));
+    set("n30",()=>cnt("presence",p,Fs(">=",now-30*Dm)));
+    set("idle7",()=>cnt("presence",p,L("<",now-7*Dm)));
+    set("lost",()=>cnt("presence",p,L("<",now-30*Dm)));
+  }
+  jobs.push(async()=>{R.drops=await cnt("drops")},async()=>{R.groups=await cnt("groups")});
+  await pool(jobs,12);
+}
+async function loadDays(){
+  const today=iso(day(29)),jobs=[];
+  for(const {k} of PF)for(let i=0;i<30;i++){
+    const slot=D[k][i],isToday=i===29;
+    if(slot.a!==null&&!isToday)continue;
+    const d0=day(i),d1=new Date(d0.getTime()+864e5);
+    jobs.push(async()=>{slot.a=await cnt("act",F.where("d","==",iso(d0)),F.where("pf","==",k))});
+    jobs.push(async()=>{slot.n=await cnt("presence",F.where("pf","==",k),F.where("fs",">=",ts(d0.getTime())),F.where("fs","<",ts(d1.getTime())))});
+  }
+  await pool(jobs,10);
+}
+const sum=key=>PF.reduce((s,p)=>s+(sel.has(p.k)?(R[p.k][key]||0):0),0);
+const series=f=>Array.from({length:30},(_,i)=>PF.reduce((s,p)=>s+(sel.has(p.k)?(D[p.k][i][f]||0):0),0));
+
+function line(vals,w,h,col,fill){const mx=Math.max(1,...vals),n=vals.length,x=i=>i*(w/(n-1)),y=v=>h-4-(v/mx)*(h-12);
+  const d=vals.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join("");
+  return (fill?`<path d="${d}L${w} ${h}L0 ${h}Z" fill="${col}" opacity=".14"/>`:"")+`<path d="${d}" fill="none" stroke="${col}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`}
+function spark(){const v=series("a"),w=520,h=120;
+  $("spark").innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Aktywni dziennie, 30 dni">${line(v,w,h,"var(--bl)",true)}</svg>`;
+  $("dauNow").innerHTML=`dziś <b style="color:var(--tx)">${fmt(v[29])}</b>`}
+function chart(){const a=series("a"),nw=series("n"),w=1000,h=260,pl=34,pb=26,iw=w-pl,ih=h-pb-8,mx=Math.max(4,...a,...nw),bw=iw/30;
+  let s="";for(let t=0;t<=4;t++){const y=8+ih-(t/4)*ih;s+=`<line x1="${pl}" x2="${w}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${pl-8}" y="${y+4}" text-anchor="end" fill="var(--mu)" font-size="13" font-weight="600">${Math.round(mx*t/4)}</text>`}
+  nw.forEach((v,i)=>{const bh=(v/mx)*ih;s+=`<rect x="${pl+i*bw+bw*.2}" y="${8+ih-bh}" width="${bw*.6}" height="${Math.max(bh,v?2:0)}" rx="3" fill="var(--or)" opacity=".9"><title>${iso(day(i))}: nowi ${v}</title></rect>`});
+  const d=a.map((v,i)=>(i?"L":"M")+(pl+i*bw+bw/2).toFixed(1)+" "+(8+ih-(v/mx)*ih).toFixed(1)).join("");
+  s+=`<path d="${d}" fill="none" stroke="var(--bl)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+  a.forEach((v,i)=>{s+=`<circle cx="${pl+i*bw+bw/2}" cy="${8+ih-(v/mx)*ih}" r="${i===29?5:2.6}" fill="var(--bl)"><title>${iso(day(i))}: aktywni ${v}</title></circle>`});
+  [0,7,14,21,29].forEach(i=>{const dd=day(i);s+=`<text x="${pl+i*bw+bw/2}" y="${h-6}" text-anchor="middle" fill="var(--mu)" font-size="13" font-weight="600">${dd.getUTCDate()}.${String(dd.getUTCMonth()+1).padStart(2,"0")}</text>`});
+  $("chart").innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Aktywni dziennie i nowe konta">${s}</svg>`}
+
+function kpis(){const dau=sum("d1"),wau=sum("d7"),mau=sum("d30"),tot=sum("tot"),st=mau?Math.round(dau/mau*100):0;
+  const k=(l,v,d)=>`<div class="card k"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d||"&nbsp;"}</div></div>`;
+  $("kpis").innerHTML=k("Aktywni dziś (24 h)",fmt(dau),tot?Math.round(dau/tot*100)+"% wszystkich kont":"")+k("Aktywni 7 dni",fmt(wau),tot?Math.round(wau/tot*100)+"% kont":"")+k("Aktywni 30 dni",fmt(mau),tot?Math.round(mau/tot*100)+"% kont":"")+k("Przywiązanie (DAU/MAU)",st+"%","jak często wracają")+k("Nowi 24 h",`<span class="up">+${fmt(sum("n1"))}</span>`,"7 dni: +"+fmt(sum("n7")))+k("Nowi 30 dni",`<span class="up">+${fmt(sum("n30"))}</span>`,"")+k("Wszystkie konta",fmt(tot),"widziane od wdrożenia statystyk")+k("Dropy i grupy",fmt(R.drops),"grup: "+fmt(R.groups))}
+function platforms(){const rows=PF.map(p=>({...p,m:R[p.k].d30||0,t:R[p.k].tot||0,d1:R[p.k].d1||0,d7:R[p.k].d7||0,n7:R[p.k].n7||0}));
+  const tm=rows.reduce((s,r)=>s+r.m,0)||1;
+  $("split").innerHTML=rows.filter(r=>r.m>0).map(r=>`<span style="flex:${r.m};background:${r.c}" title="${r.n}: ${r.m}"></span>`).join("")||`<span style="flex:1;background:var(--line)"></span>`;
+  $("tbl").innerHTML=`<tr><th></th><th>konta</th><th>24 h</th><th>7 dni</th><th>30 dni</th><th>udział</th></tr>`+rows.map(r=>`<tr><td><i style="background:${r.c}"></i>${r.n}</td><td>${fmt(r.t)}</td><td>${fmt(r.d1)}</td><td>${fmt(r.d7)}</td><td>${fmt(r.m)}</td><td>${Math.round(r.m/tm*100)}%</td></tr>`).join("")}
+function churn(){const tot=sum("tot"),i7=sum("idle7"),lost=sum("lost"),risk=Math.max(0,i7-lost),m=sum("d30");
+  const k=(l,v,d)=>`<div class="card k" style="padding:16px"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
+  $("churn").innerHTML=k("Wygasają (7–30 dni)",fmt(risk),tot?Math.round(risk/tot*100)+"% kont":"")+k("Utraceni (&gt;30 dni)",`<span class="dn">${fmt(lost)}</span>`,tot?Math.round(lost/tot*100)+"% kont":"")+k("Aktywni 30 dni",fmt(m),"zostali w aplikacji");
+  $("churnN").textContent="Przybyli w ostatnich 30 dniach: +"+fmt(sum("n30"))+". Saldo wzrostu konta w tym okresie liczy się jako nowi minus utraceni."}
+function downloads(){const a=+dl.ios||0,b=+dl.android||0,s=a+b,tot=PF.reduce((x,p)=>x+(R[p.k].tot||0),0);
+  $("dSum").value=s?fmt(s):"";$("dRat").value=s&&tot?Math.round(tot/s*100):"";
+  $("dlN").textContent=s?"Pobrania ze sklepów dostajemy z opóźnieniem 1–3 dni; „konta na 100 pobrań” to ilu pobierających faktycznie się zalogowało.":"Liczby ze sklepów wpisujesz ręcznie, zapisują się same. Automatyczne pobieranie z Apple i Google dojdzie po podłączeniu kluczy."}
+function render(){spark();chart();kpis();platforms();churn();downloads();
+  $("onl").textContent=fmt(sum("onl"));$("onlS").textContent=sum("d1")?`z ${fmt(sum("d1"))} aktywnych w ciągu doby`:"czekamy na pierwszych użytkowników";
+  $("foot").textContent="Dni liczone w UTC. Statystyki zbierane od wdrożenia śledzenia – starsze konta pojawią się po pierwszym otwarciu aplikacji. Drops łącznie: "+fmt(R.drops)+", grupy: "+fmt(R.groups)+"."}
+
+function chips(){$("chips").innerHTML=PF.map(p=>`<button class="chip" data-k="${p.k}" aria-pressed="${sel.has(p.k)}" style="--c:${p.c}"><i></i>${p.n.split(" ")[0]}</button>`).join("");
+  $("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const k=b.dataset.k;if(sel.has(k)&&sel.size>1)sel.delete(k);else sel.add(k);chips();if(ready)render()}}
+
+async function tick(){if(busy)return;busy=true;try{await loadCore();await loadDays();ready=true;render();$("upd").textContent="na żywo · "+new Date().toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}
+  catch(e){if(e&&e.code==="permission-denied")deny();else $("upd").textContent="błąd połączenia"}busy=false}
+let timer;
+function deny(){clearInterval(timer);$("app").hidden=true;$("gate").hidden=false;$("err").textContent="To konto nie ma dostępu. Zaloguj się kontem twórcy ze zweryfikowanym e-mailem.";AU.signOut(auth)}
+async function loadDl(){try{const s=await F.getDoc(F.doc(db,"adm","downloads"));if(s.exists()){dl=s.data();$("dIos").value=dl.ios||"";$("dAnd").value=dl.android||""}}catch{}}
+let sv;const save=()=>{dl={ios:+$("dIos").value.replace(/\D/g,"")||0,android:+$("dAnd").value.replace(/\D/g,"")||0};downloads();clearTimeout(sv);sv=setTimeout(()=>F.setDoc(F.doc(db,"adm","downloads"),{...dl,at:F.serverTimestamp()}).then(()=>$("dlSub").textContent="zapisano").catch(()=>$("dlSub").textContent="nie zapisano"),600)};
+["dIos","dAnd"].forEach(i=>$(i).addEventListener("input",save));
+$("login").onclick=async()=>{$("err").textContent="";try{await AU.signInWithPopup(auth,new AU.GoogleAuthProvider())}catch(e){$("err").textContent="Logowanie nie powiodło się. Spróbuj ponownie."}};
+$("out").onclick=()=>AU.signOut(auth);
+chips();
+AU.onAuthStateChanged(auth,async u=>{
+  if(u&&!u.isAnonymous){$("gate").hidden=true;$("app").hidden=false;await loadDl();tick();clearInterval(timer);timer=setInterval(tick,45000)}
+  else{clearInterval(timer);$("app").hidden=true;$("gate").hidden=false}});
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // Testy reguł Firestore na emulatorze (limity dropów i wiadomości). Uruchamiane w GitHub Actions.
 import fs from "fs";
 import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
-import { doc, setDoc, writeBatch, serverTimestamp, Timestamp, updateDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, writeBatch, serverTimestamp, Timestamp, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 
 const src = fs.readFileSync("firestore.rules", "utf8");
 let fails = 0;
@@ -83,6 +83,31 @@ console.log("— enforce = true (faza 2: limity wymuszane)");
   await check("wiadomość z licznikiem: OK", assertSucceeds(sendMsg(db, "u1", "e1")));
   await check("druga wiadomość od razu (limit 1/s): ODMOWA", assertFails(sendMsg(db, "u1", "e1")));
   await check("wiadomość bez licznika: ODMOWA", assertFails(setDoc(doc(db, "drops", "e1", "messages", "qq"), { authorId: "u1", nickname: "x", text: "hej", createdAt: serverTimestamp() })));
+  await t.cleanup();
+}
+// ---- statystyki dla twórcy (presence / act / adm) ----
+{
+  const t = await env(true); await t.clearFirestore();
+  const u1 = t.authenticatedContext("u1", G).firestore(), u2 = t.authenticatedContext("u2", G).firestore();
+  const adm = t.authenticatedContext("a1", { email: "cubemobilegame@gmail.com", email_verified: true, firebase: { sign_in_provider: "google.com" } }).firestore();
+  const fake = t.authenticatedContext("a2", { email: "cubemobilegame@gmail.com", email_verified: false, firebase: { sign_in_provider: "password" } }).firestore();
+  const P = { pf: "ios", g: false, lang: "pl", v: "1.1.0" };
+  await check("presence: własny wpis (create): OK", assertSucceeds(setDoc(doc(u1, "presence", "u1"), { ...P, fs: serverTimestamp(), ls: serverTimestamp() })));
+  await check("presence: cudzy wpis: ODMOWA", assertFails(setDoc(doc(u1, "presence", "u2"), { ...P, fs: serverTimestamp(), ls: serverTimestamp() })));
+  await check("presence: update ls: OK", assertSucceeds(updateDoc(doc(u1, "presence", "u1"), { ...P, ls: serverTimestamp() })));
+  await check("presence: zmiana fs: ODMOWA", assertFails(setDoc(doc(u1, "presence", "u1"), { ...P, fs: serverTimestamp(), ls: serverTimestamp() })));
+  await check("presence: obca platforma: ODMOWA", assertFails(updateDoc(doc(u1, "presence", "u1"), { ...P, pf: "tv", ls: serverTimestamp() })));
+  await check("presence: dodatkowe pole: ODMOWA", assertFails(updateDoc(doc(u1, "presence", "u1"), { ...P, x: 1, ls: serverTimestamp() })));
+  await check("presence: odczyt przez zwykłego użytkownika: ODMOWA", assertFails(getDoc(doc(u2, "presence", "u1"))));
+  await check("presence: odczyt przez właściciela: ODMOWA", assertFails(getDoc(doc(u1, "presence", "u1"))));
+  await check("presence: odczyt przez admina: OK", assertSucceeds(getDoc(doc(adm, "presence", "u1"))));
+  await check("presence: odczyt przez nieweryfikowany e-mail: ODMOWA", assertFails(getDoc(doc(fake, "presence", "u1"))));
+  await check("act: własny dzień: OK", assertSucceeds(setDoc(doc(u1, "act", "u1_2026-11-21"), { u: "u1", d: "2026-11-21", pf: "android" })));
+  await check("act: złe id: ODMOWA", assertFails(setDoc(doc(u1, "act", "u2_2026-11-21"), { u: "u1", d: "2026-11-21", pf: "android" })));
+  await check("act: update (nadpisanie): ODMOWA", assertFails(setDoc(doc(u1, "act", "u1_2026-11-21"), { u: "u1", d: "2026-11-21", pf: "ios" })));
+  await check("act: usunięcie własnego: OK", assertSucceeds(deleteDoc(doc(u1, "act", "u1_2026-11-21"))));
+  await check("adm: zapis tylko admin", assertFails(setDoc(doc(u1, "adm", "downloads"), { ios: 5 })));
+  await check("adm: zapis admina: OK", assertSucceeds(setDoc(doc(adm, "adm", "downloads"), { ios: 5 })));
   await t.cleanup();
 }
 console.log(fails ? `\nBŁĘDY: ${fails}` : "\nWSZYSTKO OK");
