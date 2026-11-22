@@ -4927,14 +4927,13 @@ function report(info){const s=sheet(`<h2>${t("repT")}</h2><div class="acts">${RE
       q.querySelector("#hy").onclick=()=>{q.close();sset("hidC",JSON.stringify([...hidL(),info.code].slice(-100)));try{saveProfile()}catch{}vib(20);toast(t("hidDone"));try{PUB.list=(PUB.list||[]).filter(d=>d.id!==info.code);if(typeof changed==="function")changed()}catch{}if(/^\/(d|c)\//.test(location.pathname)&&location.pathname.split("/")[2]===info.code)go("/")}},600)}})}
 const BELL='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/>',BELLO='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0M4 4l16 16"/>',PADD='<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>';
 function userActions(u,info,redraw){vib(10);const bl=isBlk(u.id),cu=auth.currentUser,fr=!!(cu&&!cu.isAnonymous&&u.id!==me()&&!S.con.has(u.id)),mi=x=>`<span class="cmi">${sv(x)}</span>`;
-  const s=sheet(`<div class="cmenu"><h2>${esc(u.nickname)}</h2>${fr?`<button class="ghost cmb" id="uf">${mi(PADD)}${t("uaFr")}</button>`:""}<button class="ghost cmb" id="ur">${mi(SI.flag)}${t("repUser")}</button><button class="ghost cmb cmd" id="ub">${mi(BAN)}${bl?t("unblock"):t("blockU",esc(u.nickname))}</button><button class="ghost cmb cmx" id="uc">${t("cancel")}</button></div>`);
-  s.querySelector("#uc").onclick=s.close;if(fr)s.querySelector("#uf").onclick=()=>{s.close();conReq(u.id,u)};
+  const s=sheet(`<div class="dsh cmenu2"><h2>${esc(u.nickname)}</h2><div class="dsb">${fr?`<button class="dsx cmw" id="uf" type="button">${t("uaFr")}</button>`:""}<button class="dsx ${fr?"g":"cmw"}" id="ur" type="button">${t("repUser")}</button><button class="dsx g cmd" id="ub" type="button">${bl?t("unblock"):t("blockU",esc(u.nickname))}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
+  if(fr)s.querySelector("#uf").onclick=()=>{s.close();conReq(u.id,u)};
   s.querySelector("#ur").onclick=()=>{s.close();report({...info,authorId:u.id,nickname:u.nickname})};
   s.querySelector("#ub").onclick=()=>{s.close();if(bl){sset("blocked",JSON.stringify(blockedL().filter(b=>b.id!==u.id)));saveProfile();vib(10);toast(t("unblocked"))}
     else{sset("blocked",JSON.stringify([...blockedL().filter(b=>b.id!==u.id),{id:u.id,nick:u.nickname,av:u.av??null,ph:u.ph||null}]));saveProfile();vib(20);toast(t("blkDone",u.nickname))}redraw?.()}}
 function msgActions(m,P,info,redrawChat){vib(10);
-  const s=sheet(`<h2>${t("mActT",esc(m.nickname))}</h2><p class="qt">${esc(m.text)}</p><div class="acts"><button id="ar">${sv(SI.flag)}${t("repMsg")}</button><button id="ab" class="danger">${sv(BAN)}${t("blockU",esc(m.nickname))}</button><button id="ac">${t("cancel")}</button></div>`);
-  s.querySelector("#ac").onclick=s.close;
+  const s=sheet(`<div class="dsh cmenu2"><h2>${t("mActT",esc(m.nickname))}</h2><p class="qt">${esc(m.text)}</p><div class="dsb"><button class="dsx cmw" id="ar" type="button">${t("repMsg")}</button><button class="dsx g cmd" id="ab" type="button">${t("blockU",esc(m.nickname))}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#ar").onclick=()=>{s.close();report({...info,messageId:m.id,authorId:m.authorId,text:m.text})};
   s.querySelector("#ab").onclick=()=>{s.close();const p=P.find(q=>q.id===m.authorId)||{};
     sset("blocked",JSON.stringify([...blockedL().filter(b=>b.id!==m.authorId),{id:m.authorId,nick:m.nickname,av:p.av??null,ph:p.ph||null}]));saveProfile();vib(20);toast(t("blkDone",m.nickname));redrawChat?.()}}
