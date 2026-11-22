@@ -1678,6 +1678,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .sk #mf .mfp{order:3;flex:1;min-width:0;display:flex;align-items:center;gap:8px}.sk #mf .mfp textarea{flex:1;min-width:0}
 .sk #mf.fo{background:transparent!important;padding:0 0 0 6px;gap:8px}.sk #mf.fo .mfp{background:#17171c;border-radius:99px;padding:5px 5px 5px 14px}
 .scr.chl .ngr{display:flex;align-items:center;gap:8px;flex:none}.scr.chl .ngb{height:40px;padding:0 15px 0 11px;font-size:14px}.scr.chl .ngb.ngi{width:40px;padding:0;justify-content:center}.scr.chl .ngb.ngi svg{width:19px;height:19px}
+.cskl{pointer-events:none}.cskl .cav{background:rgba(255,255,255,.07)!important;animation:cskp 1.4s ease-in-out infinite}.cskl i{display:block;height:13px;border-radius:99px;background:rgba(255,255,255,.07);animation:cskp 1.4s ease-in-out infinite}.cskl .cr1{margin-bottom:9px}.cskl .cr2 i{height:11px;opacity:.8}@keyframes cskp{50%{opacity:.45}}@media(prefers-reduced-motion:reduce){.cskl .cav,.cskl i{animation:none}}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -2341,6 +2342,17 @@ const jx=s=>String(s??"").replace(/[^\w-]/g,""),jh=s=>String(s??"").replace(/[^\
 let _hl=null;const iosTick=()=>{try{if(!_hl){_hl=document.createElement("label");_hl.setAttribute("aria-hidden","true");_hl.style.cssText="position:fixed;left:-99px;top:-99px;width:40px;height:20px;opacity:.01;pointer-events:none";_hl.innerHTML='<input type="checkbox" switch tabindex="-1">';document.body.append(_hl)}_hl.click()}catch{}};
 const vib=p=>{if(sget("n_snd")==="0")return;if(navigator.vibrate)return navigator.vibrate(p);const a=Array.isArray(p)?p:[p];let t=0;a.forEach((v,i)=>{if(i%2===0&&v>0){if(t===0)iosTick();else setTimeout(iosTick,t)}t+=v}) },pad=n=>String(n).padStart(2,"0");
 function sget(k){try{return localStorage[k]||""}catch{return""}}function sset(k,v){try{localStorage[k]=v}catch{}}
+/* szybki start: ostatnia lista czatów/dropów w localStorage – pokazuje się od razu, po chwili podmieniają ją dane z serwera */
+const SQC=(()=>{let tm=0;const off=()=>DEMO&&!window.__sqcT,rp=function(k,v){const o=this[k];return o&&typeof o==="object"&&typeof o.toMillis==="function"&&typeof o.seconds==="number"?{__t:o.toMillis()}:v},rv=(k,v)=>v&&typeof v==="object"&&typeof v.__t==="number"?Timestamp.fromMillis(v.__t):v;
+  const save=()=>{try{const u=auth.currentUser;if(!u||off()||!wUid||wUid!==u.uid)return;const now=Date.now(),items=[...S.items.values()].filter(d=>d.expiresAt?.toMillis&&d.expiresAt.toMillis()>now),groups=[...S.groups.values()],ppl={},ms={},gm={};
+    items.forEach(d=>{if(S.ppl[d.id])ppl[d.id]=S.ppl[d.id];if(S.ms[d.id])ms[d.id]=S.ms[d.id].slice(-8)});groups.forEach(g=>{if(S.gm[g.id])gm[g.id]=S.gm[g.id];if(S.ms["g_"+g.id])ms["g_"+g.id]=S.ms["g_"+g.id].slice(-8)});
+    const str=JSON.stringify({v:1,items:items.map(d=>({...d,__k:undefined})),groups:groups.map(g=>({...g,__k:undefined})),ppl,ms,gm},rp);if(str.length<1.2e6)localStorage["sqc_"+u.uid]=str}catch{}};
+  const load=u=>{try{if(off())return false;const raw=localStorage["sqc_"+u.uid];if(!raw)return false;const c=JSON.parse(raw,rv);if(!c||c.v!==1)return false;const now=Date.now();
+    (c.items||[]).forEach(d=>{if(d&&d.id&&d.expiresAt?.toMillis&&d.expiresAt.toMillis()>now)S.items.set(d.id,{...d,__k:1})});Object.entries(c.ppl||{}).forEach(([k,v])=>{if(S.items.has(k)&&Array.isArray(v))S.ppl[k]=v});
+    (c.groups||[]).forEach(g=>{if(g&&g.id)S.groups.set(g.id,{...g,__k:1})});Object.entries(c.gm||{}).forEach(([k,v])=>{if(S.groups.has(k)&&Array.isArray(v))S.gm[k]=v});Object.entries(c.ms||{}).forEach(([k,v])=>{if(Array.isArray(v))S.ms[k]=visM(k,v)});return S.items.size+S.groups.size>0}catch{return false}};
+  try{document.addEventListener("visibilitychange",()=>{if(document.hidden)save()})}catch{}
+  return{save,load,soon:()=>{clearTimeout(tm);tm=setTimeout(save,3000)}}})();
+window.__SQC=SQC;
 const joined=()=>{try{return JSON.parse(sget("joined")||"[]")}catch{return[]}};
 const fixMine=(code,P)=>{const u=auth.currentUser,nk=sget("nick");if(!u||DEMO||!nk)return;const m=P.find(p=>p.id===u.uid);if(!m)return;
   const ph=sget("photo")||null,av=myAv();if(m.nickname===nk&&m.av===av&&(m.ph||null)===ph)return;const k=code+"|"+nk+"|"+av+"|"+(ph||"").slice(-12);window.__fixd=window.__fixd||{};if(window.__fixd[k])return;window.__fixd[k]=1;
@@ -2492,22 +2504,23 @@ const emo=t=>t.replace(/(^|\s)(\S{2,8})(?=\s|$|[.,!?])/g,(m,a,b)=>EMM.has(b)?a+E
 const ibUn=a=>a&&a.at?.toMillis&&Date.now()-a.at.toMillis()<14*864e5&&sget("ib_"+a.id)!=="1",IBI={grp:"👥",inv:"✉️",rem:"⏰",edit:"✏️",creq:"🤝",cacc:"🤝",join:"👥",sos:"🆘"};
 function badges(){const c=[...S.items.values()].reduce((a,d)=>a+unreadOf(d),0)+[...S.groups.values()].reduce((a,g)=>a+unreadOf({id:"g_"+g.id}),0),T=nsT(),n=events().filter(evUn).length+Object.values(window.__al||{}).filter(alUn).length+Object.values(window.__ib||{}).filter(ibUn).length;setBd("#bdc",c);try{n+=live().filter(d=>loaded(d)&&roleOf(d)==="inv").length+(S.ginv?S.ginv.length:0)}catch{}setBd("#bdn",n);setBd("#bdk",S.creqIn.filter(r=>!isBlk(r.from)).length);try{if(!DEMO&&navigator.setAppBadge){c?navigator.setAppBadge(c):navigator.clearAppBadge()}}catch{}if(DEMO)demoBd()}
 function demoBd(){const u=auth.currentUser,host=u&&!u.isAnonymous;setBd("#bdh",host?0:FB.__hb())}
-const changed=()=>{badges();redraw?.();try{widgetSync()}catch{}};
+const changed=()=>{badges();redraw?.();try{widgetSync()}catch{}try{SQC.soon()}catch{}};
 function stopWatch(){W.forEach(u=>u());W=[];S.items=new Map();S.ppl={};S.ms={};S.groups=new Map();S.gm={};S.con=new Map();S.creqIn=[];S.creqOut=[];S.ginv=[];wUid=null}
 function watch(){const u=auth.currentUser;if(!u||(u.isAnonymous&&sget("guest")!=="1")){if(wUid)stopWatch();return}if(wUid===u.uid)return;stopWatch();wUid=u.uid;const sub=new Set();
   const upd=()=>{S.items.forEach(d=>{if(sub.has(d.id))return;sub.add(d.id);
     W.push(onSnapshot(collection(db,"drops",d.id,"participants"),s=>{S.ppl[d.id]=dedupP(s.docs.map(x=>({...x.data(),id:x.id})));fixMine(d.id,S.ppl[d.id]);changed()},()=>{}));
     W.push(onSnapshot(query(collection(db,"drops",d.id,"messages"),orderBy("createdAt","desc"),limit(25)),s=>{S.ms[d.id]=visM(d.id,s.docs.map(x=>x.data()).reverse());changed()},()=>{}))});changed()};
   S.addItem=(c,d)=>{S.items.set(c,{...d,id:c});upd()};W.push(onSnapshot(query(collection(db,"drops"),where("hostId","==",u.uid)),s=>{const ids=new Set(s.docs.map(x=>x.id));S.items.forEach((d,k)=>{if(d.__h&&!ids.has(k))S.items.delete(k)});s.docs.forEach(x=>S.items.set(x.id,{id:x.id,__h:1,...x.data()}));upd()},()=>{}));
-  joined().forEach(async c=>{const R=await loadDrop(c);if(R&&!S.items.has(c)){S.items.set(c,{id:c,...R.d});upd()}});
-  if(FB.collectionGroup){W.push(onSnapshot(query(FB.collectionGroup(db,"participants"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;if(S.items.has(c))return;const R=await loadDrop(c);if(R&&!S.items.has(c)){remember(c);S.items.set(c,{id:c,...R.d});upd()}})},e=>console.warn("cg drops",e)));
-    W.push(onSnapshot(query(FB.collectionGroup(db,"members"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;if(S.groups.has(c))return;try{const r=await getDoc(doc(db,"groups",c));if(r.exists()&&!S.groups.has(c)){rememberG(c);S.groups.set(c,{id:c,...r.data()});gupd()}}catch{}})},e=>console.warn("cg groups",e)))}
+  joined().forEach(async c=>{const R=await loadDrop(c),o=S.items.get(c);if(R&&(!o||o.__k)){S.items.set(c,{id:c,...(o&&o.__h?{__h:1}:{}),...R.d});upd()}else if(!R&&o&&o.__k&&!o.__h&&navigator.onLine!==false){S.items.delete(c);changed()}});
+  if(FB.collectionGroup){W.push(onSnapshot(query(FB.collectionGroup(db,"participants"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;const o=S.items.get(c);if(o&&!o.__k)return;const R=await loadDrop(c);if(R&&(!S.items.has(c)||S.items.get(c).__k)){remember(c);S.items.set(c,{id:c,...(o&&o.__h?{__h:1}:{}),...R.d});upd()}})},e=>console.warn("cg drops",e)));
+    W.push(onSnapshot(query(FB.collectionGroup(db,"members"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;const o=S.groups.get(c);if(o&&!o.__k)return;try{const r=await getDoc(doc(db,"groups",c));if(r.exists()&&(!S.groups.has(c)||S.groups.get(c).__k)){rememberG(c);S.groups.set(c,{id:c,...(o&&o.__h?{__h:1}:{}),...r.data()});gupd()}}catch{}})},e=>console.warn("cg groups",e)))}
   const gsub=new Set(),gupd=()=>{S.groups.forEach(g=>{if(gsub.has(g.id))return;gsub.add(g.id);
     W.push(onSnapshot(collection(db,"groups",g.id,"members"),x=>{S.gm[g.id]=x.docs.map(y=>({id:y.id,...y.data()}));changed()},()=>{}));
     W.push(onSnapshot(query(collection(db,"groups",g.id,"messages"),orderBy("createdAt","desc"),limit(25)),x=>{S.ms["g_"+g.id]=visM("g_"+g.id,x.docs.map(y=>y.data()).reverse());changed()},()=>{}))});changed()};
   S.addGroup=(c,g)=>{S.groups.set(c,{id:c,...g});gupd()};
+  if(SQC.load(u)){upd();gupd()}
   W.push(onSnapshot(query(collection(db,"groups"),where("ownerId","==",u.uid)),x=>{const ids=new Set(x.docs.map(y=>y.id));S.groups.forEach((g,k)=>{if(g.__h&&!ids.has(k))S.groups.delete(k)});x.docs.forEach(y=>S.groups.set(y.id,{id:y.id,__h:1,...y.data()}));gupd()},()=>{}));
-  joinedG().forEach(async c=>{try{const r=await getDoc(doc(db,"groups",c));if(!r.exists()){forgetG(c);return}if(S.groups.has(c))return;const gd=r.data();let mem=gd.ownerId===u.uid;if(!mem){try{mem=(await getDoc(doc(db,"groups",c,"members",u.uid))).exists()}catch{mem=true}}if(!mem){forgetG(c);return}S.groups.set(c,{id:c,...gd});gupd()}catch{}});
+  joinedG().forEach(async c=>{try{const r=await getDoc(doc(db,"groups",c));const og=S.groups.get(c);if(!r.exists()){forgetG(c);if(og&&og.__k&&!og.__h){S.groups.delete(c);changed()}return}if(og&&!og.__k)return;const gd=r.data();let mem=gd.ownerId===u.uid;if(!mem){try{mem=(await getDoc(doc(db,"groups",c,"members",u.uid))).exists()}catch{mem=true}}if(!mem){forgetG(c);if(og&&og.__k){S.groups.delete(c);changed()}return}S.groups.set(c,{id:c,...(og&&og.__h?{__h:1}:{}),...gd});gupd()}catch{}});
   /* KONTAKTY + zaproszenia od kontaktów (tylko konta, nie goście) */
   if(!u.isAnonymous){
     if(SAFE&&!DEMO)W.push(onSnapshot(collection(db,"users",u.uid,"alerts"),x=>{window.__al=window.__al||{};x.docChanges().forEach(c=>{if(c.type==="removed")delete window.__al[c.doc.id];else window.__al[c.doc.id]={...c.doc.data(),id:c.doc.id}});try{if(typeof redraw==="function"&&gp()==="/n")redraw()}catch{}x.docChanges().forEach(c=>{if(c.type!=="added")return;const a={...c.doc.data(),id:c.doc.id},ms=a.at?.toMillis?.()||0;if(ms&&Date.now()-ms<72e5&&sget("alSeen_"+a.id)!=="1"){sset("alSeen_"+a.id,"1");alertSheet(a)}})},()=>{}));
@@ -3222,11 +3235,13 @@ function chatsView(){
     const G=[...S.groups.values()].map(g=>{const [c1,c2]=gth(g,g.id),m=(S.ms["g_"+g.id]||[]).slice(-1)[0];return{g:1,id:g.id,href:"/gc/"+g.id,c1,c2,icon:'<img class="e3" src="/e/grupa-o.webp" alt="">',title:g.name,m,n:unreadOf({id:"g_"+g.id}),tag:t("tagG"),at:m?.createdAt?.toMillis?.()||(m?Date.now():g.createdAt?.toMillis?.()||0),st:g.createdAt?.toMillis?.()||0}});
     const D=live().filter(d=>loaded(d)&&["host","in","late"].includes(roleOf(d))).map(d=>{const pk=pxKey(d),pg=(FG[pk]||(HG[d.category==="pizza"?"food":d.category]||[])[0]),[c1,c2]=pg?pg.split(","):thm(d),m=(S.ms[d.id]||[]).slice(-1)[0],cu=cutu(d);return{g:0,id:d.id,href:"/c/"+d.id,c1:cu?cu.g[0]:c1,c2:cu?cu.g[1]:c2,icon:`<span class="ltr" style="color:${cu&&cu.c==="cl"?"#17171f":"#fff"}">${ltr(d.title)}</span>`,title:d.title,m,n:unreadOf(d),tag:(()=>{const ms=d.startsAt.toMillis(),q=new Date(ms),hh=pad(q.getHours())+":"+pad(q.getMinutes());if(ms<=Date.now())return"🔥 "+t("live2");const dd=Math.round((new Date(ms).setHours(0,0,0,0)-new Date().setHours(0,0,0,0))/864e5);return"🔥 "+(dd<=0?t("todL"):dd===1?t("tmrL"):q.toLocaleDateString(LANG,{day:"numeric",month:"short"}))+" "+hh})(),at:m?.createdAt?.toMillis?.()||(m?Date.now():d.createdAt?.toMillis?.()||d.startsAt.toMillis()-864e5),st:d.startsAt.toMillis()}});
     const HD=hidMap(),A=(F==="g"?G:F==="d"?D:[...G,...D]).filter(x=>!((HD[(x.g?"g_":"")+x.id]||0)>=x.at)).sort((a,b)=>{if(!!a.m!==!!b.m)return a.m?-1:1;return b.at-a.at});
-    $("#gl").innerHTML=A.map(row).join("")||(F==="d"?`<p class="mut emp"><img src="/e/chat.webp" alt="">${t("emptyDc")}</p>`:`<p class="mut emp"><img src="/e/ghost.webp" alt="">${t("emptyG")}</p>`);
+    const ld=!A.length&&(joined().length+joinedG().length>0||performance.now()<2500)&&performance.now()<8000;
+    $("#gl").innerHTML=A.map(row).join("")||(ld?skel():F==="d"?`<p class="mut emp"><img src="/e/chat.webp" alt="">${t("emptyDc")}</p>`:`<p class="mut emp"><img src="/e/ghost.webp" alt="">${t("emptyG")}</p>`);
     /* czerwona kropka z liczbą nieprzeczytanych także na zakładkach Wszystkie / Grupy / Czaty dropów */
     const sum=L=>L.reduce((x,y)=>x+(y.n||0),0),NB={all:sum(G)+sum(D),g:sum(G),d:sum(D)},LB={all:t("chAll"),g:t("grT"),d:t("dcT")};
     document.querySelectorAll("#chf button").forEach(b=>{const k=b.dataset.f,n=NB[k];b.innerHTML=esc(LB[k])+(n?`<b class="cfb">${n>99?"99+":n}</b>`:"");b.classList.toggle("on",b.dataset.f===F);b.onclick=()=>{F=b.dataset.f;sset("chf",F);vib(6);draw()}})};
-  redraw=draw;draw();
+  const skel=()=>[[.62,.86],[.48,.7],[.7,.55],[.55,.8]].map(([a,b])=>`<div class="chrow cskl" aria-hidden="true"><div class="cav"></div><div class="crm"><div class="cr1"><i style="width:${a*100}%"></i></div><div class="cr2"><i style="width:${b*100}%"></i></div></div></div>`).join("");
+  redraw=draw;draw();{const w=8100-performance.now();if(w>0)setTimeout(()=>{if(redraw===draw)draw()},Math.min(w,8100))}
 }
 
 /* ---------- GRUPA: link, udostępnianie, ekipa, dołączanie, wyjście ---------- */
