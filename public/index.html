@@ -1448,6 +1448,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .po .pb i,.po.lead .pb i,.gpo .pb i{position:static!important;display:block;height:100%;border-radius:99px;transition:width .35s;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.26) 0 7px,rgba(255,255,255,0) 7px 14px),linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 55%),var(--acc);background-size:20px 20px,100% 100%,100% 100%;animation:abst 1.6s linear infinite;box-shadow:inset 0 -1px 0 rgba(0,0,0,.12)}
 :root.acw .po .pb i,:root.acw .gpo .pb i{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.14) 0 7px,rgba(0,0,0,0) 7px 14px),var(--acc)}
 @media (prefers-reduced-motion:reduce){.po .pb i,.gpo .pb i{animation:none}}
+.poll .pq{align-items:center!important;gap:12px!important}.poll .pq .pqi{flex:none;width:36px;height:36px;border-radius:12px;background:#fff;color:#0b0b0b;display:grid;place-items:center}.poll .pq .pqi svg{width:19px;height:19px}
 .poll .pf{color:#8e8e8e;font:500 13px Brico,BricoCyr,system-ui;margin-top:12px}.gpx{color:#8e8e8e;font:500 13px Brico,BricoCyr,system-ui}
 .gph em{color:#8e8e8e;font:500 13px Brico,BricoCyr,system-ui}
 /* logowanie: czarne tło, logo, animowane ikony dropów, nagłówek po lewej */
@@ -1608,6 +1609,9 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .gv #shb.n2a .gic{flex:none!important;flex-direction:row!important;justify-content:center!important;align-items:center;width:100%;height:56px!important;min-height:0;gap:0!important;padding:0 18px!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:18px!important;background:#1a1a1a!important;color:#fff;position:relative;box-sizing:border-box}
 .gv #shb.n2a .gic:first-child{background:#fff!important;border-color:transparent!important;color:#0b0b0b}.gv #shb.n2a .gic:first-child b{color:#0b0b0b}
 .gv #shb.n2a .gic span{display:none!important}.gv #shb.n2a .gic b{font:800 16px Brico,BricoCyr,system-ui!important;color:#fff;text-align:center}.gv #shb.n2a .gic.on{background:#26262c!important}.gv #shb.n2a .gic:active{transform:scale(.99)}
+.gv .gpn{border-radius:20px!important;background:rgba(255,255,255,.022)!important;border:1px solid rgba(255,255,255,.055)!important;padding:12px 16px!important;min-height:54px;gap:12px!important;box-shadow:none!important}
+.gv .gpn i.gpi{width:20px!important;height:20px!important;border-radius:0!important;background:none!important;color:var(--acc)}.gv .gpn i.gpi svg{width:20px!important;height:20px!important}
+.gv .gpn b{font:700 14px/1.3 Brico,BricoCyr,system-ui!important}.gv .gpn small{font:600 12px Brico,BricoCyr,system-ui!important;margin-top:2px}.gv .gpn .gpm{font-size:18px;font-weight:800;color:rgba(255,255,255,.4)}
 .gv .gpn.add{border-style:solid}.gv .gpl{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px}
 .gv>.cta{display:flex;align-items:center;justify-content:center;height:56px;border:0;border-radius:99px;background:var(--acc);color:#fff;font:800 18px Brico,BricoCyr,system-ui;box-shadow:none}.gv>.cta[hidden]{display:none}
 .gv>input{height:54px;border-radius:99px;background:#141414;border:0}
@@ -3543,7 +3547,7 @@ async function chatView(code,g){
   const pollCard=m=>{const pl=m.poll||{},o=(pl.o||[]).slice(0,6),V=m.v||{},n=Object.keys(V).length,my=V[me()],cnt=o.map((_,i)=>Object.values(V).filter(x=>x===i).length),mx=Math.max(0,...cnt),lead=n?cnt.indexOf(mx):-1;
     const who=i=>Object.entries(V).filter(([,x])=>x===i).map(([u])=>P.find(p=>p.id===u)).filter(Boolean);
     const canSet=!g&&owner===me()&&(pl.k==="place"||pl.k==="time")&&lead>=0&&(d.startsAt?.toMillis?.()||0)>Date.now();
-    return`<div class="poll"><div class="pq"><span>${pl.k==="place"?"📍":pl.k==="time"?"🕒":"📊"}</span><b>${esc(clean(pl.q||""))}</b></div>
+    return`<div class="poll"><div class="pq">${(()=>{const P=pl.k==="place"?'<path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>':pl.k==="time"?'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>':'<path d="M4.500 19.500v-5M12 19.500V5M19.500 19.500v-8"/>';return`<i class="pqi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.7" stroke-linecap="round" stroke-linejoin="round">${P}</svg></i>`})()}<b>${esc(clean(pl.q||""))}</b></div>
     ${o.map((x,i)=>{const pc=n?Math.round(cnt[i]/n*100):0,w=who(i);return`<button class="po${my===i?" my":""}${i===lead&&mx>0?" lead":""}" data-pv="${esc(m.id)}:${i}"><span class="pt">${my===i?"✓ ":""}${esc(clean(x))}</span><span class="pr">${w.slice(0,3).map(p=>avc("mini",avIdx(p))).join("")}<em>${cnt[i]}</em></span><u class="pb"><i style="width:${pc}%"></i></u></button>`}).join("")}
     <div class="pf">${t("votes",n)} · ${esc(m.nickname||"")}${canSet?`<button class="pset" data-pa="${esc(m.id)}:${lead}">✅ ${t(pl.k==="place"?"pSetP":"pSetT")}: ${esc(clean(o[lead]))}</button>`:""}</div></div>`};
   const vote=async(id,i)=>{const m=M.find(x=>x.id===id);if(!m||!mine){return toast(t("chOut"))}vib(10);const cur=(m.v||{})[me()];try{await updateDoc(doc(ref,"messages",id),{["v."+me()]:cur===i?deleteField():i})}catch{toast(t("err"))}};
@@ -4842,6 +4846,7 @@ function mock(){const X=DX[(()=>{const v=sget("lang");if(DX[v])return v;for(cons
   [["host1_1","host1",X.n0,"🛹","#ff6a3d","#ffb020",22],["u2_1","u2",X.n1,"🤙","#7c3aed","#ec4899",18],["u2_2","u2",X.n1,"🌇","#0ea5e9","#22d3a4",12],["u3_1","u3",X.n2,"😎","#f43f5e","#a855f7",8]].forEach(([id,a,n,e,c1,c2,x])=>put("drops/DEMO4/photos/"+id,{authorId:a,nickname:n,url:genPic(e,c1,c2),createdAt:m(x)}));
   put("drops/DEMO4/participants/u3",{nickname:X.n2,status:"late",etaMin:15,av:14,isGuest:false,updatedAt:m(7)});
   put("drops/DEMO1/messages/a",{authorId:"u3",nickname:X.n2,text:X.m1,createdAt:m(3),r:{u2:"😂",u4:"🔥",host1:"🔥"}});put("drops/DEMO1/messages/b0",{authorId:"u2",nickname:X.n1,text:X.m7,createdAt:m(2.5),r:{u3:"🔥"}});put("drops/DEMO1/messages/c0",{authorId:"u4",nickname:X.n3,text:X.m8,createdAt:m(2)});put("drops/DEMO1/messages/d0",{authorId:"host1",nickname:X.n0,text:X.m9,createdAt:m(1.5),r:{u2:"❤️",u4:"😂"}});
+  put("drops/DEMO4/messages/pl1",{authorId:"u2",nickname:X.n1,text:"📊 Gdzie gramy w sobotę?",poll:{q:"Gdzie gramy w sobotę?",k:"other",o:["Orlik przy szkole","Skatepark Zachodni"]},v:{u3:0},createdAt:m(9)});
   put("drops/DEMO4/messages/a",{authorId:"u2",nickname:X.n1,text:X.m4,createdAt:m(10),r:{u3:"👀"}});
   if(!sget("st"))sset("st",JSON.stringify({hosted:4,groups:1,msgs:23,photos:1}));
   if(!sget("hist"))sset("hist",JSON.stringify({DEMO5:"in",DEMO7:"late",DEMO6:"out",x1:"in",x2:"late",x3:"late",x4:"in",x5:"late"}));
