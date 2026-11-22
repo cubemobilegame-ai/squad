@@ -1703,7 +1703,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 <script>
 /* ---------- śnieg na ekranie startowym: 4 warstwy głębi (dalej = mniejsze, ciemniejsze, bardziej rozmyte; najbliżej = ostre), nieregularny ruch ---------- */
 window.frostFx=function(cv,seed){
-  try{const D=new Date(),M=D.getMonth(),d=D.getDate();if(!(M===11||(M===0&&d===1)||/[?&]snow=1\b/.test(location.search))){cv.remove();return}}catch(e){}
+  try{const D=new Date(),M=D.getMonth(),d=D.getDate();/* TODO: sezon 1.12–1.01 – na razie szron włączony zawsze */}catch(e){}
   const dpr=Math.min(window.devicePixelRatio||1,2),W=cv.clientWidth||innerWidth,H=cv.clientHeight||innerHeight;
   cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
   const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
