@@ -1733,6 +1733,7 @@ html.noxmas .sfk,html.noxmas .pmhat,html.noxmas canvas.frost,html.noxmas canvas.
 .dtop .shd{position:static!important;width:44px;height:44px;box-shadow:none;background:#161616;color:#fff;border:1px solid rgba(255,255,255,.1);flex:none;margin:0}.dtop .shd svg{width:22px;height:22px}.dtop .shd.sent{background:#2e7d4f}
 .scr.dv.n2>#n2t{order:2}.dtm{display:flex;justify-content:center;margin-top:-2px}.dtm:empty{display:none}.dtm .tm{position:static!important;animation:none!important;display:inline-block;padding:9px 16px;border-radius:99px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);font:800 12.5px Brico,BricoCyr,system-ui;letter-spacing:.03em;text-transform:uppercase}.dtm .tm.live{background:rgba(var(--accr),.18);color:var(--acc)}.dseat{font-size:13px}
 .dtm{display:block!important}#n2t .n2b{margin:0!important;border-radius:26px}
+.dtm[hidden]{display:none!important}
 </style>
 </head>
 <body style="background:#000;margin:0">
@@ -4858,7 +4859,7 @@ const nhero=(d,code,P,logged,isHost,hAv)=>{const [c1,c2]=thm({...d,id:code}),st=
   return`<div class="dtop">${back?bk(back,"",1):"<span></span>"}<b class="dtt">${isHost?t("myDrop"):t("dropT")}</b>${mo}</div>
   <div class="pc dcd">${(()=>{let h=pcmBlk(d,st,c1,c2,isHost||d.public).replace(/<div class="pmeta">.*?<\/div>/,"");if(d.public&&d.seats){const fr=Math.max(0,d.seats-nIn-nLa);h=h.replace(/<\/div>$/,`<span class="dseat${fr?"":" full"}" aria-label="${esc(fr?t("pubFree",fr,d.seats):t("pubFull"))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3z"/><path d="M13 6v12" stroke-dasharray="2 2.5"/></svg>${esc(fr?t("seatsLeft",fr):t("pubFull"))}</span></div>`)}return h})()}<div class="dof">${avc("",hAv)}<div class="don"><b>${isHost?t("you"):esc(clean(d.hostNick||"?"))}</b><small>${t("pcOrg")}</small></div><span class="dbg">${nIn} IN${nLa?` <i>· ${nLa} LATE</i>`:""}</span></div></div>`};
 window.n2tk=()=>document.querySelectorAll(".n2cd").forEach(e=>{const n=Date.now(),s=+e.dataset.t,x=+e.dataset.x,lb=e.previousElementSibling;let a="",v="";
-  if(n<s){if(dayD(s)<=0){a=t("n2st");v=left(s-n)}else{a=t("n2st2");v=dayD(s)===1?t("n2tom"):(()=>{try{const q=new Date(s).toLocaleDateString(LANG,dayD(s)<7?{weekday:"long"}:{day:"numeric",month:"short"});return q.charAt(0).toUpperCase()+q.slice(1)}catch{return dayD(s)+""}})()}}else if(n<x){a=t("n2live");v=t("n2ends",left(x-n))}else v=t("tmGone");
+  if(n<s){if(dayD(s)<=0){a=t("n2st");v=left(s-n)}else{a=t("n2st2");v=dayD(s)===1?t("n2tom"):(()=>{try{const q=new Date(s).toLocaleDateString(LANG,dayD(s)<7?{weekday:"long"}:{day:"numeric",month:"short"});return q.charAt(0).toUpperCase()+q.slice(1)}catch{return dayD(s)+""}})()}}else if(n<x){a=t("n2live");v=t("n2ends",left(x-n))}else{v=t("tmGone");const w=e.closest("#n2t");if(w)w.hidden=true}
   if(lb)lb.textContent=a;e.textContent=v});
 function moreSheet(d,code,isHost,logged){vib(8);const cl=Date.now()>=d.startsAt.toMillis(),B=[];
   if(isHost&&$("#inv"))B.push(["inv",t("cmInv")]);if(isHost&&!cl&&$("#edb"))B.push(["edb",t("aEdit")]);if($("#mkp"))B.push(["mkp",t("mkPubB")]);if(!isHost&&$("#rp"))B.push(["rp",t("repDrop")]);if($("#bug"))B.push(["bug",t("bugL")]);
