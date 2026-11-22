@@ -1598,6 +1598,9 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 /* pole pisania w czacie 5 px niżej (bez klawiatury) */
 :root:not(.kb) .scr.chs.sk{padding-bottom:calc(9px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
 :root:not(.kb) .scr.chs:not(.sk){padding-bottom:calc(5px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
+
+.pf .actg h3{display:flex;align-items:center;gap:6px}.pf .actg .abl{width:26px;height:32px;flex:none;object-fit:contain;mix-blend-mode:screen;margin-left:-4px;-webkit-mask-image:radial-gradient(ellipse,#000 50%,transparent 72%);mask-image:radial-gradient(ellipse,#000 50%,transparent 72%)}
+
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -3010,7 +3013,7 @@ function profileView(){
   <div id="ped" hidden><div class="phl" id="phl"></div><input type="file" id="pf" accept="image/*" hidden>
   <label class="lbl" for="pn">${t("nick")}</label><div class="lr2"><input id="pn" value="${esc(nick)}" maxlength="20" autocomplete="off"><button class="mbtn" id="ps">${t("save")}</button></div><p class="nkh">${t("nickHint")}</p>
   <button class="ghost kmk" id="kmk">${t("avMake")}</button></div></div>
-  <div class="sgrp actg" id="act"><h3>${t("actT")}</h3><div class="slist" id="actb"></div></div>
+  <div class="sgrp actg" id="act"><h3><img class="abl" src="/bolt-icon.png" alt="">${t("actT")}</h3><div class="slist" id="actb"></div></div>
   <div class="sgrp"><h3>${t("pAcc")}</h3><div class="slist">${bI.row}${bI.grid}${SAFE?row(SI.shield,t("trT"),`<em>${trusted().length}/3</em>`,`onclick="trustSheet()"`,esc(trN)||t("trAdd")):""}</div></div>
   <div class="sgrp"><div class="slist"><button class="srow nhd" id="nhd" aria-expanded="false">${I(IC.bell)}<span class="rl">${t("sNotif")}</span><em class="pcv">${I(CV)}</em></button><div id="nbd" hidden>${NK.map(k=>`<div class="srow">${I(NI[k])}<span class="rl">${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div></div><p class="hint s pfn">${t("nHint")}</p></div>
   <div class="sgrp"><div class="slist"><button class="srow nhd" id="thh" aria-expanded="false">${I('<circle cx="12" cy="12" r="9"/><circle cx="8.500" cy="10" r="1.200"/><circle cx="12" cy="7.500" r="1.200"/><circle cx="15.500" cy="10" r="1.200"/><path d="M12 21c-1.500 0-2-1.200-1.200-2.200.8-1 .2-2.300-1-2.300H8"/>')}<span class="rl">${t("thT")}</span><em class="pcv">${I(CV)}</em></button><div id="thb" hidden style="padding:0 14px 8px">${thSw()}</div></div></div>
