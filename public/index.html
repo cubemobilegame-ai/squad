@@ -1727,6 +1727,8 @@ html.noxmas .sfk,html.noxmas .pmhat,html.noxmas canvas.frost,html.noxmas canvas.
 .gv .gpn{background:#0c0c0c!important;border:1px solid rgba(var(--accr),.28)!important}
 #n2cta{display:none!important}
 .dcd .don b::first-letter{text-transform:uppercase}
+.alh2{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:10px;width:100%;cursor:pointer}.alh2 h3{flex:1;margin:0}.alh2 .alv{font-style:normal;font-size:26px;line-height:1;color:rgba(255,255,255,.45);transition:transform .2s}.alc4.open .alv{transform:rotate(90deg)}.albd[hidden]{display:none}.alc4.open .albd{padding-top:10px}
+.alc4:not(.open) .sech{margin:0!important}
 </style>
 </head>
 <body style="background:#000;margin:0">
@@ -3659,9 +3661,9 @@ async function dropView(code){
     const CAMI=sv(SI.cam),MAXT=can?4:5,shown=PH.length>MAXT?MAXT-1:Math.min(PH.length,MAXT),extra=PH.length-shown,
       ph=(p,i)=>`<button class="aph${i===0?" big":""}" data-i="${i}"><i style="background-image:url('${esc(p.url)}')"></i><span>${esc(p.nickname)}</span></button>`,
       tiles=PH.slice(0,shown).map(ph).join("")+(extra>0?`<button class="aph amore" data-i="${shown}"><i style="background-image:url('${esc(PH[shown].url)}')"></i><b>+${extra+1}</b></button>`:"")+(can?`<button class="aadd" id="aadd">${sv('<path d="M12 5v14M5 12h14"/>')}</button>`:"");
-    el.innerHTML=`<div class="alc4"><div class="sech"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span></div>
+    const op=!!(window.__alo&&window.__alo[code]);el.innerHTML=`<div class="alc4${op?" open":""}"><button type="button" class="sech alh2" id="alt"><h3>📸 ${t("alT")}</h3><span class="alc">${t("alN",PH.length)}</span><i class="alv">›</i></button><div class="albd"${op?"":" hidden"}>
     ${PH.length?`<div class="amos n${Math.min(PH.length+(can?1:0),5)}">${tiles}</div>`:can?`<button class="aadd wide" id="aadd"><i>${CAMI}</i><b>${t("alAdd")}</b></button>`:`<p class="mut">${t("alEmpty")}</p>`}
-    ${PH.length?`<button class="cta" id="col">${t("alCol")}</button>`:""}${PH.length>1?`<button class="ghost" id="rnd">${t("alRnd")}</button>`:""}<p class="hint s">${t("alHint")}</p></div><input type="file" id="af" accept="image/*" hidden>`;
+    ${PH.length?`<button class="cta" id="col">${t("alCol")}</button>`:""}${PH.length>1?`<button class="ghost" id="rnd">${t("alRnd")}</button>`:""}<p class="hint s">${t("alHint")}</p></div></div><input type="file" id="af" accept="image/*" hidden>`;{const tg=el.querySelector("#alt");if(tg)tg.onclick=()=>{vib(8);window.__alo=window.__alo||{};window.__alo[code]=!window.__alo[code];const o=window.__alo[code];el.querySelector(".alc4").classList.toggle("open",o);el.querySelector(".albd").hidden=!o}}
     el.querySelectorAll(".aph").forEach(b=>b.onclick=()=>{vib(8);lightbox(PH,+b.dataset.i,{ref,code})});
     const ad=el.querySelector("#aadd");if(ad){ad.onclick=()=>{vib(8);el.querySelector("#af").click()};el.querySelector("#af").onchange=async e=>{const f=e.target.files?.[0];e.target.value="";if(!f)return;
       const u=await (stor?compressImg(f,1080):compressImg(f,900,.7)).catch(()=>null);if(!u)return toast(t("phErr"));
