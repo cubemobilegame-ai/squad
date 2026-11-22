@@ -3672,7 +3672,7 @@ async function chatView(code,g){
   let seen0=seenT((g?"g_":"")+code),below=0;
   const drawM=()=>{const b=$("#msgs");if(!b)return;const atEnd=b.scrollHeight-b.scrollTop-b.clientHeight<80;let lastDay="",prev=null,nsepDone=false;
     const lm=[...M].reverse().find(m=>!isBlk(m.authorId)),lmT=lm?tms(lm):0;
-    const rdr={};let maxRd=0;P.forEach(p=>{if(p.id===me())return;const rt=p.readAt?.toMillis?.()||0;if(!rt)return;maxRd=Math.max(maxRd,rt);for(let i=M.length-1;i>=0;i--){const x=M[i];if(x.authorId===p.id||isBlk(x.authorId))continue;if(tms(x)<=rt+1000){(rdr[x.id]=rdr[x.id]||[]).push(p);break}}});
+    const rdr={};let maxRd=0;P.forEach(p=>{if(p.id===me())return;const rt=p.readAt?.toMillis?.()||0;if(!rt)return;maxRd=Math.max(maxRd,rt);for(let i=M.length-1;i>=0;i--){const x=M[i];if(x.authorId===p.id||isBlk(x.authorId))continue;if(tms(x)<=rt+1000){(rdr[x.id]=rdr[x.id]||[]).push(p);break}}});Object.keys(rdr).forEach(k=>{if(!lm||k!==lm.id)delete rdr[k]});
     b.innerHTML=(M.length&&!sget("rxHint")?`<p class="rxhint">${t("rxHint")}</p>`:"")+(M.map((m,mi)=>{const mm=isMe(m.authorId),T=tms(m),dk=new Date(T).toDateString();let sep="";
       if(dk!==lastDay){sep=`<div class="dsep"><span>${dayL(T)}</span></div>`;lastDay=dk;prev=null}
       if(!nsepDone&&seen0&&!mm&&T>seen0){nsepDone=true;const n=M.filter(x=>x.authorId!==me()&&tms(x)>seen0).length;sep+=`<div class="nsep" id="nsep"><span>${t("newMsgs",n)}</span></div>`;prev=null}
