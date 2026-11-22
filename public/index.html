@@ -1690,6 +1690,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 #nl .nlist .chat.sosr .nh>span:first-child,#nl .nlist .chat.sosr b:not(.bd){color:#fff!important}#nl .nlist .chat.sosr>.bdi{background:#ff4d4d;box-shadow:0 0 0 4px rgba(255,77,77,.25)}
 .rspn{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 4px 0;font:600 13.5px/1.35 Brico,BricoCyr,system-ui;color:rgba(255,255,255,.62);text-align:center}.rspn svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nsw{position:relative;overflow-x:clip;overflow-y:visible}.nsw>.chat{position:relative;z-index:1;transition:transform .22s cubic-bezier(.2,.8,.2,1);touch-action:pan-y}.ndel{position:absolute;right:0;top:0;bottom:0;width:84px;border:0;background:#e5484d;color:#fff;font:800 14px Brico,BricoCyr,system-ui;border-radius:0 22px 22px 0;cursor:pointer;transform:translateX(84px);transition:transform .22s cubic-bezier(.2,.8,.2,1)}.nsw.op .ndel{transform:none}.ndel::before,.ndel::after{content:"";position:absolute;left:-22px;width:22px;height:22px;opacity:0;transition:opacity .15s;pointer-events:none}.ndel::before{top:0;background:radial-gradient(circle at 0 100%,transparent 21.5px,#e5484d 22px)}.ndel::after{bottom:0;background:radial-gradient(circle at 0 0,transparent 21.5px,#e5484d 22px)}.nsw.dr .ndel::before,.nsw.dr .ndel::after,.nsw.op .ndel::before,.nsw.op .ndel::after{opacity:1}
+.scr.dv{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))!important}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -3484,7 +3485,7 @@ async function dropView(code){
     {const b=$("#n2pp");if(b)b.onclick=()=>{vib(8);peopleSheet(d,code)}}
     const T=[];if(isHost||d.public)T.push(["i",DSP.inv,t("aInv")]);if(!hidden(d)&&d.place)T.push(["m",DSP.pin,t("n2map")]);if(mem)T.push(["c",DSP.cal,t("n2cal")]);
     const ta=$("#n2a");if(ta){ta.style.setProperty("--n",Math.max(1,T.length));ta.innerHTML=T.map(([k,p,l])=>`<button type="button" data-k="${k}">${DSI(p)}<span>${l}</span></button>`).join("");ta.onclick=e=>{const b=e.target.closest("[data-k]");if(!b)return;vib(8);const k=b.dataset.k;if(k==="i")inviteSheet(d,code,P,isHost);else if(k==="m")mapSheet(d);else calSheet(d,url)}}
-    const cta=$("#n2cta");if(cta){cta.hidden=!mem;const un=mem?unreadOf({id:code}):0;cta.innerHTML=t("n2cht")+(un?`<span class="bd bdi">${un}</span>`:"");cta.onclick=()=>{vib(8);go("/c/"+code)}}
+    const cta=$("#n2cta");if(cta){cta.hidden=!mem||window.__from==="/c/"+code;const un=mem?unreadOf({id:code}):0;cta.innerHTML=t("n2cht")+(un?`<span class="bd bdi">${un}</span>`:"");cta.onclick=()=>{vib(8);go("/c/"+code)}}
     {const m=$("#n2mo");if(m)m.onclick=()=>moreSheet(d,code,isHost,logged)}
     /* nagłówek jest rysowany od nowa przy każdym odświeżeniu – tarczę zagrożenia dokładamy za każdym razem */
     try{if(SAFE&&logged&&(isHost||(mine&&mine.status!=="out"))&&Date.now()>=start)safeBtn(d,code,P)}catch{}};
