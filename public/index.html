@@ -1626,7 +1626,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .scr.chl #nf{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:16px;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
 .scr.chl #nf .hint{color:rgba(255,255,255,.6);font:500 14px/1.4 Brico,BricoCyr,system-ui;margin:0 4px 12px}
 .scr.chl #nf input{height:54px;border-radius:99px;background:#0b0b0b!important;border:0!important;padding:0 20px;color:#fff;box-shadow:none}
-.scr.chl #nf .cta{height:54px;border-radius:99px;background:#fff;color:#0b0b0b;font-weight:800;box-shadow:none;border:0}.scr.chl #nf .cta.dim{background:#1f1f1f;color:#6b6b6b}
+.scr.chl #nf .cta{height:54px;border-radius:99px;background:#fff;color:#0b0b0b;font-weight:800;box-shadow:none;border:0}.scr.chl #nf .cta.dim{background:#1f1f1f;color:#6b6b6b}.scr.chl #nf .gcx{display:block;width:100%;height:46px;margin-top:6px;border:0;background:none;color:rgba(255,255,255,.6);font:700 15px Brico,BricoCyr,system-ui;border-radius:99px;cursor:pointer}
 
 /* ===== WYCIECZKA PO APLIKACJI ===== */
 .tour{position:fixed;inset:0;z-index:9999;animation:tfi .25s ease}@keyframes tfi{from{opacity:0}}
@@ -3234,10 +3234,11 @@ function wlView(){const u=authed();if(!u)return;sset("wlR","1");try{badges()}cat
 function chatsView(){
   const u=authed();if(!u)return;
   view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><div class="ngr"><button class="bell" id="newd" aria-label="${t("nNew")}"><img class="ndp" src="/plus-icon.png" alt=""></button><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNewS")}</span></button></div></div><span class="gbadge">${t("gOnly")}</span>
-  <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta dim" id="gk" style="margin-top:8px">${t("grCreate")}</button></div>
+  <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta dim" id="gk" style="margin-top:8px">${t("grCreate")}</button><button type="button" class="gcx" id="gx">${t("cancel")}</button></div>
   <div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
   $("#gn").oninput=()=>$("#gk").classList.toggle("dim",!$("#gn").value.trim());
+  $("#gx").onclick=()=>{vib(8);$("#gn").value="";$("#gn").blur();$("#gk").classList.add("dim");$("#nf").hidden=true};
   const openNf=()=>{$("#nf").hidden=!$("#nf").hidden;if(!$("#nf").hidden)$("#gn").focus()};
   $("#newd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};
   $("#newg").onclick=()=>{vib(8);if(auth.currentUser?.isAnonymous)return guestUp("/chats");
