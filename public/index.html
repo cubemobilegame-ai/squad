@@ -1650,6 +1650,17 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .pf .sgrp .abl[src*="ic-"]{width:32px;height:32px}
 
 .bell#nd{overflow:visible}.bell#nd .ndp{width:28px;height:28px;flex:none;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%)}
+/* powiadomienia: oś czasu */
+#nl .nlist{position:relative;padding-left:32px;margin:0 0 20px 2px}
+#nl .nlist::before{content:"";position:absolute;left:9px;top:10px;bottom:10px;width:2px;border-radius:2px;background:rgba(255,255,255,.1)}
+#nl .nlist .ndh{margin:14px 0 2px -32px}
+#nl .nlist .chat,#nl .nlist .chat.u{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important;padding:12px 2px 12px 0!important}
+#nl .nlist .chat::before{content:"";position:absolute;left:-31px;top:27px;width:16px;height:16px;box-sizing:border-box;border-radius:50%;border:2px solid #3b3b40;background:#0b0b0b}
+#nl .nlist .chat.u::before{background:var(--acc);border-color:#0b0b0b;box-shadow:0 0 0 4px rgba(var(--accr),.28)}
+#nl .nlist .chat .bdi{display:none!important}
+#nl .nlist .chat .nic{border-radius:50%!important}
+#nl .nlist .chat.u .nh>span:first-child,#nl .nlist .chat.u b:not(.bd){color:#fff}
+#nl .nlist .chat:not(.u) .nh>span:first-child{color:rgba(255,255,255,.82)}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -2521,7 +2532,7 @@ if(!DEMO&&("ontouchstart"in window)){let ty=0,pd=0,on=false,el=null;const top=()
   addEventListener("touchmove",e=>{if(!on)return;const dy=e.touches[0].clientY-ty;if(dy<=0||!top()){pd=0;if(el)el.style.opacity=0;return}pd=dy;const k=Math.min(dy/2.2,70),x=mk();x.style.opacity=Math.min(1,dy/70);x.style.transform=`translateY(${k-6+(window.visualViewport?0:0)}px) rotate(${dy*3}deg)`},{passive:true});
   addEventListener("touchend",()=>{if(!on)return;on=false;if(pd>110){vib(15);if(el){el.style.transition="transform .2s";el.style.transform="translateY(70px) rotate(360deg)"}setTimeout(()=>{if(el){el.remove();el=null}try{PUB.at=0}catch{}if(gp()==="/"||gp()==="/chats")route()},450)}else if(el){el.style.transition="opacity .15s";el.style.opacity=0;setTimeout(()=>{if(el){el.remove();el=null}},180)}pd=0},{passive:true})}
 const SCR={};
-window.go=p=>{const cur=gp();SCR[cur]=scrollY;window.__rest=(p===window.__from&&SCR[p]!=null)?SCR[p]:null;window.__from=cur;DEMO?PATH=p:history.pushState(0,"",p);route()};
+window.go=p=>{const cur=gp();SCR[cur]=scrollY;window.__rest=(p===window.__from&&SCR[p]!=null)?SCR[p]:null;if(cur!==p)window.__from=cur;DEMO?PATH=p:history.pushState(0,"",p);route()};
 /* cofanie gestem: przesunięcie od lewej krawędzi (jak systemowe) – ekran idzie za palcem; przycisk Wróć zostaje */
 if("ontouchstart"in window){let sx=0,sy=0,bx=0,lx=0,on=false,mv=false,el=null;const BK=()=>[...document.querySelectorAll(".hbk,.hdr .bk,.scr .bk,.scr>.back,.chh .back")].find(b=>b.offsetParent!==null);
   const TX=(e,x)=>e.classList.contains("chs")?"translate(calc(-50% + "+x+"px),var(--vvt,0px))":"translateX("+x+"px)";const HX=on=>{const h=document.documentElement,b=document.body;if(on){h.style.overflowX="hidden";b.style.overflowX="hidden"}else{h.style.overflowX="";b.style.overflowX="";try{window.scrollTo(0,window.scrollY||0)}catch{}}};const reset=a=>{HX(false);if(!el)return;const e=el;el=null;if(a){e.style.transition="transform .2s ease";e.style.transform=TX(e,0);setTimeout(()=>{e.style.transition="";e.style.transform="";e.style.boxShadow=""},210)}else{e.style.transition="";e.style.transform="";e.style.boxShadow=""}};
