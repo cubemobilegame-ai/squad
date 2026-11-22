@@ -123,7 +123,7 @@ td:first-child i{width:9px;height:9px;border-radius:50%}
       <label>App Store (iOS)<input id="dIos" inputmode="numeric" placeholder="0"></label>
       <label>Google Play (Android)<input id="dAnd" inputmode="numeric" placeholder="0"></label>
       <label class="tp" tabindex="0" data-tip="Suma pobrań z App Store i Google Play."><span>Razem</span><input id="dSum" readonly></label>
-      <label class="tp" tabindex="0" data-tip="Na każde 100 pobrań tyle kont faktycznie otworzyło aplikację. Wynik poniżej 100 znaczy, że nie każdy pobierający się zalogował."><span>Konta na 100 pobrań</span><input id="dRat" readonly></label>
+      <label class="tp" tabindex="0" data-tip="Na każde 100 pobrań ze sklepów tyle kont otworzyło aplikację na iOS lub Androidzie. Ruch ze strony w przeglądarce i konta o nieznanej platformie się nie liczą. Wynik poniżej 100 znaczy, że nie każdy pobierający otworzył aplikację."><span>Konta na 100 pobrań</span><input id="dRat" readonly></label>
     </div>
     <div class="note" id="dlN"></div>
   </section>
@@ -211,9 +211,9 @@ function churn(){const tot=sum("tot"),i7=sum("idle7"),lost=sum("lost"),risk=Math
   const k=(l,v,d,tip)=>`<div class="card k tp" tabindex="0" data-tip="${tip}" style="padding:16px"><div class="lbl">${l}</div><div class="v">${v}</div><div class="d">${d}</div></div>`;
   $("churn").innerHTML=k("Wygasają (7–30 dni)",fmt(risk),tot?Math.round(risk/tot*100)+"% kont":"","Konta, które nie otworzyły aplikacji od 7 do 30 dni. Jeszcze można je odzyskać, np. powiadomieniem.")+k("Utraceni (&gt;30 dni)",`<span class="dn">${fmt(lost)}</span>`,tot?Math.round(lost/tot*100)+"% kont":"","Konta, które nie otworzyły aplikacji od ponad 30 dni. Uznajemy je za utracone, choć ktoś może jeszcze wrócić.")+k("Aktywni 30 dni",fmt(m),"zostali w aplikacji","Konta aktywne w ostatnich 30 dniach, czyli te, które nie odpadły.");
   $("churnN").textContent="Przybyli w ostatnich 30 dniach: +"+fmt(sum("n30"))+". Saldo wzrostu konta w tym okresie liczy się jako nowi minus utraceni."}
-function downloads(){const a=+dl.ios||0,b=+dl.android||0,s=a+b,tot=PF.reduce((x,p)=>x+(R[p.k].tot||0),0);
+function downloads(){const a=+dl.ios||0,b=+dl.android||0,s=a+b,tot=(R.ios.tot||0)+(R.android.tot||0);
   $("dSum").value=s?fmt(s):"";$("dRat").value=s&&tot?Math.round(tot/s*100):"";
-  $("dlN").textContent=s?"Pobrania ze sklepów dostajemy z opóźnieniem 1–3 dni; „konta na 100 pobrań” to ilu pobierających faktycznie się zalogowało.":"Liczby ze sklepów wpisujesz ręcznie, zapisują się same. Automatyczne pobieranie z Apple i Google dojdzie po podłączeniu kluczy."}
+  $("dlN").textContent=s?"Pobrania ze sklepów dostajemy z opóźnieniem 1–3 dni; „konta na 100 pobrań” liczy tylko konta z aplikacji na iOS i Androidzie (bez przeglądarki i bez kont o nieznanej platformie).":"Liczby ze sklepów wpisujesz ręcznie, zapisują się same. Automatyczne pobieranie z Apple i Google dojdzie po podłączeniu kluczy."}
 function render(){spark();chart();kpis();platforms();churn();downloads();
   $("onl").textContent=fmt(sum("onl"));$("onlS").textContent=sum("d1")?`z ${fmt(sum("d1"))} aktywnych w ciągu doby`:"czekamy na pierwszych użytkowników";
   $("foot").textContent="Dni liczone w UTC. Statystyki zbierane od wdrożenia śledzenia – starsze konta pojawią się po pierwszym otwarciu aplikacji. Drops łącznie: "+fmt(R.drops)+", grupy: "+fmt(R.groups)+"."}
