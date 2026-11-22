@@ -1746,6 +1746,8 @@ try{
 }catch{DEMO=true;FB=mock()}
 window.__splP&&__splP(.62);
 const CAPN=(()=>{try{const c=window.Capacitor;return c&&c.isNativePlatform&&c.isNativePlatform()?c:null}catch{return null}})(),IOSAPP=!!CAPN&&CAPN.getPlatform&&CAPN.getPlatform()==="ios",ANDAPP=!!CAPN&&CAPN.getPlatform&&CAPN.getPlatform()==="android",NATAPP=!!CAPN&&(IOSAPP||ANDAPP),NP=n=>{try{return CAPN&&CAPN.Plugins&&CAPN.Plugins[n]||null}catch{return null}};
+/* iOS: bez paska ze strzałkami i ptaszkiem nad klawiaturą (wymaga wtyczki Keyboard w buildzie; bez niej nic nie robi) */
+const hideKbBar=()=>{try{const K=NP("Keyboard");if(K&&K.setAccessoryBarVisible)Promise.resolve(K.setAccessoryBarVisible({isVisible:false})).catch(()=>{})}catch{}};if(IOSAPP){hideKbBar();document.addEventListener("visibilitychange",()=>{if(!document.hidden)hideKbBar()})}
 const {updateDoc,deleteField,initializeApp,getAuth,GoogleAuthProvider,signInWithPopup,signInAnonymously,signOut,onAuthStateChanged,getFirestore,collection,doc,getDoc,setDoc,addDoc,deleteDoc,getDocs,query,where,limit,orderBy,onSnapshot,serverTimestamp,Timestamp}=FB;
 let guestP=null;const ensureUser=async()=>auth.currentUser||(guestP??=signInAnonymously(auth).then(r=>r.user).finally(()=>{guestP=null}));
 const fbApp=initializeApp(FB.__c),auth=getAuth(fbApp),db=(()=>{const IOSX=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&"ontouchend" in document);
