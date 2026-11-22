@@ -1565,6 +1565,23 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .pmq,.pmo{background:rgba(14,14,14,.55)!important;border:1px solid rgba(255,255,255,.14)!important;color:#fff!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .hlp{text-align:left;gap:12px}.hlp h2{font-size:24px;text-align:center;margin:6px 0 0}.hlp .hint{color:rgba(255,255,255,.55);font:700 15px Brico,BricoCyr,system-ui;text-align:left}.hlp .dsb{margin-top:4px}#bgm,#bge{background:#161616;border-radius:18px}
 .gvl{margin-left:auto;margin-right:6px;color:rgba(255,255,255,.55);font:700 14px Brico,BricoCyr,system-ui}.gvl+.pcv{margin-left:0}.gop .gck{margin-left:auto;color:var(--acc);font-style:normal;font-weight:900;opacity:0}.gop.on .gck{opacity:1}
+
+/* ===== GRUPA: podgląd w stylu podglądu dropa ===== */
+.scr.dv.n2.gv>*{order:0!important}.scr.dv.n2.gv>.n2h{margin:0!important}.scr.dv.n2.gv{gap:12px}.gv .n2h .n2ph{object-fit:cover}
+.gv .n2a .gic{height:92px;padding:0;gap:10px}.gv .n2a .gic span{display:contents}.gv .n2a .gic span svg{width:24px;height:24px}.gv .n2a .gic b{font:800 14px Brico,BricoCyr,system-ui;color:#fff}.gv .n2a .gic.on{background:rgba(255,255,255,.1)}
+.gv #mem,.gv .inv{margin-left:16px!important;margin-right:16px!important}
+.gv h3{font:800 13px Brico,BricoCyr,system-ui;color:rgba(255,255,255,.55);text-transform:none;letter-spacing:0;margin:8px 4px 8px}
+.gv .gpn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px}
+.gv .gpn.add{border-style:solid}.gv .gpl{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px}
+.gv>.cta{display:flex;align-items:center;justify-content:center;height:56px;border:0;border-radius:99px;background:var(--acc);color:#fff;font:800 18px Brico,BricoCyr,system-ui;box-shadow:none}.gv>.cta[hidden]{display:none}
+.gv>input{height:54px;border-radius:99px;background:#141414;border:0}
+
+/* ===== CZATY: nowa grupa – podpowiedź i formularz w nowym stylu ===== */
+.gi2 .gr{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid rgba(255,255,255,.07)}.gi2 h2{margin-bottom:8px}.gi2 .gr b{display:block;font:800 16px Brico,BricoCyr,system-ui;color:#fff}.gi2 .gr p{margin:3px 0 0;color:rgba(255,255,255,.6);font:500 14px/1.4 Brico,BricoCyr,system-ui}.gi2 .gr>div{min-width:0}.gi2 .dsn{margin:6px 0 4px;color:rgba(255,255,255,.55)}
+.scr.chl #nf{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:16px;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.scr.chl #nf .hint{color:rgba(255,255,255,.6);font:500 14px/1.4 Brico,BricoCyr,system-ui;margin:0 4px 12px}
+.scr.chl #nf input{height:54px;border-radius:99px;background:#0b0b0b!important;border:0!important;padding:0 20px;color:#fff;box-shadow:none}
+.scr.chl #nf .cta{height:54px;border-radius:99px;background:#fff;color:#0b0b0b;font-weight:800;box-shadow:none;border:0}.scr.chl #nf .cta.dim{background:#1f1f1f;color:#6b6b6b}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -3048,15 +3065,16 @@ function avEditor(done){let o=kDec(avCode(myAv()));
 function chatsView(){
   const u=authed();if(!u)return;
   view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNew").replace(/^\+\s*/,"")}</span></button></div><span class="gbadge">${t("gOnly")}</span>
-  <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta" id="gk" style="margin-top:8px">${t("grCreate")}</button></div>
+  <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta dim" id="gk" style="margin-top:8px">${t("grCreate")}</button></div>
   <div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
+  $("#gn").oninput=()=>$("#gk").classList.toggle("dim",!$("#gn").value.trim());
   const openNf=()=>{$("#nf").hidden=!$("#nf").hidden;if(!$("#nf").hidden)$("#gn").focus()};
   $("#newg").onclick=()=>{vib(8);if(auth.currentUser?.isAnonymous)return guestUp("/chats");
-    if(sget("grIntro")!=="1"&&$("#nf").hidden){const s2=sheet(`<div class="cmenu gint"><img class="gih" src="/e/handshake.webp" alt=""><h2>${t("giT")}</h2>
-      <div class="gir"><i><img src="/e/handshake.webp" alt=""></i><div><b>${t("giGrT")}</b><p>${t("giGrD")}</p></div></div>
-      <div class="gir"><i><img src="/e/fire.webp" alt=""></i><div><b>${t("giDrT")}</b><p>${t("giDrD")}</p></div></div>
-      <p class="gin">${t("giNote")}</p><button class="cta" id="gig">${t("giGo")}</button><button class="ghost cmb cmx" id="gic">${t("cancel")}</button></div>`);
+    if(sget("grIntro")!=="1"&&$("#nf").hidden){const s2=sheet(`<div class="dsh gi2"><h2>${t("giT")}</h2>
+      <div class="gr"><span class="dsi">${DSI(DSP.ppl)}</span><div><b>${t("giGrT")}</b><p>${t("giGrD")}</p></div></div>
+      <div class="gr"><span class="dsi">${DSI(DSP.cal)}</span><div><b>${t("giDrT")}</b><p>${t("giDrD")}</p></div></div>
+      <p class="dsn">${t("giNote")}</p><div class="dsb"><button class="dsx" id="gig">${t("giGo")}</button><button class="dsx g" id="gic">${t("cancel")}</button></div></div>`);s2.querySelector(".sheet").style.background="#0b0b0b";
       s2.querySelector("#gic").onclick=s2.close;s2.querySelector("#gig").onclick=()=>{sset("grIntro","1");s2.close();setTimeout(openNf,200)};return}
     openNf()};
   $("#gk").onclick=async()=>{const name=$("#gn").value.trim();if(!name){vib([50,30,50]);return toast(t("needGroup"))}if(isBad(name)){vib([50,30,50]);return toast(t("noBad"))}
@@ -3097,17 +3115,23 @@ async function groupView(code){
   if(!sn||!sn.exists())return gone(1);
   const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code;let mine=null,M=[];
   const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
-  view(`<div class="scr">${logged?`<div class="hdr ghd">${bk(fromChat?"/gc/"+code:"/chats")}<h2 class="ghn">${gn}</h2></div>`:`<div class="brand">Squad</div>`}${owner?"":`<div class="inv" id="gib"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
-  <div class="ghero"><div class="ghf"><img class="ghp" src="/e/ekipa.webp" alt=""><span class="ghpl"><span>👥</span><span class="ghnm">${gn}</span><span>·</span><span id="gcn"></span></span></div></div>
-  <div id="shb" class="grow" hidden>${gb(sv(SI.share),t("grInvB"),"sh")}${logged?gb(sv('<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>'),t("nK"),"gk"):""}${gb(sv('<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/>'),t("shCopy"),"cl")}${logged?gb(sv(isMuted("g_"+code)?BELLO:BELL),isMuted("g_"+code)?t("cmUnmuteS"):t("cmMuteS"),"gmu"):""}</div>
-  <div class="crew gcrew" id="mem"></div><div id="gpin"></div><div id="gpol"></div>
+  const bkb=fromChat?"/gc/"+code:"/chats",IC3='<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>';
+  view(`<div class="scr dv n2 gv"><div class="n2h" style="background:linear-gradient(160deg,#5b4be0,#a58bff)"><img class="n2ph" src="/e/ekipa.webp" alt="" style="object-position:50% 28%"><div class="hdr n2t">${logged?bk(bkb,"",1):"<span></span>"}<span style="display:flex;gap:8px"><button class="bk ic" id="gsh" aria-label="share" hidden>${DSI('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/>')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:""}</span></div><div class="n2ttl"><h1>${gn}</h1><div class="n2ch"><span class="chip">${DSI(DSP.ppl)}<span id="gcn"></span></span></div></div></div>
+  ${owner?"":`<div class="inv" id="gib"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
+  <div id="mem" hidden></div>
+  <div id="shb" class="n2a" style="--n:${logged?4:3}" hidden>${gb(sv(SI.share),t("grInvB"),"sh")}${logged?gb(sv('<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>'),t("nK"),"gk"):""}${gb(sv('<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/>'),t("shCopy"),"cl")}${logged?gb(sv(isMuted("g_"+code)?BELLO:BELL),isMuted("g_"+code)?t("cmUnmuteS"):t("cmMuteS"),"gmu"):""}</div><div id="gpin"></div><div id="gpol"></div>
   <div class="asr" id="asr" ${sget("nick")?"":"hidden"}>${avc("mini",meAv())}<span>${t("asYou")} <b>${esc(sget("nick"))}</b></span><button class="lnk" id="chn">${t("change")}</button></div>
   <input id="nick" placeholder="${t("nick")}…" maxlength="20" value="${esc(sget("nick"))}" ${sget("nick")?"hidden":""}>
   <button class="cta" id="jb">${t("grJoin")}</button><button class="cta" id="oc" hidden>${t("openGC")}</button>
-  <button class="lnk" id="lv" hidden style="display:block;margin:26px auto 0;font-size:13px;color:rgba(255,110,125,.8)">${owner?t("grDel"):t("grLeave")}</button>
+  <button class="lnk" id="lv" hidden style="display:none!important">${owner?t("grDel"):t("grLeave")}</button>
   ${logged?"":getAppBox()}
-  ${owner?"":`<button class="lnk rep" id="rp">${sv(SI.flag)} ${t("repGroup")}</button>`}</div>`);
+  ${owner?"":`<button class="lnk rep" id="rp" style="display:none!important">${sv(SI.flag)} ${t("repGroup")}</button>`}</div>`);
   $("#cl").onclick=async()=>{vib(15);try{await navigator.clipboard.writeText(url)}catch{}toast(t("copied"))};
+  $("#gsh").onclick=()=>openShare("g",{id:code,...g,M});
+  if($("#gmo"))$("#gmo").onclick=()=>{vib(8);const B=[];if(!owner)B.push(["rp",t("repGroup")]);const del=mine||owner;
+    const s4=sheet(`<div class="dsh"><h2>${t("n2more")}</h2><div class="dsb">${B.map(([k,l])=>`<button class="dsx g" data-k="${k}">${l}</button>`).join("")}${del?`<button class="dsx g" id="gxl" style="color:#ff6b7a">${owner?t("grDel"):t("grLeave")}</button>`:""}</div></div>`);s4.querySelector(".sheet").style.background="#0b0b0b";
+    s4.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{s4.close();setTimeout(()=>$("#"+b.dataset.k)?.click(),260)});
+    const xl=s4.querySelector("#gxl");if(xl){let ar=0;const lb=xl.textContent;xl.onclick=()=>{if(!ar){ar=1;xl.textContent=t("delSure");setTimeout(()=>{ar=0;xl.textContent=lb},4000);return}s4.close();$("#lv").click();$("#lv").click()}}};
   $("#sh").onclick=()=>openShare("g",{id:code,...g,M});if($("#gmu"))$("#gmu").onclick=()=>{const k="g_"+code,on=!isMuted(k);sset("mut_"+k,on?"1":"");try{if(!DEMO&&auth.currentUser&&!auth.currentUser.isAnonymous)setDoc(doc(db,"users",me()),{muted:{[k]:on?true:deleteField()}},{merge:true}).catch(()=>{})}catch{}vib(on?[20,30,20]:10);toast(t(on?"cmMuted":"cmUnm"));$("#gmu b").textContent=t(on?"cmUnmuteS":"cmMuteS");$("#gmu span").innerHTML=sv(on?BELLO:BELL);$("#gmu").classList.toggle("on",on);changed()};if($("#gk"))$("#gk").onclick=()=>pickContacts("g",code,g.name,new Set([g.ownerId,...M.map(m=>m.id)]));
   $("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};$("#oc").onclick=()=>go("/gc/"+code);
   if($("#dl"))$("#dl").onclick=()=>installSheet();if($("#acc"))$("#acc").onclick=accGo;if($("#rp"))$("#rp").onclick=()=>report({target:"group",code});
@@ -3143,9 +3167,10 @@ async function groupView(code){
   const startPoll=()=>{if(pollOn||!isM())return;pollOn=1;unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt","desc"),limit(15)),q=>{const x=q.docs.find(y=>y.data().poll);PO=x?{...x.data(),id:x.id}:null;drawPoll()},()=>{pollOn=0}))};
   unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({...y.data(),id:y.id}));mine=M.find(m=>m.id===me())||null;
     {const L=[...M].sort((a,b)=>(b.id===g.ownerId)-(a.id===g.ownerId));$("#gcn").textContent=t("grCnt",M.length);$("#mem").hidden=!M.length;
-    $("#mem").innerHTML=M.length?`<div class="crh"><b>${t("grWho")}</b><span>${M.length}</span></div><div class="crl${window.__cxo&&window.__cxo[code]?" open":""}">${L.map((p,i)=>`<div class="crr${i>=8?" crx":""}" data-u="${esc(p.id)}">${avc("",avIdx(p))}<span class="crn"><b>${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("pcOrg")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</span></div>`).join("")}</div>${L.length>8?`<button type="button" class="crmore" onclick="const l=this.previousElementSibling;l.classList.toggle('open');(window.__cxo=window.__cxo||{})['${jx(code)}']=l.classList.contains('open')"><span class="cm">${t("crMore",L.length)}</span><span class="cl">${t("crLess")}</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>`:""}`:""}
-    $("#mem").onclick=e=>{const c=e.target.closest("[data-u]");if(!c)return;const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id))userActions(q,{target:"user",chat:"group",code})};
-    $("#jb").hidden=!!mine;drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;
+    $("#mem").innerHTML=M.length?`<button type="button" class="n2pp" id="n2pg"><span class="st">${L.slice(0,3).map(p=>avc("",avIdx(p))).join("")}</span><div><b>${esc(L.slice(0,2).map(p=>clean(p.nickname||"?")).join(", "))+(L.length>2?" +"+(L.length-2):"")}</b><small>${t("grCnt",M.length)}</small></div><em>›</em></button>`:"";
+    if($("#n2pg"))$("#n2pg").onclick=()=>{vib(8);const s3=sheet(`<div class="dsh"><h2>${t("grWho")}</h2><div class="dpl">${L.map(p=>`<div class="dpr" data-u="${esc(p.id)}">${avc("",avIdx(p))}<div><b>${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("pcOrg")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</div></div>`).join("")}</div></div>`);s3.querySelector(".sheet").style.background="#0b0b0b";
+      s3.querySelectorAll("[data-u]").forEach(c=>c.onclick=()=>{const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id)){s3.close();setTimeout(()=>userActions(q,{target:"user",chat:"group",code}),260)}})}}
+    $("#jb").hidden=!!mine;drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;$("#gsh").hidden=!mine&&!owner;
     if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
 }
