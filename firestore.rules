@@ -158,8 +158,13 @@ service cloud.firestore {
           && request.resource.data.keys().hasOnly(['from', 'nick', 'av', 'code', 'title', 'place', 'drop', 'loc', 'people', 'kind', 'at'])
           && request.resource.data.get('title', '').size() <= 120
           && request.resource.data.get('place', '').size() <= 160
-          && request.resource.data.get('people', []).size() <= 12
+          && request.resource.data.get('people', []).size() <= 40
           && exists(/databases/$(db)/documents/users/$(uid)/contacts/$(request.auth.uid));
+        // nadawca może odświeżać lokalizację tylko przez 30 min od wysłania alertu
+        allow update: if signedIn() && request.auth.uid == resource.data.from
+          && request.time < resource.data.at + duration.value(31, 'm')
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['loc', 'lu'])
+          && request.resource.data.lu == request.time;
       }
       // zaproszenia na drop / do grupy – wysyła tylko ktoś z moich kontaktów
       match /invites/{iid} {
