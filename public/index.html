@@ -1712,7 +1712,7 @@ html.noxmas .sfk,html.noxmas .pmhat,html.noxmas canvas.frost,html.noxmas canvas.
 .dcd{cursor:default;margin:8px 0 0}#cb .dcd{margin:8px 16px 0}
 .dcd .dof{display:flex;align-items:center;gap:12px;padding:12px 8px 4px 12px}.dcd .dof .av{width:44px;height:44px;flex:none}.dcd .don{flex:1;min-width:0;text-align:left}.dcd .don b{display:block;font:800 16px/1.15 Brico,BricoCyr,system-ui;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.dcd .don small{display:block;color:rgba(255,255,255,.55);font:600 12.5px Brico,BricoCyr,system-ui}
 .dcd .dbg{flex:none;background:#1b1b1b;border-radius:99px;padding:11px 16px;font:800 14px Brico,BricoCyr,system-ui;white-space:nowrap}.dcd .dbg i{font-style:normal;color:rgba(255,255,255,.55);font-weight:600}
-.gv .gcm h3{font:800 23px/1.1 Brico,BricoCyr,system-ui!important;margin:0!important;color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.3)!important;right:130px!important;text-transform:none}
+.gv .gcm h3{font:800 23px/1.1 Brico,BricoCyr,system-ui!important;margin:0!important;color:#fff!important;text-shadow:0 2px 14px rgba(0,0,0,.3)!important;right:20px!important;text-transform:none}
 .scr.dv.n2>.n2a{order:2}.scr.dv.n2>#seatl{order:3}.scr.dv.n2>#rpl{order:4}.scr.dv.n2>#crew{order:5}
 .n2a{display:flex!important;justify-content:space-around;gap:6px;margin-top:6px;margin-bottom:2px}.n2a[hidden]{display:none!important}
 #n2a button{flex:1;height:auto;border:0;background:none;gap:7px;font:700 12.5px Brico,BricoCyr,system-ui;color:#c9c9c9;padding:0}
@@ -3434,7 +3434,7 @@ async function groupView(code){
   const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
   const bkb=fromChat?"/gc/"+code:"/chats",IC3='<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>';
   view(`<div class="scr dv n2 gv"><div class="dtop">${logged?bk(bkb,"",1):"<span></span>"}<b class="dtt">${owner?t("myGroup"):t("groupT")}</b><button class="bk ic" id="gqr" aria-label="QR" hidden>${QRI.replace('width="15" height="15"','width="21" height="21"')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:"<span></span>"}</div>
-  <div class="pc dcd gcd"><div class="pcm gcm" style="--c1:${gth(g,code)[0]};--c2:${gth(g,code)[1]}"><span class="pcat">${t("grpTag")}</span><h3>${gn}</h3><img class="pem" src="/e/c/other.webp?v=1121" style="${cArtCss("other")}" alt=""></div><div class="dof"><span id="gofa">${avc("",owner?meAv():avIdx({id:g.ownerId}))}</span><div class="don"><b>${owner?t("you"):esc(clean(g.ownerNick||"?"))}</b><small>${t("pcOrg")}</small></div><span class="dbg" id="gcn"></span></div></div>
+  <div class="pc dcd gcd"><div class="pcm gcm" style="--c1:${gth(g,code)[0]};--c2:${gth(g,code)[1]}"><span class="pcat">${t("grpTag")}</span><h3>${gn}</h3></div><div class="dof"><span id="gofa">${avc("",owner?meAv():avIdx({id:g.ownerId}))}</span><div class="don"><b>${owner?t("you"):esc(clean(g.ownerNick||"?"))}</b><small>${t("pcOrg")}</small></div><span class="dbg" id="gcn"></span></div></div>
   ${owner?"":`<div class="inv" id="gib"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
   <div id="mem" hidden></div>
   <div id="gcw" hidden></div>
