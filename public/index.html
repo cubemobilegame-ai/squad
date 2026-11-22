@@ -1640,8 +1640,8 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .tour .tn{height:44px;padding:0 24px;border:0;border-radius:99px;background:#fff;color:#0b0b0b;font:800 15px Brico,BricoCyr,system-ui;cursor:pointer}
 
 /* pole pisania w czacie 5 px niżej (bez klawiatury) */
-:root:not(.kb) .scr.chs.sk{padding-bottom:calc(9px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
-:root:not(.kb) .scr.chs:not(.sk){padding-bottom:calc(5px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
+:root:not(.kb) .scr.chs.sk{padding-bottom:calc(5px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
+:root:not(.kb) .scr.chs:not(.sk){padding-bottom:calc(1px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
 
 .pf .sgrp>h3:has(.abl){display:flex;align-items:center;gap:6px}.pf .sgrp .abl{width:26px;height:32px;flex:none;object-fit:contain;mix-blend-mode:screen;margin-left:-4px;-webkit-mask-image:radial-gradient(ellipse,#000 50%,transparent 72%);mask-image:radial-gradient(ellipse,#000 50%,transparent 72%)}
 
@@ -1693,14 +1693,14 @@ setTimeout(function(){window.__splDone()},20000);})();
 (function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,
 /* zwykła przeglądarka (Safari/Chrome, nie aplikacja): pasek adresu/narzędzi zmienia wysokość strony, więc bierzemy realnie widoczną wysokość (visualViewport), inaczej pole pisania ląduje pod dolnym paskiem */
 br=!(navigator.standalone||matchMedia("(display-mode: standalone)").matches||(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())),
-f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&!document.querySelector(".sheetbg")),kb=window.innerHeight-vv.height>120||foc;
+f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&!document.querySelector(".sheetbg")),hk=window.innerHeight-vv.height>120,kb=hk||(foc&&Date.now()-(window.__fiAt||0)<1500);
   /* bez klawiatury: pełna wysokość i zero przesunięcia (iOS potrafi zostawić stare offsetTop po schowaniu klawiatury) */
   if(!kb){R.style.setProperty("--vvh",(br?Math.round(Math.min(window.innerHeight,vv.height)):window.innerHeight)+"px");R.style.setProperty("--vvt","0px");if(chat&&(window.scrollY||document.documentElement.scrollTop))window.scrollTo(0,0)}
   else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px")}
   R.classList.toggle("kb",kb)},
-q=function(){if(!raf)raf=requestAnimationFrame(f)},later=function(){q();setTimeout(q,120);setTimeout(q,350);setTimeout(q,700)};
+q=function(){if(!raf)raf=requestAnimationFrame(f)},later=function(){q();[60,120,250,350,500,700,1000,1400,2000,3000].forEach(function(d){setTimeout(q,d)})};
 vv.addEventListener("resize",q);vv.addEventListener("scroll",q);window.addEventListener("scroll",q,{passive:true});
-document.addEventListener("focusin",later);document.addEventListener("focusout",later);window.addEventListener("orientationchange",later);f()})();
+document.addEventListener("focusin",function(){window.__fiAt=Date.now();later()});document.addEventListener("focusout",later);document.addEventListener("visibilitychange",later);window.addEventListener("pageshow",later);window.addEventListener("orientationchange",later);f()})();
 </script>
 <script>
 /* automatyczna aktualizacja: gdy na serwerze jest nowsza wersja, aplikacja sama się przeładowuje */
