@@ -1241,7 +1241,7 @@ html:has(.scr.dv),body:has(.scr.dv){background:#0b0b0b}
 html:has(.scr.nw),body:has(.scr.nw){background:#0b0b0b}
 .scr.nw{display:block!important;width:100%;box-sizing:border-box;padding:calc(26px + env(safe-area-inset-top,0px)) 12px 120px!important;background:#0b0b0b}
 .scr.nw .hdr .bk{background:#141414!important;border:1px solid rgba(255,255,255,.08)!important;box-shadow:none!important;color:#e8e8e8}
-.scr.nw .nwt{font:800 34px/1.05 Brico,BricoCyr,system-ui;letter-spacing:-.015em;margin:20px 0 6px 2px;color:#fff}
+.scr.nw .nwt{font:800 34px/1.05 Brico,BricoCyr,system-ui;letter-spacing:-.015em;margin:20px 0 6px 2px;color:#fff;display:flex;align-items:center;gap:10px}.nwt .nwp{width:40px;height:40px;flex:none;mix-blend-mode:screen;margin-left:-4px;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%)}
 .scr.nw>h3,.scr.nw #seatw>h3{margin:24px 0 10px 6px;font:800 12px Brico,BricoCyr,system-ui;letter-spacing:.2em;text-transform:uppercase;color:#8e8e8e}
 .scr.nw .ncd{background:#131313;border-radius:26px;overflow:hidden}
 .scr.nw .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 4px;padding:18px 8px 14px;overflow:visible}
@@ -3154,7 +3154,7 @@ function notifView(){
 function newView(){
   const u=authed();if(!u)return;if(u.isAnonymous){go("/");setTimeout(()=>guestUp("/new"),200);return}
   let cat="biz",occK=null,day=0,sur=false,rep="no",dsel=null,pub=false,seats=8;const t0=new Date(Date.now()+36e5);
-  view(`<div class="scr nw"><div class="hdr">${bk("/")}</div><h1 class="nwt">${t("newDrop").replace(/^\+\s*/,"")}</h1>
+  view(`<div class="scr nw"><div class="hdr">${bk("/")}</div><h1 class="nwt"><img class="nwp" src="/plus-icon.png" alt="" width="40" height="40">${t("newDrop").replace(/^\+\s*/,"")}</h1>
   <h3>${t("what")}</h3><div class="ncd"><div class="tiles">${seasOn().concat(CATS).map((k,i)=>`<div class="tile ${k===cat?"sel":""}${i>=7?" xtra":""}" data-c="${k}"><i>${mono(k)}</i>${t("c_"+k)}</div>`).join("")}<div class="tmore" id="tmore"><i>${mono("more")}</i>${t("dvMore")}</div></div>
   <div class="chips" id="occ" hidden>${OCC.map((k,i)=>`<button class="chip" data-o="${i}">${t("o_"+k)}</button>`).join("")}</div>
   <div class="chips spc" id="spc" hidden>${SPK.map(k=>`<button class="chip" data-s="${k}"><img src="${e3(k)}" alt="">${t("sp_"+k)}</button>`).join("")}</div>
