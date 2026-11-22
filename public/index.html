@@ -836,7 +836,7 @@ nav button span{white-space:nowrap}
 .cbar .cbt .tm,.cbar .cbt .hpill{position:static!important;display:inline;background:none!important;padding:0!important;border-radius:0;font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;color:#9a9aaa;backdrop-filter:none;-webkit-backdrop-filter:none}.cbar .cbt .tm.live{color:var(--acc)}.cbar .hcnt:not(:empty):before{content:" · "}
 .cbar .hmo{position:static;flex:none;width:40px;height:40px;border-radius:12px;border:0;background:none;box-shadow:none;color:rgba(255,255,255,.5);font-size:18px;backdrop-filter:none;-webkit-backdrop-filter:none}.scr.chs .cpan{margin-top:0!important;border-radius:0!important;padding:6px 14px 0!important;background:#000!important}
 .cbar .cbc{flex:none;color:#666;font-size:22px;font-style:normal;margin-right:4px}
-:root.kb .cbar .cbt small,:root.kb .cbar .cbc{display:none}
+:root.kb .cbar .cbc{display:none}
 .sk .m.me .bub{background:#2f7cf6!important;color:#fff!important;box-shadow:none}.sk .m.me .bub time{color:rgba(255,255,255,.7)!important}.sk .m.me .bub a{color:#fff!important}
 .sk #msb,.sk #mf #msb{background:#2f7cf6!important;color:#fff!important}
 .avw{position:relative;display:inline-flex;flex:none}.avw .onl{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:#34d27b;border:2px solid #0b0b12;box-sizing:border-box}
@@ -1577,6 +1577,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .n2a{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:10px}.n2a button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;height:92px;border-radius:22px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#fff;font:800 15px Brico,BricoCyr,system-ui;cursor:pointer}.n2a button svg{width:24px;height:24px}
 #n2cta{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border:0;border-radius:99px;background:var(--acc);color:#fff;font:800 18px Brico,BricoCyr,system-ui;cursor:pointer;box-shadow:none;margin-top:4px}#n2cta .bd{position:static;margin:0;background:#fff;color:#0b0b0b}
 .n2ld{display:grid;place-items:center;min-height:60dvh}.n2ld img{width:84px;height:84px;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%);animation:n2p 1.4s ease-in-out infinite}@keyframes n2p{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.08);opacity:1}}@media(prefers-reduced-motion:reduce){.n2ld img{animation:none}}
+.scr.chs .cbar{align-items:center;padding:14px 12px!important;gap:10px}.scr.chs .cbar .hbk,.scr.chs .cbar .hmo,.scr.chs .cbar .cbi{width:44px!important;height:44px!important;margin:0!important}.scr.chs .cbar .cbt{display:flex;flex-direction:column;justify-content:center;align-self:center}.scr.chs .cbar .cbt b,.scr.chs .cbar .cbt small{line-height:1.25;margin:0}.scr.chs .cbar .cbt small{margin-top:2px}
 .scr.chs .cbar .hmo{width:44px;height:44px;border-radius:50%;background:rgba(14,14,14,.55);border:1px solid rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.scr.chs .cbar .hmo svg{width:21px;height:21px}
 .pmq,.pmo{background:rgba(14,14,14,.55)!important;border:1px solid rgba(255,255,255,.14)!important;color:#fff!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .hlp{text-align:left;gap:12px}.hlp h2{font-size:24px;text-align:center;margin:6px 0 0}.hlp .hint{color:rgba(255,255,255,.55);font:700 15px Brico,BricoCyr,system-ui;text-align:left}.hlp .dsb{margin-top:4px}#bgm,#bge{background:#161616;border-radius:18px}
@@ -1590,6 +1591,13 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .gv #mem,.gv .inv{margin-left:16px!important;margin-right:16px!important}
 .gv h3{font:800 13px Brico,BricoCyr,system-ui;color:rgba(255,255,255,.55);text-transform:none;letter-spacing:0;margin:8px 4px 8px}
 .gv .gpn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px}
+.gv .gpn{display:flex;align-items:center;gap:14px;padding:14px 16px!important;min-height:0}
+.gv .gpn i.gpi{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:rgba(var(--accr),.16);color:var(--acc);font-size:0;flex:none;margin:0}.gv .gpn i.gpi svg{width:21px;height:21px}
+.gv .gpn>div{flex:1;min-width:0}.gv .gpn b{display:block;font:700 16px/1.25 Brico,BricoCyr,system-ui;color:#fff;overflow-wrap:anywhere}.gv .gpn small{display:block;margin-top:2px;font:500 13px Brico,BricoCyr,system-ui;color:#8e8e8e}
+.gv .gpn .gpm{font-style:normal;color:rgba(255,255,255,.35);font-size:22px;flex:none}
+.gv .n2ml{border-radius:26px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);overflow:hidden;margin-bottom:6px}
+.gv .n2mr{display:flex;align-items:center;gap:14px;padding:11px 16px;position:relative;cursor:pointer}.gv .n2mr+.n2mr::before{content:"";position:absolute;left:74px;right:0;top:0;height:1px;background:rgba(255,255,255,.07)}
+.gv .n2mr .av,.gv .n2mr .av img{width:46px!important;height:46px!important;flex:none}.gv .n2mr b{display:block;font:700 16px/1.25 Brico,BricoCyr,system-ui;color:#fff}.gv .n2mr small{display:block;font:500 13px Brico,BricoCyr,system-ui;color:#8e8e8e;margin-top:1px}
 .gv .gpn.add{border-style:solid}.gv .gpl{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:26px}
 .gv>.cta{display:flex;align-items:center;justify-content:center;height:56px;border:0;border-radius:99px;background:var(--acc);color:#fff;font:800 18px Brico,BricoCyr,system-ui;box-shadow:none}.gv>.cta[hidden]{display:none}
 .gv>input{height:54px;border-radius:99px;background:#141414;border:0}
@@ -2784,12 +2792,13 @@ function contactsView(add){
 }
 /* wybór kontaktów do zaproszenia na drop / do grupy */
 function pickContacts(kind,code,title,inSet){vib(10);const u=auth.currentUser;if(!u||u.isAnonymous)return guestUp();
-  const C=conList();
-  if(!C.length){const s=sheet(`<h2>${t("kPick")}</h2><p class="hint">${t("kEmpty")}</p><button class="cta" id="kgo">${t("kGoCon")}</button><button class="ghost" id="kcx">${t("cancel")}</button>`);s.querySelector("#kgo").onclick=()=>{s.close();go("/k")};s.querySelector("#kcx").onclick=s.close;return}
+  const C=conList().filter(p=>!inSet.has(p.id));
+  if(!C.length){const s=sheet(`<div class="shn"><h2>${t("kPick")}</h2><p class="mut shem">${t("kEmpty")}</p><button class="cta shsb" id="kgo" style="margin-top:14px">${t("kGoCon")}</button></div>`);s.querySelector("#kgo").onclick=()=>{s.close();go("/k")};return}
   const sel=new Set();
-  const s=sheet(`<h2>${t("kPick")}</h2><p class="hint">${t("kPickD")}</p><div class="kpl">${C.map(p=>{const inn=inSet.has(p.id);return `<button class="kr kp${inn?" dis":""}" data-u="${p.id}" ${inn?"disabled":""}>${avc("mini",avIdx(p))}<b style="color:${gc(p)}">${esc(p.nickname||"?")}</b><span class="ka">${inn?`<small class="kw">${t("kIsIn")}</small>`:`<i class="kc"></i>`}</span></button>`}).join("")}</div><button class="cta" id="ksd" disabled>${t("kSend",0)}</button><button class="ghost" id="kcn">${t("cancel")}</button>`);
-  const sb=s.querySelector("#ksd");s.querySelector("#kcn").onclick=s.close;
-  s.querySelectorAll(".kp:not(.dis)").forEach(b=>b.onclick=()=>{vib(6);const id=b.dataset.u;sel.has(id)?sel.delete(id):sel.add(id);b.classList.toggle("on",sel.has(id));sb.disabled=!sel.size;sb.textContent=t("kSend",sel.size)});
+  const s=sheet(`<div class="shn"><h2>${t("kPick")}</h2><label class="shs">${sv('<circle cx="11" cy="11" r="6.500"/><path d="m16 16 4 4"/>')}<input id="kq" type="search" placeholder="${t("kSrch")}" autocomplete="off" autocapitalize="off"></label><div class="shg">${C.map(p=>`<button class="sht" data-u="${esc(p.id)}" data-q="${esc(String(p.nickname||"").toLowerCase())}"><span class="shav">${avc("mini",avIdx(p))}<i class="shck">✓</i></span><span class="shn1">${esc(p.nickname||"?")}</span></button>`).join("")}</div><button class="cta shsb" id="ksd" disabled>${t("kSend",0)}</button></div>`);
+  const sb=s.querySelector("#ksd");
+  s.querySelectorAll(".sht").forEach(b=>b.onclick=()=>{vib(6);const id=b.dataset.u;sel.has(id)?sel.delete(id):sel.add(id);b.classList.toggle("on",sel.has(id));sb.disabled=!sel.size;sb.textContent=t("kSend",sel.size)});
+  const si=s.querySelector("#kq");si.oninput=()=>{const q=si.value.trim().toLowerCase();s.querySelectorAll(".sht").forEach(b=>b.hidden=!!q&&!(b.dataset.q||"").includes(q))};
   sb.onclick=()=>{if(!sel.size||sb.disabled)return;sb.disabled=true;const to=[...sel];s.close();sendInv(kind,code,title,to)}}
 function sendInv(kind,code,title,to){const u=auth.currentUser;if(!u||!to.length)return;sfx("send");vib([20,30,20]);toast(t("kSentOk"));
   Promise.allSettled(to.map(id=>setDoc(doc(db,"users",id,"invites",kind+"_"+code),{from:u.uid,...myCard(),kind,code,title:String(title||"").slice(0,60),at:serverTimestamp()}))).then(r=>{
@@ -3214,7 +3223,7 @@ async function groupView(code){
     forgetG(code);S.groups.delete(code);changed();vib([40,30,40]);toast(t(owner?"grDeleted":"grLeft"));go(logged?"/chats":"/g/"+code)};
   const isM=()=>!!mine||owner,nickN=()=>sget("nick")||g.ownerNick||"?";
   const drawPin=()=>{{const ib=$("#gib");if(ib)ib.style.display=isM()?"none":""}const el=$("#gpin");if(!el)return;if(!isM()){el.innerHTML="";return}const pn=g.pin&&g.pin.text;
-    el.innerHTML=pn?`<h3>${t("gpPin")}</h3><div class="gpn${isM()?" ed":""}" id="gpe"><i>📌</i><div><b>${esc(clean(g.pin.text))}</b><small>${t("gpBy",esc(g.pin.by||g.ownerNick||"?"))}${isM()?" · "+t("gpEdit"):""}</small></div></div>`:isM()?`<h3>${t("gpPin")}</h3><button class="gpn ed add" id="gpe"><i>＋</i><div><b>${t("gpPinAdd")}</b></div></button>`:"";
+    el.innerHTML=pn?`<h3>${t("gpPin")}</h3><div class="gpn${isM()?" ed":""}" id="gpe"><i class="gpi">${sv('<path d="M12 17v5M8.5 3h7l-1 6 3 3.5h-12L9.500 9z"/>')}</i><div><b>${esc(clean(g.pin.text))}</b><small>${t("gpBy",esc(g.pin.by||g.ownerNick||"?"))}${isM()?" · "+t("gpEdit"):""}</small></div>${isM()?"<em class=\"gpm\">›</em>":""}</div>`:isM()?`<h3>${t("gpPin")}</h3><button class="gpn ed add" id="gpe"><i class="gpi">${sv('<path d="M12 5v14M5 12h14"/>')}</i><div><b>${t("gpPinAdd")}</b></div><em class="gpm">›</em></button>`:"";
     if($("#gpe")&&isM())$("#gpe").onclick=()=>{vib(8);const s2=sheet(`<div class="cmenu"><h2>📌 ${t("gpPinT")}</h2><textarea id="gpt" class="gta" maxlength="200" rows="4" placeholder="${esc(t("gpPinPh"))}">${esc(g.pin?.text||"")}</textarea><button class="cta" id="gps" style="margin-top:14px">${t("gpSave")}</button>${pn?`<button class="ghost cmb cmx" id="gpd">${t("gpUnpin")}</button>`:""}<button class="ghost cmb cmx" id="gpc">${t("cancel")}</button></div>`);
       s2.querySelector("#gpc").onclick=s2.close;
       s2.querySelector("#gps").onclick=async()=>{const v=s2.querySelector("#gpt").value.trim().slice(0,200);if(!v)return;if(isBad(v)){vib([50,30,50]);return toast(t("noBad"))}
@@ -3222,7 +3231,7 @@ async function groupView(code){
       if(pn)s2.querySelector("#gpd").onclick=async()=>{try{await updateDoc(ref,{pin:deleteField()});delete g.pin;s2.close();vib(10);drawPin()}catch{toast(t("err"))}}}};
   let PO=null,pollOn=0;
   const drawPoll=()=>{const el=$("#gpol");if(!el)return;if(!isM()){el.innerHTML="";return}
-    if(!PO){el.innerHTML=`<h3>${t("poll")}</h3><button class="gpn ed add" id="gpa"><i>＋</i><div><b>${t("gpPolAdd")}</b></div></button>`;$("#gpa").onclick=newPoll;return}
+    if(!PO){el.innerHTML=`<h3>${t("poll")}</h3><button class="gpn ed add" id="gpa"><i class="gpi">${sv('<path d="M6 20v-6M12 20V5M18 20v-9"/>')}</i><div><b>${t("gpPolAdd")}</b></div><em class="gpm">›</em></button>`;$("#gpa").onclick=newPoll;return}
     const pl=PO.poll,V=PO.v||{},cnt=pl.o.map((_,i)=>Object.values(V).filter(x=>x===i).length),mx=Math.max(1,...cnt),my=V[me()],tot=Object.keys(V).length;
     el.innerHTML=`<h3 class="gph">${t("poll")}<em>${t("gpVotes",tot)}</em></h3><div class="gpl"><h4>${esc(clean(pl.q))}</h4><p>${t("gpPolD")}</p>${pl.o.map((o,i)=>`<button class="gpo${my===i?" my":""}" data-i="${i}"><span>${my===i?"✓ ":""}${esc(clean(o))}</span><em>${cnt[i]}</em><u class="pb"><i style="width:${cnt[i]?Math.round(cnt[i]/mx*100):0}%"></i></u></button>`).join("")}<button class="gpx" id="gpa">${t("gpPolNew")}</button></div>`;
     el.querySelectorAll(".gpo").forEach(b=>b.onclick=async()=>{if(!isM())return;vib(10);const i=+b.dataset.i,cur=(PO.v||{})[me()];try{await updateDoc(doc(ref,"messages",PO.id),{["v."+me()]:cur===i?deleteField():i})}catch{toast(t("err"))}});$("#gpa").onclick=newPoll};
@@ -3236,9 +3245,8 @@ async function groupView(code){
   const startPoll=()=>{if(pollOn||!isM())return;pollOn=1;unsubs.push(onSnapshot(query(collection(ref,"messages"),orderBy("createdAt","desc"),limit(15)),q=>{const x=q.docs.find(y=>y.data().poll);PO=x?{...x.data(),id:x.id}:null;drawPoll()},()=>{pollOn=0}))};
   unsubs.push(onSnapshot(collection(ref,"members"),x=>{M=x.docs.map(y=>({...y.data(),id:y.id}));mine=M.find(m=>m.id===me())||null;
     {const L=[...M].sort((a,b)=>(b.id===g.ownerId)-(a.id===g.ownerId));$("#gcn").textContent=t("grCnt",M.length);$("#mem").hidden=!M.length;
-    $("#mem").innerHTML=M.length?`<button type="button" class="n2pp" id="n2pg"><span class="st">${L.slice(0,3).map(p=>avc("",avIdx(p))).join("")}</span><div><b>${esc(L.slice(0,2).map(p=>clean(p.nickname||"?")).join(", "))+(L.length>2?" +"+(L.length-2):"")}</b><small>${t("grCnt",M.length)}</small></div><em>›</em></button>`:"";
-    if($("#n2pg"))$("#n2pg").onclick=()=>{vib(8);const s3=sheet(`<div class="dsh"><h2>${t("grWho")}</h2><div class="dpl">${L.map(p=>`<div class="dpr" data-u="${esc(p.id)}">${avc("",avIdx(p))}<div><b>${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("pcOrg")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</div></div>`).join("")}</div></div>`);s3.querySelector(".sheet").style.background="#0b0b0b";
-      s3.querySelectorAll("[data-u]").forEach(c=>c.onclick=()=>{const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id)){s3.close();setTimeout(()=>userActions(q,{target:"user",chat:"group",code}),260)}})}}
+    $("#mem").innerHTML=M.length?`<h3>${t("grWho")}</h3><div class="n2ml">${L.map(p=>`<div class="n2mr" data-u="${esc(p.id)}">${avc("",avIdx(p))}<div><b>${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("pcOrg")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</div></div>`).join("")}</div>`:"";
+    document.querySelectorAll("#mem [data-u]").forEach(c=>c.onclick=()=>{const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id)){vib(8);userActions(q,{target:"user",chat:"group",code})}})}
     $("#jb").hidden=!!mine;drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;$("#gsh").hidden=!mine&&!owner;
     if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
@@ -3648,6 +3656,9 @@ async function chatView(code,g){
       $("#fbp").onclick=()=>{close();pollSheet()};
       $("#fbe").onclick=()=>{vib(8);epa.hidden=true;$("#fba").classList.remove("on");emp.hidden=!emp.hidden;$("#fbe").classList.toggle("on",!emp.hidden)};
       const mi0=$("#mi");let kb=false;const kfocus=()=>{if(!kb)return;window.__kf=1;try{mi0.focus({preventScroll:true})}catch{}setTimeout(()=>{window.__kf=0},120)};
+      /* iOS: dotyk plusa/menu nie może zabrać fokusu polu (inaczej klawiatura znika i pole „skacze”) – obsługa tapnięcia na touchstart/touchend z preventDefault */
+      [pl,fab].forEach(x=>{let sx=0,sy=0,tb=null;x.addEventListener("touchstart",e=>{const b=e.target.closest("button");if(!b)return;tb=b;sx=e.touches[0].clientX;sy=e.touches[0].clientY;if(e.cancelable)e.preventDefault()},{passive:false});
+        x.addEventListener("touchend",e=>{if(!tb)return;const t0=e.changedTouches[0],b=tb;tb=null;if(e.cancelable)e.preventDefault();if(Math.abs(t0.clientX-sx)<12&&Math.abs(t0.clientY-sy)<12)b.click()},{passive:false});x.addEventListener("touchcancel",()=>{tb=null})});
       ["#fab","#emp","#epa","#mpl"].forEach(q=>{const el=$(q);el.addEventListener("mousedown",e=>e.preventDefault());el.addEventListener("pointerdown",()=>{kb=document.activeElement===mi0});el.addEventListener("touchstart",()=>{kb=document.activeElement===mi0},{passive:true});el.addEventListener("click",()=>setTimeout(kfocus,0))});
       emp.onclick=async e=>{const b=e.target.closest("button[data-n]");if(!b)return;const n=+b.dataset.n;if(!mine)return toast(t("chOut"));close();vib(12);sfx("send");window.__justSent=Date.now();window.__chatEnd&&window.__chatEnd();
         try{const mr=await sendMsg(collection(ref,"messages"),{authorId:me(),nickname:mine.nickname,text:EMJ[n],em:n,createdAt:serverTimestamp()});pushNow({kind:"msg",code,id:mr.id,group:!!g});bump("msgs")}catch{toast(t("err"))}};
