@@ -1682,6 +1682,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .mut.emp{background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;display:flex;flex-direction:column;align-items:center;gap:14px;width:auto;max-width:270px;margin:14vh auto 0;text-align:center;font:500 14px/1.5 Brico,BricoCyr,system-ui;color:rgba(255,255,255,.4)}.mut.emp svg{width:32px;height:32px;stroke:rgba(255,255,255,.26);stroke-width:1.5;fill:none}
 .scr.chl .ngb{height:46px}.scr.chl .ngb.ngi{width:46px}
 .sk #mf .mpl{background:none!important;box-shadow:none!important;border-radius:0!important;width:30px!important;min-width:30px!important;height:42px!important;color:rgba(255,255,255,.85)!important}.sk #mf .mpl{align-self:center!important;margin:0!important}.sk #mf .mpl:active{opacity:.6}
+.scr.chs{transition:height .26s cubic-bezier(.22,.9,.3,1),padding-bottom .26s cubic-bezier(.22,.9,.3,1)}.sk #mf{transition:margin-bottom .26s cubic-bezier(.22,.9,.3,1)}@media(prefers-reduced-motion:reduce){.scr.chs,.sk #mf{transition:none}}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -1722,13 +1723,14 @@ setTimeout(function(){window.__splDone()},20000);})();
 </script>
 <script>
 /* wysokość widocznej części ekranu (iPhone z klawiaturą) – czat trzyma pole pisania tuż nad klawiaturą */
-(function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,B=0,
+(function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,B=0,IPH=/iPhone|iPod/.test(navigator.userAgent),KK=function(){return window.innerWidth>window.innerHeight?"kbhL":"kbh"},KE=function(){var v=0;try{v=+localStorage[KK()]||0}catch(e){}return v>150&&v<450?v:(window.innerWidth>window.innerHeight?200:336)},
 /* zwykła przeglądarka (Safari/Chrome, nie aplikacja): pasek adresu/narzędzi zmienia wysokość strony, więc bierzemy realnie widoczną wysokość (visualViewport), inaczej pole pisania ląduje pod dolnym paskiem */
 br=!(navigator.standalone||matchMedia("(display-mode: standalone)").matches||(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())),
 f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&!document.querySelector(".sheetbg")),hk0=window.innerHeight-vv.height>120;if(!foc||vv.height>B)B=Math.max(B,vv.height);var hk=hk0||(B-vv.height>120),kb=hk||(foc&&Date.now()-(window.__fiAt||0)<1500);
   /* bez klawiatury: pełna wysokość i zero przesunięcia (iOS potrafi zostawić stare offsetTop po schowaniu klawiatury) */
   if(!kb){R.style.setProperty("--vvh",(br?Math.round(Math.min(window.innerHeight,vv.height)):window.innerHeight)+"px");R.style.setProperty("--vvt","0px");if(chat&&(window.scrollY||document.documentElement.scrollTop))window.scrollTo(0,0)}
-  else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px")}
+  else if(!hk&&IPH){/* iPhone: klawiatura jedzie już od dotknięcia pola, a iOS zgłasza nową wysokość dopiero na końcu animacji – ruszamy pole od razu, wg ostatnio zmierzonej wysokości klawiatury */R.style.setProperty("--vvh",Math.round(Math.max(B,vv.height)-KE())+"px");R.style.setProperty("--vvt","0px")}
+  else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px");if(IPH&&hk&&foc&&Date.now()-(window.__fiAt||0)>600){var d=Math.round(B-vv.height);if(d>150&&d<450){try{localStorage[KK()]=d}catch(e){}}}}
   R.classList.toggle("kb",kb)},
 q=function(){if(!raf)raf=requestAnimationFrame(f)},later=function(){q();[60,120,250,350,500,700,1000,1400,2000,3000].forEach(function(d){setTimeout(q,d)})};
 vv.addEventListener("resize",q);vv.addEventListener("scroll",q);window.addEventListener("scroll",q,{passive:true});
