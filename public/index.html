@@ -1649,7 +1649,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 
 .pf .sgrp .abl[src*="ic-"]{width:32px;height:32px}
 
-.bell#nd{overflow:visible}.bell#nd .ndp{width:28px;height:28px;flex:none;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%)}
+.bell#nd,#newd{overflow:visible}.bell#nd .ndp,#newd .ndp{width:28px;height:28px;flex:none;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%)}
 /* powiadomienia: oś czasu */
 #nl .nlist{position:relative;padding-left:0;margin:0 0 20px 2px}
 #nl .nlist .ndh{margin:14px 0 2px 0}
@@ -1677,6 +1677,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .sk #mf{margin-left:-9px!important;margin-right:-9px!important}
 .sk #mf .mfp{order:3;flex:1;min-width:0;display:flex;align-items:center;gap:8px}.sk #mf .mfp textarea{flex:1;min-width:0}
 .sk #mf.fo{background:transparent!important;padding:0 0 0 6px;gap:8px}.sk #mf.fo .mfp{background:#17171c;border-radius:99px;padding:5px 5px 5px 14px}
+.scr.chl .ngr{display:flex;align-items:center;gap:8px;flex:none}.scr.chl .ngb{height:40px;padding:0 15px 0 11px;font-size:14px}.scr.chl .ngb.ngi{width:40px;padding:0;justify-content:center}.scr.chl .ngb.ngi svg{width:19px;height:19px}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -3192,12 +3193,13 @@ function avEditor(done){let o=kDec(avCode(myAv()));
 /* ---------- CZATY: grupy ogólne + czaty dropów ---------- */
 function chatsView(){
   const u=authed();if(!u)return;
-  view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNew").replace(/^\+\s*/,"")}</span></button></div><span class="gbadge">${t("gOnly")}</span>
+  view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><div class="ngr"><button class="bell" id="newd" aria-label="${t("nNew")}"><img class="ndp" src="/plus-icon.png" alt=""></button><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNewS")}</span></button></div></div><span class="gbadge">${t("gOnly")}</span>
   <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta dim" id="gk" style="margin-top:8px">${t("grCreate")}</button></div>
   <div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
   $("#gn").oninput=()=>$("#gk").classList.toggle("dim",!$("#gn").value.trim());
   const openNf=()=>{$("#nf").hidden=!$("#nf").hidden;if(!$("#nf").hidden)$("#gn").focus()};
+  $("#newd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};
   $("#newg").onclick=()=>{vib(8);if(auth.currentUser?.isAnonymous)return guestUp("/chats");
     if(sget("grIntro")!=="1"&&$("#nf").hidden){const s2=sheet(`<div class="dsh gi2"><h2>${t("giT")}</h2>
       <div class="gr"><span class="dsi">${DSI(DSP.ppl)}</span><div><b>${t("giGrT")}</b><p>${t("giGrD")}</p></div></div>
@@ -4539,6 +4541,14 @@ Object.assign(L.fr,{alRep:"Signaler"});
 Object.assign(L.it,{alRep:"Segnala"});
 Object.assign(L.cs,{alRep:"Nahlásit"});
 Object.assign(L.uk,{alRep:"Поскаржитись"});
+Object.assign(L.pl,{grNewS:"Grupa"});
+Object.assign(L.en,{grNewS:"Group"});
+Object.assign(L.es,{grNewS:"Grupo"});
+Object.assign(L.de,{grNewS:"Gruppe"});
+Object.assign(L.fr,{grNewS:"Groupe"});
+Object.assign(L.it,{grNewS:"Gruppo"});
+Object.assign(L.cs,{grNewS:"Skupina"});
+Object.assign(L.uk,{grNewS:"Група"});
 window.alertSheet=alertSheet;function alertSheet(a){if(a&&a.id){if(document.querySelector(`.sheetbg [data-al="${a.id}"]`)||(window.__alOpen&&window.__alOpen.id===a.id&&Date.now()-window.__alOpen.t<8000))return;window.__alOpen={id:a.id,t:Date.now()}}vib([200,100,200]);try{if(a&&a.id){sset("ar_"+a.id,"1");badges()}}catch{}const t0=a.at&&a.at.toMillis?a.at.toMillis():(+a.at||0),lv=!t0||Date.now()-t0<30*60e3,pt=(lv&&a.loc)||a.drop,mp=pt&&isFinite(+pt.la)&&isFinite(+pt.lo)?(ANDAPP?"geo:"+(+pt.la)+","+(+pt.lo)+"?q="+(+pt.la)+","+(+pt.lo)+"("+encodeURIComponent(a.nick)+")":"https://maps.apple.com/?ll="+(+pt.la)+","+(+pt.lo)+"&q="+encodeURIComponent(a.nick)):"";
   const ppl=(a.people||[]).filter(Boolean),pnA='<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',pnP='<path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>';
   const bg=sheet(`<div class="dsh"><div class="alh" data-al="${esc(a.id||"")}">${avc("l",avIdx({id:a.from,av:a.av}))}<h2>${esc(a.nick)} ${t("alNeed")}</h2></div><div class="alc"><div class="r">${DSI(pnA)}<span><b>${esc(a.title||"")}</b></span></div>${a.place?`<div class="r">${DSI(pnP)}<span><b>${esc(a.place)}</b></span></div>`:""}${ppl.length?`<div class="r">${DSI(DSP.ppl)}<span><small>${t("alPpl").replace(/:\s*$/,"")} · ${ppl.length}</small><span class="alp">${ppl.map(x=>`<i>${esc(x)}</i>`).join("")}</span></span></div>`:""}</div><div class="dsb">${mp?`<a class="dsx" href="${esc(mp)}" target="_blank" rel="noopener">${t("alLoc")}</a>`:""}${a.loc?`<p class="aln">${t(lv?"alLive":"alLiveX")}</p>`:""}${a.code?`<button class="dsx g" id="alo">${t("alDrop")}</button>`:""}<div class="alb2"><button class="dsx g" id="alr">${t("alRep")}</button><button class="dsx g" id="alx">${t("alClose")}</button></div></div></div>`);bg.querySelector(".sheet").style.background="#0b0b0b";
