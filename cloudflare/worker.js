@@ -189,8 +189,9 @@ async function handle(env, uid, b) {
       if (!isUid(x) || typeof aid !== "string" || !/^[A-Za-z0-9]{10,40}$/.test(aid)) continue;
       const a = await db.get(`users/${x}/alerts/${aid}`);
       if (a && a.from === uid && a.kind === "sos" && Date.now() - Number(a.at || 0) < 120000) ok.push([x, aid, a]);
+      else (env.sosWhy = env.sosWhy || []).push(!a ? "alert nie istnieje" : a.from !== uid ? "inny nadawca" : a.kind !== "sos" ? "zły rodzaj" : "alert za stary/bez daty (" + String(a.at).slice(0, 24) + ")");
     }
-    if (!ok.length) return 0;
+    if (!ok.length) { env.stats = { to: 0, users: 0, toks: 0, errs: ["sos odrzucony: " + (env.sosWhy || ["brak odbiorców"]).join("; ")] }; return 0; }
     // kliknięcie powiadomienia otwiera od razu okno alarmu (drop + lokalizacja): /n?sos=<id alertu odbiorcy>
     let sent = 0;
     for (const [x, aid, al] of ok) sent += await notify(env, db, [x], null, (T) => T.sos(String(al.nick || "Squad").slice(0, 40), String(al.title || "").slice(0, 80), String(al.place || "").slice(0, 80)), `/n?sos=${aid}`, uid);
