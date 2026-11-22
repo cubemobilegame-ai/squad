@@ -1601,6 +1601,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 
 .pf .actg h3{display:flex;align-items:center;gap:6px}.pf .actg .abl{width:26px;height:32px;flex:none;object-fit:contain;mix-blend-mode:screen;margin-left:-4px;-webkit-mask-image:radial-gradient(ellipse,#000 50%,transparent 72%);mask-image:radial-gradient(ellipse,#000 50%,transparent 72%)}
 
+.pmadd{overflow:visible}.pmadd img{width:26px;height:26px;flex:none;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%)}.scr.pmx .pmw .pmadd img{width:29px;height:29px}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -2907,7 +2908,7 @@ const cellsBox=(s,w,n,e)=>{const dla=180/1024,dlo=360/1024,S=new Set(),cl=(v,m)=
 function pubMap(el,safe){
   const P=PUB.M||(PUB.M={items:new Map(),mk:new Map(),loaded:new Map(),map:null,wrap:null,cl:null,tm:0});
   if(!P.wrap){const w=P.wrap=document.createElement("div");w.className="pmw";
-    w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmfs" id="pmfs" aria-label="Fullscreen">${PVI.fs}</button><button class="pmme" id="pmme" aria-label="${t("pmMy")}">${PVI.loc}</button><button class="pmbk" id="pmbk" aria-label="${t("back")}" hidden>${PVI.bk}</button><button class="pmadd" id="pmadd" aria-label="${esc(t("newDrop").replace(/^\+\s*/,""))}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
+    w.innerHTML=`<div class="pmm" id="pmap"></div><button class="pmfs" id="pmfs" aria-label="Fullscreen">${PVI.fs}</button><button class="pmme" id="pmme" aria-label="${t("pmMy")}">${PVI.loc}</button><button class="pmbk" id="pmbk" aria-label="${t("back")}" hidden>${PVI.bk}</button><button class="pmadd" id="pmadd" aria-label="${esc(t("newDrop").replace(/^\+\s*/,""))}"><img src="/plus-icon.png" alt=""></button><div class="pmh" id="pmh" hidden></div><div class="pmcard" id="pmcard" hidden></div>`;
     const fs=(on,keep)=>{P.isFs=on;{const cd=w.querySelector("#pmcard");if(cd&&!keep)cd.hidden=true}w.classList.toggle("fs",on);document.documentElement.classList.toggle("pmlock",on);w.querySelector("#pmbk").hidden=!on;w.querySelector("#pmfs").hidden=on;if(!on)w.style.top="";setTimeout(()=>{try{P.map&&P.map.invalidateSize()}catch{}},60);vib(8)};P.fs=fs;
     w.querySelector("#pmadd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};
     w.querySelector("#pmfs").onclick=()=>{fs(true);setTimeout(()=>{try{if(PUB.pos)pmFit(P,PUB.pos)}catch{}pmScanAgain(P)},380)};w.querySelector("#pmbk").onclick=()=>{fs(false);setTimeout(()=>{try{if(PUB.pos)pmFit(P,PUB.pos)}catch{}pmScanAgain(P)},380)};
