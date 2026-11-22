@@ -118,7 +118,7 @@ td:first-child i{width:9px;height:9px;border-radius:50%}
   </section>
 
   <section class="card">
-    <div class="hd tp" tabindex="0" data-tip="Ile razy aplikację pobrano z App Store i Google Play. Dane ze sklepów mają 1–3 dni opóźnienia. Na razie wpisujesz je ręcznie."><h2>Pobrania ze sklepów</h2><span class="sub" id="dlSub">wpisz z App Store Connect i Google Play Console</span></div>
+    <div class="hd tp" tabindex="0" data-tip="Ile razy aplikację pobrano z App Store i Google Play. Dane ze sklepów mają 1–3 dni opóźnienia. Na razie wpisujesz je ręcznie."><h2>Pobrania ze sklepów</h2><span class="sub" id="dlSub">uzupełnij ręcznie, dopóki nie ma danych automatycznych</span></div>
     <div class="dl">
       <label>App Store (iOS)<input id="dIos" inputmode="numeric" placeholder="0"></label>
       <label>Google Play (Android)<input id="dAnd" inputmode="numeric" placeholder="0"></label>
@@ -225,7 +225,11 @@ async function tick(){if(busy)return;busy=true;try{await loadCore();await loadDa
   catch(e){if(e&&e.code==="permission-denied")deny();else $("upd").textContent="błąd: "+((e&&e.code)||"połączenie")}busy=false}
 let timer;
 function deny(){clearInterval(timer);$("app").hidden=true;$("gate").hidden=false;$("err").textContent="To konto nie ma dostępu. Zaloguj się kontem twórcy ze zweryfikowanym e-mailem.";AU.signOut(auth)}
-async function loadDl(){try{const s=await F.getDoc(F.doc(db,"adm","downloads"));if(s.exists()){dl=s.data();$("dIos").value=dl.ios||"";$("dAnd").value=dl.android||""}}catch{}}
+let auto=false;
+async function loadDl(){try{const s=await F.getDoc(F.doc(db,"adm","downloads"));if(s.exists()){dl=s.data();$("dIos").value=dl.ios||"";$("dAnd").value=dl.android||""}}catch{}
+  try{const t=await F.getDoc(F.doc(db,"adm","store"));if(t.exists()){const x=t.data(),i=x.ios&&x.ios.total,a=x.android&&x.android.total;
+    if(i!=null){dl.ios=i;$("dIos").value=i;$("dIos").readOnly=true}if(a!=null){dl.android=a;$("dAnd").value=a;$("dAnd").readOnly=true}
+    if(i!=null||a!=null){auto=true;const at=x.at&&x.at.toDate?x.at.toDate():null;$("dlSub").textContent="automatycznie ze sklepów"+(at?" · "+at.toLocaleDateString("pl-PL")+" "+at.toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit"}):"")}}}catch{}}
 let sv;const save=()=>{dl={ios:+$("dIos").value.replace(/\D/g,"")||0,android:+$("dAnd").value.replace(/\D/g,"")||0};downloads();clearTimeout(sv);sv=setTimeout(()=>F.setDoc(F.doc(db,"adm","downloads"),{...dl,at:F.serverTimestamp()}).then(()=>$("dlSub").textContent="zapisano").catch(e=>{$("dlSub").textContent="nie zapisano ("+((e&&e.code)||"błąd")+")"}),600)};
 ["dIos","dAnd"].forEach(i=>$(i).addEventListener("input",save));
 $("login").onclick=async()=>{$("err").textContent="";try{await AU.signInWithPopup(auth,new AU.GoogleAuthProvider())}catch(e){$("err").textContent="Logowanie nie powiodło się. Spróbuj ponownie."}};

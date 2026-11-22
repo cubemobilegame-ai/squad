@@ -1,0 +1,23 @@
+name: Pobrania ze sklepów (Apple + Google Play)
+on:
+  schedule: [{ cron: "17 6 * * *" }]
+  workflow_dispatch:
+    inputs:
+      write: { description: "Zapisz do bazy (domyślnie tylko podgląd)", type: boolean, default: false }
+jobs:
+  sklepy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          WRITE: ${{ (github.event_name == 'schedule' || inputs.write) && '1' || '0' }}
+        run: |
+          echo "$SA" > "$RUNNER_TEMP/sa.json"; export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json"
+          npm install --prefix tools --no-audit --no-fund >/dev/null
+          node tools/sync-stores.cjs
