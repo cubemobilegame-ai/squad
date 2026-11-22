@@ -1651,12 +1651,9 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 
 .bell#nd{overflow:visible}.bell#nd .ndp{width:28px;height:28px;flex:none;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%)}
 /* powiadomienia: oś czasu */
-#nl .nlist{position:relative;padding-left:32px;margin:0 0 20px 2px}
-#nl .nlist::before{content:"";position:absolute;left:9px;top:10px;bottom:10px;width:2px;border-radius:2px;background:rgba(255,255,255,.1)}
-#nl .nlist .ndh{margin:14px 0 2px -32px}
+#nl .nlist{position:relative;padding-left:0;margin:0 0 20px 2px}
+#nl .nlist .ndh{margin:14px 0 2px 0}
 #nl .nlist .chat,#nl .nlist .chat.u{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;margin:0!important;padding:12px 2px 12px 0!important}
-#nl .nlist .chat::before{content:"";position:absolute;left:-31px;top:27px;width:16px;height:16px;box-sizing:border-box;border-radius:50%;border:2px solid #3b3b40;background:#0b0b0b}
-#nl .nlist .chat.u::before{background:var(--acc);border-color:#0b0b0b;box-shadow:0 0 0 4px rgba(var(--accr),.28)}
 #nl .nlist .chat .bdi{display:none!important}
 #nl .nlist .chat .nic{border-radius:50%!important}
 #nl .nlist .chat.u .nh>span:first-child,#nl .nlist .chat.u b:not(.bd){color:#fff}
@@ -1672,6 +1669,8 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 @keyframes fbx{from{opacity:0;transform:translateX(-14px) scale(.7)}}
 .sk #mf .mpl.on{display:none!important}.sk .fab:not([hidden])~.epn{bottom:calc(100% + 10px)}
 #mf textarea::placeholder{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sk #mf textarea{min-width:0}
+.sk #mf .fab .fb{color:#0b0b0b!important}.sk #mf .fab #fbp{background:#fff!important}.sk #mf .fab #fbe{background:#8e8e99!important}.sk #mf .fab #fba{background:var(--acc)!important}.sk #mf .fab .fb.on{box-shadow:0 0 0 2.5px #0b0b0b,0 0 0 4.5px #fff!important}
+.gv .n2ttl h1{margin-bottom:14px}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -1712,17 +1711,17 @@ setTimeout(function(){window.__splDone()},20000);})();
 </script>
 <script>
 /* wysokość widocznej części ekranu (iPhone z klawiaturą) – czat trzyma pole pisania tuż nad klawiaturą */
-(function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,
+(function(){var vv=window.visualViewport;if(!vv)return;var R=document.documentElement,raf=0,B=0,
 /* zwykła przeglądarka (Safari/Chrome, nie aplikacja): pasek adresu/narzędzi zmienia wysokość strony, więc bierzemy realnie widoczną wysokość (visualViewport), inaczej pole pisania ląduje pod dolnym paskiem */
 br=!(navigator.standalone||matchMedia("(display-mode: standalone)").matches||(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform())),
-f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&!document.querySelector(".sheetbg")),hk=window.innerHeight-vv.height>120,kb=hk||foc;
+f=function(){raf=0;var chat=!!document.querySelector(".scr.chs"),ae=document.activeElement,foc=!!(chat&&ae&&(ae.tagName==="INPUT"||ae.tagName==="TEXTAREA")&&!document.querySelector(".sheetbg")),hk0=window.innerHeight-vv.height>120;if(!foc||vv.height>B)B=Math.max(B,vv.height);var hk=hk0||(B-vv.height>120),kb=hk||(foc&&Date.now()-(window.__fiAt||0)<1500);
   /* bez klawiatury: pełna wysokość i zero przesunięcia (iOS potrafi zostawić stare offsetTop po schowaniu klawiatury) */
   if(!kb){R.style.setProperty("--vvh",(br?Math.round(Math.min(window.innerHeight,vv.height)):window.innerHeight)+"px");R.style.setProperty("--vvt","0px");if(chat&&(window.scrollY||document.documentElement.scrollTop))window.scrollTo(0,0)}
   else{R.style.setProperty("--vvh",Math.round(vv.height)+"px");R.style.setProperty("--vvt",Math.round(Math.max(0,vv.offsetTop))+"px")}
   R.classList.toggle("kb",kb)},
 q=function(){if(!raf)raf=requestAnimationFrame(f)},later=function(){q();[60,120,250,350,500,700,1000,1400,2000,3000].forEach(function(d){setTimeout(q,d)})};
 vv.addEventListener("resize",q);vv.addEventListener("scroll",q);window.addEventListener("scroll",q,{passive:true});
-document.addEventListener("focusin",function(){window.__fiAt=Date.now();later()});document.addEventListener("focusout",later);document.addEventListener("visibilitychange",later);window.addEventListener("pageshow",later);window.addEventListener("orientationchange",later);f()})();
+document.addEventListener("focusin",function(){window.__fiAt=Date.now();later()});document.addEventListener("focusout",later);document.addEventListener("visibilitychange",later);window.addEventListener("pageshow",later);window.addEventListener("orientationchange",function(){B=0;later()});f()})();
 </script>
 <script>
 /* automatyczna aktualizacja: gdy na serwerze jest nowsza wersja, aplikacja sama się przeładowuje */
@@ -3237,7 +3236,7 @@ async function groupView(code){
   const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code;let mine=null,M=[];
   const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
   const bkb=fromChat?"/gc/"+code:"/chats",IC3='<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>';
-  view(`<div class="scr dv n2 gv"><div class="n2h gh" style="background:${gth(g,code)[0]}"><div class="hdr n2t">${logged?bk(bkb,"",1):"<span></span>"}<span style="display:flex;gap:8px"><button class="bk ic" id="gsh" aria-label="share" hidden>${DSI('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/>')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:""}</span></div><div class="n2ttl"><h1>${gn}</h1><div class="n2ch"><span class="chip">${DSI(DSP.ppl)}<span id="gcn"></span></span><span class="chip">★ ${esc(clean(g.ownerNick||"?"))}</span></div></div></div>
+  view(`<div class="scr dv n2 gv"><div class="n2h gh" style="background:${gth(g,code)[0]}"><div class="hdr n2t">${logged?bk(bkb,"",1):"<span></span>"}<span style="display:flex;gap:8px"><button class="bk ic" id="gqr" aria-label="QR" hidden>${DSI('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/>')}</button><button class="bk ic" id="gsh" aria-label="share" hidden>${DSI('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/>')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:""}</span></div><div class="n2ttl"><h1>${gn}</h1><div class="n2ch"><span class="chip">${DSI(DSP.ppl)}<span id="gcn"></span></span><span class="chip">★ ${esc(clean(g.ownerNick||"?"))}</span></div></div></div>
   ${owner?"":`<div class="inv" id="gib"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
   <div id="gcw" hidden></div>
   <div id="mem" hidden></div>
@@ -3249,7 +3248,7 @@ async function groupView(code){
   ${logged?"":getAppBox()}
   ${owner?"":`<button class="lnk rep" id="rp" style="display:none!important">${sv(SI.flag)} ${t("repGroup")}</button>`}</div>`);
   $("#cl").onclick=async()=>{vib(15);try{await navigator.clipboard.writeText(url)}catch{}toast(t("copied"))};
-  $("#gsh").onclick=()=>openShare("g",{id:code,...g,M});
+  $("#gsh").onclick=()=>openShare("g",{id:code,...g,M});$("#gqr").onclick=()=>qrGroup(code,g.name);
   if($("#gmo"))$("#gmo").onclick=()=>{vib(8);const B=[];if(owner)B.push(["gcol",t("cmCol")]);if(!owner)B.push(["rp",t("repGroup")]);const del=mine||owner;
     const s4=sheet(`<div class="dsh"><h2>${t("n2more")}</h2><div class="dsb">${B.map(([k,l])=>`<button class="dsx${k==="inv"?"":" g"}" data-k="${k}">${l}</button>`).join("")}${del?`<button class="dsx g" id="gxl" style="color:#ff6b7a">${owner?t("grDel"):t("grLeave")}</button>`:""}</div></div>`);s4.querySelector(".sheet").style.background="#0b0b0b";
     s4.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{s4.close();if(b.dataset.k==="gcol"){setTimeout(()=>colorSheet(code,i=>{g.theme=i;const c=GTH[i],h=$(".n2h.gh");if(h)h.style.background=c[0]}),260);return}setTimeout(()=>$("#"+b.dataset.k)?.click(),260)});
@@ -3293,7 +3292,7 @@ async function groupView(code){
     {const L=[...M].sort((a,b)=>(b.id===g.ownerId)-(a.id===g.ownerId));$("#gcn").textContent=t("grCnt",M.length);$("#mem").hidden=!M.length;
     $("#mem").innerHTML=M.length?`<h3 class="gph">${t("grWho")}<em>${M.length}</em></h3><div class="n2ml">${L.map(p=>`<div class="n2mr" data-u="${esc(p.id)}">${avc("",avIdx(p))}<div><b>${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("pcOrg")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</div></div>`).join("")}</div>`:"";
     document.querySelectorAll("#mem [data-u]").forEach(c=>c.onclick=()=>{const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id)){vib(8);userActions(q,{target:"user",chat:"group",code})}})}
-    $("#jb").hidden=!!mine;drawChat();drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;$("#gsh").hidden=!mine&&!owner;
+    $("#jb").hidden=!!mine;drawChat();drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;$("#gsh").hidden=!mine&&!owner;$("#gqr").hidden=!mine&&!owner;
     if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
 }
@@ -3561,7 +3560,7 @@ async function chatView(code,g){
     ${g?`<span class="cbi gr"><img src="/e/grupa-o.webp" alt=""></span>`:(()=>{const cu=cutu(d);if(cu)return`<span class="cbi ct" style="background:linear-gradient(135deg,${cu.g[0]},${cu.g[1]})"><span class="ltr" style="color:${cu.c==="cl"?"#17171f":"#fff"}">${ltr(d.title)}</span></span>`;const pk=pxKey(d),ps=pxSrc(d);return`<span class="cbi" style="background:linear-gradient(135deg,${esc(FG[pk]||(HG[d.category==="pizza"?"food":d.category]||[])[0]||"#ddd")})"><span class="ltr" style="color:#fff">${ltr(d.title)}</span></span>`})()}
     <div class="cbt${g?" gl":""}"><b>${esc(clean(title))}</b><small>${hst?`<span class="tm hpill" data-t="${hst}" data-x="${d.expiresAt.toMillis()}"></span>`:`<span class="hpill">${t("grInfo")}</span>`}<span id="cnt" class="hcnt"></span></small></div>
     <span class="cbm" id="cbm"${isMuted((g?"g_":"")+code)?"":" hidden"}>${sv(BELLO)}</span><button class="hmo" onclick="event.stopPropagation();chatMenu(${g?1:0},'${jx(code)}')" aria-label="${t("cmMore")}">${DSI('<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>')}</button></div>
-  <div class="cpan"><div id="alr"></div><div class="mem" id="mem"></div><div id="msgs"></div><button class="mdj" id="mdj" hidden aria-label="↓"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="mdn" id="mdn" hidden onclick="const b=document.getElementById('msgs');b.scrollTo({top:b.scrollHeight,behavior:'smooth'})"><b>0</b> ${t("newShort")} ↓</button><div class="typ" id="typ"></div><div class="rpb" id="rpb" hidden></div><div class="grt" id="grt" hidden></div><form id="mf"><div class="fab" id="fab" hidden><button type="button" class="fb" id="fbp" aria-label="${t("poll")}" style="--i:1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 20v-6M12 20V5M18 20v-9"/></svg></button><button type="button" class="fb" id="fbe" aria-label="emoji" style="--i:2"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c.9 1.3 2.1 2 3.5 2s2.600-.7 3.500-2"/><path d="M9 9.800h.01M15 9.800h.01" stroke-width="3"/></svg></button><button type="button" class="fb" id="fba" aria-label="avatar" style="--i:3"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.500 20c1-4 4-5.500 7.500-5.500s6.500 1.500 7.500 5.500"/></svg></button></div><div class="epn" id="emp" hidden></div><div class="epn epa" id="epa" hidden></div><button type="button" class="mpl" id="mpl" aria-label="+"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.500 5l7 7-7 7"/></svg></button><textarea id="mi" rows="1" placeholder="${t("chPh")}" maxlength="500" autocomplete="off" enterkeyhint="send"></textarea><button id="msb" aria-label="${t("send2")}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 12 20 4l-5 16-3.5-6.5z"/><path d="M11.5 13.5 20 4"/></svg></button></form></div></div>`);
+  <div class="cpan"><div id="alr"></div><div class="mem" id="mem"></div><div id="msgs"></div><button class="mdj" id="mdj" hidden aria-label="↓"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="mdn" id="mdn" hidden onclick="const b=document.getElementById('msgs');b.scrollTo({top:b.scrollHeight,behavior:'smooth'})"><b>0</b> ${t("newShort")} ↓</button><div class="typ" id="typ"></div><div class="rpb" id="rpb" hidden></div><div class="grt" id="grt" hidden></div><form id="mf"><div class="fab" id="fab" hidden><button type="button" class="fb" id="fbp" aria-label="${t("poll")}" style="--i:1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="5.4" stroke-linecap="round"><path d="M4.500 19.500v-5M12 19.500V5M19.500 19.500v-8"/></svg></button><button type="button" class="fb" id="fbe" aria-label="emoji" style="--i:2"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c.9 1.3 2.1 2 3.5 2s2.600-.7 3.500-2"/><path d="M9 9.800h.01M15 9.800h.01" stroke-width="3"/></svg></button><button type="button" class="fb" id="fba" aria-label="avatar" style="--i:3"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.500 20c1-4 4-5.500 7.500-5.500s6.500 1.500 7.500 5.500"/></svg></button></div><div class="epn" id="emp" hidden></div><div class="epn epa" id="epa" hidden></div><button type="button" class="mpl" id="mpl" aria-label="+"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.500 5l7 7-7 7"/></svg></button><textarea id="mi" rows="1" placeholder="${t("chPh")}" maxlength="500" autocomplete="off" enterkeyhint="send"></textarea><button id="msb" aria-label="${t("send2")}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 12 20 4l-5 16-3.5-6.5z"/><path d="M11.5 13.5 20 4"/></svg></button></form></div></div>`);
   try{tick()}catch{}
   /* przypomnienie o albumie: gdy drop wystartował, na górze czatu pojawia się zaproszenie do wrzucenia zdjęcia */
   if(!g&&hst){const alr=()=>{const el=$("#alr");if(!el)return;const on2=Date.now()>=hst&&!sget("albd_"+code);if(!on2){if(el.innerHTML)el.innerHTML="";return}if(el.innerHTML)return;
@@ -3885,6 +3884,10 @@ let qrLib=null;const loadQR=()=>qrLib||(qrLib=new Promise((ok,no)=>{if(window.qr
 window.qrDrop=async(c,title)=>{vib(10);const d=S.items.get(c)||(typeof PUB!=="undefined"&&((PUB.items&&PUB.items.get&&PUB.items.get(c))||(PUB.list||[]).find(x=>x.id===c)))||{},url=base()+"/d/"+c;let svg="";
   try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
   const s=sheet(`<div class="dsh"><h2>${t("qrT")}</h2><p class="dsub">${t("qrD")}</p><div class="dqr">${svg}</div><p class="dsub" style="text-align:center;color:#fff;font-weight:800">${esc(clean(d.title||title||""))}</p><div class="dsb"><button class="dsx g" id="qcl">${t("close")}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
+  s.querySelector("#qcl").onclick=s.close};
+window.qrGroup=async(c,name)=>{vib(10);const url=base()+"/g/"+c;let svg="";
+  try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
+  const s=sheet(`<div class="dsh"><h2>${t("qrT")}</h2><p class="dsub">${t("qrD")}</p><div class="dqr">${svg}</div><p class="dsub" style="text-align:center;color:#fff;font-weight:800">${esc(clean(name||""))}</p><div class="dsb"><button class="dsx g" id="qcl">${t("close")}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#qcl").onclick=s.close};
 window.shareDrop=c=>{const d=S.items.get(c)||(typeof PUB!=="undefined"&&((PUB.items&&PUB.items.get&&PUB.items.get(c))||(PUB.list||[]).find(x=>x.id===c)));if(d)openShare("d",{...d,P:S.ppl[c]||[]})};
 function openShare(k,o,first){const G=k==="g",url=base()+(G?"/g/":"/d/")+o.id;
