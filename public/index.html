@@ -974,8 +974,8 @@ html:has(.scr.pf),body:has(.scr.pf){background:#0b0b0b}
 .sheet .lgl .srow.sel{font-weight:800}
 .sheet .lgl .srow em{font:800 18px Brico,BricoCyr,system-ui;font-style:normal;color:#34d17a}
 
-.pf #nhd .pcv,.pf #thh .pcv{transition:transform .22s ease;transform:rotate(90deg)}
-.pf #nhd[aria-expanded=true] .pcv,.pf #thh[aria-expanded=true] .pcv{transform:rotate(-90deg)}
+.pf #nhd .pcv,.pf #thh .pcv,.pf #ghd .pcv{transition:transform .22s ease;transform:rotate(90deg)}
+.pf #nhd[aria-expanded=true] .pcv,.pf #thh[aria-expanded=true] .pcv,.pf #ghd[aria-expanded=true] .pcv{transform:rotate(-90deg)}
 
 /* ===== KONTAKTY – nowy wygląd (wzór użytkownika) ===== */
 .scr.prf.kn2{display:block!important;padding:calc(26px + env(safe-area-inset-top,0px)) 12px 120px;background:#0b0b0b;color:#fff}
@@ -1557,6 +1557,8 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .n2ld{display:grid;place-items:center;min-height:60dvh}.n2ld img{width:84px;height:84px;mix-blend-mode:screen;-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 71%);mask-image:radial-gradient(circle,#000 52%,transparent 71%);animation:n2p 1.4s ease-in-out infinite}@keyframes n2p{0%,100%{transform:scale(.9);opacity:.7}50%{transform:scale(1.08);opacity:1}}@media(prefers-reduced-motion:reduce){.n2ld img{animation:none}}
 .scr.chs .cbar .hmo{width:44px;height:44px;border-radius:50%;background:rgba(14,14,14,.55);border:1px solid rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.scr.chs .cbar .hmo svg{width:21px;height:21px}
 .pmq,.pmo{background:rgba(14,14,14,.55)!important;border:1px solid rgba(255,255,255,.14)!important;color:#fff!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.hlp{text-align:left;gap:12px}.hlp h2{font-size:24px;text-align:center;margin:6px 0 0}.hlp .hint{color:rgba(255,255,255,.55);font:700 15px Brico,BricoCyr,system-ui;text-align:left}.hlp .dsb{margin-top:4px}#bgm,#bge{background:#161616;border-radius:18px}
+.gvl{margin-left:auto;margin-right:6px;color:rgba(255,255,255,.55);font:700 14px Brico,BricoCyr,system-ui}.gvl+.pcv{margin-left:0}.gop .gck{margin-left:auto;color:var(--acc);font-style:normal;font-weight:900;opacity:0}.gop.on .gck{opacity:1}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -2950,7 +2952,7 @@ function profileView(){
   <div class="sgrp"><h3>${t("pAcc")}</h3><div class="slist">${bI.row}${bI.grid}${SAFE?row(SI.shield,t("trT"),`<em>${trusted().length}/3</em>`,`onclick="trustSheet()"`,esc(trN)||t("trAdd")):""}</div></div>
   <div class="sgrp"><div class="slist"><button class="srow nhd" id="nhd" aria-expanded="false">${I(IC.bell)}<span class="rl">${t("sNotif")}</span><em class="pcv">${I(CV)}</em></button><div id="nbd" hidden>${NK.map(k=>`<div class="srow">${I(NI[k])}<span class="rl">${t("n_"+k)}</span><div class="tg s ${nsOn(k)?"on":""}" data-n="${k}" role="switch" aria-checked="${nsOn(k)}" tabindex="0"></div></div>`).join("")}</div></div><p class="hint s pfn">${t("nHint")}</p></div>
   <div class="sgrp"><div class="slist"><button class="srow nhd" id="thh" aria-expanded="false">${I('<circle cx="12" cy="12" r="9"/><circle cx="8.500" cy="10" r="1.200"/><circle cx="12" cy="7.500" r="1.200"/><circle cx="15.500" cy="10" r="1.200"/><path d="M12 21c-1.500 0-2-1.200-1.200-2.200.8-1 .2-2.300-1-2.300H8"/>')}<span class="rl">${t("thT")}</span><em class="pcv">${I(CV)}</em></button><div id="thb" hidden style="padding:0 14px 8px">${thSw()}</div></div></div>
-  <div class="sgrp"><div class="slist" style="padding:6px 14px 10px">${gSw()}</div></div>
+  <div class="sgrp"><div class="slist"><button class="srow nhd" id="ghd" aria-expanded="false">${I('<circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-4 3.5-6 7-6s6.2 2 7 6"/>')}<span class="rl">${t("gT")}</span><small class="gvl" id="gvl">${(()=>{const v=sget("gender");return v==="m"?t("gM"):v==="f"?t("gF"):t("gPh")})()}</small><em class="pcv">${I(CV)}</em></button><div id="gbd" hidden>${["m","f"].map(g=>`<button type="button" class="srow gop${sget("gender")===g?" on":""}" data-g="${g}"><span class="rl">${t(g==="m"?"gM":"gF")}</span><i class="gck">✓</i></button>`).join("")}</div></div><p class="hint s pfn">${t("gH")}</p></div>
   <div class="sgrp"><h3>${t("lang")}</h3><div class="slist"><button class="srow" id="lgb">${I(IC.glb)}<span class="rl">${(LANGS.find(x=>x[0]==LANG)||LANGS[0])[1]}</span><em class="pcv">${I(CV)}</em></button></div></div>
   <div class="sgrp"><h3>${t("sSafe")}</h3><div class="slist">${row(SI.shield,t("safety"),"",`onclick="go('/safety')"`)}${row(SI.shield,t("chS"),"",`onclick="go('/child-safety')"`)}${row(BAN,t("blocked"),`<em>${blockedL().length||""}</em>`,`onclick="go('/blocked')"`)}</div></div>
   <div class="sgrp"><h3>${t("sInfo")}</h3><div class="slist">${row(SI.doc,t("terms"),"",`onclick="go('/terms')"`)}${row(SI.lock,t("privacy"),"",`onclick="go('/privacy')"`)}<button class="srow" id="hlp">${sv(SI.help)}<span class="rl">${t("help")}</span></button><button class="srow" id="bug">${sv(SI.bug)}<span class="rl">${t("bugT")}</span></button><a class="srow" href="https://getsquad.web.app" target="_blank" rel="noopener">${I(IC.glb)}<span class="rl">${t("webSite")}</span></a><div class="srow">${sv(SI.info)}<span class="rl">${t("version")}</span><em>${VER_TXT}</em></div><a class="srow" href="/e/LICENSE.txt" target="_blank" rel="noopener">${sv(SI.user)}<span class="rl">${t("avCredit")}</span></a></div></div>
@@ -2958,7 +2960,8 @@ function profileView(){
   <div id="mx" hidden><div class="slist" style="margin-top:12px">${row(SI.out,t("logout"),"",'id="so"')}<button class="srow danger" id="da">${sv(SI.trash)}<span class="rl">${t("delAcc")}</span></button></div></div>
   </div>${nav("p")}`);
   $("#actb").innerHTML=actRows();
-  bindG(()=>saveProfile());
+  $("#ghd").onclick=()=>{const o=$("#ghd").getAttribute("aria-expanded")!=="true";$("#ghd").setAttribute("aria-expanded",String(o));$("#gbd").hidden=!o;vib(8)};
+  document.querySelectorAll("#gbd .gop").forEach(c=>c.onclick=()=>{vib(10);sset("gender",c.dataset.g);document.querySelectorAll("#gbd .gop").forEach(x=>x.classList.toggle("on",x===c));$("#gvl").textContent=t(c.dataset.g==="m"?"gM":"gF");$("#ghd").setAttribute("aria-expanded","false");$("#gbd").hidden=true;saveProfile()});
   $("#thh").onclick=()=>{const o=$("#thh").getAttribute("aria-expanded")!=="true";$("#thh").setAttribute("aria-expanded",String(o));$("#thb").hidden=!o;vib(8)};
   $("#nhd").onclick=()=>{const o=$("#nhd").getAttribute("aria-expanded")!=="true";$("#nhd").setAttribute("aria-expanded",String(o));$("#nbd").hidden=!o;vib(8)};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");
@@ -4599,7 +4602,7 @@ async function wipeGroup(id){try{for(const sub of ["messages","members"]){const 
 Object.assign(L.pl,{hlT:"Pomoc i kontakt",hlD:"Coś nie działa albo masz pomysł? Napisz do nas – odpisujemy najszybciej, jak się da.",hlMail:"Napisz maila",hlGm:"Napisz przez Gmail",hlCp:"Kopiuj adres",hlCpd:"Skopiowano adres ✓"});
 Object.assign(L.en,{hlT:"Help & contact",hlD:"Something broken or got an idea? Write to us – we reply as fast as we can.",hlMail:"Send an email",hlGm:"Write via Gmail",hlCp:"Copy address",hlCpd:"Address copied ✓"});
 const bugCss=0;
-function bugSheet(ctx){const s=sheet(`<div class="hlp"><img class="hli" src="/e/help3d.svg" alt=""><h2>${t("bugT")}</h2><p class="hint">${t("bugD")}</p><textarea id="bgm" maxlength="1000" rows="5" placeholder="${esc(t("bugPh"))}"></textarea><input id="bge" type="email" maxlength="120" autocomplete="email" placeholder="${esc(t("bugMail"))}"><input id="bgh" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"><div class="slist pl pr"><button class="srow bgb" id="bgs" style="background:var(--acc);color:#0b0b12">${t("bugSend")}</button></div><div class="slist pl"><button class="srow bgb" id="bgc">${t("cancel")}</button></div></div>`);
+function bugSheet(ctx){const s=sheet(`<div class="hlp"><h2>${t("bugT")}</h2><p class="hint">${t("bugD")}</p><textarea id="bgm" maxlength="1000" rows="5" placeholder="${esc(t("bugPh"))}"></textarea><input id="bge" type="email" maxlength="120" autocomplete="email" placeholder="${esc(t("bugMail"))}"><input id="bgh" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"><div class="dsb"><button class="dsx" id="bgs">${t("bugSend")}</button><button class="dsx g" id="bgc">${t("cancel")}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#bgc").onclick=s.close;
   s.querySelector("#bgs").onclick=async()=>{const m=s.querySelector("#bgm").value.trim(),em=s.querySelector("#bge").value.trim(),b=s.querySelector("#bgs");
     if(s.querySelector("#bgh").value)return s.close();
@@ -4610,10 +4613,10 @@ function bugSheet(ctx){const s=sheet(`<div class="hlp"><img class="hli" src="/e/
     if(!ok){b.disabled=false;vib([50,30,50]);return toast(t("bugFail"))}
     sset("bugAt",String(Date.now()));s.close();vib(15);toast(t("bugDone"))}}
 window.bugSheet=bugSheet;
-const contactRows=(subj,body)=>`<div class="slist"><a class="srow irow" href="mailto:${MAIL_TO}?subject=${subj}${body?"&body="+body:""}">${sv(SI.mail)}<span><b>${t("hlMail")}</b><small>${esc(MAIL_TO)}</small></span><em>›</em></a><a class="srow irow" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${MAIL_TO}&su=${subj}">${sv(SI.mail)}<span><b>${t("hlGm")}</b></span><em>›</em></a><button class="srow irow" id="hcp">${sv(SI.copy)}<span><b>${t("hlCp")}</b></span></button></div>`,
+const contactRows=(subj,body)=>`<p class="dsub" style="text-align:center;color:#fff;font-weight:800">${esc(MAIL_TO)}</p><div class="dsb"><a class="dsx" href="mailto:${MAIL_TO}?subject=${subj}${body?"&body="+body:""}">${t("hlMail")}</a><a class="dsx g" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${MAIL_TO}&su=${subj}">${t("hlGm")}</a><button class="dsx g" id="hcp">${t("hlCp")}</button></div>`,
 copyMail=async()=>{try{await navigator.clipboard.writeText(MAIL_TO)}catch{const i=document.createElement("input");i.value=MAIL_TO;document.body.append(i);i.select();try{document.execCommand("copy")}catch{}i.remove()}vib(12);toast(t("hlCpd"))};
 function helpSheet(){const subj=encodeURIComponent("Squad "+APP_VER),body=encodeURIComponent("\n\n—\n"+navigator.userAgent);
-  const s=sheet(`<div class="hlp"><img class="hli" src="/e/help3d.svg" alt=""><h2>${t("hlT")}</h2><p class="hint">${t("hlD")}</p>${contactRows(subj,body)}</div>`);
+  const s=sheet(`<div class="hlp"><h2>${t("hlT")}</h2><p class="hint">${t("hlD")}</p>${contactRows(subj,body)}</div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#hcp").onclick=copyMail}
 /* ---------- INSTALACJA: Android (Sklep Play / instalacja z Chrome), iPhone (ekran początkowy) ---------- */
 const FLOAT=`<img class="fl f1" src="/e/fire.webp" alt=""><img class="fl f2" src="/e/crown.webp" alt=""><img class="fl f3" src="/e/pizza.webp" alt=""><img class="fl f4" src="/e/cloud.webp" alt="">`;
