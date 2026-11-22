@@ -157,16 +157,16 @@ async function loadCore(){
   for(const {k} of PF){
     const p=W("pf","==",k),L=(o,v)=>W("ls",o,ts(v)),Fs=(o,v)=>W("fs",o,ts(v));
     const set=(key,fn)=>jobs.push(async()=>{R[k][key]=await fn()});
-    set("tot",()=>cnt("presence",p));
-    set("onl",()=>cnt("presence",p,L(">=",now-6*60e3)));
-    set("d1",()=>cnt("presence",p,L(">=",now-Dm)));
-    set("d7",()=>cnt("presence",p,L(">=",now-7*Dm)));
-    set("d30",()=>cnt("presence",p,L(">=",now-30*Dm)));
-    set("n1",()=>cnt("presence",p,Fs(">=",now-Dm)));
-    set("n7",()=>cnt("presence",p,Fs(">=",now-7*Dm)));
-    set("n30",()=>cnt("presence",p,Fs(">=",now-30*Dm)));
-    set("idle7",()=>cnt("presence",p,L("<",now-7*Dm)));
-    set("lost",()=>cnt("presence",p,L("<",now-30*Dm)));
+    set("tot",()=>cnt("ust",p));
+    set("onl",()=>cnt("ust",p,L(">=",now-6*60e3)));
+    set("d1",()=>cnt("ust",p,L(">=",now-Dm)));
+    set("d7",()=>cnt("ust",p,L(">=",now-7*Dm)));
+    set("d30",()=>cnt("ust",p,L(">=",now-30*Dm)));
+    set("n1",()=>cnt("ust",p,Fs(">=",now-Dm)));
+    set("n7",()=>cnt("ust",p,Fs(">=",now-7*Dm)));
+    set("n30",()=>cnt("ust",p,Fs(">=",now-30*Dm)));
+    set("idle7",()=>cnt("ust",p,L("<",now-7*Dm)));
+    set("lost",()=>cnt("ust",p,L("<",now-30*Dm)));
   }
   jobs.push(async()=>{R.drops=await cnt("drops")},async()=>{R.groups=await cnt("groups")});
   await pool(jobs,12);
@@ -178,7 +178,7 @@ async function loadDays(){
     if(slot.a!==null&&!isToday)continue;
     const d0=day(i),d1=new Date(d0.getTime()+864e5);
     jobs.push(async()=>{slot.a=await cnt("act",F.where("d","==",iso(d0)),F.where("pf","==",k))});
-    jobs.push(async()=>{slot.n=await cnt("presence",F.where("pf","==",k),F.where("fs",">=",ts(d0.getTime())),F.where("fs","<",ts(d1.getTime())))});
+    jobs.push(async()=>{slot.n=await cnt("ust",F.where("pf","==",k),F.where("fs",">=",ts(d0.getTime())),F.where("fs","<",ts(d1.getTime())))});
   }
   await pool(jobs,10);
 }

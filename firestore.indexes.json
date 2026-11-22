@@ -15,7 +15,7 @@
       ]
     },
     {
-      "collectionGroup": "presence",
+      "collectionGroup": "ust",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -29,7 +29,7 @@
       ]
     },
     {
-      "collectionGroup": "presence",
+      "collectionGroup": "ust",
       "queryScope": "COLLECTION",
       "fields": [
         {

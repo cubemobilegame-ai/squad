@@ -2399,7 +2399,7 @@ try{const u=new URL(location.href),id=u.searchParams.get("inst");if(id){u.search
 /* statystyki dla twórcy: platforma + ostatnia aktywność (bez treści, bez lokalizacji) */
 const trk=async(force)=>{try{const u=auth.currentUser;if(DEMO||!u||document.hidden)return;const now=Date.now();if(!force&&window.__trkT&&now-window.__trkT<240000)return;window.__trkT=now;
   const pf=IOSAPP?"ios":ANDAPP?"android":((matchMedia("(display-mode: standalone)").matches||navigator.standalone)?"pwa":"web"),g=!!u.isAnonymous,lang=String(LANG||"").slice(0,5),v=String((typeof APP_VER!=="undefined"?APP_VER:"")||sget("appV")||"").slice(0,12);
-  const ref=doc(db,"presence",u.uid);try{await updateDoc(ref,{ls:serverTimestamp(),pf,g,lang,v})}catch{await setDoc(ref,{fs:serverTimestamp(),ls:serverTimestamp(),pf,g,lang,v})}
+  const ref=doc(db,"ust",u.uid);try{await updateDoc(ref,{ls:serverTimestamp(),pf,g,lang,v})}catch{await setDoc(ref,{fs:serverTimestamp(),ls:serverTimestamp(),pf,g,lang,v})}
   const d=new Date().toISOString().slice(0,10),k="act_"+u.uid+"_"+d;if(!sget(k)){await setDoc(doc(db,"act",u.uid+"_"+d),{u:u.uid,d,pf});sset(k,"1")}}catch{}};
 window.addEventListener("load",()=>setInterval(()=>trk(),60000));document.addEventListener("visibilitychange",()=>{if(!document.hidden)trk()});
 onAuthStateChanged(auth,async()=>{if(window.__fresh){window.__fresh=false;try{if(auth.currentUser)await signOut(auth)}catch{}try{wipeUser()}catch{}try{sset("lastUid","");sset("guest","")}catch{}}window.__splP&&__splP(.85);watch();const u=auth.currentUser;setTimeout(()=>trk(true),2500);if(!u){window.__lp=null;try{widgetSync()}catch{}}if(u&&!u.isAnonymous&&window.__lp!==u.uid){window.__lp=u.uid;{const lu=sget("lastUid");if(lu&&lu!==u.uid)wipeUser();sset("lastUid",u.uid)}await Promise.race([loadProfile(u),new Promise(r=>setTimeout(r,4000))]);if(sget("nick"))setTimeout(()=>{saveProfile();try{syncAvatar()}catch{}},3000)}if(first){first=false;route()}else if(!/^\/(d|c|g|gc)\//.test(gp()))route();badges();if(u&&!u.isAnonymous){setTimeout(()=>enablePush(false),2000);if(!window.__visP){window.__visP=1;document.addEventListener("visibilitychange",()=>{if(!document.hidden&&auth.currentUser&&!auth.currentUser.isAnonymous){enablePush(false);setTimeout(()=>{if(pushState()==="granted"){document.getElementById("pcard")?.remove();document.getElementById("pscr")?.remove()}},800)}})}}});
@@ -4590,7 +4590,7 @@ function delAccount(){vib(15);
     try{for(const d of [...S.items.values()]){if(d.hostId===u.uid)await deleteDoc(doc(db,"drops",d.id));else await deleteDoc(doc(db,"drops",d.id,"participants",u.uid)).catch(()=>{})}
       for(const g of [...S.groups.values()]){if(g.ownerId===u.uid)await wipeGroup(g.id);else await deleteDoc(doc(db,"groups",g.id,"members",u.uid)).catch(()=>{})}
       for(const k of [...S.con.keys()])await conDel(k).catch(()=>{});
-      await deleteDoc(doc(db,"presence",u.uid)).catch(()=>{});
+      await deleteDoc(doc(db,"ust",u.uid)).catch(()=>{});
       for(const k of Object.keys(localStorage).filter(k=>k.startsWith("act_"+u.uid+"_")))await deleteDoc(doc(db,"act",k.slice(4))).catch(()=>{});
       await deleteDoc(doc(db,"users",u.uid)).catch(()=>{});
       if(typeof u.delete==="function")await u.delete();

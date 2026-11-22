@@ -15,7 +15,7 @@ service cloud.firestore {
     // Aplikacja zapisuje tylko własny wpis (platforma, data pierwszej i ostatniej aktywności); odczyt ma wyłącznie administrator.
     function isAdmin() { return request.auth != null && request.auth.token.email_verified == true && request.auth.token.email in ['cubemobilegame@gmail.com']; }
     function okPf(d) { return d.pf in ['ios', 'android', 'web', 'pwa']; }
-    match /presence/{uid} {
+    match /ust/{uid} {
       allow read: if isAdmin();
       allow create: if signedIn() && request.auth.uid == uid
         && request.resource.data.keys().hasOnly(['fs', 'ls', 'pf', 'g', 'lang', 'v'])

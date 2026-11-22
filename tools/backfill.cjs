@@ -6,7 +6,7 @@ const db = admin.firestore(), APPLY = process.env.APPLY === "1";
 (async () => {
   let all = [], tok;
   do { const r = await admin.auth().listUsers(1000, tok); all = all.concat(r.users); tok = r.pageToken; } while (tok);
-  const pdocs = (await db.collection("presence").select("pf", "ls").get()).docs, ex = new Set(pdocs.map((d) => d.id)), pfc = {}; pdocs.forEach((d) => { const p = d.get("pf") || "?"; pfc[p] = (pfc[p] || 0) + 1; });
+  const pdocs = (await db.collection("ust").select("pf", "ls").get()).docs, ex = new Set(pdocs.map((d) => d.id)), pfc = {}; pdocs.forEach((d) => { const p = d.get("pf") || "?"; pfc[p] = (pfc[p] || 0) + 1; });
   const todo = all.filter((u) => !ex.has(u.uid)), now = Date.now(), D = 864e5;
   const t = (s) => +new Date(s), ls = (u) => t(u.metadata.lastSignInTime || u.metadata.creationTime), fs = (u) => t(u.metadata.creationTime);
   const days = {}; todo.forEach((u) => { const k = new Date(fs(u)).toISOString().slice(0, 10); if (now - fs(u) < 30 * D) days[k] = (days[k] || 0) + 1; });
@@ -15,10 +15,13 @@ const db = admin.firestore(), APPLY = process.env.APPLY === "1";
     `Założone w ostatnich 7 dni: ${todo.filter((u) => now - fs(u) < 7 * D).length}, 30 dni: ${todo.filter((u) => now - fs(u) < 30 * D).length}`,
     `Ostatnie logowanie – 24 h: ${todo.filter((u) => now - ls(u) < D).length}, 7 dni: ${todo.filter((u) => now - ls(u) < 7 * D).length}, 30 dni: ${todo.filter((u) => now - ls(u) < 30 * D).length}, starsze: ${todo.filter((u) => now - ls(u) >= 30 * D).length}`,
     `Nowe konta wg dni (30 dni): ${Object.keys(days).sort().map((k) => k + "=" + days[k]).join(", ") || "-"}`];
+  const bad = (await db.collection("presence").where("pf", "==", "unk").select().get()).docs; // wpisy wczytane omyłkowo do kolekcji zielonej kropki
+  L.push(`Do usunięcia z kolekcji „presence” (omyłkowo wczytane): ${bad.length}`);
   if (APPLY) {
+    for (let i = 0; i < bad.length; i += 400) { const d = db.batch(); bad.slice(i, i + 400).forEach((x) => d.delete(x.ref)); await d.commit(); }
     let w = db.batch(), n = 0;
     for (const u of todo) {
-      w.create(db.collection("presence").doc(u.uid), { fs: admin.firestore.Timestamp.fromMillis(fs(u)), ls: admin.firestore.Timestamp.fromMillis(Math.max(ls(u), fs(u))), pf: "unk", g: !u.providerData.length, lang: "", v: "" });
+      w.create(db.collection("ust").doc(u.uid), { fs: admin.firestore.Timestamp.fromMillis(fs(u)), ls: admin.firestore.Timestamp.fromMillis(Math.max(ls(u), fs(u))), pf: "unk", g: !u.providerData.length, lang: "", v: "" });
       if (++n % 400 === 0) { await w.commit(); w = db.batch(); }
     }
     await w.commit(); L.push(`ZAPISANO: ${todo.length}`);
