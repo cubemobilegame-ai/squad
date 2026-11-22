@@ -1582,6 +1582,8 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .gvl{margin-left:auto;margin-right:6px;color:rgba(255,255,255,.55);font:700 14px Brico,BricoCyr,system-ui}.gvl+.pcv{margin-left:0}.gop .gck{margin-left:auto;color:var(--acc);font-style:normal;font-weight:900;opacity:0}.gop.on .gck{opacity:1}
 
 /* ===== GRUPA: podgląd w stylu podglądu dropa ===== */
+.gv .n2h.gh{height:305px}.gv .n2t .bk,.gv .n2t .bk.ic{background:rgba(14,14,14,.88)!important}.gv .n2h.gh:after{display:none}.gv .n2h.gh::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.2),transparent 45%),radial-gradient(115% 95% at 100% 100%,rgba(0,0,0,.31),transparent 76%),radial-gradient(90% 72% at 0% 100%,rgba(0,0,0,.19),transparent 76%)}
+.gsw{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:6px 2px 4px}.gsw button{aspect-ratio:1;border:0;border-radius:50%;padding:0;cursor:pointer;position:relative}.gsw button.on::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2.5px solid #fff}
 .scr.dv.n2.gv>*{order:0!important}.scr.dv.n2.gv>.n2h{margin:0!important}.scr.dv.n2.gv{gap:12px}.gv .n2h .n2ph{object-fit:cover}
 .gv .n2a .gic{height:92px;padding:0;gap:10px}.gv .n2a .gic span{display:contents}.gv .n2a .gic span svg{width:24px;height:24px}.gv .n2a .gic b{font:800 14px Brico,BricoCyr,system-ui;color:#fff}.gv .n2a .gic.on{background:rgba(255,255,255,.1)}
 .gv #mem,.gv .inv{margin-left:16px!important;margin-right:16px!important}
@@ -2200,6 +2202,7 @@ Object.assign(L.cs,{pubCatX:"Tato kategorie nemůže být veřejný drop."});
 Object.assign(L.uk,{pubCatX:"Ця категорія не може бути публічним дропом."});
 Object.assign(L.pl,{aMeet:"Spotkania w tym miesiącu",aHost:"Zorganizowane przez Ciebie",aFr:"Znajomi"});Object.assign(L.en,{aMeet:"Meetups this month",aHost:"Hosted by you",aFr:"Friends"});Object.assign(L.es,{aMeet:"Quedadas este mes",aHost:"Organizadas por ti",aFr:"Amigos"});Object.assign(L.de,{aMeet:"Treffen diesen Monat",aHost:"Von dir organisiert",aFr:"Freunde"});Object.assign(L.fr,{aMeet:"Rencontres ce mois-ci",aHost:"Organisées par toi",aFr:"Amis"});Object.assign(L.it,{aMeet:"Incontri questo mese",aHost:"Organizzati da te",aFr:"Amici"});Object.assign(L.cs,{aMeet:"Setkání tento měsíc",aHost:"Uspořádané tebou",aFr:"Přátelé"});Object.assign(L.uk,{aMeet:"Зустрічі цього місяця",aHost:"Організовано тобою",aFr:"Друзі"});
 Object.assign(L.pl,{nYd:"Wczoraj",nOl:"Wcześniej"});Object.assign(L.en,{nYd:"Yesterday",nOl:"Earlier"});Object.assign(L.es,{nYd:"Ayer",nOl:"Antes"});Object.assign(L.de,{nYd:"Gestern",nOl:"Früher"});Object.assign(L.fr,{nYd:"Hier",nOl:"Avant"});Object.assign(L.it,{nYd:"Ieri",nOl:"Prima"});Object.assign(L.cs,{nYd:"Včera",nOl:"Dříve"});Object.assign(L.uk,{nYd:"Вчора",nOl:"Раніше"});
+Object.assign(L.pl,{cmCol:"Zmień kolor tła"});Object.assign(L.en,{cmCol:"Change background color"});Object.assign(L.es,{cmCol:"Cambiar color de fondo"});Object.assign(L.de,{cmCol:"Hintergrundfarbe ändern"});Object.assign(L.fr,{cmCol:"Changer la couleur de fond"});Object.assign(L.it,{cmCol:"Cambia colore di sfondo"});Object.assign(L.cs,{cmCol:"Změnit barvu pozadí"});Object.assign(L.uk,{cmCol:"Змінити колір тла"});
 Object.assign(L.pl,{nAct:"Aktywność"});Object.assign(L.en,{nAct:"Activity"});Object.assign(L.es,{nAct:"Actividad"});Object.assign(L.de,{nAct:"Aktivität"});Object.assign(L.fr,{nAct:"Activité"});Object.assign(L.it,{nAct:"Attività"});Object.assign(L.cs,{nAct:"Aktivita"});Object.assign(L.uk,{nAct:"Активність"});
 Object.assign(L.es,{mf_all:"Todos los drops públicos",mf_mine:"Todos mis drops",dvMore:"Más"});
 Object.assign(L.de,{mf_all:"Alle öffentlichen Drops",mf_mine:"Alle meine Drops",dvMore:"Mehr"});
@@ -2540,6 +2543,7 @@ const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
 /* kolor dropu wynika z typu (bez wyboru przez użytkownika); stare dropy z polem theme zostają po staremu */
 const TCOL={grill:["#c2410c","#f59e0b"],biz:["#3b6cf6","#22d3ee"],sport:["#17c964","#a3e635"],house:["#f97316","#fb7185"],club:["#7c3aed","#ec4899"],pub:["#b45309","#f59e0b"],food:["#ea580c","#facc15"],pizza:["#ea580c","#facc15"],coffee:["#92400e","#d6a05a"],cinema:["#9f1239","#f43f5e"],gaming:["#4f46e5","#06b6d4"],gallery:["#0f766e","#5eead4"],walk:["#65a30d","#facc15"],trip:["#0ea5e9","#22d3a4"],occ:["#db2777","#fb7185"],xmas:["#166534","#dc2626"],nye:["#1e3a8a","#fbbf24"],bike:["#0f766e","#2dd4bf"],basket:["#ea580c","#fb923c"],fball:["#15803d","#4ade80"],vball:["#d97706","#fde047"],run:["#e11d48","#fb7185"],gym:["#4338ca","#a78bfa"],pool:["#0284c7","#38bdf8"],scoot:["#a21caf","#e879f9"],skate:["#475569","#94a3b8"],other:["#64748b","#a78bfa"]};
+const GTH=[["#db2777","#fb7185"],["#7c3aed","#ec4899"],["#3b6cf6","#22d3ee"],["#ea580c","#facc15"],["#4f46e5","#06b6d4"],["#9f1239","#f43f5e"],["#0ea5e9","#22d3a4"],["#a21caf","#e879f9"],["#17c964","#a3e635"],["#14d996","#8dffd0"],["#d97706","#fde047"],["#4338ca","#a78bfa"]],gth=(g,id)=>GTH[((g&&g.theme!=null?+g.theme:hs(id))%12+12)%12];
 const catCol=(cat,id)=>{const c=TCOL[cat];if(!c)return THEMES[hs(id||"x")%THEMES.length];return id&&hs(id)%2?[c[1],c[0]]:c};
 const thm=d=>d.theme!=null?THEMES[+d.theme%THEMES.length]:catCol(d.category,d.id);
 /* zdjęcia na kartach dropów: pula na typ (public/ph/<klucz>.webp); słowo w tytule wybiera zdjęcie, inaczej stały los wg id */
@@ -3153,7 +3157,7 @@ function chatsView(){
     <div class="cr2"><small>${m?`<em>${esc(who)}:</em> `+esc(clean(m.text||(m.drop?"🔥 "+(m.drop.title||""):""))):`<i>${t("noMsg")}</i>`}</small>${bdi(n)}</div></div></div>`};
   let F=sget("chf")||"all";
   const draw=()=>{
-    const G=[...S.groups.values()].map(g=>{const [c1,c2]=THEMES[hs(g.id)%8],m=(S.ms["g_"+g.id]||[]).slice(-1)[0];return{g:1,id:g.id,href:"/gc/"+g.id,c1,c2,icon:'<img class="e3" src="/e/grupa.webp" alt="">',title:g.name,m,n:unreadOf({id:"g_"+g.id}),tag:t("tagG"),at:m?.createdAt?.toMillis?.()||(m?Date.now():g.createdAt?.toMillis?.()||0),st:g.createdAt?.toMillis?.()||0}});
+    const G=[...S.groups.values()].map(g=>{const [c1,c2]=gth(g,g.id),m=(S.ms["g_"+g.id]||[]).slice(-1)[0];return{g:1,id:g.id,href:"/gc/"+g.id,c1,c2,icon:'<img class="e3" src="/e/grupa.webp" alt="">',title:g.name,m,n:unreadOf({id:"g_"+g.id}),tag:t("tagG"),at:m?.createdAt?.toMillis?.()||(m?Date.now():g.createdAt?.toMillis?.()||0),st:g.createdAt?.toMillis?.()||0}});
     const D=live().filter(d=>loaded(d)&&["host","in","late"].includes(roleOf(d))).map(d=>{const pk=pxKey(d),pg=(FG[pk]||(HG[d.category==="pizza"?"food":d.category]||[])[0]),[c1,c2]=pg?pg.split(","):thm(d),m=(S.ms[d.id]||[]).slice(-1)[0],cu=cutu(d);return{g:0,id:d.id,href:"/c/"+d.id,c1:cu?cu.g[0]:c1,c2:cu?cu.g[1]:c2,icon:`<span class="ltr" style="color:${cu&&cu.c==="cl"?"#17171f":"#fff"}">${ltr(d.title)}</span>`,title:d.title,m,n:unreadOf(d),tag:(()=>{const ms=d.startsAt.toMillis(),q=new Date(ms),hh=pad(q.getHours())+":"+pad(q.getMinutes());if(ms<=Date.now())return"🔥 "+t("live2");const dd=Math.round((new Date(ms).setHours(0,0,0,0)-new Date().setHours(0,0,0,0))/864e5);return"🔥 "+(dd<=0?t("todL"):dd===1?t("tmrL"):q.toLocaleDateString(LANG,{day:"numeric",month:"short"}))+" "+hh})(),at:m?.createdAt?.toMillis?.()||(m?Date.now():d.createdAt?.toMillis?.()||d.startsAt.toMillis()-864e5),st:d.startsAt.toMillis()}});
     const HD=hidMap(),A=(F==="g"?G:F==="d"?D:[...G,...D]).filter(x=>!((HD[(x.g?"g_":"")+x.id]||0)>=x.at)).sort((a,b)=>{if(!!a.m!==!!b.m)return a.m?-1:1;return b.at-a.at});
     $("#gl").innerHTML=A.map(row).join("")||(F==="d"?`<p class="mut emp"><img src="/e/chat.webp" alt="">${t("emptyDc")}</p>`:`<p class="mut emp"><img src="/e/ghost.webp" alt="">${t("emptyG")}</p>`);
@@ -3180,7 +3184,7 @@ async function groupView(code){
   const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code;let mine=null,M=[];
   const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
   const bkb=fromChat?"/gc/"+code:"/chats",IC3='<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>';
-  view(`<div class="scr dv n2 gv"><div class="n2h" style="background:linear-gradient(160deg,#5b4be0,#a58bff)"><img class="n2ph" src="/e/ekipa.webp" alt="" style="object-position:50% 28%"><div class="hdr n2t">${logged?bk(bkb,"",1):"<span></span>"}<span style="display:flex;gap:8px"><button class="bk ic" id="gsh" aria-label="share" hidden>${DSI('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/>')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:""}</span></div><div class="n2ttl"><h1>${gn}</h1><div class="n2ch"><span class="chip">${DSI(DSP.ppl)}<span id="gcn"></span></span></div></div></div>
+  view(`<div class="scr dv n2 gv"><div class="n2h gh" style="background:${gth(g,code)[0]}"><div class="hdr n2t">${logged?bk(bkb,"",1):"<span></span>"}<span style="display:flex;gap:8px"><button class="bk ic" id="gsh" aria-label="share" hidden>${DSI('<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/>')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:""}</span></div><div class="n2ttl"><h1>${gn}</h1><div class="n2ch"><span class="chip">${DSI(DSP.ppl)}<span id="gcn"></span></span></div></div></div>
   ${owner?"":`<div class="inv" id="gib"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
   <div id="mem" hidden></div>
   <div id="shb" class="n2a" style="--n:${logged?4:3}" hidden>${gb(sv(SI.share),t("grInvB"),"sh")}${logged?gb(sv('<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>'),t("nK"),"gk"):""}${gb(sv('<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M5 15V6a2 2 0 012-2h9"/>'),t("shCopy"),"cl")}${logged?gb(sv(isMuted("g_"+code)?BELLO:BELL),isMuted("g_"+code)?t("cmUnmuteS"):t("cmMuteS"),"gmu"):""}</div><div id="gpin"></div><div id="gpol"></div>
@@ -3192,9 +3196,9 @@ async function groupView(code){
   ${owner?"":`<button class="lnk rep" id="rp" style="display:none!important">${sv(SI.flag)} ${t("repGroup")}</button>`}</div>`);
   $("#cl").onclick=async()=>{vib(15);try{await navigator.clipboard.writeText(url)}catch{}toast(t("copied"))};
   $("#gsh").onclick=()=>openShare("g",{id:code,...g,M});
-  if($("#gmo"))$("#gmo").onclick=()=>{vib(8);const B=[];if(!owner)B.push(["rp",t("repGroup")]);const del=mine||owner;
+  if($("#gmo"))$("#gmo").onclick=()=>{vib(8);const B=[];if(owner)B.push(["gcol",t("cmCol")]);if(!owner)B.push(["rp",t("repGroup")]);const del=mine||owner;
     const s4=sheet(`<div class="dsh"><h2>${t("n2more")}</h2><div class="dsb">${B.map(([k,l])=>`<button class="dsx${k==="inv"?"":" g"}" data-k="${k}">${l}</button>`).join("")}${del?`<button class="dsx g" id="gxl" style="color:#ff6b7a">${owner?t("grDel"):t("grLeave")}</button>`:""}</div></div>`);s4.querySelector(".sheet").style.background="#0b0b0b";
-    s4.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{s4.close();setTimeout(()=>$("#"+b.dataset.k)?.click(),260)});
+    s4.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{s4.close();if(b.dataset.k==="gcol"){setTimeout(()=>colorSheet(code,i=>{g.theme=i;const c=GTH[i],h=$(".n2h.gh");if(h)h.style.background=c[0]}),260);return}setTimeout(()=>$("#"+b.dataset.k)?.click(),260)});
     const xl=s4.querySelector("#gxl");if(xl){let ar=0;const lb=xl.textContent;xl.onclick=()=>{if(!ar){ar=1;xl.textContent=t("delSure");setTimeout(()=>{ar=0;xl.textContent=lb},4000);return}s4.close();$("#lv").click();$("#lv").click()}}};
   $("#sh").onclick=()=>openShare("g",{id:code,...g,M});if($("#gmu"))$("#gmu").onclick=()=>{const k="g_"+code,on=!isMuted(k);sset("mut_"+k,on?"1":"");try{if(!DEMO&&auth.currentUser&&!auth.currentUser.isAnonymous)setDoc(doc(db,"users",me()),{muted:{[k]:on?true:deleteField()}},{merge:true}).catch(()=>{})}catch{}vib(on?[20,30,20]:10);toast(t(on?"cmMuted":"cmUnm"));$("#gmu b").textContent=t(on?"cmUnmuteS":"cmMuteS");$("#gmu span").innerHTML=sv(on?BELLO:BELL);$("#gmu").classList.toggle("on",on);changed()};if($("#gk"))$("#gk").onclick=()=>pickContacts("g",code,g.name,new Set([g.ownerId,...M.map(m=>m.id)]));
   $("#chn").onclick=()=>{$("#asr").hidden=true;$("#nick").hidden=false;$("#nick").focus()};$("#oc").onclick=()=>go("/gc/"+code);
@@ -3495,7 +3499,7 @@ async function chatView(code,g){
   else if(g){try{const x=await getDocR(doc(db,"groups",code));if(x.exists())R={ref:x.ref,d:x.data()}}catch{}}else R=await loadDrop(code);
   if(!R)return gone(g);
   const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];
-  const [hc1,hc2]=g?THEMES[hs(code)%THEMES.length]:thm({...d,id:code}),hst=!g&&d.startsAt?.toMillis?d.startsAt.toMillis():0;
+  const [hc1,hc2]=g?gth(d,code):thm({...d,id:code}),hst=!g&&d.startsAt?.toMillis?d.startsAt.toMillis():0;
   view(`<div class="scr chs sk" style="--c1:${hc1};--c2:${hc2}"><div class="cbar" ${g?`onclick="go('/g/${jx(code)}')"`:`onclick="dropSheet('${jx(code)}')"`}>
     <button class="hbk" onclick="event.stopPropagation();window.__nb=Date.now();go('${jh(BK)}')" aria-label="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
     ${g?`<span class="cbi gr"><img src="/e/grupa.webp" alt=""></span>`:(()=>{const cu=cutu(d);if(cu)return`<span class="cbi ct" style="background:linear-gradient(135deg,${cu.g[0]},${cu.g[1]})"><span class="ltr" style="color:${cu.c==="cl"?"#17171f":"#fff"}">${ltr(d.title)}</span></span>`;const pk=pxKey(d),ps=pxSrc(d);return`<span class="cbi" style="background:linear-gradient(135deg,${esc(FG[pk]||(HG[d.category==="pizza"?"food":d.category]||[])[0]||"#ddd")})"><span class="ltr" style="color:#fff">${ltr(d.title)}</span></span>`})()}
@@ -4284,6 +4288,10 @@ const clrMap=()=>{try{return JSON.parse(sget("clrc")||"{}")}catch{return{}}},clr
 const visM=(k,arr)=>{const c=clrAt(k);return c?arr.filter(m=>(m.createdAt?.toMillis?.()||Date.now())>c):arr};
 const hidMap=()=>{try{return JSON.parse(sget("hidc")||"{}")}catch{return{}}};
 const hideChat=(g,id)=>{const k=(g?"g_":"")+id,H=hidMap(),n=Date.now();H[k]=n;sset("hidc",JSON.stringify(H));sset("seen_"+k,n);changed()};
+window.colorSheet=(id,onDone)=>{vib(8);const G=S.groups.get(id),cur=((G&&G.theme!=null?+G.theme:hs(id))%12+12)%12;
+  const s=sheet(`<div class="dsh"><h2>${t("cmCol")}</h2><div class="gsw">${GTH.map((c,i)=>`<button type="button" data-i="${i}" class="${i===cur?"on":""}" aria-label="${i+1}" style="background:${c[0]}"></button>`).join("")}</div></div>`);
+  s.querySelector(".sheet").style.background="#0b0b0b";
+  s.querySelectorAll("[data-i]").forEach(b=>b.onclick=async()=>{const i=+b.dataset.i;vib(10);s.close();if(G)G.theme=i;try{if(!DEMO)await updateDoc(doc(db,"groups",id),{theme:i})}catch{toast(t("err")||"Error")}onDone&&onDone(i)})};
 window.chatMenu=(g,id)=>{vib(10);
   const G=g?S.groups.get(id):S.items.get(id),owner=g?(G&&G.ownerId===me()):(G&&G.hostId===me()),title=g?G?.name:G?.title,k=(g?"g_":"")+id;
   const sync=o=>{try{if(!DEMO&&auth.currentUser&&!auth.currentUser.isAnonymous)setDoc(doc(db,"users",me()),o,{merge:true}).catch(()=>{})}catch{}};
@@ -4291,6 +4299,7 @@ window.chatMenu=(g,id)=>{vib(10);
   const rw=(id,ic,tx,hn,cls)=>`<button class="dsx${cls?" "+cls:" g"}" id="${id}" type="button">${tx}</button>`;
   const s=sheet(`<div class="dsh cmenu2"><h2>${esc(clean(title||""))}</h2><div class="dsb">
     ${(g||owner)&&G&&!auth.currentUser?.isAnonymous?rw("cmI",0,t("cmInv"),0,"cmw"):""}
+    ${g&&owner?rw("cmCo",0,t("cmCol")):""}
     ${rw("cmM",isMuted(k)?IB:IBO,isMuted(k)?t("cmUnmute"):t("cmMute"))}
     ${rw("cmC",IC,t("cmClr"),t("cmClrD"))}
     ${owner?"":rw("cmR",SI.flag,t("cmRep"))}
@@ -4300,6 +4309,7 @@ window.chatMenu=(g,id)=>{vib(10);
   s.querySelector(".sheet").style.background="#0b0b0b";
   const arm=(b,lb,fn)=>{let a=0;const h0=b.innerHTML;b.onclick=async()=>{if(!a){a=1;b.textContent=t("delSure");setTimeout(()=>{a=0;b.innerHTML=h0},4000);return}b.disabled=true;try{await fn()}catch{b.disabled=false;toast(t("err")||"Error")}}};
   s.querySelector("#cmM").onclick=()=>{const on=!isMuted(k);sset("mut_"+k,on?"1":"");sync({muted:{[k]:on?true:deleteField()}});{const cb=document.getElementById("cbm");if(cb)cb.hidden=!on}s.close();vib(on?[20,30,20]:10);toast(t(on?"cmMuted":"cmUnm"));changed()};
+  if(s.querySelector("#cmCo"))s.querySelector("#cmCo").onclick=()=>{s.close();setTimeout(()=>colorSheet(id,()=>route()),260)};
   if(s.querySelector("#cmR"))s.querySelector("#cmR").onclick=()=>{s.close();report({target:g?"group":"drop",code:id})};
   if(s.querySelector("#cmI"))s.querySelector("#cmI").onclick=()=>{s.close();if(g)openShare("g",{id,...G,M:S.gm?.[id]||[]});else setTimeout(()=>inviteSheet(G,id,S.ppl[id]||[],true),260)};
   arm(s.querySelector("#cmC"),t("cmClr"),async()=>{const n=Date.now(),c=clrMap();c[k]=n;sset("clrc",JSON.stringify(c));sset("seen_"+k,n);sync({cleared:{[k]:n}});s.close();vib([20,30,20]);toast(t("cmCleared"));S.ms[k==="g_"+id?k:id]=[];changed();route()});
