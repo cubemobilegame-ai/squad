@@ -1594,6 +1594,10 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .tour .tf{display:flex;align-items:center;gap:10px}.tour .tf em{font:800 13px Brico,BricoCyr,system-ui;font-style:normal;color:rgba(255,255,255,.5);margin-right:auto}
 .tour .tk{background:none;border:0;color:rgba(255,255,255,.6);font:700 14px Brico,BricoCyr,system-ui;padding:10px 6px;cursor:pointer}
 .tour .tn{height:44px;padding:0 24px;border:0;border-radius:99px;background:#fff;color:#0b0b0b;font:800 15px Brico,BricoCyr,system-ui;cursor:pointer}
+
+/* pole pisania w czacie 5 px niżej (bez klawiatury) */
+:root:not(.kb) .scr.chs.sk{padding-bottom:calc(9px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
+:root:not(.kb) .scr.chs:not(.sk){padding-bottom:calc(5px + var(--sab,env(safe-area-inset-bottom,0px)))!important}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
