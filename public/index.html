@@ -1704,6 +1704,8 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 /* ---------- śnieg na ekranie startowym: 4 warstwy głębi (dalej = mniejsze, ciemniejsze, bardziej rozmyte; najbliżej = ostre), nieregularny ruch ---------- */
 window.snowFx=function(cv){
   if(!cv||cv.__snow)return;cv.__snow=1;
+  /* sezon: 1 grudnia – 1 stycznia (do testów: ?snow=1) */
+  try{const D=new Date(),M=D.getMonth(),d=D.getDate();if(!(M===11||(M===0&&d===1)||/[?&]snow=1\b/.test(location.search))){cv.remove();return}}catch(e){}
   const ctx=cv.getContext("2d");if(!ctx)return;
   const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
   const dpr=Math.min(window.devicePixelRatio||1,2);
