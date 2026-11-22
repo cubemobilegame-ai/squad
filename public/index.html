@@ -2436,7 +2436,7 @@ Object.assign(L.en,{tr1T:"Add a drop",tr1D:"Pick what, when and where. You'll ge
 for(const k of["es","de","fr","it","cs","uk"])for(const x of Object.keys(L.en))if(/^tr/.test(x)&&L[k][x]==null)L[k][x]=L.en[x];
 window.runTour=()=>{const steps=[["#nd","tr1"],["#qrh","tr2"],["nav.nv5 [data-k=m]","tr3"],["nav.nv5 [data-k=c]","tr4"]].filter(x=>document.querySelector(x[0]));if(!steps.length)return;
   let i=0;const ov=document.createElement("div");ov.className="tour";document.body.append(ov);const bo=document.body.style.overflow;document.body.style.overflow="hidden";
-  const done=()=>{sset("tourDone","1");ov.remove();document.body.style.overflow=bo;removeEventListener("resize",draw)};
+  const done=()=>{sset("tourDone","1");try{const u=auth.currentUser;if(u&&!DEMO)setDoc(doc(db,"users",u.uid),{tourDone:true},{merge:true}).catch(()=>{})}catch{}ov.remove();document.body.style.overflow=bo;removeEventListener("resize",draw)};
   function draw(){const[sel,k]=steps[i],el=document.querySelector(sel);if(!el)return done();
     const r=el.getBoundingClientRect(),pd=8,x=r.left-pd,y=r.top-pd,w=r.width+pd*2,h=r.height+pd*2,W=innerWidth,H=innerHeight,below=y+h/2<H/2,bw=Math.min(320,W-32),cx=x+w/2,bl=Math.max(16,Math.min(cx-bw/2,W-16-bw)),ax=Math.max(22,Math.min(cx-bl,bw-22)),last=i===steps.length-1;
     const yy=Math.min(y,H-4-h),rd=Math.min(w,h)/2,mk=`<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><path fill-rule='evenodd' d='M0 0H${W}V${H}H0Z M${x+rd} ${yy}H${x+w-rd}A${rd} ${rd} 0 0 1 ${x+w-rd} ${yy+h}H${x+rd}A${rd} ${rd} 0 0 1 ${x+rd} ${yy}Z'/></svg>`,mu=`url(data:image/svg+xml,${encodeURIComponent(mk).replace(/'/g,"%27")})`;
@@ -2444,7 +2444,13 @@ window.runTour=()=>{const steps=[["#nd","tr1"],["#qrh","tr2"],["nav.nv5 [data-k=
     <div class="tp" style="width:${bw}px;left:${bl}px;${below?`top:${yy+h+14}px`:`bottom:${H-yy+14}px`}"><span class="ta ${below?"up":"dn"}" style="left:${ax}px"></span><h3>${t(k+"T")}</h3><p>${t(k+"D")}</p><div class="tf"><em>${t("trOf",i+1,steps.length)}</em><button type="button" class="tk" id="tks"${last?" hidden":""}>${t("trSkip")}</button><button type="button" class="tn" id="tnx">${t(last?"trDone":"trNext")}</button></div></div>`;
     ov.querySelector("#tnx").onclick=()=>{vib(8);if(last)return done();i++;draw()};const sk=ov.querySelector("#tks");if(sk)sk.onclick=done}
   addEventListener("resize",draw);draw()};
-window.maybeTour=()=>{if(sget("tourDone")==="1"||gp()!=="/"||document.querySelector(".tour")||!document.querySelector("#nd"))return;if(DEMO&&!/[?&]tour/.test(location.search))return;runTour()};
+window.maybeTour=async()=>{if(sget("tourDone")==="1"||gp()!=="/"||document.querySelector(".tour")||!document.querySelector("#nd"))return;
+  if(DEMO){if(/[?&]tour/.test(location.search))runTour();return}
+  const u=auth.currentUser;if(!u)return;
+  /* tylko dla nowego konta: starsze konto (np. po reinstalacji) i konto z zapisanym znacznikiem nie dostają wycieczki */
+  const born=+u.metadata?.createdAt||Date.parse(u.metadata?.creationTime||"")||0;if(!born||Date.now()-born>2*864e5){sset("tourDone","1");return}
+  try{const d=await getDoc(doc(db,"users",u.uid));if(d.exists()&&d.data().tourDone){sset("tourDone","1");return}}catch{return}
+  if(gp()!=="/"||document.querySelector(".tour"))return;runTour()};
 /* ---------- ROUTER ---------- */
 /* powrót (np. z polityki prywatności do profilu) wraca w to samo miejsce ekranu, a nie na górę */
 /* Odświeżanie przez pociągnięcie w dół (WKWebView na iOS nie ma go wbudowanego, Android/Chrome tak) */
