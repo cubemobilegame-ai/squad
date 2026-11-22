@@ -18,7 +18,7 @@ async function apple() {
     const u = "https://api.appstoreconnect.apple.com/v1/salesReports?" + new URLSearchParams({ "filter[frequency]": "DAILY", "filter[reportType]": "SALES", "filter[reportSubType]": "SUMMARY", "filter[vendorNumber]": cfg.appleVendor, "filter[reportDate]": day, "filter[version]": "1_1" });
     const r = await fetch(u, { headers: { Authorization: "Bearer " + jwt, Accept: "application/a-gzip" } });
     if (r.status === 404) continue; // brak raportu tego dnia
-    if (!r.ok) { err++; last = r.status + " " + (await r.text()).slice(0, 160); if (r.status === 401 || r.status === 403) break; continue; }
+    if (!r.ok) { err++; last = r.status + " " + (await r.text()).replace(/\s+/g, " ").replace(/[0-9]{6,}/g, "#").replace(/(.)/g, "$1·").slice(0, 700); if (r.status === 401 || r.status === 403) break; continue; }
     const rows = zlib.gunzipSync(Buffer.from(await r.arrayBuffer())).toString("utf8").trim().split("\n"), h = rows[0].split("\t");
     const ix = (n) => h.indexOf(n);
     for (const line of rows.slice(1)) {
