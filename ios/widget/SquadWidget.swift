@@ -242,19 +242,18 @@ struct MediumA: View {
         let today = drops.filter { Calendar.current.isDate($0.start, inSameDayAs: now) }.count
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 0) {
-                Text(tr("todayUp")).font(.system(size: 11, weight: .bold, design: .rounded)).tracking(0.5).foregroundColor(gray)
-                HStack(spacing: 8) {
-                    Text("\(today)").font(.system(size: 32, weight: .bold, design: .rounded)).foregroundColor(.white)
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(dropsWord(today)).font(.system(size: 12, design: .rounded)).foregroundColor(gray)
-                        Text(tr("around")).font(.system(size: 12, design: .rounded)).foregroundColor(gray)
-                    }.lineLimit(1)
-                }
+                Text(tr("todayUp")).font(.system(size: 11, weight: .bold, design: .rounded)).tracking(0.4).foregroundColor(gray)
+                    .lineLimit(1).minimumScaleFactor(0.6)
+                Text("\(today)").font(.system(size: 34, weight: .bold, design: .rounded)).foregroundColor(.white)
+                    .lineLimit(1).minimumScaleFactor(0.6).padding(.top, 2)
+                Text(dropsWord(today) + " " + tr("around")).font(.system(size: 11, weight: .medium, design: .rounded)).foregroundColor(gray)
+                    .lineLimit(2).minimumScaleFactor(0.8)
                 Spacer(minLength: 0)
                 PlusButton(size: 38, small: false)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .layoutPriority(0)
+            .frame(width: 92, alignment: .leading)
+            .frame(maxHeight: .infinity, alignment: .topLeading)
+            .layoutPriority(2)
             if let f = drops.first {
                 Link(destination: URL(string: siteURL + "/d/" + f.id)!) {
                     VStack(alignment: .leading, spacing: 0) {
