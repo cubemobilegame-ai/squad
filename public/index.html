@@ -1683,6 +1683,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .scr.chl .ngb{height:46px}.scr.chl .ngb.ngi{width:46px}
 .sk #mf .mpl{background:none!important;box-shadow:none!important;border-radius:0!important;width:30px!important;min-width:30px!important;height:42px!important;color:rgba(255,255,255,.85)!important}.sk #mf .mpl{align-self:center!important;margin:0!important}.sk #mf .mpl:active{opacity:.6}
 .scr.chs{transition:height .26s cubic-bezier(.22,.9,.3,1),padding-bottom .26s cubic-bezier(.22,.9,.3,1)}.sk #mf{transition:margin-bottom .26s cubic-bezier(.22,.9,.3,1)}@media(prefers-reduced-motion:reduce){.scr.chs,.sk #mf{transition:none}}
+.cbar .shd2.sent{color:var(--acc)}.cbar .shd2 svg{width:22px;height:22px}
 </style>
 </head>
 <body style="background:#0b0b0b;margin:0">
@@ -3437,8 +3438,11 @@ function newView(){
 let pendingShare=null;
 async function dropView(code){
   sset("dn_"+code,Date.now());try{badges()}catch{}
-  view(`<div class="scr">${LDR}</div>`);
-  const R=await loadDrop(code);if(!R)return gone();
+  /* szybki start: drop znamy już z listy czatów/dropów – pokazujemy od razu, bez ekranu ładowania; dane i tak odświeżają się na żywo */
+  const pc0=S.items.get(code),fast=!!(pc0&&typeof pc0.startsAt?.toMillis==="function"&&typeof pc0.expiresAt?.toMillis==="function"&&pc0.expiresAt.toMillis()>Date.now());
+  if(!fast)view(`<div class="scr">${LDR}</div>`);
+  const R=fast?{ref:doc(db,"drops",code),d:pc0}:await loadDrop(code);if(!R)return gone();
+  if(fast&&Array.isArray(S.ppl[code]))window.__preP={code,list:[...S.ppl[code]]};
   const {ref,d}=R,start=d.startsAt.toMillis(),url=base()+"/d/"+code,me0=auth.currentUser,logged=me0&&!me0.isAnonymous,isHost=me0?.uid===d.hostId;let mine=null,P=[],PH=[];
   if(code==="DEMO1"&&!logged)sset("fopen","1");remember(code);if(logged&&!isHost&&!S.items.has(code))S.addItem?.(code,d);
   const closed=()=>Date.now()>=start,hAv=d.hostPh||(d.hostAv!=null?+d.hostAv:avIdx({id:d.hostId}));let wasC=closed();
@@ -3475,7 +3479,9 @@ async function dropView(code){
     const T=[];if(isHost||d.public)T.push(["i",DSP.inv,t("aInv")]);if(!hidden(d)&&d.place)T.push(["m",DSP.pin,t("n2map")]);if(mem)T.push(["c",DSP.cal,t("n2cal")]);
     const ta=$("#n2a");if(ta){ta.style.setProperty("--n",Math.max(1,T.length));ta.innerHTML=T.map(([k,p,l])=>`<button type="button" data-k="${k}">${DSI(p)}<span>${l}</span></button>`).join("");ta.onclick=e=>{const b=e.target.closest("[data-k]");if(!b)return;vib(8);const k=b.dataset.k;if(k==="i")inviteSheet(d,code,P,isHost);else if(k==="m")mapSheet(d);else calSheet(d,url)}}
     const cta=$("#n2cta");if(cta){cta.hidden=!mem;const un=mem?unreadOf({id:code}):0;cta.innerHTML=t("n2cht")+(un?`<span class="bd bdi">${un}</span>`:"");cta.onclick=()=>{vib(8);go("/c/"+code)}}
-    {const m=$("#n2mo");if(m)m.onclick=()=>moreSheet(d,code,isHost,logged)}};
+    {const m=$("#n2mo");if(m)m.onclick=()=>moreSheet(d,code,isHost,logged)}
+    /* nagłówek jest rysowany od nowa przy każdym odświeżeniu – tarczę zagrożenia dokładamy za każdym razem */
+    try{if(SAFE&&logged&&(isHost||(mine&&mine.status!=="out"))&&Date.now()>=start)safeBtn(d,code,P)}catch{}};
   let chpOn=false,CM=[];
   let dpOn=false,DPO=null;
   const drawDpo=()=>{const el=$("#dpo");if(!el)return;if(!DPO){el.innerHTML="";return}
@@ -3594,6 +3600,9 @@ async function chatView(code,g){
     <span class="cbm" id="cbm"${isMuted((g?"g_":"")+code)?"":" hidden"}>${sv(BELLO)}</span><button class="hmo" onclick="event.stopPropagation();chatMenu(${g?1:0},'${jx(code)}')" aria-label="${t("cmMore")}">${DSI('<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>')}</button></div>
   <div class="cpan"><div id="alr"></div><div class="mem" id="mem"></div><div id="msgs"></div><button class="mdj" id="mdj" hidden aria-label="↓"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></button><button class="mdn" id="mdn" hidden onclick="const b=document.getElementById('msgs');b.scrollTo({top:b.scrollHeight,behavior:'smooth'})"><b>0</b> ${t("newShort")} ↓</button><div class="typ" id="typ"></div><div class="rpb" id="rpb" hidden></div><div class="grt" id="grt" hidden></div><form id="mf"><div class="fab" id="fab" hidden><button type="button" class="fb" id="fbp" aria-label="${t("poll")}" style="--i:1"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="5.4" stroke-linecap="round"><path d="M4.500 19.500v-5M12 19.500V5M19.500 19.500v-8"/></svg></button><button type="button" class="fb" id="fbe" aria-label="emoji" style="--i:2"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2c.9 1.3 2.1 2 3.5 2s2.600-.7 3.500-2"/><path d="M9 9.800h.01M15 9.800h.01" stroke-width="3"/></svg></button><button type="button" class="fb" id="fba" aria-label="avatar" style="--i:3"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8.5" r="4"/><path d="M4.500 20c1-4 4-5.500 7.500-5.500s6.500 1.500 7.500 5.500"/></svg></button></div><div class="epn" id="emp" hidden></div><div class="epn epa" id="epa" hidden></div><button type="button" class="mpl" id="mpl" aria-label="+"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.500 5l7 7-7 7"/></svg></button><div class="mfp"><textarea id="mi" rows="1" placeholder="${t("chPh")}" maxlength="500" autocomplete="off" enterkeyhint="send"></textarea><button id="msb" aria-label="${t("send2")}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 12 20 4l-5 16-3.5-6.5z"/><path d="M11.5 13.5 20 4"/></svg></button></div></form></div></div>`);
   try{tick()}catch{}
+  /* przycisk zagrożenia (3 kliknięcia) także w czacie dropu po jego starcie – w nagłówku, obok menu */
+  if(!g&&SAFE&&hst){const sh=()=>{try{const me0=auth.currentUser;if(!me0||me0.isAnonymous||Date.now()<hst||window.__alDrop===code)return;const bar=document.querySelector(".cbar");if(!bar||bar.querySelector(".shd2"))return;if(!(owner===me0.uid||(mine&&mine.status!=="out")))return;const mo=bar.querySelector(".hmo");if(!mo)return;const b=document.createElement("button");b.className="hmo shd2";b.setAttribute("aria-label",t("trHint"));b.innerHTML=sv(SI.shield);let n=0,tm=null;
+    b.onclick=e=>{e.stopPropagation();n++;vib(8);clearTimeout(tm);tm=setTimeout(()=>{n=0},2000);if(n===1&&sget("shdHint")!=="1"){sset("shdHint","1");toast(t("trHint"))}if(n>=3){n=0;safeSend(d,code,P,b)}};mo.before(b)}catch{}};sh();every(sh,2000)}
   /* przypomnienie o albumie: gdy drop wystartował, na górze czatu pojawia się zaproszenie do wrzucenia zdjęcia */
   if(!g&&hst){const alr=()=>{const el=$("#alr");if(!el)return;const on2=Date.now()>=hst&&!sget("albd_"+code);if(!on2){if(el.innerHTML)el.innerHTML="";return}if(el.innerHTML)return;
     el.innerHTML=`<div class="albr"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.4"/></svg></span><div><b>${t("albRT")}</b><small>${t("albRD")}</small></div><button class="mbtn" id="albg">${t("albRB")}</button><button class="kx" id="albx" aria-label="${t("cancel")}">✕</button></div>`;
