@@ -1,6 +1,6 @@
 name: Pobrania ze sklepów (Apple + Google Play)
 on:
-  schedule: [{ cron: "17 6 * * *" }]
+  # codzienny harmonogram wyłączony do czasu podłączenia dostępu (odkomentuj): schedule: [{ cron: "17 6 * * *" }]
   workflow_dispatch:
     inputs:
       write: { description: "Zapisz do bazy (domyślnie tylko podgląd)", type: boolean, default: false }
