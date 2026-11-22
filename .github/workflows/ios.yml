@@ -61,7 +61,7 @@ jobs:
         run: |
           cd ios-build
           npm init -y >/dev/null
-          npm i --no-audit --no-fund @capacitor/core@7 @capacitor/cli@7 @capacitor/ios@7 @capacitor/app@7 @capacitor/browser@7 @capacitor/geolocation@7 @ebarooni/capacitor-calendar@^7 @capacitor-firebase/authentication@7 ../ios/squad-widget @capacitor-firebase/messaging@7 firebase@11
+          npm i --no-audit --no-fund @capacitor/core@7 @capacitor/cli@7 @capacitor/ios@7 @capacitor/app@7 @capacitor/browser@7 @capacitor/geolocation@7 @capacitor/keyboard@7 @ebarooni/capacitor-calendar@^7 @capacitor-firebase/authentication@7 ../ios/squad-widget @capacitor-firebase/messaging@7 firebase@11
           mkdir -p www && echo '<!doctype html><title>Squad</title>' > www/index.html
           cp ../ios/capacitor.config.json capacitor.config.json
           npx cap add ios
