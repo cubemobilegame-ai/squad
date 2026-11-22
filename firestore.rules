@@ -214,7 +214,7 @@ service cloud.firestore {
         allow update: if signedIn() && request.auth.uid == uid
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readAt', 'typing', 'nickname', 'av', 'ph'])
           && okNick(request.resource.data.nickname);
-        allow delete: if signedIn() && request.auth.uid == uid;
+        allow delete: if signedIn() && (request.auth.uid == uid || drop(code).hostId == request.auth.uid);
       }
 
       // czat dropa: tylko uczestnicy, zero DM

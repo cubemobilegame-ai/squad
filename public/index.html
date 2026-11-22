@@ -3577,7 +3577,7 @@ async function dropView(code){
   if(!fast)view(`<div class="scr">${LDR}</div>`);
   const R=fast?{ref:doc(db,"drops",code),d:pc0}:await loadDrop(code);if(!R)return gone();
   if(fast&&Array.isArray(S.ppl[code]))window.__preP={code,list:[...S.ppl[code]]};
-  const {ref,d}=R,start=d.startsAt.toMillis(),url=base()+"/d/"+code,me0=auth.currentUser,logged=me0&&!me0.isAnonymous,isHost=me0?.uid===d.hostId;let mine=null,P=[],PH=[];
+  const {ref,d}=R,start=d.startsAt.toMillis(),url=base()+"/d/"+code,me0=auth.currentUser,logged=me0&&!me0.isAnonymous,isHost=me0?.uid===d.hostId;let mine=null,P=[],PH=[];(window.__gown=window.__gown||{})[code]=d.hostId;
   if(code==="DEMO1"&&!logged)sset("fopen","1");remember(code);if(logged&&!isHost&&!S.items.has(code))S.addItem?.(code,d);
   const closed=()=>Date.now()>=start,hAv=d.hostPh||(d.hostAv!=null?+d.hostAv:avIdx({id:d.hostId}));let wasC=closed();
   view(`<div class="scr dv n2"><div id="cb"></div>
@@ -3727,7 +3727,7 @@ async function chatView(code,g){
   if(C0&&(g||typeof C0.expiresAt?.toMillis==="function"&&C0.expiresAt.toMillis()>Date.now()))R={ref:doc(db,g?"groups":"drops",code),d:C0};
   else if(g){try{const x=await getDocR(doc(db,"groups",code));if(x.exists())R={ref:x.ref,d:x.data()}}catch{}}else R=await loadDrop(code);
   if(!R)return gone(g);
-  const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];if(g)(window.__gown=window.__gown||{})[code]=d.ownerId;
+  const {ref,d}=R,pc=g?"members":"participants",title=g?d.name:d.title,owner=g?d.ownerId:d.hostId,key="seen_"+(g?"g_":"")+code;let mine=null,on=false,P=[],M=[];(window.__gown=window.__gown||{})[code]=owner;
   const [hc1,hc2]=g?gth(d,code):thm({...d,id:code}),hst=!g&&d.startsAt?.toMillis?d.startsAt.toMillis():0;
   view(`<div class="scr chs sk" style="--c1:${hc1};--c2:${hc2}"><div class="cbar" ${g?`onclick="go('/g/${jx(code)}')"`:`onclick="dropSheet('${jx(code)}')"`}>
     <button class="hbk" onclick="event.stopPropagation();window.__nb=Date.now();go('${jh(BK)}')" aria-label="back"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -4591,7 +4591,7 @@ window.xmasTour=()=>{try{if(!window.xmasOn()||localStorage.getItem("xmasTour")==
   const s=sheet(`<div class="dsh cmenu2"><h2>${t("xmasTT")}</h2><p class="mut" style="margin:6px 0 14px;text-align:center">${t("xmasTD")}</p><div class="dsb"><button class="dsx cmw" id="xk" type="button">${t("xmasOk")}</button><button class="dsx g" id="xo" type="button">${t("xmasOff")}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#xk").onclick=()=>s.close();s.querySelector("#xo").onclick=()=>{try{localStorage.setItem("xmas","0")}catch{}window.xmasApply();document.querySelectorAll("canvas.frost").forEach(c=>c.remove());s.close()}}catch(e){}};
 Object.assign(L.pl,{xmasTT:"Świąteczny klimat ❄️",xmasD:"Śnieg, szron, czapka i płatki",xmasTD:"Do 2 stycznia aplikacja ma świąteczne dodatki. Możesz je wyłączyć w Profilu → Efekt świąteczny.",xmasOk:"Super",xmasOff:"Wyłącz"});Object.assign(L.en,{xmasTT:"Holiday vibes ❄️",xmasTD:"Squad has holiday extras until January 2. You can turn them off in Profile → Holiday effects.",xmasOk:"Nice",xmasOff:"Turn off"});
-Object.assign(L.pl,{kickG:"Usuń z grupy",kickSure:"Na pewno? Dotknij, aby usunąć",kickDone:"Usunięto z grupy"});Object.assign(L.en,{kickG:"Remove from group",kickSure:"Sure? Tap to remove",kickDone:"Removed from group"});
+Object.assign(L.pl,{kickG:"Usuń z grupy",kickD:"Usuń z dropa",kickDone2:"Usunięto z dropa",kickSure:"Na pewno? Dotknij, aby usunąć",kickDone:"Usunięto z grupy"});Object.assign(L.en,{kickG:"Remove from group",kickD:"Remove from drop",kickDone2:"Removed from drop",kickSure:"Sure? Tap to remove",kickDone:"Removed from group"});
 Object.assign(L.de,{grInvB:"Einladen",cmMuteS:"Stumm",cmUnmuteS:"Laut",grCnt:n=>n+(n===1?" Mitglied":" Mitglieder")});
 Object.assign(L.fr,{grInvB:"Inviter",cmMuteS:"Sourdine",cmUnmuteS:"Activer",grCnt:n=>n+(n===1?" membre":" membres")});
 Object.assign(L.it,{grInvB:"Invita",cmMuteS:"Silenzia",cmUnmuteS:"Attiva",grCnt:n=>n+(n===1?" membro":" membri")});
@@ -5042,9 +5042,9 @@ function report(info){const s=sheet(`<h2>${t("repT")}</h2><div class="acts">${RE
       q.querySelector("#hn").onclick=q.close;
       q.querySelector("#hy").onclick=()=>{q.close();sset("hidC",JSON.stringify([...hidL(),info.code].slice(-100)));try{saveProfile()}catch{}vib(20);toast(t("hidDone"));try{PUB.list=(PUB.list||[]).filter(d=>d.id!==info.code);if(typeof changed==="function")changed()}catch{}if(/^\/(d|c)\//.test(location.pathname)&&location.pathname.split("/")[2]===info.code)go("/")}},600)}})}
 const BELL='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/>',BELLO='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0M4 4l16 16"/>',PADD='<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M19 8v6M16 11h6"/>';
-function userActions(u,info,redraw){vib(10);const bl=isBlk(u.id),cu=auth.currentUser,ko=!!(info&&info.chat==="group"&&info.code&&u.id!==me()&&window.__gown&&window.__gown[info.code]===me()),fr=!!(cu&&!cu.isAnonymous&&u.id!==me()&&!S.con.has(u.id)),mi=x=>`<span class="cmi">${sv(x)}</span>`;
-  const s=sheet(`<div class="dsh cmenu2"><h2>${esc(u.nickname)}</h2><div class="dsb">${fr?`<button class="dsx cmw" id="uf" type="button">${t("uaFr")}</button>`:""}<button class="dsx ${fr?"g":"cmw"}" id="ur" type="button">${t("repUser")}</button><button class="dsx g cmd" id="ub" type="button">${bl?t("unblock"):t("blockU",esc(u.nickname))}</button>${ko?`<button class="dsx g cmd" id="uk" type="button">${t("kickG")}</button>`:""}</div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
-  if(ko){const kb=s.querySelector("#uk");let arm=0;kb.onclick=async()=>{if(!arm){arm=1;kb.textContent=t("kickSure");kb.style.background="rgba(255,69,58,.18)";vib(10);return}try{if(!DEMO)await deleteDoc(doc(db,"groups",info.code,"members",u.id));vib([20,30,20]);s.close();toast(t("kickDone"))}catch(e){toast(t("oops"))}}}
+function userActions(u,info,redraw){vib(10);const bl=isBlk(u.id),cu=auth.currentUser,ko=!!(info&&(info.chat==="group"||info.chat==="drop")&&info.code&&u.id!==me()&&window.__gown&&window.__gown[info.code]===me()),fr=!!(cu&&!cu.isAnonymous&&u.id!==me()&&!S.con.has(u.id)),mi=x=>`<span class="cmi">${sv(x)}</span>`;
+  const s=sheet(`<div class="dsh cmenu2"><h2>${esc(u.nickname)}</h2><div class="dsb">${fr?`<button class="dsx cmw" id="uf" type="button">${t("uaFr")}</button>`:""}<button class="dsx ${fr?"g":"cmw"}" id="ur" type="button">${t("repUser")}</button><button class="dsx g cmd" id="ub" type="button">${bl?t("unblock"):t("blockU",esc(u.nickname))}</button>${ko?`<button class="dsx g cmd" id="uk" type="button">${t(info.chat==="drop"?"kickD":"kickG")}</button>`:""}</div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
+  if(ko){const kb=s.querySelector("#uk");let arm=0;kb.onclick=async()=>{if(!arm){arm=1;kb.textContent=t("kickSure");kb.style.background="rgba(255,69,58,.18)";vib(10);return}try{if(!DEMO)await deleteDoc(info.chat==="drop"?doc(db,"drops",info.code,"participants",u.id):doc(db,"groups",info.code,"members",u.id));vib([20,30,20]);s.close();toast(t(info.chat==="drop"?"kickDone2":"kickDone"))}catch(e){toast(t("oops"))}}}
   if(fr)s.querySelector("#uf").onclick=()=>{s.close();conReq(u.id,u)};
   s.querySelector("#ur").onclick=()=>{s.close();report({...info,authorId:u.id,nickname:u.nickname})};
   s.querySelector("#ub").onclick=()=>{s.close();if(bl){sset("blocked",JSON.stringify(blockedL().filter(b=>b.id!==u.id)));saveProfile();vib(10);toast(t("unblocked"))}
