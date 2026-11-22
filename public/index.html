@@ -2692,7 +2692,7 @@ window.go=p=>{const cur=gp();SCR[cur]=scrollY;window.__rest=(p===window.__from&&
 /* cofanie gestem: przesunięcie od lewej krawędzi (jak systemowe) – ekran idzie za palcem; przycisk Wróć zostaje */
 if("ontouchstart"in window){let sx=0,sy=0,bx=0,lx=0,on=false,mv=false,el=null;const BK=()=>[...document.querySelectorAll(".hbk,.hdr .bk,.scr .bk,.scr>.back,.chh .back")].find(b=>b.offsetParent!==null);
   const TX=(e,x)=>e.classList.contains("chs")?"translate(calc(-50% + "+x+"px),var(--vvt,0px))":"translateX("+x+"px)";const HX=on=>{const h=document.documentElement,b=document.body;if(on){h.style.overflowX="hidden";b.style.overflowX="hidden"}else{h.style.overflowX="";b.style.overflowX="";try{window.scrollTo(0,window.scrollY||0)}catch{}}};const reset=a=>{HX(false);if(!el)return;const e=el;el=null;if(a){e.style.transition="transform .2s ease";e.style.transform=TX(e,0);setTimeout(()=>{e.style.transition="";e.style.transform="";e.style.boxShadow=""},210)}else{e.style.transition="";e.style.transform="";e.style.boxShadow=""}};
-  addEventListener("touchstart",e=>{on=false;mv=false;if(e.touches.length!==1)return;const t0=e.touches[0];if(t0.clientX>24||document.querySelector(".sheetbg"))return;if(!/^\/(c|d|gc)\//.test(gp()))return;if(!BK())return;sx=t0.clientX;sy=t0.clientY;lx=0;on=true;el=document.querySelector(".scr")},{passive:true});
+  addEventListener("touchstart",e=>{on=false;mv=false;if(e.touches.length!==1)return;const t0=e.touches[0];if(t0.clientX>24||document.querySelector(".sheetbg"))return;if(!/^\/(c|d|gc|g)\//.test(gp()))return;if(!BK())return;sx=t0.clientX;sy=t0.clientY;lx=0;on=true;el=document.querySelector(".scr")},{passive:true});
   addEventListener("touchmove",e=>{if(!on||!el)return;const t0=e.touches[0],dx=t0.clientX-sx,dy=Math.abs(t0.clientY-sy);if(!mv&&dy>Math.max(18,dx)){on=false;reset(false);return}if(!mv&&dx>10){mv=true;bx=t0.clientX}if(mv){if(e.cancelable)e.preventDefault();HX(true);const tx=Math.max(0,t0.clientX-bx);lx=tx;el.style.transition="none";el.style.transform=TX(el,tx);el.style.boxShadow="-12px 0 30px rgba(0,0,0,.5)"}},{passive:false});
   const fin=()=>{if(!on)return;on=false;HX(false);const dx=lx,th=Math.min(80,innerWidth*.22);if(mv&&dx>=th){const b=BK(),e2=el;el=null;HX(true);if(e2){e2.style.transition="transform .18s ease";e2.style.transform=TX(e2,innerWidth)}vib(6);setTimeout(()=>{if(b)b.click();if(e2){e2.style.transition="";e2.style.transform="";e2.style.boxShadow=""}HX(false)},170)}else reset(true)};
   addEventListener("touchend",fin,{passive:true});
@@ -3721,7 +3721,7 @@ async function dropView(code){
 /* ---------- CZAT GRUPOWY (drop albo grupa) – zero DM, reakcje, zgłaszanie i blokowanie ---------- */
 const RX=["🔥","😂","👀","❤️","👍","😮"];
 async function chatView(code,g){
-  window.__co=window.__co||{};const BK=(()=>{if(!g&&window.__from==="/d/"+code)return window.__co[code]||"/d/"+code;const bt=window.__from==="/"?"/":window.__from==="/n"?"/n":"/chats";window.__co[code]=bt;return bt})();
+  window.__co=window.__co||{};const BK=(()=>{if(window.__from===(g?"/g/":"/d/")+code)return window.__co[code]||(g?"/g/":"/d/")+code;const bt=window.__from==="/"?"/":window.__from==="/n"?"/n":"/chats";window.__co[code]=bt;return bt})();
   view(`<div class="scr">${LDR}</div>`);
   /* szybki start: dane dropa/grupy mamy już z listy (na żywo) – nie czekamy na serwer */
   let R=null;const C0=g?S.groups.get(code):S.items.get(code);
