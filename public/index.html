@@ -1435,7 +1435,7 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .lgc #gua::after,.lgc #gue::after{border-color:#bdbdbd}
 .lgc #guf::after{border-color:rgba(255,255,255,.75)}
 
-.scr.deco{position:relative;isolation:isolate}.spl .snow{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:-1}.deco .snow{position:absolute!important;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0}.scr.deco::before{content:"";position:absolute;left:-20px;right:-20px;top:-98px;height:770px;z-index:-1;background:url(/e/login-bg.webp) center top/100% auto no-repeat;filter:brightness(.775);-webkit-mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);pointer-events:none}
+.scr.deco{position:relative;isolation:isolate}.frost{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:40}.spl .snow{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:-1}.deco .snow{position:absolute!important;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0}.scr.deco::before{content:"";position:absolute;left:-20px;right:-20px;top:-98px;height:770px;z-index:-1;background:url(/e/login-bg.webp) center top/100% auto no-repeat;filter:brightness(.775);-webkit-mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(#000 0,#000 88%,transparent 100%);pointer-events:none}
 .scr.deco .legal a{color:#fff!important;text-decoration-color:rgba(255,255,255,.45)}
 .scr.deco .gstb{color:#4da3ff!important;font:700 14.5px Brico,BricoCyr,system-ui!important;height:46px;display:flex;align-items:center;justify-content:center;text-decoration:none!important}
 /* ankiety: słupki jak w aktywności profilu (kolor systemowy) */
@@ -1702,6 +1702,48 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 <script>try{var T={pl:"Spotkania w 15 minut",en:"Meetups in 15 minutes",es:"Quedadas en 15 minutos",de:"Treffen in 15 Minuten",fr:"Rendez-vous en 15 minutes",it:"Incontri in 15 minuti",cs:"Schůzky za 15 minut",uk:"Зустрічі за 15 хвилин"},l=localStorage.lang||"";if(!T[l]){var q=navigator.languages||[navigator.language||""];for(var i=0;i<q.length;i++){var c=String(q[i]).slice(0,2).toLowerCase();if(T[c]){l=c;break}}}document.getElementById("spt").textContent=T[l]||T.en}catch(e){}</script>
 <script>
 /* ---------- śnieg na ekranie startowym: 4 warstwy głębi (dalej = mniejsze, ciemniejsze, bardziej rozmyte; najbliżej = ostre), nieregularny ruch ---------- */
+window.frostFx=function(cv,seed){
+  try{const D=new Date(),M=D.getMonth(),d=D.getDate();if(!(M===11||(M===0&&d===1)||/[?&]snow=1\b/.test(location.search))){cv.remove();return}}catch(e){}
+  const dpr=Math.min(window.devicePixelRatio||1,2),W=cv.clientWidth||innerWidth,H=cv.clientHeight||innerHeight;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  let s=(seed||7)>>>0;const R=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296},rr=(a,b)=>a+R()*(b-a);
+  const EDGE=Math.min(92,W*.24);
+  const layer=document.createElement("canvas");layer.width=cv.width;layer.height=cv.height;
+  const c=layer.getContext("2d");c.scale(dpr,dpr);
+  const side=(left)=>{
+    const X=x=>left?x:W-x;
+    /* 1) mleczna, nieregularna mgiełka przy samej krawędzi */
+    for(let i=0;i<200;i++){const y=R()*H,r=rr(8,30),x=Math.pow(R(),2.1)*EDGE*.55;
+      const g=c.createRadialGradient(X(x),y,0,X(x),y,r);g.addColorStop(0,"rgba(220,235,255,.07)");g.addColorStop(1,"rgba(226,240,255,0)");c.fillStyle=g;c.beginPath();c.arc(X(x),y,r,0,7);c.fill()}
+    /* 2) kryształy: rozgałęzione „paprocie” szronu wyrastające z krawędzi */
+    const branch=(x,y,ang,len,w,depth)=>{
+      c.lineWidth=w;c.beginPath();c.moveTo(X(x),y);
+      const seg=Math.max(3,Math.round(len/5));let cx=x,cy=y,a=ang;const pts=[];
+      for(let k=1;k<=seg;k++){a+=(R()-.5)*.3;cx+=Math.cos(a)*len/seg;cy+=Math.sin(a)*len/seg;c.lineTo(X(cx),cy);pts.push([cx,cy,a,k/seg])}
+      c.stroke();
+      if(depth<3)pts.forEach(([px,py,pa,t],ix)=>{if(R()<.5&&t<.9&&ix%2===0){const d=R()<.5?1:-1,bl=len*rr(.28,.46)*(1-t*.55);branch(px,py,pa+d*rr(.9,1.2),bl,w*.6,depth+1)}})
+    };
+    const n=Math.round(H/46);
+    for(let i=0;i<n;i++){const y=rr(-10,H+10),x=-2,len=rr(22,EDGE*1.05)*(R()<.18?1.6:1),ang=rr(-.9,.9);
+      c.strokeStyle=`rgba(${R()<.5?"214,234,255":"240,248,255"},${rr(.16,.34)})`;c.shadowColor="rgba(190,225,255,.6)";c.shadowBlur=rr(2,5);
+      branch(x,y,ang,len,rr(.7,1.3),0)}
+    c.shadowBlur=0;
+    /* 3) drobne iskry */
+    for(let i=0;i<80;i++){const x=Math.pow(R(),1.6)*EDGE*1.3,y=R()*H,r=rr(.6,1.9);c.fillStyle=`rgba(255,255,255,${rr(.3,.7)})`;c.shadowColor="rgba(200,230,255,.95)";c.shadowBlur=5;c.beginPath();c.arc(X(x),y,r,0,7);c.fill()}
+    c.shadowBlur=0;
+  };
+  side(true);side(false);
+  /* nieregularna maska zanikania do środka (falująca granica, nie prosty pasek) */
+  const m=document.createElement("canvas");m.width=cv.width;m.height=cv.height;const mc=m.getContext("2d");mc.scale(dpr,dpr);
+  const fade=(left)=>{const x0=left?0:W,x1=left?EDGE*1.6:W-EDGE*1.6;const g=mc.createLinearGradient(x0,0,x1,0);g.addColorStop(0,"rgba(0,0,0,.85)");g.addColorStop(.35,"rgba(0,0,0,.5)");g.addColorStop(.7,"rgba(0,0,0,.18)");g.addColorStop(1,"rgba(0,0,0,0)");mc.fillStyle=g;mc.fillRect(left?0:W-EDGE*1.6,0,EDGE*1.6,H)};
+  fade(true);fade(false);
+  c.save();c.setTransform(1,0,0,1,0,0);c.globalCompositeOperation="destination-in";c.drawImage(m,0,0);c.restore();
+  const sm=document.createElement("canvas");sm.width=Math.max(8,Math.round(cv.width*.22));sm.height=Math.max(8,Math.round(cv.height*.22));const sc=sm.getContext("2d");sc.imageSmoothingQuality="high";sc.drawImage(layer,0,0,sm.width,sm.height);
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.globalAlpha=.5;ctx.drawImage(sm,0,0,W,H);ctx.globalAlpha=.4;ctx.drawImage(layer,0,0,W,H);ctx.globalAlpha=1;
+};
+window.frostAdd=function(A){try{if(!A||!A.querySelector("#msgs")||A.querySelector("canvas.frost"))return;A.insertAdjacentHTML("beforeend","<canvas class=\"frost\" aria-hidden=\"true\"></canvas>");const cv=A.querySelector("canvas.frost");window.frostFx(cv,11);if(!cv.isConnected)return;let t=0;const rz=()=>{if(!cv.isConnected){removeEventListener("resize",rz);return}clearTimeout(t);t=setTimeout(()=>{const c=cv.getContext("2d");c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,cv.width,cv.height);window.frostFx(cv,11)},200)};addEventListener("resize",rz)}catch(e){}};
+
 window.snowFx=function(cv){
   if(!cv||cv.__snow)return;cv.__snow=1;
   /* sezon: 1 grudnia – 1 stycznia (do testów: ?snow=1) */
@@ -2542,7 +2584,7 @@ document.addEventListener("click",e=>{const T=e.target.closest&&e.target.closest
 document.addEventListener("pointerdown",e=>{const P=e.target.closest&&e.target.closest(".thp");if(!P)return;dr=P;try{P.setPointerCapture(e.pointerId)}catch{}pk(e,P);e.preventDefault()});
 document.addEventListener("pointermove",e=>{if(dr)pk(e,dr)});
 const up=()=>{if(!dr)return;dr=null;vib(8);try{saveProfile()}catch{}};document.addEventListener("pointerup",up);document.addEventListener("pointercancel",up)}
-const view=h=>{document.documentElement.classList.remove("pmlock");if(!window.__splV&&window.__splDone){window.__splV=1;requestAnimationFrame(()=>requestAnimationFrame(()=>window.__splDone()))}setTheme();document.querySelectorAll(".sheetbg,.crop,.lb,.cel,.rxbg").forEach(e=>e.remove());unsubs.forEach(u=>u());unsubs=[];redraw=null;A.innerHTML=h;{const sc=A.querySelector("canvas.snow");if(sc)snowFx(sc)}const rs=window.__rest;window.__rest=null;scrollTo(0,0);if(rs){const f=()=>scrollTo(0,rs);requestAnimationFrame(f);setTimeout(f,60);setTimeout(f,250)}};
+const view=h=>{document.documentElement.classList.remove("pmlock");if(!window.__splV&&window.__splDone){window.__splV=1;requestAnimationFrame(()=>requestAnimationFrame(()=>window.__splDone()))}setTheme();document.querySelectorAll(".sheetbg,.crop,.lb,.cel,.rxbg").forEach(e=>e.remove());unsubs.forEach(u=>u());unsubs=[];redraw=null;A.innerHTML=h;{const sc=A.querySelector("canvas.snow");if(sc)snowFx(sc)}window.frostAdd&&window.frostAdd(A);const rs=window.__rest;window.__rest=null;scrollTo(0,0);if(rs){const f=()=>scrollTo(0,rs);requestAnimationFrame(f);setTimeout(f,60);setTimeout(f,250)}};
 const every=(fn,ms)=>{fn();const id=setInterval(fn,ms);unsubs.push(()=>clearInterval(id))};
 window.surT=()=>toast(t("surShown"));window.toast=m=>{const e=document.createElement("div");e.className="toast";e.textContent=m;document.body.append(e);setTimeout(()=>e.remove(),2400)};
 addEventListener("unhandledrejection",e=>{const m=String(e.reason?.message||e.reason||"");if(/_map|layerPointToLatLng|leaflet/i.test(m))return;toast(t("oops")+m)});
