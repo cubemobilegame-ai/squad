@@ -5,7 +5,7 @@
 <body><div><p id="m">Przekierowuję do sklepu…</p><p><a id="l" href="/">Przejdź na stronę Squad</a></p></div>
 <script>
 // Inteligentne przekierowanie (kod QR / przyciski): Android -> Google Play, iPhone -> App Store (gdy już działa), reszta -> strona.
-var PLAY_ID="com.cubemobilegames.squad",APPLE_ID="6833583410",IOS_LIVE=false;
+var PLAY_ID="com.cubemobilegames.squad",APPLE_ID="6833583410",IOS_LIVE=true;
 var q=new URLSearchParams(location.search),src=(q.get("s")||"web").replace(/[^a-z0-9_]/gi,"").slice(0,20)||"web";
 var ua=navigator.userAgent,play="https://play.google.com/store/apps/details?id="+PLAY_ID+"&referrer="+encodeURIComponent("utm_source=landing&utm_medium="+src+"&utm_campaign=web"),
     app="https://apps.apple.com/app/id"+APPLE_ID,to="/";
