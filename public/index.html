@@ -2974,9 +2974,9 @@ async function conAcc(r){const u=auth.currentUser;if(!u)return;try{
   await deleteDoc(doc(db,"creq",r.id));pushNow({kind:"cacc",to:r.from});sfx("in");vib([20,30,20]);toast(t("kAccOk"))}catch(e){toast(t("err"))}}
 async function conDel(uid){const u=auth.currentUser;if(!u)return;await deleteDoc(doc(db,"users",u.uid,"contacts",uid)).catch(()=>{});await deleteDoc(doc(db,"users",uid,"contacts",u.uid)).catch(()=>{});vib(10);toast(t("kRmOk"))}
 const syncCon=(av,ph,nk)=>{const u=auth.currentUser;if(!u||u.isAnonymous)return;S.con.forEach((c,k)=>setDoc(doc(db,"users",k,"contacts",u.uid),{av,ph,...(nk?{nickname:nk}:{})},{merge:true}).catch(()=>{}))};
-function conShare(){const u=auth.currentUser;if(!u)return;const nick=sget("nick")||"",url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(nick)+(sget("photo")?"":"&a="+myAv());
+function conShare(){const u=auth.currentUser;if(!u)return;const nick=sget("nick")||"",url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(nick)+"&a="+myAv();
   shareSheet({title:t("kLink"),url,txt:t("kLinkTxt",url,nick),fname:"squad-kontakt.jpg",make:st=>makeContactCard(nick,url,st),opts:[],ar:"1200/630"})}
-window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"")+(sget("photo")?"":"&a="+myAv());let svg="";
+window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"")+"&a="+myAv();let svg="";
   try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
   const s=sheet(`<div class="dsh"><h2>${t("qcT")}</h2><p class="dsub">${t("qcD")}</p><div class="dqr">${svg}</div><p class="dsub" style="text-align:center;color:#fff;font-weight:800">${esc(clean(sget("nick")||""))}</p><div class="dsb"><button class="dsx" id="qsh">${t("kLink")}</button><button class="dsx g" id="qcl">${t("close")}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#qsh").onclick=()=>{s.close();conShare()};s.querySelector("#qcl").onclick=s.close};
