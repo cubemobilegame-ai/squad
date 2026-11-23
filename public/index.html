@@ -4578,12 +4578,12 @@ window.colorSheet=(id,onDone)=>{vib(8);const G=S.groups.get(id),cur=((G&&G.theme
   s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelectorAll("[data-i]").forEach(b=>b.onclick=async()=>{const i=+b.dataset.i;vib(10);s.close();if(G)G.theme=i;try{if(!DEMO)await updateDoc(doc(db,"groups",id),{theme:i})}catch{toast(t("err")||"Error")}onDone&&onDone(i)})};
 window.chatMenu=(g,id)=>{vib(10);
-  const G=g?S.groups.get(id):S.items.get(id),owner=g?(G&&G.ownerId===me()):(G&&G.hostId===me()),title=g?G?.name:G?.title,k=(g?"g_":"")+id;
+  const G=g?S.groups.get(id):S.items.get(id),owner=g?(G&&G.ownerId===me()):(G&&G.hostId===me()),title=g?G?.name:G?.title,k=(g?"g_":"")+id,canInvD=!g&&!!G&&!dStarted(G)&&(owner||(!!G.public&&(S.ppl[id]||[]).some(p=>p.id===me()&&(p.status==="in"||p.status==="late"))));
   const sync=o=>{try{if(!DEMO&&auth.currentUser&&!auth.currentUser.isAnonymous)setDoc(doc(db,"users",me()),o,{merge:true}).catch(()=>{})}catch{}};
   const IB='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/>',IBO='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0M4 4l16 16"/>',IC='<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>';
   const rw=(id,ic,tx,hn,cls)=>`<button class="dsx${cls?" "+cls:" g"}" id="${id}" type="button">${tx}</button>`;
   const s=sheet(`<div class="dsh cmenu2"><h2>${esc(clean(title||""))}</h2><div class="dsb">
-    ${(g||owner)&&G&&!auth.currentUser?.isAnonymous?rw("cmI",0,t("cmInv"),0,"cmw"):""}
+    ${(g||canInvD)&&G&&!auth.currentUser?.isAnonymous?rw("cmI",0,t("cmInv"),0,"cmw"):""}
     ${g&&owner?rw("cmCo",0,t("cmCol")):""}
     ${rw("cmM",isMuted(k)?IB:IBO,isMuted(k)?t("cmUnmute"):t("cmMute"))}
     ${rw("cmC",IC,t("cmClr"),t("cmClrD"))}
