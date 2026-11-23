@@ -109,6 +109,17 @@ service cloud.firestore {
             || (request.resource.data.v[request.auth.uid] is int && request.resource.data.v[request.auth.uid] >= 0 && request.resource.data.v[request.auth.uid] <= 5));
     }
 
+    // mini-profil (ksywka, awatar, zdjęcie): do podglądu w oknie po skanowaniu kodu kontaktu; czytają zalogowani (nie goście), zapisuje tylko właściciel
+    match /pubprof/{uid} {
+      allow read: if signedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      allow create, update: if signedIn() && request.auth.uid == uid && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && request.resource.data.keys().hasOnly(['nick', 'av', 'ph'])
+        && request.resource.data.nick is string && request.resource.data.nick.size() <= 30
+        && (request.resource.data.av is int || request.resource.data.av is float)
+        && (request.resource.data.ph == null || (request.resource.data.ph is string && request.resource.data.ph.size() <= 200000));
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+
     // profil (ksywka, awatar, odznaki, ustawienia powiadomień) – widoczny tylko dla właściciela
     match /users/{uid} {
       allow read, create, delete: if signedIn() && request.auth.uid == uid;
