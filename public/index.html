@@ -389,6 +389,7 @@ div.srow{cursor:default}
 .cta:disabled{opacity:.35;cursor:default}.cta.dng{background:#ff4d5e;color:#fff}
 .crop{position:fixed;inset:0;z-index:80;background:#050508;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px))}
 .crop h2{font-size:20px}
+.gcm.hasph{background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,0,.5)),var(--gph)!important;background-size:cover!important;background-position:center!important}.gpen{position:absolute;right:12px;top:12px;z-index:5;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(10,10,14,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;display:grid;place-items:center;padding:0;cursor:pointer}.gpen svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .cbox{position:relative;width:min(84vw,340px);aspect-ratio:1;touch-action:none;cursor:grab;overflow:hidden;border-radius:16px;background:#000}
 .cbox canvas{width:100%;height:100%;display:block}
 .cbox i{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 400px rgba(0,0,0,.62);border:2px solid var(--acc);pointer-events:none}
@@ -2777,7 +2778,7 @@ const STL=s=>({in:"IN",late:"LATE",out:"OUT"}[s]);
 const THEMES=[["#17c964","#ff8a1f"],["#7c3aed","#ec4899"],["#0ea5e9","#22d3a4"],["#ff6a3d","#ffb020"],["#6366f1","#22d3ee"],["#f43f5e","#a855f7"],["#14b8a6","#a3e635"],["#f59e0b","#ef4444"]];
 /* kolor dropu wynika z typu (bez wyboru przez użytkownika); stare dropy z polem theme zostają po staremu */
 const TCOL={grill:["#c2410c","#f59e0b"],biz:["#3b6cf6","#22d3ee"],sport:["#17c964","#a3e635"],house:["#f97316","#fb7185"],club:["#7c3aed","#ec4899"],pub:["#b45309","#f59e0b"],food:["#ea580c","#facc15"],pizza:["#ea580c","#facc15"],coffee:["#92400e","#d6a05a"],cinema:["#9f1239","#f43f5e"],gaming:["#4f46e5","#06b6d4"],gallery:["#0f766e","#5eead4"],walk:["#65a30d","#facc15"],trip:["#0ea5e9","#22d3a4"],occ:["#db2777","#fb7185"],xmas:["#166534","#dc2626"],nye:["#1e3a8a","#fbbf24"],bike:["#0f766e","#2dd4bf"],basket:["#ea580c","#fb923c"],fball:["#15803d","#4ade80"],vball:["#d97706","#fde047"],run:["#e11d48","#fb7185"],gym:["#4338ca","#a78bfa"],pool:["#0284c7","#38bdf8"],scoot:["#a21caf","#e879f9"],skate:["#475569","#94a3b8"],other:["#64748b","#a78bfa"]};
-const GTH=[["#db2777","#fb7185"],["#7c3aed","#ec4899"],["#3b6cf6","#22d3ee"],["#ea580c","#facc15"],["#4f46e5","#06b6d4"],["#9f1239","#f43f5e"],["#0ea5e9","#22d3a4"],["#a21caf","#e879f9"],["#17c964","#a3e635"],["#14d996","#8dffd0"],["#d97706","#fde047"],["#4338ca","#a78bfa"]],gth=(g,id)=>GTH[((g&&g.theme!=null?+g.theme:hs(id))%12+12)%12];
+const GTH=[["#db2777","#fb7185"],["#7c3aed","#ec4899"],["#3b6cf6","#22d3ee"],["#ea580c","#facc15"],["#4f46e5","#06b6d4"],["#9f1239","#f43f5e"],["#0ea5e9","#22d3a4"],["#a21caf","#e879f9"],["#17c964","#a3e635"],["#14d996","#8dffd0"],["#d97706","#fde047"],["#4338ca","#a78bfa"]],gth=(g,id)=>GTH[2];
 const catCol=(cat,id)=>{const c=TCOL[cat];if(!c)return THEMES[hs(id||"x")%THEMES.length];return id&&hs(id)%2?[c[1],c[0]]:c};
 const thm=d=>d.theme!=null?THEMES[+d.theme%THEMES.length]:catCol(d.category,d.id);
 /* zdjęcia na kartach dropów: pula na typ (public/ph/<klucz>.webp); słowo w tytule wybiera zdjęcie, inaczej stały los wg id */
@@ -3446,11 +3447,11 @@ async function groupView(code){
   view(`<div class="scr">${LDR}</div>`);
   let sn;try{sn=await getDocR(doc(db,"groups",code))}catch{}
   if(!sn||!sn.exists())return gone(1);
-  const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code&&Date.now()-(window.__nb||0)>=3000;let mine=null,M=[];(window.__gown=window.__gown||{})[code]=g.ownerId;
+  const ref=sn.ref,g=sn.data(),me0=auth.currentUser,logged=me0&&!me0.isAnonymous,owner=me0?.uid===g.ownerId,url=base()+"/g/"+code,fromChat=window.__from==="/gc/"+code&&Date.now()-(window.__nb||0)>=3000,gph=/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(g.ph||"")?g.ph:"";let mine=null,M=[];(window.__gown=window.__gown||{})[code]=g.ownerId;
   const gn=esc(clean(g.name)),gb=(i,l,id)=>`<button class="gic" id="${id}"><span>${i}</span><b>${l}</b></button>`;
   const bkb=fromChat?"/gc/"+code:"/chats",IC3='<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>';
   view(`<div class="scr dv n2 gv"><div class="dtop">${logged?bk(bkb,"",1):"<span></span>"}<b class="dtt">${owner?t("myGroup"):t("groupT")}</b><button class="bk ic" id="gqr" aria-label="QR" hidden>${QRI.replace('width="15" height="15"','width="21" height="21"')}</button>${logged?`<button class="bk ic" id="gmo" aria-label="${t("n2more")}">${DSI(IC3)}</button>`:"<span></span>"}</div>
-  <div class="pc dcd gcd"><div class="pcm gcm" style="--c1:${gth(g,code)[0]};--c2:${gth(g,code)[1]}"><span class="pcat">${t("grpTag")}</span><h3>${gn}</h3></div><div class="dof"><span id="gofa">${avc("",owner?meAv():avIdx({id:g.ownerId}))}</span><div class="don"><b>${owner?t("you"):esc(clean(g.ownerNick||"?"))}</b><small>${t("founder")}</small></div><span class="dbg" id="gcn"></span></div></div>
+  <div class="pc dcd gcd"><div class="pcm gcm${gph?" hasph":""}" style="--c1:${gth(g,code)[0]};--c2:${gth(g,code)[1]}${gph?";--gph:url(\'"+gph+"\')":""}"><span class="pcat">${t("grpTag")}</span>${owner&&logged?`<button class="gpen" id="gpen" aria-label="${t("gphT")}">${sv('<path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M14.5 7.5l3 3"/>')}</button>`:""}<h3>${gn}</h3></div><div class="dof"><span id="gofa">${avc("",owner?meAv():avIdx({id:g.ownerId}))}</span><div class="don"><b>${owner?t("you"):esc(clean(g.ownerNick||"?"))}</b><small>${t("founder")}</small></div><span class="dbg" id="gcn"></span></div></div>
   ${owner?"":`<div class="inv" id="gib"><span>${t("grInv",esc(g.ownerNick||"?"),gn)}</span></div>`}
   <div id="mem" hidden></div>
   <div id="gcw" hidden></div>
@@ -3462,8 +3463,13 @@ async function groupView(code){
   ${logged?"":getAppBox()}
   ${owner?"":`<button class="lnk rep" id="rp" style="display:none!important">${sv(SI.flag)} ${t("repGroup")}</button>`}</div>`);
   $("#cl").onclick=async()=>{vib(15);try{await navigator.clipboard.writeText(url)}catch{}toast(t("copied"))};
-  $("#gsh").onclick=()=>openShare("g",{id:code,...g,M});$("#gqr").onclick=()=>qrGroup(code,g.name);
-  if($("#gmo"))$("#gmo").onclick=()=>{vib(8);const B=[];if(owner)B.push(["gcol",t("cmCol")]);if(!owner)B.push(["rp",t("repGroup")]);const del=mine||owner;
+  $("#gsh").onclick=()=>openShare("g",{id:code,...g,M});
+  const paintG=()=>{const h=$(".gcm");if(!h)return;h.classList.toggle("hasph",!!g.ph);if(g.ph)h.style.setProperty("--gph","url('"+g.ph+"')");else h.style.removeProperty("--gph")};
+  const setG=async v=>{try{if(!DEMO)await updateDoc(doc(db,"groups",code),{ph:v||deleteField()});if(v)g.ph=v;else delete g.ph;paintG();vib([20,30]);toast(t(v?"gphOk":"gphRm"))}catch{toast(t("phErr"))}};
+  if($("#gpen"))$("#gpen").onclick=()=>{vib(8);const s5=sheet(`<div class="dsh"><h2>${t("gphT")}</h2><div class="dsb"><button class="dsx g" id="gpk">${t("gphPick")}</button>${g.ph?`<button class="dsx g" id="gpd" style="color:#ff6b7a">${t("gphDel")}</button>`:""}</div></div>`);s5.querySelector(".sheet").style.background="#0b0b0b";
+    s5.querySelector("#gpk").onclick=()=>{const inp=document.createElement("input");inp.type="file";inp.accept="image/*";inp.style.display="none";document.body.append(inp);inp.onchange=()=>{const f=inp.files&&inp.files[0];inp.remove();if(!f)return;s5.close();cropPhoto(f,d=>setG(d),19/10)};inp.click()};
+    const gd=s5.querySelector("#gpd");if(gd)gd.onclick=()=>{s5.close();setG(null)}};$("#gqr").onclick=()=>qrGroup(code,g.name);
+  if($("#gmo"))$("#gmo").onclick=()=>{vib(8);const B=[];if(!owner)B.push(["rp",t("repGroup")]);const del=mine||owner;
     const s4=sheet(`<div class="dsh"><h2>${t("n2more")}</h2><div class="dsb">${B.map(([k,l])=>`<button class="dsx${k==="inv"?"":" g"}" data-k="${k}">${l}</button>`).join("")}${del?`<button class="dsx g" id="gxl" style="color:#ff6b7a">${owner?t("grDel"):t("grLeave")}</button>`:""}</div></div>`);s4.querySelector(".sheet").style.background="#0b0b0b";
     s4.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{s4.close();if(b.dataset.k==="gcol"){setTimeout(()=>colorSheet(code,i=>{g.theme=i;const c=GTH[i],h=$(".gcm");if(h){h.style.setProperty("--c1",c[0]);h.style.setProperty("--c2",c[1])}}),260);return}setTimeout(()=>$("#"+b.dataset.k)?.click(),260)});
     const xl=s4.querySelector("#gxl");if(xl){let ar=0;const lb=xl.textContent;xl.onclick=()=>{if(!ar){ar=1;xl.textContent=t("delSure");setTimeout(()=>{ar=0;xl.textContent=lb},4000);return}s4.close();$("#lv").click();$("#lv").click()}}};
@@ -3982,19 +3988,19 @@ function swipeClose(el,close,fade){let y0=null,dy=0,t0=0;
 const phHtml=()=>`<button class="phav" data-ph aria-label="${t("sChPh")}">${avc("xl",meAv())}</button><button class="phb" data-ph aria-label="${t("sChPh")}">${sv(SI.cam)}</button>`;
 function bindPhoto(after){document.querySelectorAll("[data-ph]").forEach(b=>b.onclick=()=>{vib(8);$("#pf").click()});
   $("#pf").onchange=e=>{const f=e.target.files?.[0];e.target.value="";if(f)cropPhoto(f,async d=>{const u=auth.currentUser;let url=d;if(!DEMO&&u&&!u.isAnonymous){toast(t("upIng"));url=await putImg("avatars/"+u.uid+".jpg",d).catch(()=>null);if(!url)return toast(t("upErr"));if(/^https?:/.test(url))url+=(url.includes("?")?"&":"?")+"v="+Date.now()}sset("photo",url);after();toast(t("phSaved"))})}}
-function cropPhoto(file,done){
-  const src=URL.createObjectURL(file);
+function cropPhoto(file,done,ar){
+  ar=ar||1;const src=URL.createObjectURL(file);
   loadImg(src).then(img=>{
     const el=document.createElement("div");el.className="crop";
-    el.innerHTML=`<h2>${t("cropT")}</h2><div class="cbox"><canvas width="640" height="640"></canvas><i></i></div><input class="zr" type="range" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><p class="hint" style="text-align:center;margin:0">${t("cropHint")}</p><div class="crb"><button class="ghost" id="cx">${t("cancel")}</button><button class="cta" id="ck">${t("cropOk")}</button></div>`;
+    el.innerHTML=`<h2>${t("cropT")}</h2><div class="cbox"${ar!==1?` style="aspect-ratio:${ar};width:min(92vw,420px)"`:""}><canvas width="640" height="${Math.round(640/ar)}"></canvas><i${ar!==1?` style="border-radius:16px"`:""}></i></div><input class="zr" type="range" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><p class="hint" style="text-align:center;margin:0">${t("cropHint")}</p><div class="crb"><button class="ghost" id="cx">${t("cancel")}</button><button class="cta" id="ck">${t("cropOk")}</button></div>`;
     document.body.append(el);
-    const box=el.querySelector(".cbox"),g=el.querySelector("canvas").getContext("2d"),zr=el.querySelector(".zr"),N=640,iw=img.naturalWidth,ih=img.naturalHeight,b0=Math.max(N/iw,N/ih);let z=1,ox=0,oy=0;
-    const clamp=()=>{const mx=(iw*b0*z-N)/2,my=(ih*b0*z-N)/2;ox=Math.max(-mx,Math.min(mx,ox));oy=Math.max(-my,Math.min(my,oy))};
-    const paint=(c,s)=>{const k=s/N,w=iw*b0*z*k,h=ih*b0*z*k;c.fillStyle="#000";c.fillRect(0,0,s,s);c.drawImage(img,s/2-w/2+ox*k,s/2-h/2+oy*k,w,h)};
-    const draw=()=>{clamp();paint(g,N)};draw();
+    const box=el.querySelector(".cbox"),g=el.querySelector("canvas").getContext("2d"),zr=el.querySelector(".zr"),NW=640,NH=Math.round(640/ar),iw=img.naturalWidth,ih=img.naturalHeight,b0=Math.max(NW/iw,NH/ih);let z=1,ox=0,oy=0;
+    const clamp=()=>{const mx=(iw*b0*z-NW)/2,my=(ih*b0*z-NH)/2;ox=Math.max(-mx,Math.min(mx,ox));oy=Math.max(-my,Math.min(my,oy))};
+    const paint=(c,sw)=>{const k=sw/NW,sh=NH*k,w=iw*b0*z*k,h=ih*b0*z*k;c.fillStyle="#000";c.fillRect(0,0,sw,sh);c.drawImage(img,sw/2-w/2+ox*k,sh/2-h/2+oy*k,w,h)};
+    const draw=()=>{clamp();paint(g,NW)};draw();
     const pts=new Map();let d0=0,z0=1;const dist=()=>{const[a,b]=[...pts.values()];return Math.hypot(a[0]-b[0],a[1]-b[1])};
     box.onpointerdown=e=>{try{box.setPointerCapture(e.pointerId)}catch{}pts.set(e.pointerId,[e.clientX,e.clientY]);if(pts.size===2){d0=dist();z0=z}};
-    box.onpointermove=e=>{const p=pts.get(e.pointerId);if(!p)return;const r=N/box.clientWidth;
+    box.onpointermove=e=>{const p=pts.get(e.pointerId);if(!p)return;const r=NW/box.clientWidth;
       if(pts.size===1){ox+=(e.clientX-p[0])*r;oy+=(e.clientY-p[1])*r}pts.set(e.pointerId,[e.clientX,e.clientY]);
       if(pts.size===2&&d0){z=Math.min(4,Math.max(1,z0*dist()/d0));zr.value=z}draw()};
     box.onpointerup=box.onpointercancel=e=>{pts.delete(e.pointerId);d0=0};
@@ -4002,7 +4008,7 @@ function cropPhoto(file,done){
     zr.oninput=()=>{z=+zr.value;draw()};
     const end=()=>{el.remove();URL.revokeObjectURL(src)};
     el.querySelector("#cx").onclick=end;
-    el.querySelector("#ck").onclick=()=>{const o=document.createElement("canvas");o.width=o.height=320;paint(o.getContext("2d"),320);const d=o.toDataURL("image/jpeg",.8);end();done(d)};
+    el.querySelector("#ck").onclick=()=>{const ow=ar===1?320:800,o=document.createElement("canvas");o.width=ow;o.height=Math.round(ow/ar);paint(o.getContext("2d"),ow);const d=o.toDataURL("image/jpeg",ar===1?.8:.72);end();done(d)};
   }).catch(()=>{URL.revokeObjectURL(src);toast(t("phErr"))})}
 
 /* ---------- TEKSTY NOWYCH FUNKCJI ---------- */
@@ -4557,7 +4563,7 @@ window.chatMenu=(g,id)=>{vib(10);
   const rw=(id,ic,tx,hn,cls)=>`<button class="dsx${cls?" "+cls:" g"}" id="${id}" type="button">${tx}</button>`;
   const s=sheet(`<div class="dsh cmenu2"><h2>${esc(clean(title||""))}</h2><div class="dsb">
     ${(g?owner:canInvD)&&G&&!auth.currentUser?.isAnonymous?rw("cmI",0,t("cmInv"),0,"cmw"):""}
-    ${g&&owner?rw("cmCo",0,t("cmCol")):""}
+    
     ${rw("cmM",isMuted(k)?IB:IBO,isMuted(k)?t("cmUnmute"):t("cmMute"))}
     ${rw("cmC",IC,t("cmClr"),t("cmClrD"))}
     ${owner?"":rw("cmR",SI.flag,t("cmRep"))}
@@ -4661,6 +4667,7 @@ Object.assign(L.it,{imgHD1:"Invito",imgHD2:"a un drop",imgHGS:"Una chat di grupp
 Object.assign(L.cs,{imgHD1:"Pozvánka",imgHD2:"na drop",imgHGS:"Skupinový chat, který nemizí",imgHG1:"Přidej se",imgHG2:"do party",imgHGJ:"Přidat se do party",imgHGW:"na tebe čeká",imgHDW:"a ty?"});
 Object.assign(L.uk,{imgHD1:"Запрошення",imgHD2:"на дроп",imgHGS:"Груповий чат, який не зникає",imgHG1:"Приєднуйся",imgHG2:"до компанії",imgHGJ:"Приєднатися до компанії",imgHGW:"чекає на тебе",imgHDW:"а ти?"});
 Object.assign(L.pl,{imgHDJ:"Sprawdź i odpowiedz"});Object.assign(L.en,{imgHDJ:"Check it and reply"});Object.assign(L.es,{imgHDJ:"Míralo y responde"});Object.assign(L.de,{imgHDJ:"Ansehen und antworten"});Object.assign(L.fr,{imgHDJ:"Voir et répondre"});Object.assign(L.it,{imgHDJ:"Guarda e rispondi"});Object.assign(L.cs,{imgHDJ:"Podívej se a odpověz"});Object.assign(L.uk,{imgHDJ:"Переглянути й відповісти"});
+Object.assign(L.pl,{gphT:"Zdjęcie grupy",gphPick:"Wybierz zdjęcie",gphDel:"Usuń zdjęcie",gphOk:"Zdjęcie grupy zapisane",gphRm:"Zdjęcie usunięte"});Object.assign(L.en,{gphT:"Group photo",gphPick:"Choose a photo",gphDel:"Remove photo",gphOk:"Group photo saved",gphRm:"Photo removed"});Object.assign(L.es,{gphT:"Foto del grupo",gphPick:"Elegir foto",gphDel:"Quitar foto",gphOk:"Foto del grupo guardada",gphRm:"Foto quitada"});Object.assign(L.de,{gphT:"Gruppenfoto",gphPick:"Foto auswählen",gphDel:"Foto entfernen",gphOk:"Gruppenfoto gespeichert",gphRm:"Foto entfernt"});Object.assign(L.fr,{gphT:"Photo du groupe",gphPick:"Choisir une photo",gphDel:"Supprimer la photo",gphOk:"Photo du groupe enregistrée",gphRm:"Photo supprimée"});Object.assign(L.it,{gphT:"Foto del gruppo",gphPick:"Scegli una foto",gphDel:"Rimuovi foto",gphOk:"Foto del gruppo salvata",gphRm:"Foto rimossa"});Object.assign(L.cs,{gphT:"Fotka skupiny",gphPick:"Vybrat fotku",gphDel:"Odstranit fotku",gphOk:"Fotka skupiny uložena",gphRm:"Fotka odstraněna"});Object.assign(L.uk,{gphT:"Фото групи",gphPick:"Вибрати фото",gphDel:"Видалити фото",gphOk:"Фото групи збережено",gphRm:"Фото видалено"});
 Object.assign(L.pl,{"wlTag": "Powitanie", "wlPrev": "Cześć! Zobacz, jak zacząć 👋", "wlT": "Witaj w Squad", "wlLead": "Tu pojawią się Twoje czaty: z dropów i z grup. Zacznij od jednego z dwóch kroków:", "wlDrT": "Dodaj drop", "wlDrD": "Plan na dziś lub kiedyś: co, kiedy i gdzie. Czat dropa powstaje sam.", "wlGrT": "Utwórz grupę", "wlGrD": "Stała ekipa z czatem, który nie wygasa.", "wlHmT": "Dropy znajdziesz w Home", "wlHmD": "Po dodaniu dropu wszystkie są na ekranie Home – ikona domku w dolnym menu.", "wlGo": "Utwórz drop", "wlOk": "Rozumiem"});
 Object.assign(L.en,{"wlTag": "Welcome", "wlPrev": "Hi! See how to get started 👋", "wlT": "Welcome to Squad", "wlLead": "Your chats from drops and groups will show up here. Start with one of two steps:", "wlDrT": "Add a drop", "wlDrD": "A plan for today or later: what, when and where. The drop chat is created automatically.", "wlGrT": "Create a group", "wlGrD": "A standing crew with a chat that never expires.", "wlHmT": "Find your drops in Home", "wlHmD": "Once you add a drop, they're all on the Home screen – the house icon in the bottom menu.", "wlGo": "Create a drop", "wlOk": "Got it"});
 Object.assign(L.es,{"wlTag": "Bienvenida", "wlPrev": "¡Hola! Mira cómo empezar 👋", "wlT": "Te damos la bienvenida a Squad", "wlLead": "Aquí aparecerán tus chats de drops y grupos. Empieza con uno de estos dos pasos:", "wlDrT": "Añade un drop", "wlDrD": "Un plan para hoy o más adelante: qué, cuándo y dónde. El chat del drop se crea solo.", "wlGrT": "Crea un grupo", "wlGrD": "Una crew fija con un chat que no caduca.", "wlHmT": "Tus drops están en Inicio", "wlHmD": "Al añadir un drop, todos estarán en la pantalla de Inicio: el icono de la casa en el menú inferior.", "wlGo": "Crear un drop", "wlOk": "Entendido"});

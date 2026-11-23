@@ -301,7 +301,8 @@ service cloud.firestore {
         && request.resource.data.name.size() <= 40;
       allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
       // organizator zmienia wszystko; zwykły członek tylko przypiętą wiadomość (pin, do 200 znaków)
-      allow update: if signedIn() && (resource.data.ownerId == request.auth.uid
+      allow update: if signedIn() && ((resource.data.ownerId == request.auth.uid
+            && (!('ph' in request.resource.data) || (request.resource.data.ph is string && request.resource.data.ph.size() <= 150000)))
         || (exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pin'])
             && (!('pin' in request.resource.data)
