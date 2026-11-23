@@ -1363,17 +1363,22 @@ html:has(.scr.chl),body:has(.scr.chl){background:#000!important}
 :root.acw .scr.chl .chrow .cr1 time.un{color:#fff}
 h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 /* ZAPROSZENIA Z LINKU (kreator nicku + dodanie do znajomych) – niebieskie przyciski, nowy styl */
-.scr.ob .cta,.sheet:has(.kadd) .cta{background:#4da3ff!important;color:#0b0b12!important;box-shadow:none!important;height:54px;padding:0 16px!important;border-radius:99px!important;display:flex;align-items:center;justify-content:center;text-transform:none!important;font:700 16px 'Brico',system-ui!important;letter-spacing:0}
+.scr.ob .cta{background:#4da3ff!important;color:#0b0b12!important;box-shadow:none!important;height:54px;padding:0 16px!important;border-radius:99px!important;display:flex;align-items:center;justify-content:center;text-transform:none!important;font:700 16px 'Brico',system-ui!important;letter-spacing:0}
 .scr.ob .logo.bigl{font-size:34px!important}
 .scr.ob h1.logo{font:800 28px Brico,BricoCyr,system-ui!important;letter-spacing:-.01em}
 .scr.ob .hint{color:#8e8e8e}
 .scr.ob #pn{background:#131313!important;border:0!important;border-radius:18px;height:54px;padding:0 16px}
 .scr.ob .kmk{background:#181818!important;border:0!important;border-radius:99px;height:48px;color:#dcdcdc;font:600 15px Brico,BricoCyr,system-ui}
-.sheet:has(.kadd){background:#101010;border-top:1px solid rgba(255,255,255,.08)}
-.sheet:has(.kadd) .kadd{display:grid;place-items:center;width:84px;height:84px;margin:10px auto 6px;border-radius:50%;background:#181818}
-.sheet:has(.kadd) h2{font:800 22px Brico,BricoCyr,system-ui;letter-spacing:-.01em;margin:8px 0 6px}
-.sheet:has(.kadd) .hint{color:#8e8e8e;font-size:14.5px;line-height:1.45}
-.sheet:has(.kadd) .ghost{height:54px;border-radius:99px;background:#181818!important;border:0!important;color:#8e8e8e;font:600 15px Brico,BricoCyr,system-ui;margin-top:10px}
+.sheet:has(.kadd){background:#000;border-top:1px solid rgba(255,255,255,.08)}
+.sheet:has(.kadd) .kadd{display:none}
+.sheet:has(.kadd) .kwho{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px 0 0}
+.sheet:has(.kadd) .kwho .av{width:76px!important;height:76px!important;min-width:76px}
+.sheet:has(.kadd) .kwho .kph{display:grid;place-items:center;background:#1d1d29;color:#fff;font:800 30px Brico,BricoCyr,system-ui}
+.sheet:has(.kadd) .kwho b{font:800 17px Brico,BricoCyr,system-ui;color:#fff}
+.sheet:has(.kadd) h2{font:800 22px Brico,BricoCyr,system-ui;letter-spacing:-.01em;color:#fff;text-align:center;margin:12px 0 8px}
+.sheet:has(.kadd) .hint{color:#8e8e8e;font:500 14.5px/1.45 Brico,BricoCyr,system-ui;text-align:center;margin:0 6px 18px}
+.sheet:has(.kadd) .cta{background:#fff!important;color:#000!important;box-shadow:none!important;min-height:56px;padding:0 16px!important;border-radius:18px!important;display:flex;align-items:center;justify-content:center;text-transform:none!important;font:800 16px Brico,BricoCyr,system-ui!important;letter-spacing:0}
+.sheet:has(.kadd) .ghost{min-height:56px;border-radius:18px;background:#131313!important;border:0!important;color:#8e8e8e;font:700 15px Brico,BricoCyr,system-ui;margin-top:10px}
 /* EKRAN LOGOWANIA – lobby z kartą (wariant B) */
 .scr.deco{position:relative;isolation:isolate}
 .scr.deco .logo.bigl.lgw{font-size:64px;text-shadow:0 0 22px #000,0 0 44px #000,0 0 70px rgba(0,0,0,.95),0 0 110px rgba(0,0,0,.9),0 0 160px rgba(0,0,0,.8),0 14px 36px #000,0 22px 60px #000,0 30px 100px rgba(0,0,0,.95),0 40px 140px rgba(0,0,0,.9);margin:auto 0 -1px}.lgt{margin:0 0 8px!important;font:700 18px/24px Brico,BricoCyr,system-ui;letter-spacing:.01em;color:#f2f2f2;text-align:center;text-shadow:0 0 12px #000,0 0 28px #000,0 0 50px rgba(0,0,0,.9),0 10px 30px #000;max-width:none!important;padding:0!important}.scr.deco>p.mut{font-size:17px;line-height:1.35;margin:14px 0 40px!important;padding:0 36px;max-width:340px;color:#a8a8a8;text-shadow:0 1px 12px #000}
@@ -2969,9 +2974,9 @@ async function conAcc(r){const u=auth.currentUser;if(!u)return;try{
   await deleteDoc(doc(db,"creq",r.id));pushNow({kind:"cacc",to:r.from});sfx("in");vib([20,30,20]);toast(t("kAccOk"))}catch(e){toast(t("err"))}}
 async function conDel(uid){const u=auth.currentUser;if(!u)return;await deleteDoc(doc(db,"users",u.uid,"contacts",uid)).catch(()=>{});await deleteDoc(doc(db,"users",uid,"contacts",u.uid)).catch(()=>{});vib(10);toast(t("kRmOk"))}
 const syncCon=(av,ph,nk)=>{const u=auth.currentUser;if(!u||u.isAnonymous)return;S.con.forEach((c,k)=>setDoc(doc(db,"users",k,"contacts",u.uid),{av,ph,...(nk?{nickname:nk}:{})},{merge:true}).catch(()=>{}))};
-function conShare(){const u=auth.currentUser;if(!u)return;const nick=sget("nick")||"",url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(nick);
+function conShare(){const u=auth.currentUser;if(!u)return;const nick=sget("nick")||"",url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(nick)+"&a="+myAv();
   shareSheet({title:t("kLink"),url,txt:t("kLinkTxt",url,nick),fname:"squad-kontakt.jpg",make:st=>makeContactCard(nick,url,st),opts:[],ar:"1200/630"})}
-window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"");let svg="";
+window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;if(u.isAnonymous)return guestUp("/k");vib(10);const url=base()+"/k/"+u.uid+"?n="+encodeURIComponent(sget("nick")||"")+"&a="+myAv();let svg="";
   try{const Q=await loadQR(),q=Q(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch{return toast(t("err"))}
   const s=sheet(`<div class="dsh"><h2>${t("qcT")}</h2><p class="dsub">${t("qcD")}</p><div class="dqr">${svg}</div><p class="dsub" style="text-align:center;color:#fff;font-weight:800">${esc(clean(sget("nick")||""))}</p><div class="dsb"><button class="dsx" id="qsh">${t("kLink")}</button><button class="dsx g" id="qcl">${t("close")}</button></div></div>`);s.querySelector(".sheet").style.background="#0b0b0b";
   s.querySelector("#qsh").onclick=()=>{s.close();conShare()};s.querySelector("#qcl").onclick=s.close};
@@ -3006,9 +3011,9 @@ function contactsView(add){
     el.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{b.disabled=true;b.textContent="✓";conReq(b.dataset.add,known.get(b.dataset.add))});
     el.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{if(!b.classList.contains("arm")){vib(10);b.classList.add("arm");b.textContent=t("kRm");setTimeout(()=>{if(b.isConnected){b.classList.remove("arm");b.textContent="✕"}},3500);return}conDel(b.dataset.rm)})};
   redraw=draw;draw();badges();
-  if(add){const q=new URLSearchParams(location.search),nm=String(q.get("n")||"").slice(0,20);try{history.replaceState(history.state,"","/k")}catch{}
+  if(add){const q=new URLSearchParams(location.search),nm=String(q.get("n")||"").slice(0,20),aq=q.get("a"),ava=aq!==null&&aq!==""&&/^\d{1,5}$/.test(aq)?+aq:null;try{history.replaceState(history.state,"","/k")}catch{}
     if(add===u.uid)return toast(t("kSelf"));if(S.con.has(add))return toast(t("kAlready"));
-    const s=sheet(`<div class="kadd"><img src="/e/wave2.webp" alt="" width="72" height="72" onerror="this.remove()"></div><h2>${nm?t("kAddT",esc(nm)):t("kAddT0")}</h2><p class="hint">${t("kAddD")}</p><button class="cta" id="kay">${t("kAddGo")}</button><button class="ghost" id="kan">${t("cancel")}</button>`);
+    const s=sheet(`<i class="kadd"></i><div class="kwho">${ava!==null?avc("l",ava):`<span class="av l kph">${ltr(nm)}</span>`}${nm?`<b>${esc(nm)}</b>`:""}</div><h2>${nm?t("kAddT",esc(nm)):t("kAddT0")}</h2><p class="hint">${t("kAddD")}</p><button class="cta" id="kay">${t("kAddGo")}</button><button class="ghost" id="kan">${t("cancel")}</button>`);
     s.querySelector("#kan").onclick=s.close;s.querySelector("#kay").onclick=()=>{s.close();conReq(add,{nickname:nm})}}
 }
 /* wybór kontaktów do zaproszenia na drop / do grupy */
