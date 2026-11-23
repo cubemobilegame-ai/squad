@@ -3506,7 +3506,7 @@ async function groupView(code){
     {const L=[...M].sort((a,b)=>(b.id===g.ownerId)-(a.id===g.ownerId));$("#gcn").textContent=t("grCnt",M.length);{const om=M.find(x=>x.id===g.ownerId),fa=$("#gofa");if(om&&fa)fa.innerHTML=avc("",avIdx(om))}$("#mem").hidden=!M.length;
     $("#mem").innerHTML=M.length?`<h3 class="gph">${t("grWho")}<em>${M.length}</em></h3><div class="n2ml">${L.map(p=>`<div class="n2mr" data-u="${esc(p.id)}">${avc("",avIdx(p))}<div><b>${esc(clean(p.nickname||"?"))}${FR(p.id)}</b>${p.id===g.ownerId?`<small>★ ${t("founder")}</small>`:p.id===me()?`<small>${t("you")}</small>`:""}</div></div>`).join("")}</div>`:"";
     document.querySelectorAll("#mem [data-u]").forEach(c=>c.onclick=()=>{const q=M.find(z=>z.id===c.dataset.u);if(q&&!isMe(q.id)){vib(8);userActions(q,{target:"user",chat:"group",code})}})}
-    $("#jb").hidden=!!mine;drawChat();drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;$("#gsh").hidden=!mine&&!owner;$("#gqr").hidden=!mine&&!owner;
+    $("#jb").hidden=!!mine;drawChat();drawPin();drawPoll();startPoll();$("#oc").hidden=!mine||fromChat||window.__from==="/chats";$("#lv").hidden=!mine&&!owner;$("#shb").hidden=!mine&&!owner;$("#gsh").hidden=!owner;$("#gsh").style.display=owner?"":"none";$("#gqr").hidden=!owner;
     if(!mine&&owner&&logged&&!window["__oh"+code]){window["__oh"+code]=1;const nk=sget("nick")||g.ownerNick||"?";setDoc(doc(ref,"members",me0.uid),{nickname:nk,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:me0.uid,updatedAt:serverTimestamp()}).catch(()=>{})}
     if(mine){$("#asr").hidden=true;$("#nick").hidden=true;rememberG(code);if(logged&&!S.groups.has(code))S.addGroup?.(code,g)}},()=>{}));
 }
@@ -4556,7 +4556,7 @@ window.chatMenu=(g,id)=>{vib(10);
   const IB='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0"/>',IBO='<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20a2 2 0 0 0 4 0M4 4l16 16"/>',IC='<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>';
   const rw=(id,ic,tx,hn,cls)=>`<button class="dsx${cls?" "+cls:" g"}" id="${id}" type="button">${tx}</button>`;
   const s=sheet(`<div class="dsh cmenu2"><h2>${esc(clean(title||""))}</h2><div class="dsb">
-    ${(g||canInvD)&&G&&!auth.currentUser?.isAnonymous?rw("cmI",0,t("cmInv"),0,"cmw"):""}
+    ${(g?owner:canInvD)&&G&&!auth.currentUser?.isAnonymous?rw("cmI",0,t("cmInv"),0,"cmw"):""}
     ${g&&owner?rw("cmCo",0,t("cmCol")):""}
     ${rw("cmM",isMuted(k)?IB:IBO,isMuted(k)?t("cmUnmute"):t("cmMute"))}
     ${rw("cmC",IC,t("cmClr"),t("cmClrD"))}
