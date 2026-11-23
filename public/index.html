@@ -4240,8 +4240,7 @@ async function makeCard(k,o,st={}){await fontsReady();
 /* karty udostępniania 1200×630 (podgląd linku): czarne tło, niebieski akcent, karta jak w nowym ekranie dropa */
 function shBase(K,host,hs0,l1,l2,sub){const{x,F}=K,PI2=Math.PI*2;
   x.fillStyle="#000";x.fillRect(0,0,1200,630);
-  [[1180,-40,560,"rgba(61,130,255,.26)"],[80,690,420,"rgba(61,200,255,.09)"]].forEach(([cx,cy,r,c])=>{const g=x.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,c);g.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=g;x.fillRect(0,0,1200,630)});
-  return K.pic("/e/splmark.webp",68,62,64,64).then(()=>{K.txt("Squad",142,112,F(800,52),"#fff","left",-2);x.fillStyle="#1d1d29";x.beginPath();x.arc(104,196,32,0,PI2);x.fill();return K.pic(hs0,72,164,64,64,true)}).then(()=>{
+  return K.pic("/e/inv-chars.webp",540,0,660,630).then(()=>K.pic("/e/splmark.webp",68,62,64,64)).then(()=>{K.txt("Squad",142,112,F(800,52),"#fff","left",-2);x.fillStyle="#1d1d29";x.beginPath();x.arc(104,196,32,0,PI2);x.fill();return K.pic(hs0,72,164,64,64,true)}).then(()=>{
     x.lineWidth=3;x.strokeStyle="rgba(255,255,255,.85)";x.beginPath();x.arc(104,196,32,0,PI2);x.stroke();
     const it=t("inv",host).replace(/!$/,"");K.txt(it,152,208,K.fitF(it,520,800,34,22),"#fff","left");
     const gr=x.createLinearGradient(72,0,560,0);gr.addColorStop(0,"#7fc0ff");gr.addColorStop(1,"#4DA3FF");
@@ -4260,41 +4259,14 @@ async function shHost(K,hs0,name,subl,chip){const{x,F}=K,PI2=Math.PI*2;
   K.txt(name,-134,142,K.fitF(name,170,800,24,15),"#fff","left");K.txt(subl,-134,167,F(600,18),"rgba(255,255,255,.55)","left");
   if(chip){x.font=F(800,21);const w=x.measureText(chip).width+34;K.rr(198-w,124,w,44,22);x.fillStyle="#26262d";x.fill();K.txt(chip,198-w/2,154,F(800,21),"#fff","center")}}
 async function makeInviteH(k,o,st={}){await fontsReady();
-  const K=kit(1200,630),{x,F}=K,G=k==="g",P=o.P||[],M=o.M||[];
+  const K=kit(1200,630),G=k==="g";
   const host=sget("nick")||(G?o.ownerNick:o.hostNick)||"?",hv=meAv(),hs0=typeof hv==="string"?hv:await genAv(hv,true);
-  await shBase(K,host,hs0,t(G?"imgHG1":"imgHD1"),t(G?"imgHG2":"imgHD2"),G?t("imgHGS"):(o.surprise?t("surP"):String(o.place||"")));
-  if(G){shWhiteBtn(K,t("imgHGJ"))}
-  else{[["IN","#3DDC97","#000",1],["LATE","#111114","#8d8d98"],["OUT","#111114","#8d8d98"]].forEach(([b,bg,fg,on],i)=>{const bx=72+i*136;K.rr(bx,506,124,72,22);x.fillStyle=bg;x.fill();if(!on){x.lineWidth=2;x.strokeStyle="#2a2a33";x.stroke()}K.txt(b,bx+62,552,F(800,26),fg,"center")})}
-  await shCard(K,async()=>{
-    if(G){shPanel(K,"#cfe0ff","#e7efff");
-      x.save();K.rr(-214,-206,428,296,30);x.clip();const pw=300,ph=Math.round(pw*434/635);await K.pic("/e/ekipa.webp",214-pw+6,90-ph,pw,ph);x.restore();
-      shPill(K,"👥 "+Math.max(1,M.length),-190,-182);
-      const tl=K.wrap(String(o.name||""),200,3);x.font=F(800,36);tl.forEach((l,i)=>K.txt(l,-190,-100+i*42,K.fitF(l,200,800,36,22),"#12301f","left",-1));
-      await shHost(K,hs0,host,t("imgHGW"),Math.max(1,M.length)+" os.");
-    }else{const cu=cutu(o),pk=cu||o.category==="pub"?null:pcu(o),dk=cu?cu.c==="cd":!!(pk&&PCD[pck(o)]),fg=dk?"#fff":"#12301f",PX=-214,PY=-206,PW=428,PH=296;
-      if(cu){const g=x.createLinearGradient(PX,PY,PX+PW,PY+PH);g.addColorStop(0,cu.g[0]);g.addColorStop(1,cu.g[1]);K.rr(PX,PY,PW,PH,30);x.fillStyle=g;x.fill();
-        x.save();K.rr(PX,PY,PW,PH,30);x.clip();try{const im=await loadImg(cu.s),st2=String(cu.x||""),pc=n=>{const m=st2.match(new RegExp("(?:^|;)"+n+":(-?[\\d.]+)%"));return m?+m[1]/100:null};
-          let hh=pc("height"),ww=pc("width");const ar=im.naturalWidth/im.naturalHeight;let dh,dw;if(ww!=null&&hh==null){dw=PW*ww;dh=dw/ar}else{dh=PH*(hh!=null?hh:1.25);dw=dh*ar}
-          const rt=pc("right"),tp=pc("top"),bt=pc("bottom"),rr=rt!=null?rt:(cu.c==="cd"?-.01:-.04);let dx=PX+PW-dw+PW*(-rr),dy=bt!=null?PY+PH-dh+PH*(-bt):PY+PH*(tp!=null?tp:(cu.c==="cd"?-.02:0));
-          x.shadowColor="rgba(0,0,0,.28)";x.shadowBlur=22;x.shadowOffsetY=10;x.drawImage(im,dx,dy,dw,dh)}catch{}x.restore()}
-      else if(pk){x.save();K.rr(PX,PY,PW,PH,30);x.clip();try{const im=await loadImg(pk),ps=String(PCPOS[pck(o)]||"100% 50%").split(" "),sc=Math.max(PW/im.naturalWidth,PH/im.naturalHeight)*(PCZ[pck(o)]?+PCZ[pck(o)][0]:1),dw=im.naturalWidth*sc,dh=im.naturalHeight*sc;x.drawImage(im,PX-(dw-PW)*parseFloat(ps[0])/100,PY-(dh-PH)*parseFloat(ps[1])/100,dw,dh)}catch{}x.restore()}
-      else{const kk=pxKey(o),hg=HG[o.category],cols=String(FG[kk]||(hg?hg[0]:"#dfe6f0,#eef2f8")).split(",");shPanel(K,cols[0],cols[1]||cols[0]);
-        x.save();K.rr(PX,PY,PW,PH,30);x.clip();try{const im=await loadImg(pxSrc(o)),sc=Math.min(250/im.naturalHeight,230/im.naturalWidth*1.3),dw=im.naturalWidth*sc,dh=im.naturalHeight*sc;x.drawImage(im,214-dw+10,90-dh+10,dw,dh)}catch{}x.restore()}
-      shPill(K,String(catLab(o)).toUpperCase(),-190,-182,dk);
-      const tl=K.wrap(String(o.title||""),200,3);x.font=F(800,36);tl.forEach((l,i)=>K.txt(l,-190,-100+i*42,K.fitF(l,200,800,36,22),fg,"left",-1));
-      const ins=P.filter(p=>p.status==="in").length;
-      await shHost(K,hs0,host,t("imgHDW"),ins?ins+" IN":"")}
-  });
+  await shBase(K,host,hs0,t(G?"imgHG1":"imgHD1"),t(G?"imgHG2":"imgHD2"),G?t("imgHGS"):(o.surprise?t("surP"):String(o.title||"")));
+  shWhiteBtn(K,t(G?"imgHGJ":"imgHDJ"));
   return K.blob()}
 async function makeContactCard(nick,url,st={}){await fontsReady();
-  const K=kit(1200,630),{x,F}=K,nk=String(nick||"?"),hv=meAv(),hs0=typeof hv==="string"?hv:await genAv(hv,true);
+  const K=kit(1200,630),nk=String(nick||"?"),hv=meAv(),hs0=typeof hv==="string"?hv:await genAv(hv,true);
   await shBase(K,nk,hs0,t("imgK1"),t("imgK2"),t("imgKS"));shWhiteBtn(K,t("imgKJ2"));
-  await shCard(K,async()=>{shPanel(K,"#cfe0ff","#e7efff");
-    await K.pic("/e/wave2.webp",36,-142,150,150);
-    shPill(K,t("imgKTag"),-190,-182);
-    const c1=t("imgKC1"),c2=t("imgKC2");K.txt(c1,-190,-72,K.fitF(c1,230,800,38,22),"#12301f","left",-1);K.txt(c2,-190,-30,K.fitF(c2,230,800,38,22),"#12301f","left",-1);
-    {let px=-190;["🔥 "+t("imgKP1"),"👥 "+t("imgKP2")].forEach(pt=>{x.font=F(800,19);const w=x.measureText(pt).width+34;K.rr(px,26,w,38,19);x.fillStyle="rgba(20,20,28,.14)";x.fill();K.txt(pt,px+w/2,52,F(800,19),"#1c2a22","center");px+=w+10})}
-    await shHost(K,hs0,nk,t("imgKIn"),"16+")});
   return K.blob()}
 const url2=(G,id)=>(base()+(G?"/g/":"/d/")+id).replace(/^https?:\/\//,"");
 
@@ -4687,6 +4659,7 @@ Object.assign(L.fr,{imgHD1:"Invitation",imgHD2:"à un drop",imgHGS:"Un chat de g
 Object.assign(L.it,{imgHD1:"Invito",imgHD2:"a un drop",imgHGS:"Una chat di gruppo che resta",imgHG1:"Unisciti",imgHG2:"alla crew",imgHGJ:"Unisciti alla crew",imgHGW:"ti aspetta",imgHDW:"e tu?"});
 Object.assign(L.cs,{imgHD1:"Pozvánka",imgHD2:"na drop",imgHGS:"Skupinový chat, který nemizí",imgHG1:"Přidej se",imgHG2:"do party",imgHGJ:"Přidat se do party",imgHGW:"na tebe čeká",imgHDW:"a ty?"});
 Object.assign(L.uk,{imgHD1:"Запрошення",imgHD2:"на дроп",imgHGS:"Груповий чат, який не зникає",imgHG1:"Приєднуйся",imgHG2:"до компанії",imgHGJ:"Приєднатися до компанії",imgHGW:"чекає на тебе",imgHDW:"а ти?"});
+Object.assign(L.pl,{imgHDJ:"Sprawdź i odpowiedz"});Object.assign(L.en,{imgHDJ:"Check it and reply"});Object.assign(L.es,{imgHDJ:"Míralo y responde"});Object.assign(L.de,{imgHDJ:"Ansehen und antworten"});Object.assign(L.fr,{imgHDJ:"Voir et répondre"});Object.assign(L.it,{imgHDJ:"Guarda e rispondi"});Object.assign(L.cs,{imgHDJ:"Podívej se a odpověz"});Object.assign(L.uk,{imgHDJ:"Переглянути й відповісти"});
 Object.assign(L.pl,{"wlTag": "Powitanie", "wlPrev": "Cześć! Zobacz, jak zacząć 👋", "wlT": "Witaj w Squad", "wlLead": "Tu pojawią się Twoje czaty: z dropów i z grup. Zacznij od jednego z dwóch kroków:", "wlDrT": "Dodaj drop", "wlDrD": "Plan na dziś lub kiedyś: co, kiedy i gdzie. Czat dropa powstaje sam.", "wlGrT": "Utwórz grupę", "wlGrD": "Stała ekipa z czatem, który nie wygasa.", "wlHmT": "Dropy znajdziesz w Home", "wlHmD": "Po dodaniu dropu wszystkie są na ekranie Home – ikona domku w dolnym menu.", "wlGo": "Utwórz drop", "wlOk": "Rozumiem"});
 Object.assign(L.en,{"wlTag": "Welcome", "wlPrev": "Hi! See how to get started 👋", "wlT": "Welcome to Squad", "wlLead": "Your chats from drops and groups will show up here. Start with one of two steps:", "wlDrT": "Add a drop", "wlDrD": "A plan for today or later: what, when and where. The drop chat is created automatically.", "wlGrT": "Create a group", "wlGrD": "A standing crew with a chat that never expires.", "wlHmT": "Find your drops in Home", "wlHmD": "Once you add a drop, they're all on the Home screen – the house icon in the bottom menu.", "wlGo": "Create a drop", "wlOk": "Got it"});
 Object.assign(L.es,{"wlTag": "Bienvenida", "wlPrev": "¡Hola! Mira cómo empezar 👋", "wlT": "Te damos la bienvenida a Squad", "wlLead": "Aquí aparecerán tus chats de drops y grupos. Empieza con uno de estos dos pasos:", "wlDrT": "Añade un drop", "wlDrD": "Un plan para hoy o más adelante: qué, cuándo y dónde. El chat del drop se crea solo.", "wlGrT": "Crea un grupo", "wlGrD": "Una crew fija con un chat que no caduca.", "wlHmT": "Tus drops están en Inicio", "wlHmD": "Al añadir un drop, todos estarán en la pantalla de Inicio: el icono de la casa en el menú inferior.", "wlGo": "Crear un drop", "wlOk": "Entendido"});
