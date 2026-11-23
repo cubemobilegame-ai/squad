@@ -2676,9 +2676,10 @@ function watch(){const u=auth.currentUser;if(!u||(u.isAnonymous&&sget("guest")!=
   joined().forEach(async c=>{const R=await loadDrop(c),o=S.items.get(c);if(R&&(!o||o.__k)){S.items.set(c,{id:c,...(o&&o.__h?{__h:1}:{}),...R.d});upd()}else if(!R&&o&&o.__k&&!o.__h&&navigator.onLine!==false){S.items.delete(c);changed()}});
   if(FB.collectionGroup){W.push(onSnapshot(query(FB.collectionGroup(db,"participants"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;const o=S.items.get(c);if(o&&!o.__k)return;const R=await loadDrop(c);if(R&&(!S.items.has(c)||S.items.get(c).__k)){remember(c);S.items.set(c,{id:c,...(o&&o.__h?{__h:1}:{}),...R.d});upd()}})},e=>console.warn("cg drops",e)));
     W.push(onSnapshot(query(FB.collectionGroup(db,"members"),where("uid","==",u.uid)),x=>{x.docs.forEach(async y=>{const c=y.ref.parent.parent.id;const o=S.groups.get(c);if(o&&!o.__k)return;try{const r=await getDoc(doc(db,"groups",c));if(r.exists()&&(!S.groups.has(c)||S.groups.get(c).__k)){rememberG(c);S.groups.set(c,{id:c,...(o&&o.__h?{__h:1}:{}),...r.data()});gupd()}}catch{}})},e=>console.warn("cg groups",e)))}
-  const gsub=new Set(),gupd=()=>{S.groups.forEach(g=>{if(gsub.has(g.id))return;gsub.add(g.id);
-    W.push(onSnapshot(collection(db,"groups",g.id,"members"),x=>{S.gm[g.id]=x.docs.map(y=>({id:y.id,...y.data()}));changed()},()=>{}));
-    W.push(onSnapshot(query(collection(db,"groups",g.id,"messages"),orderBy("createdAt","desc"),limit(25)),x=>{S.ms["g_"+g.id]=visM("g_"+g.id,x.docs.map(y=>y.data()).reverse());changed()},()=>{}))});changed()};
+  const gsub=new Set(),gtry={},gupd=()=>{S.groups.forEach(g=>{if(gsub.has(g.id))return;gsub.add(g.id);
+    const rt=()=>{if((gtry[g.id]=(gtry[g.id]||0)+1)>4)return;gsub.delete(g.id);setTimeout(()=>{if(wUid===u.uid)gupd()},1200*gtry[g.id])};
+    W.push(onSnapshot(collection(db,"groups",g.id,"members"),x=>{S.gm[g.id]=x.docs.map(y=>({id:y.id,...y.data()}));changed()},rt));
+    W.push(onSnapshot(query(collection(db,"groups",g.id,"messages"),orderBy("createdAt","desc"),limit(25)),x=>{S.ms["g_"+g.id]=visM("g_"+g.id,x.docs.map(y=>y.data()).reverse());changed()},rt))});changed()};
   S.addGroup=(c,g)=>{S.groups.set(c,{id:c,...g});gupd()};
   if(SQC.load(u)){upd();gupd()}
   W.push(onSnapshot(query(collection(db,"groups"),where("ownerId","==",u.uid)),x=>{const ids=new Set(x.docs.map(y=>y.id));S.groups.forEach((g,k)=>{if(g.__h&&!ids.has(k))S.groups.delete(k)});x.docs.forEach(y=>S.groups.set(y.id,{id:y.id,__h:1,...y.data()}));gupd()},()=>{}));
@@ -3410,7 +3411,7 @@ function chatsView(){
     const code=newCode(),nick=sget("nick");
     await setDoc(doc(db,"groups",code),{ownerId:u.uid,ownerNick:nick,name,createdAt:serverTimestamp()});
     await setDoc(doc(db,"groups",code,"members",u.uid),{nickname:nick,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
-    rememberG(code);S.addGroup?.(code,{ownerId:u.uid,ownerNick:nick,name});bump("groups");vib([30,40,30]);go("/g/"+code)};
+    rememberG(code);S.gm[code]=[{id:u.uid,nickname:nick,av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid}];S.addGroup?.(code,{ownerId:u.uid,ownerNick:nick,name,createdAt:{toMillis:()=>Date.now()}});bump("groups");vib([30,40,30]);go("/g/"+code)};
   const tm=ms=>{if(!ms)return"";const d=new Date(ms),n=new Date(),dd=Math.round((new Date(n).setHours(0,0,0,0)-new Date(d).setHours(0,0,0,0))/864e5);return dd<=0?`${pad(d.getHours())}:${pad(d.getMinutes())}`:dd===1?t("yest"):d.toLocaleDateString(LANG,{day:"numeric",month:"short"})};
   const row=(x)=>{const m=x.m,n=x.n,who=m?(isMe(m.authorId)?t("you2"):m.nickname):"";
     return`<div class="chrow${n?" un":""}" onclick="go('${jh(x.href)}')"><div class="cav th${x.g?" gr":""}" onclick="event.stopPropagation();go('${x.g?"/g/":"/d/"}${x.id}')" style="background:linear-gradient(135deg,${x.c1},${x.c2})">${x.icon}</div>
