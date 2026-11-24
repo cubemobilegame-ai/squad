@@ -107,7 +107,7 @@ td:first-child i{width:9px;height:9px;border-radius:50%}
   </section>
 
   <section class="two">
-    <div class="card"><div class="hd tp" tabindex="0" data-tip="Podział aktywnych w 30 dni na iOS (App Store), Androida (Google Play), zwykłą przeglądarkę i stronę dodaną do ekranu głównego telefonu."><h2>Platformy</h2><span class="sub">aktywni w 30 dni</span></div>
+    <div class="card"><div class="hd tp" tabindex="0" data-tip="Podział aktywnych kont w 30 dni na natywną aplikację iOS (App Store, TestFlight i buildy testowe), natywną aplikację Android (Google Play i buildy testowe), zwykłą przeglądarkę i stronę dodaną do ekranu głównego. To konta, nie instalacje ze sklepów."><h2>Platformy</h2><span class="sub">aktywni w 30 dni</span></div>
       <div class="split" id="split"></div>
       <div class="scroll"><table id="tbl"></table></div>
     </div>
@@ -123,7 +123,7 @@ td:first-child i{width:9px;height:9px;border-radius:50%}
       <label>App Store (iOS)<input id="dIos" inputmode="numeric" placeholder="0"></label>
       <label>Google Play (Android)<input id="dAnd" inputmode="numeric" placeholder="0"></label>
       <label class="tp" tabindex="0" data-tip="Suma pobrań z App Store i Google Play."><span>Razem</span><input id="dSum" readonly></label>
-      <label class="tp" tabindex="0" data-tip="Na każde 100 pobrań ze sklepów tyle kont otworzyło aplikację na iOS lub Androidzie. Ruch ze strony w przeglądarce i konta o nieznanej platformie się nie liczą. Wynik poniżej 100 znaczy, że nie każdy pobierający otworzył aplikację."><span>Konta na 100 pobrań</span><input id="dRat" readonly></label>
+      
     </div>
     <div class="note" id="dlN"></div>
   </section>
@@ -138,7 +138,7 @@ const C=self.SQUAD_CONFIG,g="https://www.gstatic.com/firebasejs/10.12.2/";
 const [A,AU,F]=await Promise.all(["app","auth","firestore"].map(n=>import(g+"firebase-"+n+".js")));
 const app=A.initializeApp(C),auth=AU.getAuth(app),db=F.getFirestore(app);
 const $=id=>document.getElementById(id);
-const PF=[{k:"ios",n:"iOS (App Store)",c:"var(--ios)"},{k:"android",n:"Android (Play)",c:"var(--and)"},{k:"web",n:"Przeglądarka",c:"var(--web)"},{k:"pwa",n:"Strona na ekranie",c:"var(--pwa)"},{k:"unk",n:"Nieznana (starsze konta)",c:"#7c8094"}];
+const PF=[{k:"ios",n:"iOS (aplikacja, też TestFlight)",c:"var(--ios)"},{k:"android",n:"Android (aplikacja, też testowe)",c:"var(--and)"},{k:"web",n:"Przeglądarka",c:"var(--web)"},{k:"pwa",n:"Strona na ekranie",c:"var(--pwa)"},{k:"unk",n:"Nieznana (starsze konta)",c:"#7c8094"}];
 const sel=new Set(PF.map(p=>p.k));
 const R={},D={};            // R[pf]=liczniki, D[pf][i]={a,n} dla ostatnich 30 dni (i=0 najstarszy)
 PF.forEach(p=>{R[p.k]={};D[p.k]=Array.from({length:30},()=>({a:null,n:null}))});
@@ -212,11 +212,11 @@ function churn(){const tot=sum("tot"),i7=sum("idle7"),lost=sum("lost"),risk=Math
   $("churn").innerHTML=k("Wygasają (7–30 dni)",fmt(risk),tot?Math.round(risk/tot*100)+"% kont":"","Konta, które nie otworzyły aplikacji od 7 do 30 dni. Jeszcze można je odzyskać, np. powiadomieniem.")+k("Utraceni (&gt;30 dni)",`<span class="dn">${fmt(lost)}</span>`,tot?Math.round(lost/tot*100)+"% kont":"","Konta, które nie otworzyły aplikacji od ponad 30 dni. Uznajemy je za utracone, choć ktoś może jeszcze wrócić.")+k("Aktywni 30 dni",fmt(m),"zostali w aplikacji","Konta aktywne w ostatnich 30 dniach, czyli te, które nie odpadły.");
   $("churnN").textContent="Przybyli w ostatnich 30 dniach: +"+fmt(sum("n30"))+". Saldo wzrostu konta w tym okresie liczy się jako nowi minus utraceni."}
 function downloads(){const a=+dl.ios||0,b=+dl.android||0,s=a+b,tot=(R.ios.tot||0)+(R.android.tot||0);
-  $("dSum").value=s?fmt(s):"";$("dRat").value=s&&tot?Math.round(tot/s*100):"";
-  $("dlN").textContent=s?"Pobrania ze sklepów dostajemy z opóźnieniem 1–3 dni; „konta na 100 pobrań” liczy tylko konta z aplikacji na iOS i Androidzie (bez przeglądarki i bez kont o nieznanej platformie).":"Liczby ze sklepów wpisujesz ręcznie, zapisują się same. Automatyczne pobieranie z Apple i Google dojdzie po podłączeniu kluczy."}
+  $("dSum").value=s?fmt(s):"";
+  $("dlN").textContent=s?"Pobrania ze sklepów dostajemy z opóźnieniem 1–3 dni. To inna miara niż konta w panelu: jedno urządzenie po ponownej instalacji może założyć nowe konto, a iOS/Android w panelu obejmują też TestFlight i buildy testowe.":"Liczby ze sklepów wpisujesz ręcznie, zapisują się same. Automatyczne pobieranie z Apple i Google dojdzie po podłączeniu kluczy."}
 function render(){spark();chart();kpis();platforms();churn();downloads();
   $("onl").textContent=fmt(sum("onl"));$("onlS").textContent=sum("d1")?`z ${fmt(sum("d1"))} aktywnych w ciągu doby`:"czekamy na pierwszych użytkowników";
-  $("foot").textContent="Dni liczone w UTC. Statystyki zbierane od wdrożenia śledzenia – starsze konta pojawią się po pierwszym otwarciu aplikacji. Drops łącznie: "+fmt(R.drops)+", grupy: "+fmt(R.groups)+"."}
+  $("foot").textContent="Dni liczone w UTC. Panel liczy konta (nie urządzenia ze sklepów). Statystyki zbierane od wdrożenia śledzenia – starsze konta pojawią się po pierwszym otwarciu aplikacji. Drops łącznie: "+fmt(R.drops)+", grupy: "+fmt(R.groups)+"."}
 
 function chips(){$("chips").innerHTML=PF.map(p=>`<button class="chip tp" tabindex="0" data-tip="Pokaż lub ukryj w statystykach: ${p.n}. Wyłączona platforma nie liczy się do sum." data-k="${p.k}" aria-pressed="${sel.has(p.k)}" style="--c:${p.c}"><i></i>${p.n.split(" ")[0]}</button>`).join("");
   $("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const k=b.dataset.k;if(sel.has(k)&&sel.size>1)sel.delete(k);else sel.add(k);chips();if(ready)render()}}
