@@ -1326,6 +1326,7 @@ html:has(.scr.nw),body:has(.scr.nw){background:#000}
 /* ===== CZATY – wygląd wg makiety (kolumna 02) ===== */
 html:has(.scr.chl),body:has(.scr.chl){background:#000!important}
 .scr.chl .chtop{margin:8px 0 4px}
+.chtop .ngr{display:flex;align-items:center;gap:8px}.xq{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:#0d0d0d;color:#fff;display:grid;place-items:center;padding:0;flex:none;cursor:pointer}.xq:active{background:#1a1a1a}.xq svg{width:21px;height:21px}
 .scr.chl .chtop h1{font:800 34px/1.05 Brico,BricoCyr,system-ui!important;letter-spacing:-.015em;margin:0!important}
 .scr.chl .ngb{height:44px;padding:0 18px 0 14px;background:#0d0d0d;border:1px solid rgba(255,255,255,.08);color:#fff;font:800 15px Brico,BricoCyr,system-ui;letter-spacing:0;text-transform:none}
 .scr.chl .ngb span{display:block;text-transform:lowercase}.scr.chl .ngb span::first-letter{text-transform:uppercase}
@@ -3393,13 +3394,14 @@ function wlView(){const u=authed();if(!u)return;sset("wlR","1");try{badges()}cat
   <p class="wln">${t("wlNo")}</p></div></div>`)}
 function chatsView(){
   const u=authed();if(!u)return;
-  view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><div class="ngr"><button class="bell" id="newd" aria-label="${t("nNew")}"><img class="ndp" src="/plus-icon.png" alt=""></button><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNewS")}</span></button></div></div><span class="gbadge">${t("gOnly")}</span>
+  view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><div class="ngr"><button class="xq" id="qrc" aria-label="QR"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3M20 14v.01M14 20h3M20 17v3"/></svg></button><button class="bell" id="newd" aria-label="${t("nNew")}"><img class="ndp" src="/plus-icon.png" alt=""></button><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNewS")}</span></button></div></div><span class="gbadge">${t("gOnly")}</span>
   <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta dim" id="gk" style="margin-top:8px">${t("grCreate")}</button><button type="button" class="gcx" id="gx">${t("cancel")}</button></div>
   <div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
   $("#gn").oninput=()=>$("#gk").classList.toggle("dim",!$("#gn").value.trim());
   $("#gx").onclick=()=>{vib(8);$("#gn").value="";$("#gn").blur();$("#gk").classList.add("dim");$("#nf").hidden=true};
   const openNf=()=>{$("#nf").hidden=!$("#nf").hidden;if(!$("#nf").hidden)$("#gn").focus()};
+  $("#qrc").onclick=()=>{vib(8);qrContact()};
   $("#newd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};
   $("#newg").onclick=()=>{vib(8);if(auth.currentUser?.isAnonymous)return guestUp("/chats");
     if(sget("grIntro")!=="1"&&$("#nf").hidden){const s2=sheet(`<div class="dsh gi2"><h2>${t("giT")}</h2>
