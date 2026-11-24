@@ -3546,7 +3546,7 @@ function notifView(){
   redraw=draw;draw();every(tick,1000);
   $("#nmo").onclick=()=>{vib(8);const has=nIds().length>0,s6=sheet(`<div class="dsh nms"><h2>${t("nMenu")}</h2><div class="dsb"><button class="dsx g" id="nm1"${has?"":" disabled"}>${t("nPick")}</button><button class="dsx g" id="nm3" style="color:#ff6b7a"${has?"":" disabled"}>${t("nDelAll")}</button></div></div>`);s6
     s6.querySelector("#nm1").onclick=()=>{s6.close();window.__nsm=true;window.__nsel=new Set();redo()};
-    s6.querySelector("#nm3").onclick=()=>{s6.close();const ids=nIds(),s7=sheet(`<div class="dsh nms"><h2>${t("nDelAll")}</h2><p class="hint" style="text-align:center">${t("nDelAllQ")}</p><div class="dsb"><button class="dsx g" id="nq1" style="color:#ff6b7a">${t("nDelAll")}</button><button class="dsx g" id="nq2">${t("cancel")}</button></div></div>`);s7s7.querySelector("#nq1").onclick=()=>{s7.close();nDelIds(ids)};s7.querySelector("#nq2").onclick=()=>s7.close()}};
+    s6.querySelector("#nm3").onclick=()=>{s6.close();const ids=nIds(),s7=sheet(`<div class="dsh nms"><h2>${t("nDelAll")}</h2><p class="hint" style="text-align:center">${t("nDelAllQ")}</p><div class="dsb"><button class="dsx g" id="nq1" style="color:#ff6b7a">${t("nDelAll")}</button><button class="dsx g" id="nq2">${t("cancel")}</button></div></div>`);s7.querySelector("#nq1").onclick=()=>{s7.close();nDelIds(ids)};s7.querySelector("#nq2").onclick=()=>s7.close()}};
   $("#nsx").onclick=()=>{vib(8);window.__nsm=false;window.__nsel=new Set();redo()};
   $("#nsa").onclick=()=>{vib(8);const ids=nIds();if(window.__nsel.size===ids.length)window.__nsel=new Set();else window.__nsel=new Set(ids);redo()};
   $("#nsd").onclick=()=>{if(window.__nsel.size)nDelIds([...window.__nsel])};
