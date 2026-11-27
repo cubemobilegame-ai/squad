@@ -130,7 +130,7 @@ private struct ChatIcon: Shape {
 }
 
 @available(iOS 16.2, *)
-private struct Body: View {
+private struct LiveBody: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     let ring: Color
     let chat: Bool
@@ -160,14 +160,14 @@ private struct Body: View {
 struct SquadLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: SquadLiveAttributes.self) { ctx in
-            Body(ctx: ctx, ring: Color(red: 0.10, green: 0.10, blue: 0.13), chat: false)
+            LiveBody(ctx: ctx, ring: Color(red: 0.10, green: 0.10, blue: 0.13), chat: false)
                 .padding(20)
                 .activityBackgroundTint(Color(red: 0.10, green: 0.10, blue: 0.13))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { ctx in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.bottom) {
-                    Body(ctx: ctx, ring: .black, chat: true).padding(.horizontal, 4).padding(.bottom, 4)
+                    LiveBody(ctx: ctx, ring: .black, chat: true).padding(.horizontal, 4).padding(.bottom, 4)
                 }
             } compactLeading: {
                 HStack(spacing: 7) { Dot(); Text(ctx.state.cat).font(.system(size: 14, weight: .heavy)).lineLimit(1) }
