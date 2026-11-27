@@ -1042,14 +1042,14 @@ html:has(.scr.pf),body:has(.scr.pf){background:#000}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .cta:disabled{opacity:.45}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .ghost,.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .acts button:not(.cta),.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .qbtn:not(.pri){background:#131313!important;border:0!important;border-radius:99px;min-height:56px;color:#fff;font:500 16px Brico,BricoCyr,system-ui;text-transform:none;letter-spacing:0;box-shadow:none}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .qbtn.pri{border-radius:99px;min-height:56px;box-shadow:none}
-.gbrd{box-sizing:border-box!important;border:1px solid rgba(255,255,255,.09)!important}.gbrd.gbrr{border-color:rgba(255,77,94,.22)!important}
-.gbd{box-sizing:border-box;border:1px solid rgba(255,255,255,.09)!important}.gbd.gbr{border-color:rgba(255,77,94,.2)!important}
+.gbrd{box-sizing:border-box!important;border:1px solid rgba(255,255,255,.17)!important}.gbrd.gbrr{border-color:rgba(255,77,94,.34)!important}
+.gbd{box-sizing:border-box;border:1px solid rgba(255,255,255,.17)!important}.gbd.gbr{border-color:rgba(255,77,94,.34)!important}
 /* przyciski menu (3 kropki itp.) i akcje dropa: tez cienka ramka */
-.cmenu .cmb:not(.cta),.sheet .cmb:not(.cta),.gint .cmb:not(.cta),.scr.dv .acts4 button,.scr.dv #dx,.scr.dv #rp{box-sizing:border-box;border:1px solid rgba(255,255,255,.09)!important}
-.cmenu .cmb.cmd,.sheet .cmb.cmd{border:1px solid rgba(255,77,94,.2)!important}
+.cmenu .cmb:not(.cta),.sheet .cmb:not(.cta),.gint .cmb:not(.cta),.scr.dv .acts4 button,.scr.dv #dx,.scr.dv #rp{box-sizing:border-box;border:1px solid rgba(255,255,255,.17)!important}
+.cmenu .cmb.cmd,.sheet .cmb.cmd{border:1px solid rgba(255,77,94,.34)!important}
 /* szare przyciski i listy: zostaje dotychczasowe tlo, dochodzi cienka ramka lekko jasniejsza od wypelnienia */
-.slist,.ghost,.sheet .acts button:not(.cta),.sheet .qbtn:not(.pri),.stn .lgc>.ghost,.sheet textarea,.sheet input:not([type=checkbox]):not([type=file]){border:1px solid rgba(255,255,255,.09)!important}
-.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) textarea,.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) input:not([type=checkbox]):not([type=file]){border:1px solid rgba(255,255,255,.09)!important}
+.slist,.ghost,.sheet .acts button:not(.cta),.sheet .qbtn:not(.pri),.stn .lgc>.ghost,.sheet textarea,.sheet input:not([type=checkbox]):not([type=file]){border:1px solid rgba(255,255,255,.17)!important}
+.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) textarea,.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) input:not([type=checkbox]):not([type=file]){border:1px solid rgba(255,255,255,.17)!important}
 
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .qrbox{border-radius:26px}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .trx{background:#131313;border-radius:26px;padding:16px 18px;margin:0 0 12px;text-align:left}
@@ -5289,9 +5289,7 @@ Object.assign(L.it,{"n2st": "Inizia tra", "n2st2": "Inizio", "n2tom": "Domani", 
 Object.assign(L.cs,{"n2st": "Start za", "n2st2": "Start", "n2tom": "Zítra", "n2live": "Probíhá", "n2mine": "Tvůj drop", "n2stat": "Tvůj stav", "n2cht": "Otevřít chat", "n2map": "Mapa", "n2cal": "Kalendář", "n2more": "Více", "dsInvT": "Pozvi partu", "dsInvD": "Naskenují kód nebo otevřou odkaz", "dsCopy": "Kopírovat",n2ends:x=>`Zmizí za ${x}`,n2by:x=>`Zve tě ${x}`});
 Object.assign(L.uk,{"n2st": "Старт через", "n2st2": "Старт", "n2tom": "Завтра", "n2live": "Триває", "n2mine": "Твій дроп", "n2stat": "Твій статус", "n2cht": "Відкрити чат", "n2map": "Мапа", "n2cal": "Календар", "n2more": "Більше", "dsInvT": "Запроси компанію", "dsInvD": "Вони скануватимуть код або відкриють посилання", "dsCopy": "Копіювати",n2ends:x=>`Зникне через ${x}`,n2by:x=>`Запрошує ${x}`});
 
-/* automatyczna cienka ramka na wszystkich szarych przyciskach (okna, menu, formularze) */
-{const gbd=r=>{try{r.querySelectorAll("button,[role=button],a.cmb,a.ghost").forEach(b=>{if(b.dataset.gb||b.closest("nav,.stn .stgo"))return;b.dataset.gb="1";const w=b.offsetWidth,h=b.offsetHeight;if(w<110||h<38||h>96)return;const cs=getComputedStyle(b);if(parseFloat(cs.borderTopWidth)>0.4&&cs.borderTopStyle!=="none")return;const m=cs.backgroundColor.match(/[\d.]+/g);if(!m||m.length<3)return;const R=+m[0],G=+m[1],Bc=+m[2],A=m[3]===undefined?1:+m[3];if(A<.02)return;const mx=Math.max(R,G,Bc),mn=Math.min(R,G,Bc);const grey=mx-mn<=16&&((A<.35)||(mx>=8&&mx<=70));const red=R>180&&G<110&&A<.35;if(grey)b.classList.add("gbd");else if(red)b.classList.add("gbd","gbr")})}catch{}};
-let q=0;const run=()=>{q=0;gbd(document.body)};new MutationObserver(()=>{if(!q)q=requestAnimationFrame(()=>setTimeout(run,30))}).observe(document.body,{childList:true,subtree:true});setTimeout(run,300)}
+
 </script>
 </body>
 </html>
