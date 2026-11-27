@@ -1383,10 +1383,14 @@ body:has(.scr.prf) .sheet,body:has(.pscr) .sheet{background:#0b0b0b}body:has(.sc
 .sheet .cmenu .hint{color:#8e8e8e;font-size:14px;line-height:1.35;margin:8px 8px 4px;text-align:left}
 :root.acw .scr.chl .chf button.on,:root.acw .scr.nw .dayb .sel,:root.acw .scr.nw .ncd .chip.on{color:#0b0b12!important}
 :root.acw .scr.chl .chf button.on .cfb{background:rgba(0,0,0,.14);color:#0b0b12}
-.fre{margin:22px 0 22px}.fre[hidden],.fch[hidden]{display:none}
+.fre{margin:22px 0 17px}.fre[hidden],.fch[hidden]{display:none}
 .fre .hd{display:flex;align-items:center;justify-content:space-between;margin:0 2px 14px}
 .fre h3{margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em;text-transform:none;color:#fff;display:flex;align-items:center;gap:10px}
-.fre .lv,.fch .lv{width:10px;height:10px;border-radius:50%;flex:none;background:linear-gradient(45deg,#7fb2ff,#4f86ff,#2f55d6)}
+.fre .lv,.fch .lv{width:10px;height:10px;border-radius:50%;flex:none;position:relative;background:linear-gradient(45deg,#7fb2ff,#4f86ff,#2f55d6)}
+.fre .lv:before,.fre .lv:after,.fch .lv:before,.fch .lv:after{content:"";position:absolute;inset:0;border-radius:50%;background:#4f86ff;opacity:0;animation:lvr 2.4s ease-out infinite;pointer-events:none}
+.fre .lv:after,.fch .lv:after{animation-delay:1.2s}
+@keyframes lvr{0%{transform:scale(1);opacity:.55}100%{transform:scale(2.7);opacity:0}}
+@media (prefers-reduced-motion:reduce){.fre .lv:before,.fre .lv:after,.fch .lv:before,.fch .lv:after{animation:none}}
 .fre .mk{border:0;font:inherit;font-weight:800;font-size:14px;border-radius:99px;height:38px;padding:0 16px;background:#fff;color:#0b0b12;cursor:pointer}
 .fre .row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 2px}.fre .row::-webkit-scrollbar{display:none}
 .fre .pp{flex:none;width:62px;text-align:center;background:none;border:0;padding:0;color:#fff;font:inherit;cursor:pointer}
@@ -2840,7 +2844,7 @@ if(!DEMO&&("ontouchstart"in window)){let ty=0,pd=0,on=false,el=null;const top=()
   addEventListener("touchend",()=>{if(!on)return;on=false;if(pd>110){vib(15);if(el){el.style.transition="transform .2s";el.style.transform="translateY(70px) rotate(360deg)"}setTimeout(()=>{if(el){el.remove();el=null}try{PUB.at=0}catch{}if(gp()==="/"||gp()==="/chats")route()},450)}else if(el){el.style.transition="opacity .15s";el.style.opacity=0;setTimeout(()=>{if(el){el.remove();el=null}},180)}pd=0},{passive:true})}
 const SCR={};
 window.go=p=>{const cur=gp();SCR[cur]=scrollY;window.__rest=(p===window.__from&&SCR[p]!=null)?SCR[p]:null;if(cur!==p)window.__from=cur;const gm=/^\/g\/([^/?#]+)/.exec(cur),rp=!!gm&&p==="/gc/"+gm[1];DEMO?PATH=p:(rp?history.replaceState(0,"",p):history.pushState(0,"",p));route()};
-const UL={n:null,on(){if(UL.n)return true;const pv=window.__pv;if(!pv||!pv.html||pv.path!==window.__from||pv.path===gp())return false;UL.bg=getComputedStyle(document.body).backgroundColor;document.documentElement.classList.add("ulon");const n=document.createElement("div");n.className="ulb";const c=document.createElement("div");c.className="ulc";c.style.top=(-(pv.sy||0))+"px";c.innerHTML=pv.html;c.querySelectorAll("[id]").forEach(e=>e.removeAttribute("id"));c.querySelectorAll("video,audio,iframe,canvas").forEach(e=>e.remove());n.append(c);n.setAttribute("aria-hidden","true");document.body.append(n);UL.n=n;UL.set(0,0);return true},
+const UL={n:null,on(){if(UL.n)return true;const pv=window.__pv;if(!pv||!pv.html||pv.path!==window.__from||pv.path===gp())return false;UL.bg=getComputedStyle(document.body).backgroundColor;document.documentElement.classList.add("ulon");const n=document.createElement("div");n.className="ulb";const c=document.createElement("div");c.className="ulc";c.style.top=(-(pv.sy||0))+"px";c.innerHTML=pv.html;/* id zostają: reguły CSS (np. .scr.hm #tb) muszą działać też w podglądzie; prawdziwy ekran jest w DOM wcześniej, więc $("#x") trafia w niego */c.querySelectorAll("video,audio,iframe,canvas").forEach(e=>e.remove());n.append(c);n.setAttribute("aria-hidden","true");document.body.append(n);UL.n=n;UL.set(0,0);return true},
   set(p,ms){const n=UL.n;if(!n)return;n.style.transition=ms?"filter "+ms+"ms ease,transform "+ms+"ms ease":"none";n.style.filter="blur("+(7*(1-p)).toFixed(2)+"px) brightness("+(.68+.32*p).toFixed(3)+")";n.style.transform="scale("+(.965+.035*p).toFixed(4)+")"},
   off(){document.documentElement.classList.remove("ulon");if(UL.n){UL.n.remove();UL.n=null}}};
 const ulBg=e=>{try{let b=UL.bg||"#000";if(/rgba\(0, 0, 0, 0\)|transparent/.test(b))b="#000";e.style.background=b}catch{}};
