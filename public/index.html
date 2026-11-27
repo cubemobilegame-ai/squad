@@ -1042,6 +1042,8 @@ html:has(.scr.pf),body:has(.scr.pf){background:#000}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .cta:disabled{opacity:.45}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .ghost,.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .acts button:not(.cta),.sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .qbtn:not(.pri){background:#131313!important;border:0!important;border-radius:99px;min-height:56px;color:#fff;font:500 16px Brico,BricoCyr,system-ui;text-transform:none;letter-spacing:0;box-shadow:none}
 .sheet:has(.trx,.hlp,#dw,#loy,.qrbox,.lgl) .qbtn.pri{border-radius:99px;min-height:56px;box-shadow:none}
+.gbrd{box-sizing:border-box!important;border:1px solid rgba(255,255,255,.09)!important}.gbrd.gbrr{border-color:rgba(255,77,94,.22)!important}
+.gbd{box-sizing:border-box;border:1px solid rgba(255,255,255,.09)!important}.gbd.gbr{border-color:rgba(255,77,94,.2)!important}
 /* przyciski menu (3 kropki itp.) i akcje dropa: tez cienka ramka */
 .cmenu .cmb:not(.cta),.sheet .cmb:not(.cta),.gint .cmb:not(.cta),.scr.dv .acts4 button,.scr.dv #dx,.scr.dv #rp{box-sizing:border-box;border:1px solid rgba(255,255,255,.09)!important}
 .cmenu .cmb.cmd,.sheet .cmb.cmd{border:1px solid rgba(255,77,94,.2)!important}
@@ -2998,6 +3000,12 @@ function mailView(){let em="";try{em=localStorage.getItem("mailE")||""}catch{}
     catch(x){vib([50,30,50]);toast(mailErr(x))}finally{b.disabled=false}}}
 
 const WV=Array.from({length:48},(_,i)=>`<i style="--i:${i}"></i>`).join("");
+/* wszystkie szare/polprzezroczyste przyciski: cienka ramka (automatycznie, takze w nowych oknach) */
+(()=>{let q=0;const parse=c=>{const m=/rgba?\(([^)]+)\)/.exec(c);if(!m)return null;const p=m[1].split(/[ ,\/]+/).filter(Boolean).map(Number);return{r:p[0],g:p[1],b:p[2],a:p.length>3?p[3]:1}};
+const scan=()=>{q=0;document.querySelectorAll("button,a.calb,.cmb,[role=button]").forEach(e=>{if(e.dataset.gb)return;const w=e.offsetWidth,h=e.offsetHeight;if(!w)return;e.dataset.gb="1";if(e.closest("nav,.tabs,.fab,#demo"))return;if(w<90||h<38||h>110)return;const cs=getComputedStyle(e),bg=parse(cs.backgroundColor);if(!bg||bg.a<.03)return;if(parseFloat(cs.borderTopWidth)>0&&parseParse(cs.borderTopColor))return;
+const red=bg.r>200&&bg.g<130;const grey=Math.max(bg.r,bg.g,bg.b)<=75||(bg.r>235&&bg.g>235&&bg.b>235&&bg.a<.2)||(Math.abs(bg.r-bg.g)<14&&Math.abs(bg.g-bg.b)<14&&bg.a<.2&&bg.r>200);if(!(grey||red&&bg.a<.3))return;e.classList.add("gbrd");if(red)e.classList.add("gbrr")})};
+const parseParse=c=>{const p=parse(c);return p&&p.a>.04};
+new MutationObserver(()=>{if(!q)q=setTimeout(scan,80)}).observe(document.body,{childList:true,subtree:true});setTimeout(scan,300)})();
 const ST_FS=[[0,95,330,56,'g1','a'],[1,292,292,64,'w','b'],[2,326,420,44,'g2','c'],[3,292,552,54,'t','a'],[4,52,478,46,'w','b'],[5,112,574,62,'g3','c'],[6,200,624,38,'t','a'],[8,190,258,50,'g2','b'],[9,340,358,42,'w','c']],
 ST_SV={gym:'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.2v5.6M20.5 9.2v5.6M6.5 12h11"/>',fball:'<circle cx="12" cy="12" r="8.5"/><path d="M12 8l3.2 2.3-1.2 3.7h-4l-1.2-3.7z"/>',biz:'<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M16 5.5a3 3 0 010 5.6M18 14.3c1.6.6 2.6 2.2 3 4.7"/>',xmas:'<path d="M12 3l5 6h-3l4 5h-4l3 4H6l3-4H5l4-5H7z"/><path d="M12 18v3"/>',party:'<path d="M12 3a5.5 6 0 015.5 6c0 3.3-2.5 5.8-5.5 5.8S6.5 12.3 6.5 9A5.5 6 0 0112 3zM12 14.8l-1 1.4h2zM12 16.2c0 2 1.5 3 0 4.8"/>',bike:'<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l4-8h5l3 8M10 8l3.5 8M9 6h3"/>',coffee:'<path d="M5 9h11v5a5 5 0 01-5 5h-1a5 5 0 01-5-5z"/><path d="M16 10h2a2 2 0 010 4h-2M8 3v3M12 3v3"/>'},
 ST_IC=[['gym',48,380,52,'c'],['fball',345,262,46,'a'],['biz',205,520,54,'b'],['xmas',330,490,50,'a'],['coffee',112,455,48,'b'],['party',250,214,40,'c'],['bike',60,250,50,'b']];
@@ -5280,6 +5288,10 @@ Object.assign(L.fr,{"n2st": "Début dans", "n2st2": "Début", "n2tom": "Demain",
 Object.assign(L.it,{"n2st": "Inizia tra", "n2st2": "Inizio", "n2tom": "Domani", "n2live": "In corso", "n2mine": "Il tuo drop", "n2stat": "Il tuo stato", "n2cht": "Apri chat", "n2map": "Mappa", "n2cal": "Calendario", "n2more": "Altro", "dsInvT": "Invita la crew", "dsInvD": "Scansionano il codice o aprono il link", "dsCopy": "Copia",n2ends:x=>`Sparisce tra ${x}`,n2by:x=>`Ti invita ${x}`});
 Object.assign(L.cs,{"n2st": "Start za", "n2st2": "Start", "n2tom": "Zítra", "n2live": "Probíhá", "n2mine": "Tvůj drop", "n2stat": "Tvůj stav", "n2cht": "Otevřít chat", "n2map": "Mapa", "n2cal": "Kalendář", "n2more": "Více", "dsInvT": "Pozvi partu", "dsInvD": "Naskenují kód nebo otevřou odkaz", "dsCopy": "Kopírovat",n2ends:x=>`Zmizí za ${x}`,n2by:x=>`Zve tě ${x}`});
 Object.assign(L.uk,{"n2st": "Старт через", "n2st2": "Старт", "n2tom": "Завтра", "n2live": "Триває", "n2mine": "Твій дроп", "n2stat": "Твій статус", "n2cht": "Відкрити чат", "n2map": "Мапа", "n2cal": "Календар", "n2more": "Більше", "dsInvT": "Запроси компанію", "dsInvD": "Вони скануватимуть код або відкриють посилання", "dsCopy": "Копіювати",n2ends:x=>`Зникне через ${x}`,n2by:x=>`Запрошує ${x}`});
+
+/* automatyczna cienka ramka na wszystkich szarych przyciskach (okna, menu, formularze) */
+{const gbd=r=>{try{r.querySelectorAll("button,[role=button],a.cmb,a.ghost").forEach(b=>{if(b.dataset.gb||b.closest("nav,.stn .stgo"))return;b.dataset.gb="1";const w=b.offsetWidth,h=b.offsetHeight;if(w<110||h<38||h>96)return;const cs=getComputedStyle(b);if(parseFloat(cs.borderTopWidth)>0.4&&cs.borderTopStyle!=="none")return;const m=cs.backgroundColor.match(/[\d.]+/g);if(!m||m.length<3)return;const R=+m[0],G=+m[1],Bc=+m[2],A=m[3]===undefined?1:+m[3];if(A<.02)return;const mx=Math.max(R,G,Bc),mn=Math.min(R,G,Bc);const grey=mx-mn<=16&&((A<.35)||(mx>=8&&mx<=70));const red=R>180&&G<110&&A<.35;if(grey)b.classList.add("gbd");else if(red)b.classList.add("gbd","gbr")})}catch{}};
+let q=0;const run=()=>{q=0;gbd(document.body)};new MutationObserver(()=>{if(!q)q=requestAnimationFrame(()=>setTimeout(run,30))}).observe(document.body,{childList:true,subtree:true});setTimeout(run,300)}
 </script>
 </body>
 </html>
