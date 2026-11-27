@@ -94,6 +94,21 @@ private struct Bar: View {
 }
 
 @available(iOS 16.2, *)
+private struct Ring: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    var body: some View {
+        let s = ctx.state
+        if s.start > Date() && !ctx.isStale {
+            ProgressView(timerInterval: s.from...s.start, countsDown: true, label: { EmptyView() },
+                currentValueLabel: { Text(s.start, style: .timer).font(.system(size: 10.5, weight: .heavy).monospacedDigit()).foregroundColor(blueLt).minimumScaleFactor(0.6).lineLimit(1) })
+                .progressViewStyle(.circular).tint(blue).frame(width: 46, height: 46).offset(y: -4)
+        } else {
+            Text(s.live).font(.system(size: 13, weight: .bold)).foregroundColor(blueLt)
+        }
+    }
+}
+
+@available(iOS 16.2, *)
 private struct TimeTxt: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     var body: some View {
@@ -109,14 +124,14 @@ private struct TimeTxt: View {
 private func openBtn(_ s: SquadLiveAttributes.ContentState, _ id: String, chat: Bool) -> some View {
     HStack(spacing: 10) {
         Link(destination: URL(string: laSite + "/d/" + id)!) {
-            Text(s.open).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
-                .frame(maxWidth: .infinity).frame(height: 36).background(Capsule().fill(Color.white))
+            Text(s.open).font(.system(size: 16, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                .frame(maxWidth: .infinity).frame(height: 44).background(Capsule().fill(Color.white))
         }
         if chat {
             Link(destination: URL(string: laSite + "/c/" + id)!) {
                 // ta sama ikona czatu co w dolnym menu aplikacji
                 ChatIcon().stroke(Color.white, style: StrokeStyle(lineWidth: 1.9 * 24.0 / 24.0, lineCap: .round, lineJoin: .round))
-                    .frame(width: 21, height: 21).frame(width: 36, height: 36).background(Circle().fill(Color.white.opacity(0.12)))
+                    .frame(width: 24, height: 24).frame(width: 44, height: 44).background(Circle().fill(Color.white.opacity(0.12)))
             }
         }
     }
@@ -152,14 +167,9 @@ private struct LiveBody: View {
                 Spacer(minLength: 8)
                 Pill(t: s.cat, small: true)
             }
-            HStack(spacing: 8) {
-                Faces(s: s, ring: ring, size: 28)
-                Text(s.people).font(.system(size: 13, weight: .bold)).foregroundColor(Color(red: 0.81, green: 0.81, blue: 0.85))
-                Spacer(minLength: 6)
-                TimeTxt(ctx: ctx)
-            }.padding(.top, 8)
-            Bar(ctx: ctx, thick: 8).padding(.top, 9)
-            openBtn(s, ctx.attributes.id, chat: chat).padding(.top, 9)
+            HStack { Spacer(); TimeTxt(ctx: ctx) }.padding(.top, 10)
+            Bar(ctx: ctx, thick: 8).padding(.top, 7)
+            openBtn(s, ctx.attributes.id, chat: chat).padding(.top, 12)
         }
     }
 }
@@ -178,22 +188,22 @@ struct SquadLiveActivity: Widget {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(ctx.state.title).font(.system(size: 17, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.7)
                         if !ctx.state.place.isEmpty { Text(ctx.state.place).font(.system(size: 12)).foregroundColor(mute).lineLimit(1) }
-                    }.padding(.leading, 6)
+                    }.padding(.leading, 12)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Pill(t: ctx.state.cat, small: true).padding(.trailing, 6)
+                    Pill(t: ctx.state.cat, small: true).padding(.trailing, 12)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    IslandBottom(ctx: ctx).padding(.horizontal, 6).padding(.top, 4)
+                    IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, 4).padding(.bottom, 2)
                 }
             } compactLeading: {
-                HStack(spacing: 6) { Dot(); Text(ctx.state.cat).font(.system(size: 14, weight: .heavy)).lineLimit(1) }
+                HStack(spacing: 6) { Dot(); Text(ctx.state.cat).font(.system(size: 14, weight: .heavy)).lineLimit(1).offset(y: -2) }
             } compactTrailing: {
                 Group {
                     if ctx.state.start <= Date() || ctx.isStale { Text(ctx.state.live) }
                     else { Text(ctx.state.start, style: .timer).monospacedDigit() }
                 }
-                .font(.system(size: 14, weight: .heavy)).foregroundColor(blueLt).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 62)
+                .font(.system(size: 14, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 62)
             } minimal: {
                 Dot()
             }
@@ -212,17 +222,16 @@ private struct IslandBottom: View {
                 Faces(s: s, ring: .black, size: 30)
                 Text(s.people).font(.system(size: 13, weight: .bold)).foregroundColor(Color(red: 0.81, green: 0.81, blue: 0.85)).padding(.leading, 8)
                 Spacer()
-                TimeTxt(ctx: ctx)
+                Ring(ctx: ctx)
             }
-            Bar(ctx: ctx, thick: 8)
             HStack(spacing: 8) {
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {
                     Text(s.open).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
-                        .frame(maxWidth: .infinity).frame(height: 38).background(Capsule().fill(Color.white))
+                        .frame(maxWidth: .infinity).frame(height: 44).background(Capsule().fill(Color.white))
                 }
                 Link(destination: URL(string: laSite + "/c/" + ctx.attributes.id)!) {
                     ChatIcon().stroke(Color.white, style: StrokeStyle(lineWidth: 1.9, lineCap: .round, lineJoin: .round))
-                        .frame(width: 22, height: 22).frame(width: 38, height: 38).background(Circle().fill(Color.white.opacity(0.12)))
+                        .frame(width: 24, height: 24).frame(width: 44, height: 44).background(Circle().fill(Color.white.opacity(0.12)))
                 }
             }
         }
