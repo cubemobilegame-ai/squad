@@ -85,6 +85,13 @@ service cloud.firestore {
     }
 
     // kształt nowej wiadomości: tylko znane pola, kod dropa w karcie to zwykły identyfikator, emoji/odpowiedź krótkie (brak obcego HTML-a w polach renderowanych)
+    // usunięcie własnej wiadomości dla wszystkich: tylko autor, treść czyszczona, znacznik del
+    function okDel() {
+      return resource.data.authorId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['del', 'text', 'r', 're', 'poll', 'drop', 'em', 'v'])
+        && request.resource.data.del == true
+        && request.resource.data.get('text', '') == '';
+    }
     function okMsgShape() {
       return request.resource.data.keys().hasOnly(['authorId', 'nickname', 'text', 'poll', 'v', 'em', 're', 'drop', 'createdAt'])
         && request.resource.data.get('createdAt', null) == request.time
@@ -243,7 +250,7 @@ service cloud.firestore {
           && msgLimOk();
         allow update: if signedIn() && drop(code).expiresAt > request.time
           && exists(/databases/$(db)/documents/drops/$(code)/participants/$(request.auth.uid))
-          && (okReact() || okVote());
+          && (okReact() || okVote() || okDel());
       }
 
       // ALBUM WYPADU: po starcie, każdy uczestnik max 3 zdjęcia (id = uid_1..3, zdjęcie zapisane w dokumencie), znika z dropem
@@ -335,7 +342,7 @@ service cloud.firestore {
           && msgLimOk();
         allow update: if signedIn()
           && exists(/databases/$(db)/documents/groups/$(g)/members/$(request.auth.uid))
-          && (okReact() || okVote());
+          && (okReact() || okVote() || okDel());
       }
     }
   }
