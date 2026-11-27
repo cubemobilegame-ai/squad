@@ -5015,7 +5015,7 @@ window.dropSheet=code=>{const d=S.items.get(code);if(!d)return go("/d/"+code);vi
   s.querySelector("#dsf").onclick=()=>{s.close();go("/d/"+code)}};
 async function mapSheet(d){vib(8);const ios=/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
   const s=sheet(`<div class="dsh"><h2>${esc(d.place||"")}</h2><div class="dmm" id="dsmm"></div><div class="dsb"><a class="dsx" id="dso" target="_blank" rel="noopener" href="#">${t("dsMaps")}</a><button class="dsx g" id="dsn">${t("navH").replace(/\?$/,"")}</button></div></div>`);
-  ss.querySelector("#dsn").onclick=()=>{s.close();setTimeout(()=>navSheet(d),260)};
+  s.querySelector("#dsn").onclick=()=>{s.close();setTimeout(()=>navSheet(d),260)};
   let pt=null;try{pt=DEMO?{la:52.2297,lo:21.0122}:(d.pt&&isFinite(+d.pt.la)&&isFinite(+d.pt.lo)?{la:+d.pt.la,lo:+d.pt.lo}:await placeGeo(d.place,wxPt(d)||PUB.pos))}catch{}
   const q=pt?pt.la+","+pt.lo:encodeURIComponent(d.place||""),o=s.querySelector("#dso");o.href=ios?"https://maps.apple.com/?q="+q:"https://www.google.com/maps/search/?api=1&query="+q;o.onclick=e=>{if(NATAPP){e.preventDefault();location.href=o.href}};
   const box=s.querySelector("#dsmm");if(!pt){box.style.display="none";return}
