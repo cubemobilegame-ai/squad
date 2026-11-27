@@ -203,6 +203,19 @@ service cloud.firestore {
         || exists(/databases/$(db)/documents/users/$(uid)/contacts/$(request.auth.uid)));
     }
 
+    // WOLNY DZIŚ: status „mam dziś czas”; zapis tylko własny (do 30 h w przód), odczyt: ja oraz osoby z moich kontaktów
+    match /free/{uid} {
+      allow create, update: if signedIn() && !isGuest() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['until', 'at'])
+        && request.resource.data.until is timestamp
+        && request.resource.data.until > request.time
+        && request.resource.data.until <= request.time + duration.value(30, 'h')
+        && request.resource.data.at == request.time;
+      allow delete: if signedIn() && request.auth.uid == uid;
+      allow get: if signedIn() && (request.auth.uid == uid
+        || exists(/databases/$(db)/documents/users/$(uid)/contacts/$(request.auth.uid)));
+    }
+
     // DROPY: link działa do startu eventu, wiadomości do 24h po evencie, potem dokument znika
     match /drops/{code} {
       allow get: if resource.data.expiresAt > request.time;

@@ -1383,6 +1383,20 @@ body:has(.scr.prf) .sheet,body:has(.pscr) .sheet{background:#0b0b0b}body:has(.sc
 .sheet .cmenu .hint{color:#8e8e8e;font-size:14px;line-height:1.35;margin:8px 8px 4px;text-align:left}
 :root.acw .scr.chl .chf button.on,:root.acw .scr.nw .dayb .sel,:root.acw .scr.nw .ncd .chip.on{color:#0b0b12!important}
 :root.acw .scr.chl .chf button.on .cfb{background:rgba(0,0,0,.14);color:#0b0b12}
+.fre{margin:22px 0 22px}.fre[hidden],.fch[hidden]{display:none}
+.fre .hd{display:flex;align-items:center;justify-content:space-between;margin:0 2px 14px}
+.fre h3{margin:0;font-size:22px;font-weight:800;letter-spacing:-.02em;text-transform:none;color:#fff;display:flex;align-items:center;gap:10px}
+.fre .lv,.fch .lv{width:10px;height:10px;border-radius:50%;flex:none;background:linear-gradient(45deg,#7fb2ff,#4f86ff,#2f55d6)}
+.fre .mk{border:0;font:inherit;font-weight:800;font-size:14px;border-radius:99px;height:38px;padding:0 16px;background:#fff;color:#0b0b12;cursor:pointer}
+.fre .row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 2px}.fre .row::-webkit-scrollbar{display:none}
+.fre .pp{flex:none;width:62px;text-align:center;background:none;border:0;padding:0;color:#fff;font:inherit;cursor:pointer}
+.fre .a,.fre .mine{display:grid;place-items:center;width:62px;height:62px;border-radius:50%;box-sizing:border-box}
+.fre .a .av{width:62px;height:62px;border-radius:50%}
+.fre .mine{border:2px dashed rgba(255,255,255,.3);font-size:28px;line-height:1}
+.fre .pp b{display:block;font-size:13px;margin-top:7px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fch{display:flex;align-items:center;gap:10px;width:100%;margin:12px 0 18px;padding:0 4px;background:none;border:0;font:inherit;font-size:14px;font-weight:700;color:#b9b9c6;cursor:pointer;text-align:left}
+.fch .lv{width:8px;height:8px}.fch .st{display:flex}.fch .st .av{width:26px;height:26px;border-radius:50%;margin-left:-8px;box-shadow:0 0 0 2px #000}.fch .st .av:first-child{margin-left:0}
+.fch .ar{margin-left:auto;color:#6b6b78;font-size:18px}.fch+.chf{margin-top:0}
 :root.acw .scr.nw .tg.on:after{background:#0b0b12}
 :root.acw .pf .abar2 i{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.14) 0 7px,rgba(0,0,0,0) 7px 14px),var(--acc)}
 :root.acw .bdg em u{background:repeating-linear-gradient(-45deg,rgba(0,0,0,.16) 0 4px,rgba(0,0,0,0) 4px 8px),var(--acc)}
@@ -2492,6 +2506,14 @@ Object.assign(L.fr,{tmTom:"DÉBUT DEMAIN",tmD:w=>`DÉBUT: ${w}`});
 Object.assign(L.it,{tmTom:"INIZIA DOMANI",tmD:w=>`INIZIA: ${w}`});
 Object.assign(L.cs,{tmTom:"ZAČÁTEK ZÍTRA",tmD:w=>`ZAČÁTEK: ${w}`});
 Object.assign(L.uk,{tmTom:"ПОЧАТОК ЗАВТРА",tmD:w=>`ПОЧАТОК: ${w}`});
+Object.assign(L.pl,{"wdT":"Wolni dziś","wdDrop":"Zrób drop","wdYou":"Ty","wdSetT":"Wolny dziś","wdSetD":"Do 23:59 Twoje ekipy zobaczą, że masz czas. Status wyłączy się sam.","wdOn":"Jestem wolny dziś","wdOff":"Wyłącz status","wdOnD":"Jesteś wolny dziś do 23:59. Twoje ekipy to widzą.","wdOnToast":"Wolny dziś do 23:59","wdOffToast":"Status wyłączony","wdFr":"Zrób drop z {n}","wdFrD":"Jest wolny dziś","wdN":n=>n===1?"1 osoba wolna dziś":(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?n+" osoby wolne dziś":n+" osób wolnych dziś"});
+Object.assign(L.en,{"wdT":"Free today","wdDrop":"Make a drop","wdYou":"You","wdSetT":"Free today","wdSetD":"Your crews will see you're free until 11:59 PM. The status turns off by itself.","wdOn":"I'm free today","wdOff":"Turn off status","wdOnD":"You're free until 11:59 PM. Your crews can see it.","wdOnToast":"Free until 11:59 PM","wdOffToast":"Status off","wdFr":"Make a drop with {n}","wdFrD":"Free today","wdN":n=>n===1?"1 person free today":n+" people free today"});
+Object.assign(L.es,{"wdT":"Libres hoy","wdDrop":"Crear drop","wdYou":"Tú","wdSetT":"Libre hoy","wdSetD":"Tus grupos verán que tienes tiempo hasta las 23:59. El estado se apaga solo.","wdOn":"Estoy libre hoy","wdOff":"Desactivar estado","wdOnD":"Estás libre hasta las 23:59. Tus grupos lo ven.","wdOnToast":"Libre hasta las 23:59","wdOffToast":"Estado desactivado","wdFr":"Crear drop con {n}","wdFrD":"Está libre hoy","wdN":n=>n===1?"1 persona libre hoy":n+" personas libres hoy"});
+Object.assign(L.de,{"wdT":"Heute frei","wdDrop":"Drop erstellen","wdYou":"Du","wdSetT":"Heute frei","wdSetD":"Bis 23:59 sehen deine Crews, dass du Zeit hast. Der Status endet von selbst.","wdOn":"Ich bin heute frei","wdOff":"Status ausschalten","wdOnD":"Du bist bis 23:59 frei. Deine Crews sehen es.","wdOnToast":"Frei bis 23:59","wdOffToast":"Status aus","wdFr":"Drop mit {n} erstellen","wdFrD":"Ist heute frei","wdN":n=>n===1?"1 Person heute frei":n+" Personen heute frei"});
+Object.assign(L.fr,{"wdT":"Libres aujourd'hui","wdDrop":"Créer un drop","wdYou":"Toi","wdSetT":"Libre aujourd'hui","wdSetD":"Jusqu'à 23:59, tes équipes verront que tu es dispo. Le statut se désactive tout seul.","wdOn":"Je suis libre aujourd'hui","wdOff":"Désactiver le statut","wdOnD":"Tu es libre jusqu'à 23:59. Tes équipes le voient.","wdOnToast":"Libre jusqu'à 23:59","wdOffToast":"Statut désactivé","wdFr":"Créer un drop avec {n}","wdFrD":"Est libre aujourd'hui","wdN":n=>n===1?"1 personne libre aujourd'hui":n+" personnes libres aujourd'hui"});
+Object.assign(L.it,{"wdT":"Liberi oggi","wdDrop":"Crea un drop","wdYou":"Tu","wdSetT":"Libero oggi","wdSetD":"Fino alle 23:59 i tuoi gruppi vedranno che hai tempo. Lo stato si disattiva da solo.","wdOn":"Sono libero oggi","wdOff":"Disattiva stato","wdOnD":"Sei libero fino alle 23:59. I tuoi gruppi lo vedono.","wdOnToast":"Libero fino alle 23:59","wdOffToast":"Stato disattivato","wdFr":"Crea un drop con {n}","wdFrD":"È libero oggi","wdN":n=>n===1?"1 persona libera oggi":n+" persone libere oggi"});
+Object.assign(L.cs,{"wdT":"Volní dnes","wdDrop":"Vytvořit drop","wdYou":"Ty","wdSetT":"Volný dnes","wdSetD":"Do 23:59 uvidí tvoje skupiny, že máš čas. Stav se vypne sám.","wdOn":"Jsem dnes volný","wdOff":"Vypnout stav","wdOnD":"Jsi volný do 23:59. Tvoje skupiny to vidí.","wdOnToast":"Volný do 23:59","wdOffToast":"Stav vypnut","wdFr":"Vytvořit drop s {n}","wdFrD":"Je dnes volný","wdN":n=>n===1?"1 osoba volná dnes":n<5?n+" osoby volné dnes":n+" osob volných dnes"});
+Object.assign(L.uk,{"wdT":"Вільні сьогодні","wdDrop":"Створити дроп","wdYou":"Ти","wdSetT":"Вільний сьогодні","wdSetD":"До 23:59 твої групи бачитимуть, що ти маєш час. Статус вимкнеться сам.","wdOn":"Я вільний сьогодні","wdOff":"Вимкнути статус","wdOnD":"Ти вільний до 23:59. Твої групи це бачать.","wdOnToast":"Вільний до 23:59","wdOffToast":"Статус вимкнено","wdFr":"Створити дроп з {n}","wdFrD":"Вільний сьогодні","wdN":n=>n===1?"1 людина вільна сьогодні":(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?n+" людини вільні сьогодні":n+" людей вільних сьогодні"});
 Object.assign(L.pl,{dzAll:"Wszystkie dropy"});Object.assign(L.en,{dzAll:"All drops"});Object.assign(L.es,{dzAll:"Todos los drops"});Object.assign(L.de,{dzAll:"Alle Drops"});Object.assign(L.fr,{dzAll:"Tous les drops"});Object.assign(L.it,{dzAll:"Tutti i drop"});Object.assign(L.cs,{dzAll:"Všechny dropy"});Object.assign(L.uk,{dzAll:"Усі дропи"});
 Object.assign(L.pl,{stT:"Spotkania i grupy w kilka minut",stGo:"Zaczynamy",stSub:"Zajmie mniej niż minutę",stSheetH:"Zaloguj się lub załóż konto",stSheetP:"Wybierz, jak chcesz wejść do Squad.",stB1:"Kto dziś na boisko? ⚽",stB2:"Biorę piłkę 🙌",stB3:"Late",stB4:"Zgarniam resztę ekipy"});Object.assign(L.en,{stT:"Meetups and groups in minutes",stGo:"Get started",stSub:"Takes less than a minute",stSheetH:"Log in or create an account",stSheetP:"Choose how you want to join Squad.",stB1:"Who's up for football today? ⚽",stB2:"I'll bring the ball 🙌",stB3:"Late",stB4:"I'll get the rest of the crew"});
 Object.assign(L.pl,{lgTag:"Spotkania w 15 minut",lgH1:"Spotkania i grupy znajomych ",lgH2:"w jednym miejscu",lgSub:"Twórz spotkania i grupy w kilka chwil i spotykaj się nie tylko online"});
@@ -3137,6 +3159,46 @@ window.qrContact=async()=>{const u=auth.currentUser;if(!u)return;pubSync();if(u.
 /* kropka „online" w kontaktach: aplikacja co 4 min (gdy jest na wierzchu) zapisuje presence/<uid>.at; kontakt widzi ją, jeśli jest w jego kontaktach (reguły) */
 const presBeat=()=>{try{const u=auth.currentUser;if(DEMO||!u||u.isAnonymous||document.hidden||!S.con.size)return;if(Date.now()-(+sget("presT")||0)<2.5*6e4)return;sset("presT",String(Date.now()));setDoc(doc(db,"presence",u.uid),{at:serverTimestamp()}).catch(()=>{})}catch{}};
 setInterval(presBeat,4*6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)setTimeout(presBeat,800)});
+/* ---------- WOLNY DZIŚ: status „mam dziś czas” do 23:59; widzą go tylko kontakty (reguły: free/<uid>) ---------- */
+const FREE={at:0,list:[],mine:0,fn:null};
+const freeEnd=()=>{const d=new Date();d.setHours(23,59,0,0);return d.getTime()};
+const freeOn=()=>FREE.mine>Date.now();
+const freeCan=()=>{const u=auth.currentUser;return !!u&&!u.isAnonymous};
+async function freeLoad(force){try{
+  if(DEMO){if(!FREE.at){FREE.at=1;FREE.list=[{id:"d1",nickname:"Mati",av:1},{id:"d2",nickname:"Ola",av:2},{id:"d3",nickname:"Piotr",av:3},{id:"d4",nickname:"Zosia",av:4}];FREE.fn&&FREE.fn()}return}
+  const u=auth.currentUser;if(!u||u.isAnonymous)return;if(!force&&Date.now()-FREE.at<6e4)return;FREE.at=Date.now();
+  const ids=[...S.con.keys()].slice(0,40),now=Date.now();
+  const rs=await Promise.all(ids.map(id=>getDoc(doc(db,"free",id)).then(x=>x.exists()?{id,u:x.data().until?.toMillis?.()||0}:null).catch(()=>null)));
+  FREE.list=rs.filter(r=>r&&r.u>now).map(r=>({...S.con.get(r.id),id:r.id,until:r.u}));
+  const m=await getDoc(doc(db,"free",u.uid)).catch(()=>null);FREE.mine=m&&m.exists()?(m.data().until?.toMillis?.()||0):0;
+  FREE.fn&&FREE.fn()}catch{}}
+async function freeSet(on){try{const u=auth.currentUser;if(!u||u.isAnonymous)return;
+  if(DEMO){FREE.mine=on?freeEnd():0}else if(on){await setDoc(doc(db,"free",u.uid),{until:Timestamp.fromMillis(freeEnd()),at:serverTimestamp()});FREE.mine=freeEnd();
+    if(Date.now()-(+sget("freeN")||0)>2*36e5){sset("freeN",String(Date.now()));pushNow({kind:"free"})}}
+  else{await deleteDoc(doc(db,"free",u.uid));FREE.mine=0}
+  vib(on?[20,30,20]:10);toast(t(on?"wdOnToast":"wdOffToast"));FREE.fn&&FREE.fn()}catch{toast(t("err"))}}
+function freeSheet(p){vib(8);
+  const me=!p,on=freeOn();
+  const h=me?(on?`<h2>${t("wdSetT")}</h2><p class="mut">${t("wdOnD")}</p><div class="dsb"><button class="dsx g" id="fo" type="button">${t("wdOff")}</button></div>`
+    :`<h2>${t("wdSetT")}</h2><p class="mut">${t("wdSetD")}</p><div class="dsb"><button class="cta" id="fo" type="button">${t("wdOn")}</button><button class="dsx g" id="fx" type="button">${t("cancel")}</button></div>`)
+    :`<h2>${esc(p.nickname||"?")}</h2><p class="mut">${t("wdFrD")}</p><div class="dsb"><button class="cta" id="fo" type="button">${esc(t("wdFr").replace("{n}",p.nickname||"?"))}</button><button class="dsx g" id="fx" type="button">${t("cancel")}</button></div>`;
+  const s=sheet(`<div class="dsh">${h}</div>`);
+  s.querySelector("#fx")&&(s.querySelector("#fx").onclick=()=>s.close());
+  s.querySelector("#fo").onclick=()=>{s.close();if(me)freeSet(!on);else freeDrop([p.id])}}
+function freeDrop(ids){try{sessionStorage.setItem("freeInv",JSON.stringify({t:Date.now(),ids}))}catch{}go("/new")}
+const freeNum=n=>t("wdN",n);
+function freeDraw(){
+  const hm=document.getElementById("fre"),ch=document.getElementById("fch"),L=FREE.list;
+  if(hm){try{sessionStorage.removeItem("freeInv")}catch{}
+    const show=freeCan()&&(DEMO||S.con.size||L.length||freeOn());hm.hidden=!show;
+    if(show){const mc=myCard();
+      hm.innerHTML=`<div class="hd"><h3><i class="lv"></i>${t("wdT")}</h3>${L.length?`<button class="mk" id="fmk" type="button">${t("wdDrop")}</button>`:""}</div><div class="row"><button class="pp" id="fme" type="button">${freeOn()?`<span class="a">${avc("fx",avIdx({id:me(),av:mc.av,ph:mc.ph}))}</span>`:`<span class="mine">+</span>`}<b>${t("wdYou")}</b></button>${L.map(p=>`<button class="pp" data-f="${esc(p.id)}" type="button"><span class="a">${avc("fx",avIdx(p))}</span><b>${esc(p.nickname||"?")}</b></button>`).join("")}</div>`;
+      hm.querySelector("#fme").onclick=()=>freeSheet(null);
+      const mk=hm.querySelector("#fmk");if(mk)mk.onclick=()=>{vib(8);freeDrop(L.map(p=>p.id))};
+      hm.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>freeSheet(L.find(p=>p.id===b.dataset.f)))}}
+  if(ch){ch.hidden=!L.length;if(L.length)ch.innerHTML=`<i class="lv"></i><span>${esc(freeNum(L.length))}</span><span class="st">${L.slice(0,3).map(p=>avc("mini",avIdx(p))).join("")}</span><span class="ar">›</span>`}
+  freeLoad()}
+FREE.fn=freeDraw;
 async function markOnline(el){try{if(DEMO)return;const rows=[...el.querySelectorAll(".kr")].filter(r=>r.querySelector("[data-rm]")&&r.dataset.pu);await Promise.all(rows.map(async r=>{try{const x=await getDoc(doc(db,"presence",r.dataset.pu)),m=x.exists()?x.data().at?.toMillis?.():0;if(m&&Date.now()-m<7*6e4&&r.isConnected&&!r.querySelector(".onl"))r.querySelector(".avw")?.insertAdjacentHTML("beforeend",'<i class="onl"></i>')}catch{}}))}catch{}}
 function contactsView(add){
   const u=authed();if(!u)return;
@@ -3199,13 +3261,14 @@ function home(){
   const PLUS='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
   const hTit=()=>{const w=t(HFK[HFL()]),i=w.lastIndexOf(" "),a1=i<0?"":esc(w.slice(0,i))+" ",a2=esc(i<0?w:w.slice(i+1));return`${HFT(HFL())}<br>${a1}<span class="hfw">${a2}</span>`};
   view(`<div class="scr hm"><canvas class="snow hsn" aria-hidden="true"></canvas><h1 class="pmt"><button type="button" class="pmf" id="pmf" aria-haspopup="true" aria-expanded="false"><span>${t(MFL()==="mine"?"mf_mine":"pMapT")}</span><svg class="hch" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button></h1><div class="pmm2" id="pmm2" hidden>${["all","mine"].map(k=>`<button data-m="${k}" class="${MFL()===k?"on":""}"><span>${t("mf_"+k)}</span></button>`).join("")}</div><div class="top hd2"><h1 class="logo lg2">Squad<span class="sfk" aria-hidden="true"><i class="s1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M20.7 7 3.3 17"/><path d="M9.2 4.6 12 7.4l2.8-2.8M9.2 19.4 12 16.6l2.8 2.8M4 9.4l3.800 1M20 14.6l-3.800-1M4 14.600l3.800-1M20 9.400l-3.800 1" stroke-width="1.3"/></svg></i><i class="s2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3.500v17M4.600 7.700l14.800 8.600M19.400 7.700 4.600 16.300"/><circle cx="12" cy="3" r="1.300" fill="currentColor" stroke="none"/><circle cx="12" cy="21" r="1.300" fill="currentColor" stroke="none"/><circle cx="4" cy="7.500" r="1.300" fill="currentColor" stroke="none"/><circle cx="20" cy="16.500" r="1.300" fill="currentColor" stroke="none"/><circle cx="20" cy="7.500" r="1.300" fill="currentColor" stroke="none"/><circle cx="4" cy="16.500" r="1.300" fill="currentColor" stroke="none"/></svg></i><i class="s3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M12 2.500 14 8l5.500-2-2 5.500L22 12l-4.500 1.500 2 5.500L14 17l-2 5.500L10 17l-5.500 2 2-5.500L2 12l4.500-1.500-2-5.500L10 8z" fill="currentColor" fill-opacity=".18"/><circle cx="12" cy="12" r="1.600" fill="currentColor" stroke="none"/></svg></i></span></h1><div class="tr"><button class="bell" id="qrh" aria-label="QR">${QRI.replace('width="15" height="15"','width="22" height="22"')}</button><button class="bell" id="nd" aria-label="${esc(t("newDrop").replace(/^\+\s*/,""))}"><img class="ndp" src="/plus-icon.png" alt=""></button><button class="bell" id="bel" aria-label="${t("nNot")}">${I.bell}<b class="bd" id="bdn" hidden></b></button></div></div>
-  ${u.isAnonymous?accBox():""}<div class="zb" id="zb"><button class="htl" id="hfl" aria-haspopup="true" aria-expanded="false"><span id="hft">${hTit()}</span><svg class="hch" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="cal" id="cal" hidden></div></div><div class="hmn" id="hmn" hidden>${["all","host","in","pub"].map(k=>`<button data-f="${k}" class="${HFL()===k?"on":""}"><span>${k==="all"?t("hAll"):HFT(k)+" "+t(HFK[k])}</span></button>`).join("")}</div><div class="tabs" id="tb"></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
+  ${u.isAnonymous?accBox():""}<div class="zb" id="zb"><button class="htl" id="hfl" aria-haspopup="true" aria-expanded="false"><span id="hft">${hTit()}</span><svg class="hch" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="cal" id="cal" hidden></div></div><div class="hmn" id="hmn" hidden>${["all","host","in","pub"].map(k=>`<button data-f="${k}" class="${HFL()===k?"on":""}"><span>${k==="all"?t("hAll"):HFT(k)+" "+t(HFK[k])}</span></button>`).join("")}</div><div class="tabs" id="tb"></div><div class="fre" id="fre" hidden></div><p class="hint" id="hint"></p><div id="list"></div></div>${nav("h")}`);
   $("#pmf").onclick=()=>{vib(8);const m=$("#pmm2");m.hidden=!m.hidden;$("#pmf").setAttribute("aria-expanded",String(!m.hidden))};
   setTimeout(()=>{try{window.maybeTour&&window.maybeTour()}catch{}},1100);
   document.querySelectorAll("#pmm2 [data-m]").forEach(b=>b.onclick=()=>{vib(8);sset("mflt",b.dataset.m);if(PUB.M)PUB.M.fitMine=b.dataset.m==="mine";try{const cd=PUB.M&&PUB.M.wrap.querySelector("#pmcard");if(cd)cd.hidden=true}catch{}$("#pmf span").textContent=t(b.dataset.m==="mine"?"mf_mine":"pMapT");$("#pmm2").hidden=true;$("#pmf").setAttribute("aria-expanded","false");document.querySelectorAll("#pmm2 [data-m]").forEach(x=>x.classList.toggle("on",x===b));const P=PUB.M;if(P&&P.map){pubMapLoad(P,m=>{const h=P.wrap.querySelector("#pmh");if(h){h.hidden=!m;h.textContent=m||""}});if(b.dataset.m!=="mine"&&PUB.pos){P.scanReq=1;pmFit(P,PUB.pos)}}});
   if($("#acc"))$("#acc").onclick=()=>{vib(10);guestUp("/")};
   $("#nd").onclick=()=>{vib(15);if(auth.currentUser?.isAnonymous)return guestUp("/new");go("/new")};$("#bel").onclick=()=>{vib(8);go("/n")};$("#qrh").onclick=()=>qrContact();$("#hfl").onclick=()=>{vib(8);const m=$("#hmn");m.hidden=!m.hidden;$("#hfl").setAttribute("aria-expanded",String(!m.hidden))};document.querySelectorAll("#hmn [data-f]").forEach(b=>b.onclick=()=>{vib(8);sset("hflt",b.dataset.f);homeDay=null;$("#hmn").hidden=true;$("#hfl").setAttribute("aria-expanded","false");$("#hft").innerHTML=hTit();document.querySelectorAll("#hmn [data-f]").forEach(x=>x.classList.toggle("on",x===b));try{redraw()}catch{}});setTimeout(pushScreen,700);setTimeout(guestAfter,1500);bindPushCard();setTimeout(askLocOnce,2600);
   const draw=()=>{
+    try{freeDraw()}catch{}
     const all=live().filter(loaded),r=d=>roleOf(d),fl=HFL(),jn=d=>["in","late"].includes(r(d)),CN={all:all.filter(d=>["host","in","late"].includes(r(d))).length,host:all.filter(d=>r(d)==="host").length,in:all.filter(jn).length,pub:all.filter(d=>jn(d)&&d.public).length},G={inv:all.filter(d=>r(d)==="inv"),mine:all.filter(d=>fl==="host"?r(d)==="host":fl==="in"?jn(d):fl==="pub"?jn(d)&&d.public:["host","in","late"].includes(r(d))),out:all.filter(d=>r(d)==="out")};
     const tab=homeTab||"mine";
     $("#list").classList.toggle("pubt",tab==="pub");
@@ -3552,9 +3615,10 @@ function chatsView(){
   const u=authed();if(!u)return;
   view(`<div class="scr chl"><div class="chtop"><h1 class="logo" style="font-size:34px;margin:0">${t("nCh")}</h1><div class="ngr"><button class="xq" id="qrc" aria-label="QR"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3M20 14v.01M14 20h3M20 17v3"/></svg></button><button class="bell" id="newd" aria-label="${t("nNew")}"><img class="ndp" src="/plus-icon.png" alt=""></button><button class="ngb" id="newg"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>${t("grNewS")}</span></button></div></div><span class="gbadge">${t("gOnly")}</span>
   <div class="glass" id="nf" hidden style="margin:12px 0"><p class="hint s" style="margin-top:0">${t("grHint")}</p><input id="gn" placeholder="${t("grName")}" maxlength="30"><button class="cta dim" id="gk" style="margin-top:8px">${t("grCreate")}</button><button type="button" class="gcx" id="gx">${t("cancel")}</button></div>
-  <div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
+  <button class="fch" id="fch" type="button" hidden></button><div class="chf" id="chf"><button data-f="all" class="on">${t("chAll")}</button><button data-f="g">${t("grT")}</button><button data-f="d">${t("dcT")}</button></div>
   <div id="gl"></div><div id="cl" hidden></div></div>${nav("c")}`);
   $("#gn").oninput=()=>$("#gk").classList.toggle("dim",!$("#gn").value.trim());
+  $("#fch").onclick=()=>{vib(8);go("/")};try{freeDraw()}catch{}
   $("#gx").onclick=()=>{vib(8);$("#gn").value="";$("#gn").blur();$("#gk").classList.add("dim");$("#nf").hidden=true};
   const openNf=()=>{$("#nf").hidden=!$("#nf").hidden;if(!$("#nf").hidden)$("#gn").focus()};
   $("#qrc").onclick=()=>{vib(8);qrContact()};
@@ -3788,7 +3852,7 @@ function newView(){
     await createDropDoc(code,{code,hostId:u.uid,hostNick:nick,hostAv:myAv(),hostPh:sget("photo")||null,category:cat,...(cat==="occ"&&occK?{occK}:{}),title:$("#ti").value.trim()||(cat==="other"?cu:cat==="occ"?t("occDef"):t("run",t("c_"+cat))),place,surprise:sur,repeat:rep==="no"?null:rep,...(pg||{}),
       startsAt:Timestamp.fromDate(tm),expiresAt:Timestamp.fromMillis(tm.getTime()+24*36e5),createdAt:serverTimestamp()});
     await setDoc(doc(db,"drops",code,"participants",u.uid),{nickname:nick,status:"in",av:myAv(),ph:sget("photo")||null,isGuest:false,uid:u.uid,updatedAt:serverTimestamp()});
-    remember(code);if(isPubDrop)PUB.at=0;pendingShare=isPubDrop?null:code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);go("/d/"+code);
+    remember(code);if(isPubDrop)PUB.at=0;pendingShare=isPubDrop?null:code;bump("hosted");if(tm.getHours()>=22||tm.getHours()<4)bump("night");if(sur)bump("surprise");vib([30,40,30]);try{const fi=JSON.parse(sessionStorage.getItem("freeInv")||"null");sessionStorage.removeItem("freeInv");if(fi&&Date.now()-fi.t<20*6e4&&fi.ids?.length&&!DEMO){const tt=(S.items.get(code)||{}).title||$("#ti")?.value.trim()||code;setTimeout(()=>sendInv("d",code,tt,fi.ids),900)}}catch{}go("/d/"+code);
   };
   $("#go").onclick=async()=>{const b=$("#go");if(!b||b.dataset.b)return;b.dataset.b="1";try{await goRun()}finally{setTimeout(()=>{try{delete b.dataset.b}catch{}},1500)}};
 }
