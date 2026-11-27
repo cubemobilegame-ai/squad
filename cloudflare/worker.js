@@ -307,6 +307,52 @@ async function launchMail(envRaw) {
   if (ok || bad) await logEv({ SA, PID }, { kind: "launchmail", sent: ok, errs: bad ? bad + " nieudanych (limit Brevo/błąd)" : "" });
 }
 
+
+/* ---------- podgląd linków w czacie (GET /lp?u=...) ---------- */
+const lpBad = (h) => !h || !h.includes(".") || /^(localhost|.*\.(local|internal|lan|home|localdomain))$/i.test(h) || /^\d{1,3}(\.\d{1,3}){3}$/.test(h) || h.includes(":") || h.startsWith("[");
+const lpOk = (u) => { try { const t = new URL(u); if (!/^https?:$/.test(t.protocol)) return null; if (t.username || t.password) return null; if (t.port && t.port !== "80" && t.port !== "443") return null; if (lpBad(t.hostname)) return null; return t; } catch { return null; } };
+const lpDec = (s) => String(s || "").replace(/&(#x?[0-9a-f]+|amp|lt|gt|quot|apos|nbsp);/gi, (m, e) => { const k = e.toLowerCase(); if (k === "amp") return "&"; if (k === "lt") return "<"; if (k === "gt") return ">"; if (k === "quot") return '"'; if (k === "apos") return "'"; if (k === "nbsp") return " "; try { return String.fromCodePoint(k[1] === "x" ? parseInt(k.slice(2), 16) : parseInt(k.slice(1), 10)); } catch { return ""; } }).replace(/\s+/g, " ").trim();
+async function linkPreview(u, cors, ctx) {
+  let t = lpOk(u);
+  if (!t) return json({ error: "bad url" }, 400, cors);
+  const ck = new Request("https://lp.cache.local/?u=" + encodeURIComponent(t.href)), cache = caches.default;
+  const hit = await cache.match(ck);
+  if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=3600", ...cors } });
+  let res = null;
+  try {
+    for (let i = 0; i < 4; i++) {
+      res = await fetch(t.href, { redirect: "manual", signal: AbortSignal.timeout(4500), headers: { "User-Agent": "Mozilla/5.0 (compatible; SquadLinkPreview/1.0; +https://getsquad.web.app)", Accept: "text/html,application/xhtml+xml", "Accept-Language": "pl,en;q=0.8" }, cf: { cacheTtl: 3600 } });
+      if (res.status >= 300 && res.status < 400 && res.headers.get("Location")) { const n = lpOk(new URL(res.headers.get("Location"), t).href); if (!n) { res = null; break; } t = n; continue; }
+      break;
+    }
+  } catch { res = null; }
+  const out = { h: t.hostname.replace(/^www\./, ""), u: t.href };
+  if (res && res.ok && /html/i.test(res.headers.get("Content-Type") || "") && res.body) {
+    let html = "";
+    try {
+      const rd = res.body.getReader(), dec = new TextDecoder("utf-8", { fatal: false });
+      while (html.length < 220000) { const { done, value } = await rd.read(); if (done) break; html += dec.decode(value, { stream: true }); if (/<\/head>/i.test(html) || html.length > 160000) break; }
+      try { rd.cancel(); } catch {}
+    } catch {}
+    const meta = {};
+    for (const m of html.matchAll(/<meta\s+([^>]*?)\/?>/gi)) {
+      const a = m[1], k = (a.match(/(?:property|name)\s*=\s*["']([^"']+)["']/i) || [])[1], c = (a.match(/content\s*=\s*(?:"([^"]*)"|'([^']*)')/i) || []);
+      if (k && (c[1] !== undefined || c[2] !== undefined) && !meta[k.toLowerCase()]) meta[k.toLowerCase()] = c[1] !== undefined ? c[1] : c[2];
+    }
+    const ti = (html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1];
+    const title = lpDec(meta["og:title"] || meta["twitter:title"] || ti).slice(0, 120), desc = lpDec(meta["og:description"] || meta["twitter:description"] || meta["description"]).slice(0, 160);
+    let img = meta["og:image"] || meta["og:image:url"] || meta["twitter:image"] || meta["twitter:image:src"] || "";
+    if (img) { try { const iu = new URL(lpDec(img), t); img = /^https?:$/.test(iu.protocol) ? iu.href : ""; } catch { img = ""; } }
+    if (title) out.t = title;
+    if (desc) out.d = desc;
+    if (img) out.i = img;
+    if (meta["og:site_name"]) out.s = lpDec(meta["og:site_name"]).slice(0, 40);
+  }
+  const resp = new Response(JSON.stringify(out), { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=3600", ...cors } });
+  ctx.waitUntil(cache.put(ck, resp.clone()));
+  return resp;
+}
+
 export default {
   async scheduled(ev, envRaw, ctx) { ctx.waitUntil(launchMail(envRaw).catch(() => {})); ctx.waitUntil(reminders(envRaw).catch((e) => logEv({ SA: JSON.parse(envRaw.FIREBASE_SA), PID: JSON.parse(envRaw.FIREBASE_SA).project_id }, { kind: "rem", err: e.message }))); },
   async fetch(req, envRaw, ctx) {
@@ -316,6 +362,7 @@ export default {
     const url = new URL(req.url);
     if (req.method === "GET" && url.pathname === "/ics") return ics(url.searchParams);
     if (req.method === "GET" && url.pathname.startsWith("/av/")) return avatar(envRaw, url.pathname.slice(4));
+    if (req.method === "GET" && url.pathname === "/lp") return linkPreview(url.searchParams.get("u") || "", cors, ctx);
     if (req.method === "GET" && url.pathname === "/geo") { const c = req.cf || {}; return json(c.latitude ? { la: +c.latitude, lo: +c.longitude } : {}, 200, cors); }
     if (req.method === "GET") return json({ ok: true, app: "squad-push" }, 200, cors);
     if (req.method !== "POST" || url.pathname !== "/notify") return json({ error: "not found" }, 404, cors);
