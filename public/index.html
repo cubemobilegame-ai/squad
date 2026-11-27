@@ -1394,6 +1394,19 @@ h1,h2,h3,.pnm,.pft{word-spacing:.04em}
 .scr.ob .hint{color:#8e8e8e}
 .scr.ob #pn{background:#131313!important;border:0!important;border-radius:18px;height:54px;padding:0 16px}
 .scr.ob .kmk{background:#181818!important;border:0!important;border-radius:99px;height:48px;color:#dcdcdc;font:600 15px Brico,BricoCyr,system-ui}
+
+
+.o2z{margin:0;padding:0}.o2z .o2t{margin:0 0 4px}.o2z .phb{background:var(--o2a)!important;color:#0b0b12!important;border:3px solid #000!important}
+.scr.ob2 .o2z h1.o2ti{font-size:30px!important;margin:0!important}.o2z .hint{margin:8px 0 16px}.ob2 #pn{margin-top:0}
+.scr.ob2:not(.o2th) .agec a{color:#fff}.scr.ob2{--o2a:#fff}.scr.ob2.o2th{--o2a:var(--acc)}.scr.ob2{padding-bottom:0}.o2t{display:flex;margin:0 0 4px}.ob2 .phw{width:124px;height:124px;margin:0 auto 12px}.ob2 .phw .av{width:124px!important;height:124px!important}.ob2 .phb{width:38px;height:38px;right:-2px;bottom:-2px;background:var(--o2a);border:3px solid #000}
+.o2mk{display:block;margin:0 auto 22px;height:38px;padding:0 18px;border:0;border-radius:99px;background:#161616;color:#d6d6d6;font:600 14px Brico,BricoCyr,system-ui;cursor:pointer}.o2mk:active{transform:scale(.97)}
+.scr.ob2 h1.o2ti{font-size:30px!important;margin:0!important;line-height:1.1;letter-spacing:-.02em!important}.ob2 .hint{margin:8px 0 16px;font-size:15px;line-height:1.4}
+.o2c{background:#101010;border:1px solid rgba(255,255,255,.07);border-radius:22px;padding:2px 16px;margin-top:12px}.o2r{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:62px}.o2r>span{font:800 14px Brico,BricoCyr,system-ui;color:rgba(255,255,255,.7)}
+.o2sg{display:flex;background:#1b1b1b;border-radius:99px;padding:3px}.o2sg button{border:0;background:none;color:#9a9a9a;font:700 14px Brico,BricoCyr,system-ui;height:38px;padding:0 16px;border-radius:99px;cursor:pointer;white-space:nowrap}.o2sg button.on{background:var(--o2a);color:#0b0b12}
+.o2c .thsw{margin:0;padding:14px 0 16px;border-top:1px solid rgba(255,255,255,.07)}.o2c .tht{flex-direction:column;align-items:flex-start;gap:12px}.o2c .thd{width:34px;height:34px}.o2c .thr{gap:12px;margin-top:0}
+.o2h{display:block;margin:10px 4px 0;color:#7d7d7d;font-size:13px;line-height:1.35}
+.ob2 .agec{margin:18px 2px 0;gap:12px;font-size:14px;color:#a8a8a8}.ob2 .agec input{appearance:none;-webkit-appearance:none;width:24px;height:24px;border-radius:8px;border:2px solid rgba(255,255,255,.28);background:transparent;display:grid;place-items:center;margin-top:1px}.ob2 .agec input:checked{background:var(--o2a);border-color:var(--o2a)}.ob2 .agec input:checked::after{content:"";width:6px;height:11px;border:solid #0b0b12;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-3px)}
+.o2f{position:sticky;bottom:0;margin:0 -16px;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,#000 62%,rgba(0,0,0,0))}.scr.ob2 .cta{background:var(--o2a)!important;margin:0}.scr.ob2 .cta.off{opacity:.38}
 .sheet:has(.kadd){background:#000;border-top:1px solid rgba(255,255,255,.08)}
 .sheet:has(.kadd) .kadd{display:none}
 .sheet:has(.kadd) .kwho{display:flex;flex-direction:column;align-items:center;gap:8px;margin:16px 0 0}
@@ -3473,16 +3486,23 @@ const syncMine=()=>{const u=auth.currentUser;if(!u||DEMO)return;const nk=sget("n
 async function loadProfile(u){try{const x=await getDoc(doc(db,"users",u.uid));if(x.exists()){const d=x.data();if(d.nick)sset("nick",d.nick);if(d.nickAt?.toMillis)sset("nickAt",Math.max(+sget("nickAt")||0,d.nickAt.toMillis()));if(d.av!=null)sset("avatar",d.av);if(thOk(d.th))sset("theme",d.th);if(d.gender==="m"||d.gender==="f")sset("gender",d.gender);if(d.ph)sset("photo",d.ph);if(d.blocked)sset("blocked",JSON.stringify(d.blocked));if(d.st){const lo=jget("st",{}),m={...d.st};for(const k in lo){const x=lo[k],y=m[k];m[k]=(typeof x==="number"&&typeof y==="number")?Math.max(x,y):(y===undefined?x:y)}sset("st",JSON.stringify(m))}if(d.hist)sset("hist",JSON.stringify({...d.hist,...hist()}));if(d.badges)sset("badges",JSON.stringify([...new Set([...(d.badges||[]),...seenB()])]));const un=(a,b)=>[...new Set([...(a||[]),...(b||[])])].slice(-50);if(d.drops)sset("joined",JSON.stringify(un(d.drops,joined())));if(d.groups)sset("groups",JSON.stringify(un(d.groups,joinedG())));if(d.notif)Object.entries(d.notif).forEach(([k,v])=>sset("n_"+k,v?"1":"0"));if(d.muted){Object.keys(localStorage).filter(k=>k.startsWith("mut_")).forEach(k=>localStorage.removeItem(k));Object.entries(d.muted).forEach(([k,v])=>{if(v)sset("mut_"+k,"1")})}if(d.cleared){const c=clrMap();Object.entries(d.cleared).forEach(([k,v])=>{if(+v>(+c[k]||0))c[k]=+v});sset("clrc",JSON.stringify(c))}if(d.pub16===true){sset("pub16","1");sset("pubU18",d.pubU18?"1":"0")}if(d.pubRulesOk||d.pubRulesAt)sset("pubRules","1");if(d.age13||d.nick)sset("age13","1");if(d.lang&&L[d.lang]){sset("lang",d.lang);LANG=d.lang}}}catch{}try{setTheme()}catch{}}
 function onboard(){
   const u=auth.currentUser;
-  view(`<div class="scr ob"><button class="lnk" id="obk" style="margin:4px 0 0;padding:6px 0">← ${t("back")}</button><div class="logo bigl" style="font-size:44px;margin-top:8px">Squad</div><h1 class="logo" style="font-size:30px;margin-top:18px">${t("obT")}</h1><p class="hint">${t("obD")}</p>
+  const gv=sget("gender");
+  view(`<div class="scr ob ob2${sget("theme")?" o2th":""}"><div class="o2z"><div class="o2t"><button class="bk ic" id="obk" aria-label="${t("back")}">${sv('<path d="M15 5l-7 7 7 7"/>')}</button></div>
   <div class="phw" id="phw"></div><input type="file" id="pf" accept="image/*" hidden>
+  <button class="o2mk" id="kmk">${t("avMake")}</button>
+  <h1 class="logo o2ti">${t("obT")}</h1><p class="hint">${t("obD")}</p></div>
   <input id="pn" placeholder="${t("nick")}" value="${esc(u.displayName?.split(" ")[0]||"")}" maxlength="20" autocomplete="off">
-  <button class="ghost kmk" id="kmk">${t("avMake")}</button>${thSw()}<small class="thh">${t("thH")}</small>
-  ${gSw()}
+  <div class="o2c"><div class="o2r"><span>${t("gT")}</span><div class="o2sg"><button type="button" data-g="m" class="${gv==="m"?"on":""}">${t("gM")}</button><button type="button" data-g="f" class="${gv==="f"?"on":""}">${t("gF")}</button></div></div>${thSw()}</div>
+  <small class="o2h">${t("gH")}</small>
   <label class="agec" id="agew"><input type="checkbox" id="age"><span>${t("ageOk")}</span></label>
-  <button class="cta" id="ps">${t("obGo")}</button></div>`);
+  <div class="o2f"><button class="cta" id="ps">${t("obGo")}</button></div></div>`);
+  document.querySelector(".o2c").addEventListener("click",e=>{if(e.target.closest("[data-th]"))setTimeout(()=>document.querySelector(".ob2")?.classList.add("o2th"),0)});
+  const upd=()=>$("#ps").classList.toggle("off",!($("#pn").value.trim()&&sget("gender")&&$("#age").checked));
+  document.querySelectorAll(".o2sg button").forEach(c=>c.onclick=()=>{vib(10);sset("gender",c.dataset.g);document.querySelectorAll(".o2sg button").forEach(x=>x.classList.toggle("on",x===c));upd()});
+  $("#pn").oninput=upd;$("#age").onchange=upd;upd();
   $("#obk").onclick=async()=>{vib(8);sset("guest","");const x=auth.currentUser;if(x&&!x.isAnonymous){try{await signOut(auth)}catch{}try{await NP("FirebaseAuthentication")?.signOut()}catch{}clearBadge()}login()};
   const refresh=()=>{$("#phw").innerHTML=phHtml();const ph=sget("photo");document.querySelectorAll(".ap").forEach(b=>b.classList.toggle("sel",!ph&&+b.dataset.i===myAv()));bindPhoto(refresh)};refresh();
-  document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});$("#kmk").onclick=()=>avEditor(refresh);bindG();
+  document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");refresh()});$("#kmk").onclick=()=>avEditor(refresh);
   $("#ps").onclick=async()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}if(!sget("gender")){vib([50,30,50]);return toast(t("gNeed"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!$("#age")?.checked){vib([50,30,50]);$("#agew")?.classList.add("shake");return toast(t("ageNeed"))}sset("age13","1");sset("nick",n);sset("avatar",myAv());askPush();await saveProfile();route()};
 }
 
