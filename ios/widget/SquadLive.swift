@@ -111,12 +111,13 @@ private struct Ring: View {
 @available(iOS 16.2, *)
 private struct TimeTxt: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
+    var size: CGFloat = 14
     var body: some View {
         let s = ctx.state
         if ctx.isStale || s.start <= Date() {
-            Text(s.live).font(.system(size: 13, weight: .bold)).foregroundColor(blueLt)
+            Text(s.live).font(.system(size: size, weight: .bold)).foregroundColor(blueLt)
         } else {
-            (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: 13, weight: .bold).monospacedDigit()).foregroundColor(blueLt)
+            (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: size, weight: .bold).monospacedDigit()).foregroundColor(blueLt)
         }
     }
 }
@@ -159,16 +160,9 @@ private struct LiveBody: View {
     var body: some View {
         let s = ctx.state
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center, spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(s.title).font(.system(size: 19, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.7)
-                    if !s.place.isEmpty { Text(s.place).font(.system(size: 12.5)).foregroundColor(mute).lineLimit(1) }
-                }
-                Spacer(minLength: 8)
-                Pill(t: s.cat, small: true)
-            }
-            HStack { Spacer(); TimeTxt(ctx: ctx) }.padding(.top, 10)
-            Bar(ctx: ctx, thick: 8).padding(.top, 7)
+            Text(s.title).font(.system(size: 24, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6)
+            TimeTxt(ctx: ctx, size: 15).padding(.top, 3)
+            Bar(ctx: ctx, thick: 8).padding(.top, 12)
             openBtn(s, ctx.attributes.id, chat: chat).padding(.top, 12)
         }
     }
@@ -185,26 +179,26 @@ struct SquadLiveActivity: Widget {
         } dynamicIsland: { ctx in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(ctx.state.title).font(.system(size: 16, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6)
-                        if !ctx.state.place.isEmpty { Text(ctx.state.place).font(.system(size: 12)).foregroundColor(mute).lineLimit(1) }
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(ctx.state.title).font(.system(size: 22, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6)
+                        TimeTxt(ctx: ctx, size: 14)
                     }.padding(.leading, 12)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Pill(t: ctx.state.cat, small: true).padding(.trailing, 12)
+                    Faces(s: ctx.state, ring: .black, size: 34).padding(.trailing, 12)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     IslandBottom(ctx: ctx).padding(.horizontal, 12)
                 }
             } compactLeading: {
-                HStack(spacing: 5) { Dot(); Text(ctx.state.cat).font(.system(size: 13.5, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7) }
-                    .frame(maxWidth: 84, alignment: .leading).padding(.leading, 4)
+                HStack(spacing: 5) { Dot(); Text(ctx.state.cat).font(.system(size: 13, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7) }
+                    .frame(maxWidth: 66, alignment: .leading).padding(.leading, 3)
             } compactTrailing: {
                 Group {
                     if ctx.state.start <= Date() || ctx.isStale { Text(ctx.state.live) }
                     else { Text(ctx.state.start, style: .timer).monospacedDigit() }
                 }
-                .font(.system(size: 14, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 46, alignment: .trailing).padding(.trailing, 4)
+                .font(.system(size: 14, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 40, alignment: .trailing).padding(.trailing, 3)
             } minimal: {
                 Dot()
             }
@@ -218,13 +212,7 @@ private struct IslandBottom: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     var body: some View {
         let s = ctx.state
-        VStack(spacing: 6) {
-            HStack {
-                Faces(s: s, ring: .black, size: 26)
-                Text(s.people).font(.system(size: 13, weight: .bold)).foregroundColor(Color(red: 0.81, green: 0.81, blue: 0.85)).padding(.leading, 8)
-                Spacer()
-                Ring(ctx: ctx)
-            }
+        VStack(spacing: 0) {
             HStack(spacing: 8) {
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {
                     Text(s.open).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
