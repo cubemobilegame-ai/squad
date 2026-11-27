@@ -1,10 +1,10 @@
-# Squad – App Store (iPhone): grafiki i teksty (8 języków)
+# Squad – App Store (iPhone): grafiki i teksty (11 języków)
 
-Każdy folder (pl, en, es, de, fr, it, cs, uk) zawiera:
-- `zrzut-1.jpg … zrzut-6.jpg` – zrzuty ekranu **1290×2796** (iPhone 6,9") → App Store Connect → wersja → *Zrzuty ekranu* → iPhone 6,9". Apple sam przeskaluje je na mniejsze iPhone'y.
+Każdy folder (pl, en, es, de, fr, it, cs, uk, pt, ru, hu) zawiera:
+- `zrzut-1.jpg … zrzut-6.jpg` – zrzuty ekranu **1206×2622** (iPhone 6,3") → App Store Connect → wersja → *Zrzuty ekranu* → iPhone 6.1"/6.3". Apple sam przeskaluje je na inne iPhone'y.
 - `opis.txt` – nazwa (≤30), podtytuł (≤30), tekst promocyjny (≤170), słowa kluczowe (≤100), „Co nowego" i opis (≤4000).
 - `opisy-app-store.csv` – wszystkie teksty w jednym pliku. `ikona-1024.png` – ikona aplikacji 1024×1024 (bez przezroczystości i zaokrągleń; Apple sam ją zaokrągla; aplikacja ma tę samą ikonę wbudowaną).
-Kolejność zrzutów: 1 strona główna · 2 zaproszenie z linku (IN/LATE/OUT) · 3 czat ekipy · 4 kategorie nowego dropa · 5 publiczne dropy w okolicy · 6 lista czatów.
+Kolejność zrzutów (czarne tło, ramki iPhone): 1+2 jedna ciągła grafika (czat ekipy → z czatu na spotkanie) · 3 jeden drop (piłka nożna) · 4 tydzień w kalendarzu · 5+6 jedna ciągła grafika (wszystkie czaty → wolni dziś). Pary 1+2 i 5+6 wgrywaj obok siebie w tej kolejności.
 
 ## Pola, które wpisujesz ręcznie (App Store Connect → Squad)
 - **Język podstawowy:** polski. Pozostałe języki dodajesz w prawym górnym rogu strony wersji.
