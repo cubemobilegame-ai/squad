@@ -26,6 +26,7 @@ h1,h2,h3{margin:0;font-weight:800;text-transform:uppercase}h1,h2{text-transform:
 h3{font-size:13px;letter-spacing:.08em;margin:24px 0 12px;color:rgba(255,255,255,.7)}
 .logo{font-size:48px;letter-spacing:-.012em;margin:12px 0 4px}.logo.bigl{font-size:72px;text-align:center;line-height:1}
 html,body{overscroll-behavior-y:contain}
+.scr.prf.kn2.sq .kshb,.scr.prf.kn2.sq .kh{display:none!important}.scr.prf.kn2.sq .ksb{margin-top:16px!important}
 html:has(.scr.chl),body:has(.scr.chl){background:#000!important}
 .prf .slist,.prf .bcol .bhd,.prf .glass,.prf .kshb{background:rgba(255,255,255,.022)!important;border-color:rgba(255,255,255,.055)!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.mut{color:rgba(255,255,255,.55)}.cen{text-align:center;padding-top:22vh}
 .top{display:flex;justify-content:space-between;align-items:center}.gi{color:var(--acc);display:flex}.gi svg{width:30px;height:30px}
@@ -5945,9 +5946,10 @@ function contactsView(add){
   view(`<div class="scr prf kn2"><div class="pfh"><h1 class="pft">${t("kTitle")}<span id="kcn">&nbsp;</span></h1><button class="bk ic" id="kqt" aria-label="QR">${QRI.replace('width="15" height="15"','width="21" height="21"')}</button></div><p class="hint kh">${t("kH")}</p>
   <label class="ksb">${sv(KS)}<input id="ksr" type="search" placeholder="${t("kSrch")}" autocomplete="off" autocapitalize="off" enterkeyhint="search"></label>
   <button class="kshb" id="kqr"><i>${sv(KQ)}</i><span><b>${t("qcB")}</b><small>${t("qcBD")}</small></span></button><button class="kshb" id="ksh"><i>${sv(KL)}</i><span><b>${t("kLink")}</b><small>${t("kLinkD")}</small></span></button><div id="kl"></div></div>${nav("k")}`);
+  {const si=$("#ksr");si.addEventListener("focus",()=>document.body.classList.add("nsmode"));si.addEventListener("blur",()=>document.body.classList.remove("nsmode"))}
   $("#ksh").onclick=conShare;$("#kqr").onclick=()=>qrContact();$("#kqt").onclick=()=>qrContact();
   const kRow2=(p,act,cls="")=>{const h="@"+String(p.nickname||"?").toLowerCase().replace(/\s+/g,"");return`<div class="kr ${cls}" data-pu="${esc(p.id||"")}" data-q="${esc(String(p.nickname||"").toLowerCase())}"><span class="avw">${avc("mini",avIdx(p))}</span><span class="kt"><b>${esc(p.nickname||"?")}</b><small>${esc(h)}</small></span><span class="ka">${act}</span></div>`};
-  $("#ksr").oninput=()=>{const q=$("#ksr").value.trim().toLowerCase();let any=0;document.querySelectorAll("#kl .kr").forEach(r=>{const m=!q||(r.dataset.q||"").includes(q);r.hidden=!m;if(m)any++});document.querySelectorAll("#kl .sgrp").forEach(g=>{g.hidden=!!q&&![...g.querySelectorAll(".kr")].some(r=>!r.hidden)});const n=$("#kno");if(n)n.hidden=!q||any>0};
+  $("#ksr").oninput=()=>{const q=$("#ksr").value.trim().toLowerCase();let any=0;document.querySelector(".kn2")?.classList.toggle("sq",!!q);document.querySelectorAll("#kl .kr").forEach(r=>{const m=!q||(r.dataset.q||"").includes(q);r.hidden=!m;if(m)any++});document.querySelectorAll("#kl .sgrp").forEach(g=>{g.hidden=!!q&&![...g.querySelectorAll(".kr")].some(r=>!r.hidden)});const n=$("#kno");if(n)n.hidden=!q||any>0};
   const draw=()=>{const el=$("#kl");if(!el)return;
     const inc=S.creqIn.filter(r=>!isBlk(r.from)),out=S.creqOut,C=conList(),known=new Map();
     S.items.forEach((d,c)=>(S.ppl[c]||[]).forEach(p=>known.set(p.id,p)));S.groups.forEach((g,c)=>(S.gm[c]||[]).forEach(p=>known.set(p.id,p)));
