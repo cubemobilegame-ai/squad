@@ -78,25 +78,30 @@ private struct Pill: View {
 }
 
 @available(iOS 16.2, *)
-private struct Countdown: View {
+private struct Bar: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    var thick: CGFloat = 8
+    var body: some View {
+        let s = ctx.state
+        if s.start > Date() && !ctx.isStale {
+            ProgressView(timerInterval: s.from...s.start, countsDown: true, label: { EmptyView() }, currentValueLabel: { EmptyView() })
+                .progressViewStyle(.linear).tint(blue)
+                .scaleEffect(x: 1, y: thick / 4, anchor: .center).frame(height: thick).clipShape(Capsule())
+        } else {
+            Capsule().fill(blue).frame(height: thick)
+        }
+    }
+}
+
+@available(iOS 16.2, *)
+private struct TimeTxt: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     var body: some View {
         let s = ctx.state
-        VStack(spacing: 7) {
-            HStack {
-                Spacer()
-                if ctx.isStale || s.start <= Date() {
-                    Text(s.live).font(.system(size: 12.5, weight: .bold)).foregroundColor(blueLt)
-                } else {
-                    (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: 12.5, weight: .bold).monospacedDigit()).foregroundColor(blueLt)
-                }
-            }
-            if s.start > Date() {
-                ProgressView(timerInterval: s.from...s.start, countsDown: true, label: { EmptyView() }, currentValueLabel: { EmptyView() })
-                    .progressViewStyle(.linear).tint(blue)
-            } else {
-                Capsule().fill(blue).frame(height: 4)
-            }
+        if ctx.isStale || s.start <= Date() {
+            Text(s.live).font(.system(size: 13, weight: .bold)).foregroundColor(blueLt)
+        } else {
+            (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: 13, weight: .bold).monospacedDigit()).foregroundColor(blueLt)
         }
     }
 }
@@ -104,14 +109,14 @@ private struct Countdown: View {
 private func openBtn(_ s: SquadLiveAttributes.ContentState, _ id: String, chat: Bool) -> some View {
     HStack(spacing: 10) {
         Link(destination: URL(string: laSite + "/d/" + id)!) {
-            Text(s.open).font(.system(size: 16, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
-                .frame(maxWidth: .infinity).frame(height: 46).background(Capsule().fill(Color.white))
+            Text(s.open).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                .frame(maxWidth: .infinity).frame(height: 36).background(Capsule().fill(Color.white))
         }
         if chat {
             Link(destination: URL(string: laSite + "/c/" + id)!) {
                 // ta sama ikona czatu co w dolnym menu aplikacji
                 ChatIcon().stroke(Color.white, style: StrokeStyle(lineWidth: 1.9 * 24.0 / 24.0, lineCap: .round, lineJoin: .round))
-                    .frame(width: 24, height: 24).frame(width: 46, height: 46).background(Circle().fill(Color.white.opacity(0.12)))
+                    .frame(width: 21, height: 21).frame(width: 36, height: 36).background(Circle().fill(Color.white.opacity(0.12)))
             }
         }
     }
@@ -139,21 +144,22 @@ private struct LiveBody: View {
     var body: some View {
         let s = ctx.state
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center, spacing: 14) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(s.title).font(.system(size: 21, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.7)
-                    if !s.place.isEmpty { Text(s.place).font(.system(size: 13.5)).foregroundColor(mute).lineLimit(1) }
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(s.title).font(.system(size: 19, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.7)
+                    if !s.place.isEmpty { Text(s.place).font(.system(size: 12.5)).foregroundColor(mute).lineLimit(1) }
                 }
                 Spacer(minLength: 8)
-                Pill(t: s.cat)
+                Pill(t: s.cat, small: true)
             }
-            HStack {
-                Faces(s: s, ring: ring)
-                Spacer()
-                Text(s.people).font(.system(size: 14, weight: .bold)).foregroundColor(Color(red: 0.81, green: 0.81, blue: 0.85))
-            }.padding(.top, 16)
-            Countdown(ctx: ctx).padding(.top, 14)
-            openBtn(s, ctx.attributes.id, chat: chat).padding(.top, 14)
+            HStack(spacing: 8) {
+                Faces(s: s, ring: ring, size: 28)
+                Text(s.people).font(.system(size: 13, weight: .bold)).foregroundColor(Color(red: 0.81, green: 0.81, blue: 0.85))
+                Spacer(minLength: 6)
+                TimeTxt(ctx: ctx)
+            }.padding(.top, 8)
+            Bar(ctx: ctx, thick: 8).padding(.top, 9)
+            openBtn(s, ctx.attributes.id, chat: chat).padding(.top, 9)
         }
     }
 }
@@ -163,7 +169,7 @@ struct SquadLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: SquadLiveAttributes.self) { ctx in
             LiveBody(ctx: ctx, ring: Color(red: 0.10, green: 0.10, blue: 0.13), chat: false)
-                .padding(20)
+                .padding(.horizontal, 20).padding(.vertical, 14)
                 .activityBackgroundTint(Color(red: 0.10, green: 0.10, blue: 0.13))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { ctx in
@@ -206,16 +212,9 @@ private struct IslandBottom: View {
                 Faces(s: s, ring: .black, size: 30)
                 Text(s.people).font(.system(size: 13, weight: .bold)).foregroundColor(Color(red: 0.81, green: 0.81, blue: 0.85)).padding(.leading, 8)
                 Spacer()
-                if ctx.isStale || s.start <= Date() {
-                    Text(s.live).font(.system(size: 12.5, weight: .bold)).foregroundColor(blueLt)
-                } else {
-                    (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: 12.5, weight: .bold).monospacedDigit()).foregroundColor(blueLt)
-                }
+                TimeTxt(ctx: ctx)
             }
-            if s.start > Date() {
-                ProgressView(timerInterval: s.from...s.start, countsDown: true, label: { EmptyView() }, currentValueLabel: { EmptyView() })
-                    .progressViewStyle(.linear).tint(blue)
-            }
+            Bar(ctx: ctx, thick: 8)
             HStack(spacing: 8) {
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {
                     Text(s.open).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
