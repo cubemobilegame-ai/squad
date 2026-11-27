@@ -1,0 +1,67 @@
+CO NOWEGO W AKTUALIZACJI (do wklejenia w Google Play Console → Informacje o wersji, i App Store Connect → Co nowego)
+Google Play: limit 500 znaków na język. App Store: limit 4000.
+
+=== pl (279 zn.) ===
+Co nowego:
+• Nowa ikona aplikacji ze szklanym plusem.
+• Widżety na ekran główny (mały i średni): najbliższy drop i przycisk „+” do szybkiego dodania dropa.
+• Nowa animacja startowa i nowy ekran logowania.
+• Plus zamiast gwiazdki w nagłówku.
+• Drobne poprawki i szybsze działanie.
+
+=== en (270 zn.) ===
+What’s new:
+• New app icon with a glass plus.
+• Home screen widgets (small and medium): your next drop and a “+” button to add a drop fast.
+• New launch animation and a new sign-in screen.
+• A plus instead of the star in the header.
+• Small fixes and better performance.
+
+=== es (326 zn.) ===
+Novedades:
+• Nuevo icono de la app con un plus de cristal.
+• Widgets para la pantalla de inicio (pequeño y mediano): tu próximo drop y un botón «+» para crear un drop al instante.
+• Nueva animación de inicio y nueva pantalla de acceso.
+• Un plus en lugar de la estrella en la cabecera.
+• Pequeños arreglos y mejor rendimiento.
+
+=== de (300 zn.) ===
+Neu:
+• Neues App-Symbol mit gläsernem Plus.
+• Widgets für den Home-Bildschirm (klein und mittel): dein nächster Drop und ein „+“-Button zum schnellen Erstellen.
+• Neue Startanimation und neuer Anmeldebildschirm.
+• Ein Plus statt des Sterns in der Kopfzeile.
+• Kleine Korrekturen und bessere Leistung.
+
+=== fr (336 zn.) ===
+Nouveautés :
+• Nouvelle icône de l’app avec un plus en verre.
+• Widgets pour l’écran d’accueil (petit et moyen) : ton prochain drop et un bouton « + » pour en créer un vite.
+• Nouvelle animation de démarrage et nouvel écran de connexion.
+• Un plus à la place de l’étoile dans l’en-tête.
+• Petites corrections et meilleures performances.
+
+=== it (320 zn.) ===
+Novità:
+• Nuova icona dell’app con un plus di vetro.
+• Widget per la schermata Home (piccolo e medio): il tuo prossimo drop e un pulsante «+» per crearne uno al volo.
+• Nuova animazione di avvio e nuova schermata di accesso.
+• Un plus al posto della stella nell’intestazione.
+• Piccole correzioni e prestazioni migliori.
+
+=== cs (266 zn.) ===
+Novinky:
+• Nová ikona aplikace se skleněným plusem.
+• Widgety na plochu (malý a střední): nejbližší drop a tlačítko „+“ pro rychlé přidání dropu.
+• Nová úvodní animace a nová přihlašovací obrazovka.
+• Plus místo hvězdičky v záhlaví.
+• Drobné opravy a rychlejší chod.
+
+=== uk (285 zn.) ===
+Що нового:
+• Нова іконка застосунку зі скляним плюсом.
+• Віджети для головного екрана (малий і середній): найближчий дроп і кнопка «+» для швидкого створення дропу.
+• Нова стартова анімація та новий екран входу.
+• Плюс замість зірочки в заголовку.
+• Дрібні виправлення й швидша робота.
+
