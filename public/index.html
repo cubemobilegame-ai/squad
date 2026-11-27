@@ -5652,9 +5652,11 @@ const widgetSync=()=>{if(!NATAPP)return;clearTimeout(wgT);wgT=setTimeout(()=>{tr
 let liveLast="";
 const liveSync=async(W,a,now)=>{try{if(!IOSAPP||!W||!W.live)return;const x=sget("n_isl")==="0"?null:a.find(q=>q.ts-2*36e5<=now&&q.ts+30*6e4>now);
   if(!x){if(liveLast!==""){liveLast="";W.live({json:""}).catch(()=>{})}return}
-  const d=S.items.get(x.id),ins=(S.ppl[x.id]||[]).filter(p=>p.status==="in"),sh=ins.slice(0,3);
-  const av=await Promise.all(sh.map(async p=>{try{return typeof p.ph==="string"&&p.ph?p.ph:await genAv(avIdx(p),true)}catch{return""}}));
-  const o={id:x.id,t:x.t,pl:x.pl,k:d?catLab(d):"",ts:x.ts,av:av.filter(u=>u&&u!==BLANK),pp:ins.length+" IN",more:Math.max(0,ins.length-3),pre:t("islPre"),open:t("islOpen"),lv:t("islLive")};
+  const d=S.items.get(x.id),uid=me(),ins=(S.ppl[x.id]||[]).filter(p=>p.status==="in"||p.status==="late"),mine=ins.find(p=>p.id===uid),others=ins.filter(p=>p.id!==uid),tot=others.length+1,sh=others.slice(0,2);
+  const myPh=sget("photo");
+  const faceOf=async p=>{try{return typeof p.ph==="string"&&p.ph?p.ph:await genAv(avIdx(p),true)}catch{return""}};
+  const av=[await (async()=>{try{return myPh||await genAv(myAv(),true)}catch{return""}})(),...await Promise.all(sh.map(faceOf))];
+  const o={id:x.id,t:x.t,pl:x.pl,k:d?catLab(d):"",ts:x.ts,av:av.filter(u=>u&&u!==BLANK),pp:tot+" IN",more:Math.max(0,tot-3),pre:t("islPre"),open:t("islOpen"),lv:t("islLive")};
   const j=JSON.stringify(o);if(j===liveLast)return;liveLast=j;W.live({json:j}).catch(()=>{})}catch{}};
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)try{widgetSync()}catch{}});
 setInterval(()=>{if(!document.hidden)try{widgetSync()}catch{}},60000);
