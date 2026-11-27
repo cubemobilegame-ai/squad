@@ -89,6 +89,7 @@ public class SquadWidgetPlugin: CAPPlugin, CAPBridgedPlugin {
         let json = call.getString("json") ?? ""
         Task {
             let cur = Activity<SquadLiveAttributes>.activities
+            if !json.isEmpty && !ActivityAuthorizationInfo().areActivitiesEnabled { call.resolve(["err": "iOS wyłączył aktywności na żywo"]); return }
             guard !json.isEmpty, ActivityAuthorizationInfo().areActivitiesEnabled,
                   let o = (try? JSONSerialization.jsonObject(with: Data(json.utf8))) as? [String: Any],
                   let id = o["id"] as? String, let ts = o["ts"] as? Double else {
@@ -108,7 +109,8 @@ public class SquadWidgetPlugin: CAPPlugin, CAPBridgedPlugin {
             if let a = cur.first(where: { $0.attributes.id == id }) {
                 await a.update(content)
             } else {
-                _ = try? Activity.request(attributes: SquadLiveAttributes(id: id), content: content, pushType: nil)
+                do { _ = try Activity.request(attributes: SquadLiveAttributes(id: id), content: content, pushType: nil) }
+                catch { call.resolve(["err": String(describing: error).prefix(120).description]); return }
             }
             call.resolve()
         }
