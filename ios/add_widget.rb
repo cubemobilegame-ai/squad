@@ -5,15 +5,16 @@ repo, build = ARGV[0], ARGV[1]
 team = ENV['TEAM_ID']; bid = ENV['BUNDLE_ID']
 a = File.join(build, 'ios', 'App')
 dir = File.join(a, 'SquadWidget'); FileUtils.mkdir_p(dir)
-%w[SquadWidget.swift Info.plist SquadWidget.entitlements].each { |f| FileUtils.cp(File.join(repo, 'ios', 'widget', f), File.join(dir, f)) }
+%w[SquadWidget.swift SquadLive.swift Info.plist SquadWidget.entitlements].each { |f| FileUtils.cp(File.join(repo, 'ios', 'widget', f), File.join(dir, f)) }
 
 proj = Xcodeproj::Project.open(File.join(a, 'App.xcodeproj'))
 app = proj.targets.find { |t| t.name == 'App' } or abort 'brak targetu App'
-wt = proj.new_target(:app_extension, 'SquadWidget', :ios, '15.0')
+wt = proj.new_target(:app_extension, 'SquadWidget', :ios, '16.2')
 grp = proj.main_group.new_group('SquadWidget', 'SquadWidget')
 src = grp.new_file('SquadWidget.swift')
+src2 = grp.new_file('SquadLive.swift')
 grp.new_file('Info.plist'); grp.new_file('SquadWidget.entitlements')
-wt.add_file_references([src])
+wt.add_file_references([src, src2])
 wt.build_configurations.each do |c|
   s = c.build_settings
   s['PRODUCT_BUNDLE_IDENTIFIER'] = "#{bid}.widget"
@@ -21,7 +22,7 @@ wt.build_configurations.each do |c|
   s['INFOPLIST_FILE'] = 'SquadWidget/Info.plist'
   s['CODE_SIGN_ENTITLEMENTS'] = 'SquadWidget/SquadWidget.entitlements'
   s['SWIFT_VERSION'] = '5.0'
-  s['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+  s['IPHONEOS_DEPLOYMENT_TARGET'] = '16.2'
   s['TARGETED_DEVICE_FAMILY'] = '1'
   s['MARKETING_VERSION'] = '1.0.0'
   s['CURRENT_PROJECT_VERSION'] = '1'

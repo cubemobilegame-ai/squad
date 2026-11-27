@@ -323,5 +323,8 @@ struct SquadWidget: Widget {
 
 @main
 struct SquadWidgetBundle: WidgetBundle {
-    var body: some Widget { SquadWidget() }
+    var body: some Widget {
+        SquadWidget()
+        if #available(iOS 16.2, *) { SquadLiveActivity() }
+    }
 }

@@ -20,6 +20,7 @@ d = plistlib.load(open(pp, "rb"))
 d["CFBundleDisplayName"] = "Squad"
 d["ITSAppUsesNonExemptEncryption"] = False
 d["UIBackgroundModes"] = ["remote-notification"]
+d["NSSupportsLiveActivities"] = True
 d["NSCameraUsageDescription"] = "Squad potrzebuje aparatu, żebyś mógł dodać zdjęcie do albumu wypadu."
 d["NSPhotoLibraryUsageDescription"] = "Squad potrzebuje dostępu do zdjęć, żebyś mógł dodać zdjęcie do albumu lub awatara."
 d["NSPhotoLibraryAddUsageDescription"] = "Squad zapisuje kolaże z wypadów w Twojej galerii."
