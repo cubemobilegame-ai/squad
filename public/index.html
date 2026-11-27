@@ -1789,14 +1789,14 @@ html.noxmas .sfk,html.noxmas .pmhat,html.noxmas canvas.frost,html.noxmas canvas.
 .dtm{display:block!important}#n2t .n2b{margin:0!important;border-radius:26px}
 .dtm[hidden]{display:none!important}
 /* nowy wyglad glownej: niebieskie pole + karty dropow */
-.scr.hm .zb{margin-left:-3px!important;margin-right:-3px!important;background:linear-gradient(180deg,#2f55d6,#2748b8);border-radius:30px;padding:20px 16px 16px;margin:14px 0 14px;color:#fff}
+.scr.hm .zb{margin-left:-3px!important;margin-right:-3px!important;margin-bottom:0!important;background:linear-gradient(180deg,#2f55d6,#2748b8);border-radius:30px;padding:20px 16px 16px;margin:14px 0 14px;color:#fff}
 .scr.hm .zb .htl{margin:0 0 14px 4px;width:calc(100% - 4px);padding:0;font-size:28px;line-height:1.08}.scr.hm .zb .hfw{color:rgba(255,255,255,.72)}
 .scr.hm .zb .cal{margin:0 -6px;padding:0 6px;gap:2px;justify-content:flex-start}.scr.hm .zb .cal[hidden]{display:none}
 .scr.hm .zb .cal .cd{flex:0 0 46px;background:none!important;border:0!important;color:#fff;border-radius:23px;padding:6px 0 5px}
 .scr.hm .zb .cal .cd small{color:rgba(255,255,255,.72);opacity:1;font-size:11px}.scr.hm .zb .cal .cd b{font-size:16px;margin:4px 0 4px}
 .scr.hm .zb .cal .cd .cdt i{background:#fff}.scr.hm .zb .cal .cd.on{background:#fff!important}.scr.hm .zb .cal .cd.on small{color:#8a8a90}.scr.hm .zb .cal .cd.on b{color:#111}.scr.hm .zb .cal .cd.on .cdt i{background:#2f55d6}
 .scr.pmx .zb{display:none!important}
-.dzs{margin:6px 3px 12px;color:rgba(255,255,255,.42);font:700 12px Brico,BricoCyr,system-ui}.dzs span{display:block;margin:0 0 8px 4px}.dzs i{display:block;height:1px;background:rgba(255,255,255,.08)}.dz{margin-left:-3px!important;margin-right:-3px!important;position:relative;background:#17171c;border-radius:26px;padding:14px 14px 12px;margin:0 0 10px;color:#fff;cursor:pointer;animation:in .3s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.dzs{margin:0 3px;padding:15px 4px;color:rgba(255,255,255,.42);font:700 12px/12px Brico,BricoCyr,system-ui}.dz{margin-left:-3px!important;margin-right:-3px!important;position:relative;background:#17171c;border-radius:26px;padding:14px 14px 12px;margin:0 0 10px;color:#fff;cursor:pointer;animation:in .3s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
 .dz.f{background:#cfe0ff;color:#111;box-shadow:none}
 .dz .dzt{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:34px}
 .dz .dzd{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;border-radius:99px;padding:7px 12px 7px 10px;background:rgba(255,255,255,.1);color:#fff}.dz.f .dzd{background:rgba(0,0,0,.1);color:#111}
@@ -3202,7 +3202,7 @@ function home(){
     if(tab==="pub"){pubTab($("#list"),draw);tick();return}
     window.__pubSk=1;
     const GI=tab==="inv"?S.ginv.map(i=>`<div class="ginv">${avc("mini",avIdx({id:i.from,av:i.av,ph:i.ph}))}<div class="gi"><small>${t("kGInv",esc(i.nickname||"?"))}</small><b>👥 ${esc(clean(i.title||""))}</b></div><button class="mbtn" data-gv="${esc(i.code)}">${t("kSee")}</button><button class="kx" data-gx="${esc(i.id)}">✕</button></div>`).join(""):"";
-    $("#list").innerHTML=GI+((homeDay&&tab==="mine"?all.filter(d=>["host","in","late"].includes(r(d))&&dOf(d)===homeDay):G[tab]).length?`<div class="dzs"><span>${t("dzAll")}</span><i></i></div>`:"")+(homeDay&&tab==="mine"?all.filter(d=>["host","in","late"].includes(r(d))&&dOf(d)===homeDay):G[tab]).map((d,i)=>dCard(d,S.ppl[d.id]||[],r(d),{first:i===0&&tab==="mine"&&!homeDay})).join("")||(tab==="mine"?(fl!=="all"?`<p class="mut" style="margin:6px 8px">${t("hEmp")}</p>`:`<div class="how">${[1,2,3].map(i=>`<div><b>${i}</b><span>${t("how"+i)}</span></div>`).join("")}</div>`):(tab==="inv"?`<div class="emp">${t("eInv")}</div>`:`<p class="mut">${t("eOut")}</p>`));{const em=!GI&&!G[tab].length;if(tab==="inv")$("#hint").hidden=em}
+    $("#list").innerHTML=GI+(tab==="mine"&&(homeDay?all.filter(d=>["host","in","late"].includes(r(d))&&dOf(d)===homeDay):G[tab]).length?`<div class="dzs">${fl==="all"?t("dzAll"):HFT(fl)+" "+t(HFK[fl])}</div>`:"")+(homeDay&&tab==="mine"?all.filter(d=>["host","in","late"].includes(r(d))&&dOf(d)===homeDay):G[tab]).map((d,i)=>dCard(d,S.ppl[d.id]||[],r(d),{first:i===0&&tab==="mine"&&!homeDay})).join("")||(tab==="mine"?(fl!=="all"?`<p class="mut" style="margin:6px 8px">${t("hEmp")}</p>`:`<div class="how">${[1,2,3].map(i=>`<div><b>${i}</b><span>${t("how"+i)}</span></div>`).join("")}</div>`):(tab==="inv"?`<div class="emp">${t("eInv")}</div>`:`<p class="mut">${t("eOut")}</p>`));{const em=!GI&&!G[tab].length;if(tab==="inv")$("#hint").hidden=em}
     if(homeDay&&tab==="mine"&&!all.some(d=>["host","in","late"].includes(r(d))&&dOf(d)===homeDay))$("#list").innerHTML=`<p class="mut" style="margin:6px 8px">${t("hDayEmp")}</p>`;
     document.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{vib(8);go("/g/"+b.dataset.gv)});document.querySelectorAll("[data-gx]").forEach(b=>b.onclick=()=>{vib(10);deleteDoc(doc(db,"users",me(),"invites",b.dataset.gx)).catch(()=>{});S.ginv=S.ginv.filter(i=>i.id!==b.dataset.gx);draw()});
     tick()};
