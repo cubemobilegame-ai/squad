@@ -50,6 +50,10 @@ private struct CompactMin: View {
             } else {
                 let mins = max(0, Int(state.start.timeIntervalSince(now) / 60))
                 let digits = CGFloat(String(mins).count)
+                if mins >= 180 {
+                    Text(state.start, style: .time).monospacedDigit().lineLimit(1).fixedSize()
+                        .font(.system(size: 15, weight: .heavy))
+                } else {
                 HStack(spacing: 3) {
                     Text(timerInterval: now...state.start, pauseTime: nil, countsDown: true, showsHours: false)
                         .monospacedDigit()
@@ -60,6 +64,7 @@ private struct CompactMin: View {
                     Text("min").lineLimit(1).fixedSize()
                 }
                 .font(.system(size: 15, weight: .heavy))
+                }
             }
         }
         .foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
@@ -267,6 +272,10 @@ private struct PeriTime: View {
         } else {
             let mins = max(0, Int(s.start.timeIntervalSince(now) / 60))
             let digits = CGFloat(String(mins).count)
+            if mins >= 180 {
+                (Text("Drop " + s.pre + " ") + Text(s.start, style: .relative))
+                    .font(.system(size: size, weight: .medium)).foregroundColor(peri).lineLimit(1).minimumScaleFactor(0.7)
+            } else {
             HStack(spacing: 4) {
                 Text("Drop " + s.pre).lineLimit(1).fixedSize()
                 Text(timerInterval: now...s.start, pauseTime: nil, countsDown: true, showsHours: false)
@@ -275,6 +284,7 @@ private struct PeriTime: View {
                 Text("min").lineLimit(1).fixedSize()
             }
             .font(.system(size: size, weight: .medium)).foregroundColor(peri)
+            }
         }
     }
 }
@@ -299,9 +309,9 @@ private struct TimelineBar: View {
     var knob: CGFloat = 28
     var body: some View {
         let s = ctx.state
-        let t0 = s.from.timeIntervalSince1970
-        let t1 = max(s.seg.last ?? 0, s.start.timeIntervalSince1970 + 7200)
-        let span = max(t1 - t0, 1)
+        // oś całego dnia: od północy do północy (w czasie urządzenia)
+        let t0 = Calendar.current.startOfDay(for: s.start).timeIntervalSince1970
+        let span: Double = 86400
         let nowF = min(max((Date().timeIntervalSince1970 - t0) / span, 0), 1)
         GeometryReader { g in
             let w = g.size.width
@@ -309,10 +319,10 @@ private struct TimelineBar: View {
                 Capsule().fill(slate).frame(height: thick)
                 Capsule().fill(sky).frame(width: max(thick, w * nowF), height: thick)
                 ForEach(0..<(s.seg.count / 2), id: \.self) { i in
-                    let a = (s.seg[2 * i] - t0) / span
-                    let b = (s.seg[2 * i + 1] - t0) / span
+                    let a = min(max((s.seg[2 * i] - t0) / span, 0), 1)
+                    let b = min(max((s.seg[2 * i + 1] - t0) / span, 0), 1)
                     Capsule().fill(segColors[i % segColors.count])
-                        .frame(width: max(thick, w * (b - a)), height: thick).offset(x: w * a)
+                        .frame(width: max(thick, w * (b - a)), height: thick).offset(x: min(w * a, w - max(thick, w * (b - a))))
                 }
                 HostDot(s: s, idx: 0, size: knob).overlay(Circle().stroke(Color.white, lineWidth: 2.5))
                     .offset(x: min(max(w * nowF - knob / 2, 0), w - knob))

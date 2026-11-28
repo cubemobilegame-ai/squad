@@ -5651,7 +5651,7 @@ let wgT=0,wgLast="";
 const widgetSync=()=>{if(!NATAPP)return;clearTimeout(wgT);wgT=setTimeout(()=>{try{const W=NP("SquadWidget");if(!W)return;const u=auth.currentUser,now=Date.now();let a=[];
   if(u&&!u.isAnonymous)a=[...S.items.values()].filter(d=>d&&d.startsAt&&d.startsAt.toMillis&&d.startsAt.toMillis()+2*36e5>now).map(d=>({d,r:roleOf(d)})).filter(x=>x.r==="host"||x.r==="in"||x.r==="late").sort((x,y)=>x.d.startsAt.toMillis()-y.d.startsAt.toMillis()).slice(0,6).map(({d,r})=>{const[c1,c2]=thm(d),pk=pxKey(d),pg=FG[pk]||(HG[d.category==="pizza"?"food":d.category]||[])[0],[p1,p2]=pg?pg.split(","):[c1,c2],n=(S.ppl[d.id]||[]).filter(p=>p.status==="in").length;return{p1,p2,n,id:d.id,t:clean(d.title||""),ts:d.startsAt.toMillis(),pl:plc(d)||"",e:WEM[d.category]||"✨",k:E3[d.category]||"other",c1,c2,r}});
   liveSync(W,a,now);const j=JSON.stringify(a);if(j===wgLast)return;wgLast=j;W.update({json:j}).catch(()=>{})}catch{}},800)};
-/* „Drop na wyspie” (iOS Live Activity): najbliższy drop, na który jestem IN/host/late, od 2 h przed startem do 30 min po */
+/* „Drop na wyspie” (iOS Live Activity): najbliższy dzisiejszy drop, na który jestem IN/host/late; oś pokazuje wszystkie dzisiejsze dropy */
 let liveLast="",wkLast="";
 /* „Tydzień” (iOS Live Activity): wykres moich dropów na 7 dni; działa tylko gdy nie trwa „Drop na wyspie” */
 const weekSync=(W,now,off)=>{try{if(!W.week)return;const u=auth.currentUser;
@@ -5665,14 +5665,14 @@ const weekSync=(W,now,off)=>{try{if(!W.week)return;const u=auth.currentUser;
   const lb=days.map((_,i)=>i===0?cap(td):cap(wd(d0.getTime()+i*DAY+36e5*12)));
   const o={id:"week",days,lb,hd:t("wkT"),pill:days[0]>0?days[0]+" "+td:cap(wd(nx.ts)),n:days[0],nt:nx.t,ni:(i0===0?td:wd(nx.ts))+" "+hm(nx.ts),ts:nx.ts,pre:t("islPre"),open:t("islOpen"),nid:nx.id};
   const j=JSON.stringify(o);if(j===wkLast)return;wkLast=j;W.week({json:j}).catch(()=>{})}catch{}};
-const liveSync=async(W,a,now)=>{try{if(!IOSAPP||!W||!W.live)return;const x=sget("n_isl")==="0"?null:a.find(q=>q.ts-2*36e5<=now&&q.ts+30*6e4>now);
-  weekSync(W,now,!!x);
+const liveSync=async(W,a,now)=>{try{if(!IOSAPP||!W||!W.live)return;const dk=new Date(now).toDateString(),x=sget("n_isl")==="0"?null:a.find(q=>q.ts+30*6e4>now&&new Date(q.ts).toDateString()===dk);
+  if(W.week&&!window.__wkEnd){window.__wkEnd=1;W.week({json:""}).catch(()=>{})}
   if(!x){if(liveLast!==""){liveLast="";W.live({json:""}).catch(()=>{})}return}
   const d=S.items.get(x.id),uid=me(),ins=(S.ppl[x.id]||[]).filter(p=>p.status==="in"||p.status==="late"),mine=ins.find(p=>p.id===uid),others=ins.filter(p=>p.id!==uid),tot=others.length+1,hp=others.find(p=>p.id===d?.hostId),sh=(hp?[hp,...others.filter(p=>p!==hp)]:others).slice(0,2);
   const myPh=sget("photo");
   const faceOf=async p=>{try{return typeof p.ph==="string"&&p.ph?p.ph:await genAv(avIdx(p),true)}catch{return""}};
   const av=[await (async()=>{try{return myPh||await genAv(myAv(),true)}catch{return""}})(),...await Promise.all(sh.map(faceOf))];
-  const o={id:x.id,t:x.t,pl:x.pl,k:d?catLab(d):"",ts:x.ts,av:av.filter(u=>u&&u!==BLANK),pp:tot+" IN",more:Math.max(0,tot-3),pre:t("islPre"),open:t("islOpen"),lv:t("islLive"),hi:d?.hostId===uid?0:1,seg:a.filter(q=>q.ts>=x.ts&&q.ts<=x.ts+10*36e5).slice(0,4).flatMap(q=>[q.ts/1000,q.ts/1000+7200])};
+  const o={id:x.id,t:x.t,pl:x.pl,k:d?catLab(d):"",ts:x.ts,av:av.filter(u=>u&&u!==BLANK),pp:tot+" IN",more:Math.max(0,tot-3),pre:t("islPre"),open:t("islOpen"),lv:t("islLive"),hi:d?.hostId===uid?0:1,seg:a.filter(q=>q.ts>=x.ts&&new Date(q.ts).toDateString()===dk).slice(0,4).flatMap(q=>[q.ts/1000,q.ts/1000+7200])};
   const j=JSON.stringify(o);if(j===liveLast)return;liveLast=j;W.live({json:j}).then(r=>{if(r&&r.err)toast("Wyspa: "+r.err)}).catch(e=>toast("Wyspa: "+String((e&&e.message)||e).slice(0,100)))}catch(e){toast("Wyspa: "+String((e&&e.message)||e).slice(0,100))}};
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)try{liveLast="";wkLast="";widgetSync()}catch{}});
 setInterval(()=>{if(!document.hidden)try{widgetSync()}catch{}},60000);
