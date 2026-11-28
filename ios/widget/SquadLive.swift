@@ -48,9 +48,11 @@ private struct CompactMin: View {
                 HStack(spacing: 3) {
                     Text(timerInterval: now...state.start, pauseTime: nil, countsDown: true, showsHours: false)
                         .monospacedDigit()
+                        .lineLimit(1)
+                        .fixedSize()
                         .frame(width: digits * 9.4, alignment: .leading)
                         .clipped()
-                    Text("min")
+                    Text("min").lineLimit(1).fixedSize()
                 }
                 .font(.system(size: 15, weight: .heavy))
             }
