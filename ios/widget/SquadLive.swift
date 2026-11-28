@@ -233,7 +233,8 @@ struct SquadLiveActivity: Widget {
             } compactLeading: {
                 HStack(spacing: 4) {
                     Dot().overlay(PulseHalo())
-                    Text(ctx.state.title).font(.system(size: 15.5, weight: .black)).lineLimit(1).minimumScaleFactor(0.8)
+                    Text(ctx.state.title).font(.system(size: 12.5, weight: .black)).lineLimit(2).minimumScaleFactor(0.8)
+                        .multilineTextAlignment(.leading).lineSpacing(-1)
                 }
                 .frame(width: 72, alignment: .leading)
             } compactTrailing: {
