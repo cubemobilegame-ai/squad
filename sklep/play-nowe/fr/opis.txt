@@ -1,0 +1,45 @@
+TITLE:
+Squad : sorties entre amis
+
+SHORT DESCRIPTION:
+Organise des sorties entre amis : un lien, chat de groupe, réponses IN/LATE/OUT.
+
+FULL DESCRIPTION:
+Squad est une application pour organiser des sorties entre amis. Tu crées une invitation (un « drop ») avec un lieu et une heure, tu envoies le lien et tu vois tout de suite qui vient. Fini les détails à régler dans plusieurs discussions à la fois.
+
+Comment ça marche
+• Crée un drop : ce que vous faites, où et quand.
+• Envoie le lien par messagerie ou SMS, ou montre un code QR.
+• Tes amis répondent d'un clic : IN (je viens), LATE (j'arrive en retard) ou OUT (je ne peux pas). Pas besoin d'installer l'application pour répondre.
+• Tu vois la liste des participants en direct, qui sera en retard et de combien de minutes.
+
+Un organisateur pour chaque occasion
+Soirée à la maison, sortie, boîte de nuit, pizza après l'entraînement, match, cinéma, jeux vidéo, balade, voyage, anniversaire, 18 ans ou anniversaire de couple. Répète une sortie chaque semaine, toutes les deux semaines ou chaque mois, ou fais-en une surprise dont le lieu est dévoilé une heure avant.
+
+Chat de groupe pour ta bande
+Chaque drop a son propre chat de groupe. Lance un sondage « on va où ? », ajoute des réactions et vois qui a lu un message. Les chats sont uniquement de groupe, sans messages privés.
+
+Groupes permanents et contacts
+Crée un groupe avec un chat qui ne disparaît pas : une classe, une équipe, une bande d'amis. Ajoute des personnes à tes contacts, invite-les d'un geste et envoie des drops directement à tes groupes.
+
+Drops publics près de toi
+Parcours les sorties ouvertes dans un rayon de 20 km, en liste ou sur une carte. Rejoins-en une ou crée la tienne avec un nombre de places limité. Les drops publics sont réservés aux personnes de 16 ans et plus.
+
+Visuels à partager
+Envoie ton invitation sous forme de visuel prêt à l'emploi : pour les stories Instagram, WhatsApp, Messenger ou par SMS. Choisis parmi plusieurs styles et enregistre l'image dans ta galerie.
+
+Avatars 3D et badges
+Choisis ton avatar 3D et gagne des badges pour ton activité : sorties organisées, présence, ponctualité et plus encore.
+
+Rappels, agenda et widgets
+Tu reçois une notification quand quelqu'un répond ou écrit, et toute la bande un rappel 30 minutes avant le début. Ajoute la sortie à ton agenda d'un geste. Sur l'écran d'accueil, place un widget en trois tailles avec ton prochain drop et un compte à rebours, plus des boutons rapides Nouveau drop et Chats.
+
+Album et collage
+Quand un drop commence, un album partagé s'ouvre. Toutes les photos de la sortie sont au même endroit et forment un collage prêt à partager.
+
+Sécurité et confidentialité
+Tu peux signaler ou bloquer un utilisateur en appuyant longuement sur un message. Un filtre de gros mots est actif et les liens des drops expirent 24 heures après le début de la sortie. Tu peux supprimer ton compte à tout moment dans les réglages. L'application est destinée aux personnes de 13 ans et plus (de 13 à 16 ans avec l'accord d'un parent ou tuteur).
+
+Disponible en polonais, hongrois, portugais, russe, anglais, espagnol, allemand, français, italien, tchèque et ukrainien. Gratuite.
+
+Rassemble ta bande et fixez un plan en quelques secondes.

@@ -1,0 +1,45 @@
+TITLE:
+Squad: quedadas con amigos
+
+SHORT DESCRIPTION:
+Organiza quedadas con amigos: un enlace, chat de grupo y respuestas IN/LATE/OUT.
+
+FULL DESCRIPTION:
+Squad es una app para organizar quedadas con tus amigos. Creas una invitación (un «drop») con lugar y hora, envías el enlace y ves al instante quién viene. Se acabó acordar los detalles en varios chats a la vez.
+
+Cómo funciona
+• Crea un drop: qué hacéis, dónde y cuándo.
+• Envía el enlace por mensajería o SMS, o muestra un código QR.
+• Tus amigos responden con un toque: IN (voy), LATE (llego tarde) u OUT (no puedo). No necesitan instalar la app para responder.
+• Ves la lista de asistentes al momento, quién llegará tarde y cuántos minutos.
+
+Un planificador para cada ocasión
+Fiesta en casa, salida nocturna, discoteca, pizza tras el entreno, partido, cine, videojuegos, paseo, viaje, cumpleaños, mayoría de edad o aniversario. Puedes repetir la quedada cada semana, cada dos semanas o cada mes, o convertirla en sorpresa: el lugar se revela una hora antes.
+
+Chat de grupo para tu gente
+Cada drop tiene su propio chat de grupo. Haz una encuesta de «¿adónde vamos?», añade reacciones y mira quién ha leído un mensaje. Los chats son solo de grupo, sin mensajes privados.
+
+Grupos permanentes y contactos
+Crea un grupo con un chat que no desaparece: una clase, un equipo, tu pandilla. Añade personas a tus contactos, invítalas con un toque y envía drops directamente a tus grupos.
+
+Drops públicos cerca de ti
+Explora quedadas abiertas en un radio de 20 km, en lista o en mapa. Únete o crea la tuya con plazas limitadas. Los drops públicos están disponibles para mayores de 16 años.
+
+Gráficos para compartir
+Envía tu invitación como un gráfico listo para usar: para historias de Instagram, WhatsApp, Messenger o SMS. Elige entre varios estilos y guarda la imagen en tu galería.
+
+Avatares 3D e insignias
+Elige tu avatar 3D y consigue insignias por tu actividad: quedadas organizadas, asistencia, puntualidad y más.
+
+Recordatorios, calendario y widgets
+Recibe una notificación cuando alguien responda o escriba, y un recordatorio para todos 30 minutos antes. Añade la quedada al calendario con un toque. En la pantalla de inicio puedes poner un widget en tres tamaños con tu próximo drop y cuenta atrás, y botones rápidos de Nuevo drop y Chats.
+
+Álbum y collage
+Cuando empieza un drop se abre un álbum compartido. Las fotos de la quedada están en un solo sitio y con ellas se crea un collage listo.
+
+Seguridad y privacidad
+Puedes denunciar o bloquear a un usuario manteniendo pulsado un mensaje. Hay un filtro de palabras malsonantes y los enlaces de los drops caducan 24 horas después de empezar la quedada. Puedes eliminar tu cuenta en cualquier momento desde los ajustes. La app es para mayores de 13 años (de 13 a 16, con el consentimiento de un padre, madre o tutor).
+
+Disponible en polaco, húngaro, portugués, ruso, inglés, español, alemán, francés, italiano, checo y ucraniano. Gratis.
+
+Reúne a tu gente y cerrad el plan en segundos.

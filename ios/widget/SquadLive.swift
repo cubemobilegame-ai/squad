@@ -19,6 +19,7 @@ struct SquadLiveAttributes: ActivityAttributes {
         var live: String      // „Trwa”
         var seg: [Double]     // pary (start, koniec) dropów dnia, sekundy epoch
         var hi: Int           // indeks twarzy organizatora w `faces`
+        var ini: String       // inicjał organizatora (gdy brak zdjęcia)
         var none: Bool        // brak dropów dziś
         var msg1: String      // „Nie masz na dziś dropów”
         var msg2: String      // „Dołącz lub utwórz drop”
@@ -36,6 +37,7 @@ private let blueDk = Color(red: 0.18, green: 0.33, blue: 0.84)
 private let slate = Color(red: 0.29, green: 0.32, blue: 0.45)
 private let peri = Color(red: 0.557, green: 0.608, blue: 0.878)
 private let sky = Color(red: 0.435, green: 0.804, blue: 0.973)
+private let pillGray = Color(red: 0.56, green: 0.56, blue: 0.60)   // tło pigułki małej wyspy: wyraźnie ciemniejsze niż biel
 private let mute = Color(red: 0.60, green: 0.60, blue: 0.66)
 
 private func faceImage(_ n: String) -> UIImage? {
@@ -74,7 +76,7 @@ private struct CompactMin: View {
         }
         .foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
         .padding(.vertical, 5).padding(.horizontal, 9)
-        .background(Capsule().fill(Color.white))
+        .background(Capsule().fill(pillGray))
     }
 }
 
@@ -258,7 +260,7 @@ struct SquadLiveActivity: Widget {
             } compactTrailing: {
                 if ctx.state.none {
                     Text(ctx.state.short).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
-                        .lineLimit(1).fixedSize().padding(.vertical, 5).padding(.horizontal, 10).background(Capsule().fill(Color.white))
+                        .lineLimit(1).fixedSize().padding(.vertical, 5).padding(.horizontal, 10).background(Capsule().fill(pillGray))
                         .frame(width: 72, alignment: .trailing)
                 } else {
                     CompactMin(state: ctx.state, stale: ctx.isStale)
@@ -310,11 +312,11 @@ private struct PeriClock: View {
     }
 }
 
-private let segColors: [Color] = [   // kolory dropów, o 6% ciemniejsze
-    Color(red: 0.929, green: 0.682, blue: 0.107), Color(red: 0.940, green: 0.351, blue: 0.155),
-    Color(red: 0.940, green: 0.338, blue: 0.583), Color(red: 0.611, green: 0.423, blue: 0.940)]
+private let barTrack = Color(red: 0.165, green: 0.169, blue: 0.227)   // tor: ciemny granat
+private let barDone = Color(red: 0.804, green: 0.820, blue: 0.984)     // przebyta droga: bardzo jasny fiolet
+private let barDrop = Color(red: 0.333, green: 0.388, blue: 0.910)     // dropy: mocny fiolet
 
-/// Oś czasu dnia: błękit = minęło, odcinki = dropy (każdy w innym kolorze), twoja fotka = „teraz”.
+/// Oś czasu dnia: jasny fiolet = minęło, odcinki = dropy (jeden mocny fiolet), twoja fotka = „teraz”.
 @available(iOS 16.2, *)
 private struct TimelineBar: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
@@ -329,12 +331,12 @@ private struct TimelineBar: View {
         GeometryReader { g in
             let w = g.size.width
             ZStack(alignment: .leading) {
-                Capsule().fill(slate).frame(height: thick)
-                Capsule().fill(sky).frame(width: max(thick, w * nowF), height: thick)
+                Capsule().fill(barTrack).frame(height: thick)
+                Capsule().fill(barDone).frame(width: max(thick, w * nowF), height: thick)
                 ForEach(0..<(s.seg.count / 2), id: \.self) { i in
                     let a = min(max((s.seg[2 * i] - t0) / span, 0), 1)
                     let b = min(max((s.seg[2 * i + 1] - t0) / span, 0), 1)
-                    Capsule().fill(segColors[i % segColors.count])
+                    Capsule().fill(barDrop)
                         .frame(width: max(thick, w * (b - a)), height: thick).offset(x: min(w * a, w - max(thick, w * (b - a))))
                 }
                 HostDot(s: s, idx: 0, size: knob)
@@ -355,6 +357,8 @@ private struct HostDot: View {
         Group {
             if idx < s.faces.count, let im = faceImage(s.faces[idx]) {
                 Image(uiImage: im).resizable().scaledToFill()
+            } else if !s.ini.isEmpty {
+                Text(s.ini).font(.system(size: size * 0.5, weight: .heavy)).foregroundColor(peri)
             } else {
                 Image(systemName: "person.fill").font(.system(size: size * 0.45)).foregroundColor(peri)
             }
@@ -371,7 +375,7 @@ private struct IslandBottom: View {
         VStack(alignment: .leading, spacing: 12) {
             TimelineBar(ctx: ctx)
             HStack(spacing: 12) {
-                HostDot(s: s, idx: s.hi, size: 34)
+                HostDot(s: s, idx: s.hi, size: 32)
                 Text(s.title).font(.system(size: 20, weight: .bold)).foregroundColor(.white)
                     .lineLimit(1).truncationMode(.tail).layoutPriority(1).frame(maxWidth: .infinity, alignment: .leading)
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {

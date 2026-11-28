@@ -1,0 +1,45 @@
+TITLE:
+Squad: setkání s přáteli
+
+SHORT DESCRIPTION:
+Plánuj setkání s přáteli: jeden odkaz, skupinový chat, odpovědi IN/LATE/OUT.
+
+FULL DESCRIPTION:
+Squad je aplikace pro pořádání setkání s přáteli. Vytvoříš pozvánku (drop) s místem a časem, pošleš odkaz a hned vidíš, kdo přijde. Konec s domlouváním podrobností v několika chatech najednou.
+
+Jak to funguje
+• Vytvoř drop: co budete dělat, kde a kdy.
+• Pošli odkaz v messengeru nebo SMS, případně ukaž QR kód.
+• Přátelé odpoví jedním klepnutím: IN (jdu), LATE (přijdu později) nebo OUT (nemůžu). K odpovědi nemusí aplikaci instalovat.
+• Seznam účastníků vidíš průběžně, včetně toho, kdo se zpozdí a o kolik minut.
+
+Plánovač na každou příležitost
+Domácí párty, večer venku, klub, pizza po tréninku, zápas, kino, hraní her, procházka, výlet, narozeniny, osmnáctka nebo výročí. Setkání můžeš opakovat každý týden, každé dva týdny nebo každý měsíc, případně z něj udělat překvapení s místem odhaleným hodinu před začátkem.
+
+Skupinový chat pro partu
+Každý drop má svůj skupinový chat. Uděláš v něm anketu „kam půjdeme?“, přidáš reakce a uvidíš, kdo zprávu přečetl. Chaty jsou jen skupinové, bez soukromých zpráv.
+
+Stálé skupiny a kontakty
+Vytvoř skupinu s chatem, který nezmizí: třída, tým, parta kamarádů. Přidávej lidi do kontaktů, zvi je jedním klepnutím a posílej dropy rovnou do svých skupin.
+
+Veřejné dropy v okolí
+Prohlížej otevřená setkání do 20 km v seznamu nebo na mapě. Připoj se k nim nebo vytvoř vlastní s omezeným počtem míst. Veřejné dropy jsou dostupné od 16 let.
+
+Grafiky ke sdílení
+Pozvánku pošli jako hotovou grafiku: do příběhu na Instagramu, na WhatsApp, Messenger nebo SMS. Vybereš z několika stylů a obrázek si uložíš do galerie.
+
+3D avatary a odznaky
+Vyber si svůj 3D avatar a získávej odznaky za aktivitu: uspořádaná setkání, účast, přesnost a další.
+
+Připomínky, kalendář a widgety
+Dostaneš upozornění, když někdo odpoví nebo napíše, a parta připomínku 30 minut před začátkem. Setkání přidáš do kalendáře jedním klepnutím. Na ploše telefonu si můžeš nastavit widget ve třech velikostech s nejbližším dropem a odpočtem a s rychlými tlačítky Nový drop a Chaty.
+
+Album a koláž
+Když drop začne, otevře se společné album. Fotky ze setkání jsou na jednom místě a vznikne z nich hotová koláž.
+
+Bezpečnost a soukromí
+Uživatele můžeš nahlásit nebo zablokovat podržením zprávy. Funguje filtr vulgarismů a odkazy na dropy vyprší 24 hodin po začátku setkání. Účet můžeš kdykoli smazat v nastavení aplikace. Aplikace je určena pro osoby od 13 let (od 13 do 16 let se souhlasem rodiče nebo zákonného zástupce).
+
+Dostupná v polštině, maďarštině, portugalštině, ruštině, angličtině, španělštině, němčině, francouzštině, italštině, češtině a ukrajinštině. Zdarma.
+
+Svolej partu a domluvte se během pár vteřin.

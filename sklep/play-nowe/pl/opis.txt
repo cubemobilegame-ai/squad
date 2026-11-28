@@ -1,0 +1,45 @@
+TYTUŁ:
+Squad: wypady ze znajomymi
+
+KRÓTKI OPIS:
+Planuj spotkania ze znajomymi: jeden link, czat grupowy, odpowiedzi IN/LATE/OUT.
+
+PEŁNY OPIS:
+Squad to aplikacja do organizowania spotkań ze znajomymi. Tworzysz zaproszenie (drop) z miejscem i godziną, wysyłasz link i od razu widzisz, kto przychodzi. Koniec z ustalaniem szczegółów na kilku czatach naraz.
+
+Jak to działa
+• Utwórz drop: co robicie, gdzie i kiedy.
+• Wyślij link w komunikatorze, SMS-em albo pokaż kod QR.
+• Znajomi odpowiadają jednym kliknięciem: IN (wbijam), LATE (spóźnię się) albo OUT (nie dam rady). Nie muszą instalować aplikacji, żeby odpowiedzieć.
+• Na bieżąco widzisz listę uczestników, kto się spóźni i o ile minut.
+
+Planer na każdą okazję
+Domówka, impreza, klub, pizza po treningu, mecz, kino, gry, spacer, wyjazd, urodziny, osiemnastka, rocznica. Spotkanie ustawisz jako cykliczne (co tydzień, co dwa tygodnie, co miesiąc) albo jako niespodziankę z miejscem odsłanianym godzinę przed startem.
+
+Czat grupowy dla ekipy
+Każdy drop ma własny czat. Zrobisz w nim ankietę „gdzie idziemy?”, dodasz reakcje i zobaczysz, kto przeczytał wiadomość. Czaty są tylko grupowe, bez prywatnych wiadomości.
+
+Stałe grupy i kontakty
+Załóż grupę z czatem, który nie znika: klasa, drużyna, paczka znajomych. Dodawaj osoby do kontaktów, zapraszaj je jednym stuknięciem i wysyłaj dropy prosto do swoich grup.
+
+Publiczne dropy w okolicy
+Przeglądaj otwarte spotkania w promieniu do 20 km na liście albo na mapie. Dołącz do nich lub stwórz własne z limitem miejsc. Publiczne dropy są dostępne dla osób od 16 lat.
+
+Grafiki do udostępniania
+Zaproszenie możesz wysłać jako gotową grafikę: do relacji na Instagramie, na WhatsAppa, Messengera albo SMS-em. Do wyboru kilka stylów, a obrazek zapiszesz też w galerii.
+
+Awatary 3D i odznaki
+Wybierz swojego awatara 3D i zdobywaj odznaki za aktywność: zorganizowane spotkania, obecność, punktualność i więcej.
+
+Przypomnienia, kalendarz i widżety
+Dostaniesz powiadomienie, gdy ktoś odpowie lub napisze, a ekipa przypomnienie 30 minut przed startem. Spotkanie dodasz do kalendarza jednym kliknięciem. Na ekranie głównym telefonu ustawisz widżet w trzech rozmiarach: z najbliższym dropem i odliczaniem oraz szybkimi przyciskami Nowy drop i Czaty.
+
+Album i kolaż
+Gdy drop się zaczyna, otwiera się wspólny album. Zdjęcia z wypadu są w jednym miejscu, a z nich powstaje gotowy kolaż.
+
+Bezpieczeństwo i prywatność
+Możesz zgłosić lub zablokować użytkownika, przytrzymując wiadomość. Działa filtr wulgaryzmów, a linki do dropów wygasają 24 godziny po starcie spotkania. Konto usuniesz w każdej chwili w ustawieniach aplikacji. Z aplikacji mogą korzystać osoby od 13 lat (do 16 lat za zgodą rodzica lub opiekuna).
+
+Dostępna po polsku, węgiersku, portugalsku, rosyjsku, angielsku, hiszpańsku, niemiecku, francusku, włosku, czesku i ukraińsku. Bezpłatna.
+
+Zbierz ekipę i ustalcie spotkanie w kilka sekund.
