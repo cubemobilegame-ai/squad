@@ -112,12 +112,13 @@ private struct Ring: View {
 private struct TimeTxt: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     var size: CGFloat = 14
+    var weight: Font.Weight = .bold
     var body: some View {
         let s = ctx.state
         if ctx.isStale || s.start <= Date() {
-            Text(s.live).font(.system(size: size, weight: .bold)).foregroundColor(blueLt)
+            Text(s.live).font(.system(size: size, weight: weight)).foregroundColor(blueLt)
         } else {
-            (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: size, weight: .bold).monospacedDigit()).foregroundColor(blueLt)
+            (Text(s.pre + " ") + Text(s.start, style: .timer)).font(.system(size: size, weight: weight).monospacedDigit()).foregroundColor(blueLt)
         }
     }
 }
@@ -179,26 +180,23 @@ struct SquadLiveActivity: Widget {
         } dynamicIsland: { ctx in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(ctx.state.title).font(.system(size: 22, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6)
-                        TimeTxt(ctx: ctx, size: 14)
-                    }.padding(.leading, 12)
+                    TimeTxt(ctx: ctx, size: 17, weight: .heavy).padding(.leading, 12)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Faces(s: ctx.state, ring: .black, size: 34).padding(.trailing, 12)
+                    Faces(s: ctx.state, ring: .black, size: 30).padding(.trailing, 12)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    IslandBottom(ctx: ctx).padding(.horizontal, 12)
+                    IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, -3).padding(.bottom, 6)
                 }
             } compactLeading: {
-                HStack(spacing: 5) { Dot(); Text(ctx.state.cat).font(.system(size: 13, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7) }
-                    .frame(maxWidth: 66, alignment: .leading).padding(.leading, 3)
+                HStack(spacing: 5) { Dot(); Text(ctx.state.cat).font(.system(size: 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.75) }
+                    .frame(maxWidth: 74, alignment: .leading).padding(.leading, 3)
             } compactTrailing: {
                 Group {
                     if ctx.state.start <= Date() || ctx.isStale { Text(ctx.state.live) }
                     else { Text(ctx.state.start, style: .timer).monospacedDigit() }
                 }
-                .font(.system(size: 14, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 40, alignment: .trailing).padding(.trailing, 3)
+                .font(.system(size: 15, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 42, alignment: .trailing).padding(.trailing, 3)
             } minimal: {
                 Dot()
             }
@@ -212,15 +210,17 @@ private struct IslandBottom: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     var body: some View {
         let s = ctx.state
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(s.title).font(.system(size: 22.6, weight: .heavy)).foregroundColor(.white)
+                .lineLimit(1).minimumScaleFactor(0.55).frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 8) {
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {
-                    Text(s.open).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
-                        .frame(maxWidth: .infinity).frame(height: 38).background(Capsule().fill(Color.white))
+                    Text(s.open).font(.system(size: 14, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                        .frame(maxWidth: .infinity).frame(height: 34).background(Capsule().fill(Color.white))
                 }
                 Link(destination: URL(string: laSite + "/c/" + ctx.attributes.id)!) {
                     ChatIcon().stroke(Color.white, style: StrokeStyle(lineWidth: 1.9, lineCap: .round, lineJoin: .round))
-                        .frame(width: 22, height: 22).frame(width: 38, height: 38).background(Circle().fill(Color.white.opacity(0.12)))
+                        .frame(width: 20, height: 20).frame(width: 34, height: 34).background(Circle().fill(Color.white.opacity(0.12)))
                 }
             }
         }
