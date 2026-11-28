@@ -34,6 +34,22 @@ private func faceImage(_ n: String) -> UIImage? {
 }
 
 @available(iOS 16.2, *)
+private struct PulseDot: View {
+    var body: some View {
+        ZStack {
+            if #available(iOS 17.0, *) {
+                Image(systemName: "circle.fill").font(.system(size: 17)).foregroundColor(blue.opacity(0.28))
+                    .symbolEffect(.pulse, options: .repeating)
+            } else {
+                Circle().fill(blue.opacity(0.28)).frame(width: 17, height: 17)
+            }
+            Dot()
+        }
+        .frame(width: 17, height: 17)
+    }
+}
+
+@available(iOS 16.2, *)
 private struct Dot: View {
     var body: some View {
         Circle().fill(LinearGradient(colors: [blueLt, blue, blueDk], startPoint: .topLeading, endPoint: .bottomTrailing))
@@ -189,14 +205,16 @@ struct SquadLiveActivity: Widget {
                     IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, -3).padding(.bottom, 6)
                 }
             } compactLeading: {
-                HStack(spacing: 5) { Dot(); Text(ctx.state.cat).font(.system(size: 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.75) }
-                    .frame(maxWidth: 74, alignment: .leading).padding(.leading, 3)
+                HStack(spacing: 6) { PulseDot(); Text(ctx.state.title).font(.system(size: 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.75) }
+                    .frame(maxWidth: 80, alignment: .leading).padding(.leading, 3)
             } compactTrailing: {
                 Group {
                     if ctx.state.start <= Date() || ctx.isStale { Text(ctx.state.live) }
                     else { Text(ctx.state.start, style: .timer).monospacedDigit() }
                 }
-                .font(.system(size: 15, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: 42, alignment: .trailing).padding(.trailing, 3)
+                .font(.system(size: 14, weight: .heavy)).foregroundColor(.white).lineLimit(1).minimumScaleFactor(0.6)
+                .padding(.horizontal, 9).padding(.vertical, 3).background(Capsule().fill(blue))
+                .frame(maxWidth: 62, alignment: .trailing).padding(.trailing, 1)
             } minimal: {
                 Dot()
             }
