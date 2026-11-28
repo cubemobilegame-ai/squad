@@ -326,5 +326,6 @@ struct SquadWidgetBundle: WidgetBundle {
     var body: some Widget {
         SquadWidget()
         if #available(iOS 16.2, *) { SquadLiveActivity() }
+        if #available(iOS 16.2, *) { SquadWeekActivity() }
     }
 }

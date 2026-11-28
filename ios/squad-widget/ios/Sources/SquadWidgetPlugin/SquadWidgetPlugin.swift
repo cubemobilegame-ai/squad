@@ -28,6 +28,26 @@ struct SquadLiveAttributes: ActivityAttributes {
     }
     var id: String
 }
+
+/// Definicja identyczna jak w rozszerzeniu widżetu (SquadLive.swift).
+@available(iOS 16.1, *)
+struct SquadWeekAttributes: ActivityAttributes {
+    struct ContentState: Codable, Hashable {
+        var days: [Int]
+        var lb: [String]
+        var hd: String
+        var pill: String
+        var n: Int
+        var nt: String
+        var ni: String
+        var hasNext: Bool
+        var start: Date
+        var pre: String
+        var open: String
+        var nid: String
+    }
+    var id: String
+}
 #endif
 
 /// Zapisuje najbliższe dropy do App Group, skąd czyta je widżet, i odświeża widżet.
@@ -38,7 +58,8 @@ public class SquadWidgetPlugin: CAPPlugin, CAPBridgedPlugin {
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "update", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "pending", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "live", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "live", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "week", returnType: CAPPluginReturnPromise)
     ]
     private let group = "group.com.cubemobilegames.squad"
 
@@ -110,6 +131,39 @@ public class SquadWidgetPlugin: CAPPlugin, CAPBridgedPlugin {
                 await a.update(content)
             } else {
                 do { _ = try Activity.request(attributes: SquadLiveAttributes(id: id), content: content, pushType: nil) }
+                catch { call.resolve(["err": String(describing: error).prefix(120).description]); return }
+            }
+            call.resolve()
+        }
+        #else
+        call.resolve()
+        #endif
+    }
+
+    /// Live Activity „Tydzień” (wykres dropów na 7 dni). json = obiekt albo "" (zakończ).
+    @objc func week(_ call: CAPPluginCall) {
+        #if canImport(ActivityKit)
+        guard #available(iOS 16.2, *) else { call.resolve(); return }
+        let json = call.getString("json") ?? ""
+        Task {
+            let cur = Activity<SquadWeekAttributes>.activities
+            guard !json.isEmpty, ActivityAuthorizationInfo().areActivitiesEnabled,
+                  let o = (try? JSONSerialization.jsonObject(with: Data(json.utf8))) as? [String: Any] else {
+                for a in cur { await a.end(nil, dismissalPolicy: .immediate) }
+                call.resolve(); return
+            }
+            let ts = o["ts"] as? Double ?? 0
+            let start = Date(timeIntervalSince1970: ts / 1000)
+            let st = SquadWeekAttributes.ContentState(
+                days: o["days"] as? [Int] ?? [], lb: o["lb"] as? [String] ?? [],
+                hd: o["hd"] as? String ?? "", pill: o["pill"] as? String ?? "", n: o["n"] as? Int ?? 0,
+                nt: o["nt"] as? String ?? "", ni: o["ni"] as? String ?? "", hasNext: ts > 0, start: start,
+                pre: o["pre"] as? String ?? "", open: o["open"] as? String ?? "", nid: o["nid"] as? String ?? "")
+            let content = ActivityContent(state: st, staleDate: ts > 0 ? start : nil)
+            if let a = cur.first {
+                await a.update(content)
+            } else {
+                do { _ = try Activity.request(attributes: SquadWeekAttributes(id: "week"), content: content, pushType: nil) }
                 catch { call.resolve(["err": String(describing: error).prefix(120).description]); return }
             }
             call.resolve()

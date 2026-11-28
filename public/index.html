@@ -5652,8 +5652,21 @@ const widgetSync=()=>{if(!NATAPP)return;clearTimeout(wgT);wgT=setTimeout(()=>{tr
   if(u&&!u.isAnonymous)a=[...S.items.values()].filter(d=>d&&d.startsAt&&d.startsAt.toMillis&&d.startsAt.toMillis()+2*36e5>now).map(d=>({d,r:roleOf(d)})).filter(x=>x.r==="host"||x.r==="in"||x.r==="late").sort((x,y)=>x.d.startsAt.toMillis()-y.d.startsAt.toMillis()).slice(0,6).map(({d,r})=>{const[c1,c2]=thm(d),pk=pxKey(d),pg=FG[pk]||(HG[d.category==="pizza"?"food":d.category]||[])[0],[p1,p2]=pg?pg.split(","):[c1,c2],n=(S.ppl[d.id]||[]).filter(p=>p.status==="in").length;return{p1,p2,n,id:d.id,t:clean(d.title||""),ts:d.startsAt.toMillis(),pl:plc(d)||"",e:WEM[d.category]||"✨",k:E3[d.category]||"other",c1,c2,r}});
   liveSync(W,a,now);const j=JSON.stringify(a);if(j===wgLast)return;wgLast=j;W.update({json:j}).catch(()=>{})}catch{}},800)};
 /* „Drop na wyspie” (iOS Live Activity): najbliższy drop, na który jestem IN/host/late, od 2 h przed startem do 30 min po */
-let liveLast="";
+let liveLast="",wkLast="";
+/* „Tydzień” (iOS Live Activity): wykres moich dropów na 7 dni; działa tylko gdy nie trwa „Drop na wyspie” */
+const weekSync=(W,now,off)=>{try{if(!W.week)return;const u=auth.currentUser;
+  const fin=()=>{if(wkLast!==""){wkLast="";W.week({json:""}).catch(()=>{})}};
+  if(off||sget("n_isl")==="0"||!u||u.isAnonymous)return fin();
+  const d0=new Date(now);d0.setHours(0,0,0,0);const DAY=864e5,cap=z=>z?z.charAt(0).toUpperCase()+z.slice(1):"",wd=ms=>{try{return new Date(ms).toLocaleDateString(LANG,{weekday:"short"}).replace(/\./g,"")}catch{return""}},hm=ms=>{const d=new Date(ms);return pad(d.getHours())+":"+pad(d.getMinutes())};
+  const mine=[...S.items.values()].filter(d=>d&&d.startsAt&&d.startsAt.toMillis&&d.startsAt.toMillis()+30*6e4>now&&["host","in","late"].includes(roleOf(d))).map(d=>({id:d.id,t:clean(d.title||""),ts:d.startsAt.toMillis()})).sort((x,y)=>x.ts-y.ts);
+  const days=[0,0,0,0,0,0,0];mine.forEach(q=>{const i=Math.max(0,Math.round((new Date(q.ts).setHours(0,0,0,0)-d0)/DAY));if(i<7)days[i]++});
+  if(!days.some(Boolean))return fin();
+  const nx=mine[0],i0=Math.max(0,Math.round((new Date(nx.ts).setHours(0,0,0,0)-d0)/DAY)),td=t("wkToday");
+  const lb=days.map((_,i)=>i===0?cap(td):cap(wd(d0.getTime()+i*DAY+36e5*12)));
+  const o={id:"week",days,lb,hd:t("wkT"),pill:days[0]>0?days[0]+" "+td:cap(wd(nx.ts)),n:days[0],nt:nx.t,ni:(i0===0?td:wd(nx.ts))+" "+hm(nx.ts),ts:nx.ts,pre:t("islPre"),open:t("islOpen"),nid:nx.id};
+  const j=JSON.stringify(o);if(j===wkLast)return;wkLast=j;W.week({json:j}).catch(()=>{})}catch{}};
 const liveSync=async(W,a,now)=>{try{if(!IOSAPP||!W||!W.live)return;const x=sget("n_isl")==="0"?null:a.find(q=>q.ts-2*36e5<=now&&q.ts+30*6e4>now);
+  weekSync(W,now,!!x);
   if(!x){if(liveLast!==""){liveLast="";W.live({json:""}).catch(()=>{})}return}
   const d=S.items.get(x.id),uid=me(),ins=(S.ppl[x.id]||[]).filter(p=>p.status==="in"||p.status==="late"),mine=ins.find(p=>p.id===uid),others=ins.filter(p=>p.id!==uid),tot=others.length+1,sh=others.slice(0,2);
   const myPh=sget("photo");
@@ -5661,7 +5674,7 @@ const liveSync=async(W,a,now)=>{try{if(!IOSAPP||!W||!W.live)return;const x=sget(
   const av=[await (async()=>{try{return myPh||await genAv(myAv(),true)}catch{return""}})(),...await Promise.all(sh.map(faceOf))];
   const o={id:x.id,t:x.t,pl:x.pl,k:d?catLab(d):"",ts:x.ts,av:av.filter(u=>u&&u!==BLANK),pp:tot+" IN",more:Math.max(0,tot-3),pre:t("islPre"),open:t("islOpen"),lv:t("islLive")};
   const j=JSON.stringify(o);if(j===liveLast)return;liveLast=j;W.live({json:j}).then(r=>{if(r&&r.err)toast("Wyspa: "+r.err)}).catch(e=>toast("Wyspa: "+String((e&&e.message)||e).slice(0,100)))}catch(e){toast("Wyspa: "+String((e&&e.message)||e).slice(0,100))}};
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)try{liveLast="";widgetSync()}catch{}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)try{liveLast="";wkLast="";widgetSync()}catch{}});
 setInterval(()=>{if(!document.hidden)try{widgetSync()}catch{}},60000);
 const loaded=d=>d.hostId===me()||S.ppl[d.id]!==undefined;
 const live=()=>[...S.items.values()].filter(d=>d.expiresAt.toMillis()>Date.now()&&!isHid(d.id)).sort((a,b)=>a.startsAt-b.startsAt);
@@ -6265,7 +6278,7 @@ function profileView(){
   $("#pqr").onclick=()=>qrContact();$("#pe").onclick=()=>{vib(10);const e=$("#ped");e.hidden=!e.hidden;$("#pe").classList.toggle("on",!e.hidden)};
   $("#ps").onclick=()=>{const n=$("#pn").value.trim();if(!n){vib([50,30,50]);return toast(t("needNick"))}if(isBad(n)){vib([50,30,50]);return toast(t("noBad"))}if(!nickTry(n)){$("#pn").value=sget("nick");return}sset("nick",n);$("#pnm").textContent=n;$("#ped").hidden=true;$("#pe").classList.remove("on");saveProfile();syncAvatar();vib(15);toast(t("saved"))};
   document.querySelectorAll(".ap").forEach(b=>b.onclick=()=>{vib(10);sset("avatar",+b.dataset.i);sset("photo","");changedAv()});$("#kmk").onclick=()=>avEditor(changedAv);
-  const isb=$("#isl");if(isb)isb.onclick=()=>{const on=!nsOn("isl");sset("n_isl",on?"1":"0");isb.classList.toggle("on",on);isb.setAttribute("aria-checked",on);liveLast="x";vib(10);widgetSync()};
+  const isb=$("#isl");if(isb)isb.onclick=()=>{const on=!nsOn("isl");sset("n_isl",on?"1":"0");isb.classList.toggle("on",on);isb.setAttribute("aria-checked",on);liveLast="x";wkLast="x";vib(10);widgetSync()};
   document.querySelectorAll(".tg[data-n]").forEach(b=>b.onclick=()=>{const k=b.dataset.n,on=!nsOn(k);sset("n_"+k,on?"1":"0");saveProfile();if(on&&k!=="snd")askPush();b.classList.toggle("on",on);b.setAttribute("aria-checked",on);vib(10)});
   $("#lgb").onclick=()=>{vib(8);const q=sheet(`<h2>${t("lang")}</h2><div class="slist lgl">${LANGS.map(([c,n])=>`<button class="srow lgi ${c==LANG?"sel":""}" data-l="${c}"><span>${n}</span>${c==LANG?`<em>✓</em>`:""}</button>`).join("")}</div>`);q.querySelectorAll(".lgi").forEach(b=>b.onclick=()=>{q.close();setLang(b.dataset.l)})};
   $("#hlp").onclick=helpSheet;$("#bug").onclick=()=>bugSheet("profil");$("#mo").onclick=()=>{const x=$("#mx");x.hidden=!x.hidden;$("#mo").classList.toggle("op",!x.hidden);if(!x.hidden)setTimeout(()=>x.scrollIntoView({behavior:"smooth",block:"center"}),60)};
@@ -7303,7 +7316,7 @@ async function makeCollage(o,PH,st={}){await fontsReady();
 if(!sget("badges"))checkBadges(true);
 
 /* ---------- FIREBASE: zdjęcia w Storage, powiadomienia push, synchronizacja konta ---------- */
-Object.assign(L.pl,{islT:"Drop na wyspie",islPre:"za",islOpen:"Otwórz drop",islLive:"Trwa"});Object.assign(L.en,{islT:"Drop on Dynamic Island",islPre:"in",islOpen:"Open drop",islLive:"Live"});Object.assign(L.es,{islT:"Drop en la isla",islPre:"en",islOpen:"Abrir drop",islLive:"En curso"});Object.assign(L.de,{islT:"Drop in der Dynamic Island",islPre:"in",islOpen:"Drop öffnen",islLive:"Läuft"});Object.assign(L.fr,{islT:"Drop dans la Dynamic Island",islPre:"dans",islOpen:"Ouvrir le drop",islLive:"En cours"});Object.assign(L.it,{islT:"Drop nella Dynamic Island",islPre:"tra",islOpen:"Apri il drop",islLive:"In corso"});Object.assign(L.cs,{islT:"Drop na ostrově",islPre:"za",islOpen:"Otevřít drop",islLive:"Probíhá"});Object.assign(L.uk,{islT:"Дроп на острові",islPre:"через",islOpen:"Відкрити дроп",islLive:"Триває"});
+Object.assign(L.pl,{wkT:"Ten tydzień",wkToday:"dziś"});Object.assign(L.en,{wkT:"This week",wkToday:"today"});Object.assign(L.es,{wkT:"Esta semana",wkToday:"hoy"});Object.assign(L.de,{wkT:"Diese Woche",wkToday:"heute"});Object.assign(L.fr,{wkT:"Cette semaine",wkToday:"aujourd'hui"});Object.assign(L.it,{wkT:"Questa settimana",wkToday:"oggi"});Object.assign(L.cs,{wkT:"Tento týden",wkToday:"dnes"});Object.assign(L.uk,{wkT:"Цього тижня",wkToday:"сьогодні"});Object.assign(L.pt,{wkT:"Esta semana",wkToday:"hoje"});Object.assign(L.ru,{wkT:"На этой неделе",wkToday:"сегодня"});Object.assign(L.hu,{wkT:"Ezen a héten",wkToday:"ma"});Object.assign(L.pl,{islT:"Drop na wyspie",islPre:"za",islOpen:"Otwórz drop",islLive:"Trwa"});Object.assign(L.en,{islT:"Drop on Dynamic Island",islPre:"in",islOpen:"Open drop",islLive:"Live"});Object.assign(L.es,{islT:"Drop en la isla",islPre:"en",islOpen:"Abrir drop",islLive:"En curso"});Object.assign(L.de,{islT:"Drop in der Dynamic Island",islPre:"in",islOpen:"Drop öffnen",islLive:"Läuft"});Object.assign(L.fr,{islT:"Drop dans la Dynamic Island",islPre:"dans",islOpen:"Ouvrir le drop",islLive:"En cours"});Object.assign(L.it,{islT:"Drop nella Dynamic Island",islPre:"tra",islOpen:"Apri il drop",islLive:"In corso"});Object.assign(L.cs,{islT:"Drop na ostrově",islPre:"za",islOpen:"Otevřít drop",islLive:"Probíhá"});Object.assign(L.uk,{islT:"Дроп на острові",islPre:"через",islOpen:"Відкрити дроп",islLive:"Триває"});
 Object.assign(L.pl,{upIng:"Wysyłam zdjęcie…",upErr:"Nie udało się wysłać zdjęcia. Sprawdź internet i spróbuj jeszcze raz.",edBtn:"Edytuj drop",edT:"Edytuj drop",edNote:"Ekipa dostanie powiadomienie o zmianie. Odpowiedzi IN / LATE / OUT zostają.",edPast:"Ta godzina już minęła – wybierz późniejszą",edSaved:"Zmiany zapisane ✓",edPlace:"Wpisz miejsce",dropChanged:"Drop został zmieniony ✏️",lateT:"Ile się spóźnisz?",lateN:n=>`(${n} min)`,pushOn:"Powiadomienia włączone ✓",pushBlocked:"Powiadomienia są zablokowane – włącz je w ustawieniach telefonu"});
 Object.assign(L.en,{upIng:"Uploading photo…",upErr:"Couldn't upload the photo. Check your connection and try again.",edBtn:"Edit drop",edT:"Edit drop",edNote:"Your crew gets a notification about the change. IN / LATE / OUT replies stay.",edPast:"That time has passed – pick a later one",edSaved:"Changes saved ✓",edPlace:"Enter a place",dropChanged:"The drop was changed ✏️",lateT:"How late will you be?",lateN:n=>`(${n} min)`,pushOn:"Notifications on ✓",pushBlocked:"Notifications are blocked – turn them on in your phone settings"});
 const putImg=async(path,dataUrl)=>{if(DEMO||!stor)return dataUrl;const r=FB.ref(stor,path);await FB.uploadString(r,dataUrl,"data_url",{contentType:"image/jpeg",cacheControl:"public,max-age=31536000"});return FB.getDownloadURL(r)};

@@ -269,3 +269,125 @@ private struct IslandBottom: View {
         }
     }
 }
+
+// ---------- Live Activity „Tydzień”: wykres dropów na 7 dni (osobna, opcjonalna aktywność) ----------
+struct SquadWeekAttributes: ActivityAttributes {
+    struct ContentState: Codable, Hashable {
+        var days: [Int]       // liczba dropów w kolejnych 7 dniach (0 = dziś)
+        var lb: [String]      // podpisy dni
+        var hd: String        // „Ten tydzień”
+        var pill: String      // „2 dziś”
+        var n: Int            // dropów dziś
+        var nt: String        // tytuł najbliższego dropa
+        var ni: String        // „dziś 20:00”
+        var hasNext: Bool
+        var start: Date       // start najbliższego dropa
+        var pre: String       // „za”
+        var open: String      // „Otwórz drop”
+        var nid: String       // id najbliższego dropa
+    }
+    var id: String
+}
+
+@available(iOS 16.2, *)
+private struct WeekBars: View {
+    let s: SquadWeekAttributes.ContentState
+    var count = 7
+    var bar: CGFloat = 20
+    var unit: CGFloat = 8.5
+    var base: CGFloat = 5
+    var labels = true
+    var spread = true
+    var body: some View {
+        HStack(alignment: .bottom, spacing: spread ? 0 : 3) {
+            ForEach(0..<min(count, s.days.count), id: \.self) { i in
+                VStack(spacing: 4) {
+                    RoundedRectangle(cornerRadius: bar * 0.32, style: .continuous)
+                        .fill(i == 0 ? blue : Color.white.opacity(0.22))
+                        .frame(width: bar, height: base + CGFloat(min(s.days[i], 4)) * unit)
+                    if labels {
+                        Text(i < s.lb.count ? s.lb[i] : "")
+                            .font(.system(size: 11, weight: i == 0 ? .heavy : .bold))
+                            .foregroundColor(i == 0 ? .white : mute).lineLimit(1).minimumScaleFactor(0.7)
+                    }
+                }
+                .frame(maxWidth: spread ? .infinity : nil)
+            }
+        }
+    }
+}
+
+@available(iOS 16.2, *)
+private struct WeekPill: View {
+    let t: String
+    var size: CGFloat = 14
+    var body: some View {
+        Text(t).font(.system(size: size, weight: .heavy)).foregroundColor(.white).lineLimit(1).fixedSize()
+            .padding(.vertical, 4).padding(.horizontal, 10).background(Capsule().fill(blue))
+    }
+}
+
+@available(iOS 16.2, *)
+private struct WeekNext: View {
+    let ctx: ActivityViewContext<SquadWeekAttributes>
+    var body: some View {
+        let s = ctx.state
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(s.nt).font(.system(size: 15, weight: .heavy)).foregroundColor(.white).lineLimit(1)
+                if !ctx.isStale && s.start > Date() && s.start < Date().addingTimeInterval(7200) {
+                    (Text(s.ni + " · " + s.pre + " ") + Text(s.start, style: .timer))
+                        .font(.system(size: 12.5, weight: .bold).monospacedDigit()).foregroundColor(mute).lineLimit(1)
+                } else {
+                    Text(s.ni).font(.system(size: 12.5, weight: .bold)).foregroundColor(mute).lineLimit(1)
+                }
+            }
+            Spacer(minLength: 6)
+            Link(destination: URL(string: laSite + "/d/" + s.nid)!) {
+                Text(s.open).font(.system(size: 14, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                    .lineLimit(1).padding(.horizontal, 16).frame(height: 32).background(Capsule().fill(Color.white))
+            }
+        }
+    }
+}
+
+@available(iOS 16.2, *)
+struct SquadWeekActivity: Widget {
+    var body: some WidgetConfiguration {
+        ActivityConfiguration(for: SquadWeekAttributes.self) { ctx in
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text(ctx.state.hd).font(.system(size: 17, weight: .heavy)).foregroundColor(.white).lineLimit(1)
+                    Spacer(minLength: 8)
+                    WeekPill(t: ctx.state.pill)
+                }
+                WeekBars(s: ctx.state).padding(.top, 6)
+                if ctx.state.hasNext { WeekNext(ctx: ctx).padding(.top, 8) }
+            }
+            .padding(.horizontal, 18).padding(.vertical, 12)
+            .activityBackgroundTint(Color(red: 0.10, green: 0.10, blue: 0.13))
+            .activitySystemActionForegroundColor(.white)
+        } dynamicIsland: { ctx in
+            DynamicIsland {
+                DynamicIslandExpandedRegion(.leading) {
+                    Text(ctx.state.hd).font(.system(size: 17, weight: .heavy)).foregroundColor(.white).lineLimit(1).padding(.leading, 12)
+                }
+                DynamicIslandExpandedRegion(.trailing) {
+                    WeekPill(t: ctx.state.pill).padding(.trailing, 12)
+                }
+                DynamicIslandExpandedRegion(.bottom) {
+                    WeekBars(s: ctx.state, bar: 24, unit: 7, base: 5).padding(.horizontal, 12).padding(.top, 2).padding(.bottom, 4)
+                }
+            } compactLeading: {
+                WeekBars(s: ctx.state, count: 5, bar: 6, unit: 4, base: 4, labels: false, spread: false)
+                    .frame(width: 72, alignment: .leading)
+            } compactTrailing: {
+                WeekPill(t: ctx.state.pill, size: 14).frame(width: 72, alignment: .trailing)
+            } minimal: {
+                Text(ctx.state.n > 0 ? "\(ctx.state.n)" : "·").font(.system(size: 13, weight: .heavy)).foregroundColor(.white)
+                    .frame(width: 22, height: 22).background(Circle().fill(blue))
+            }
+            .widgetURL(URL(string: laSite + (ctx.state.hasNext ? "/d/" + ctx.state.nid : "")))
+        }
+    }
+}
