@@ -34,18 +34,42 @@ private func faceImage(_ n: String) -> UIImage? {
 }
 
 @available(iOS 16.2, *)
-private struct PulseDot: View {
+private struct CompactMin: View {
+    let state: SquadLiveAttributes.ContentState
+    let stale: Bool
     var body: some View {
-        ZStack {
-            if #available(iOS 17.0, *) {
-                Image(systemName: "circle.fill").font(.system(size: 15)).foregroundColor(blue.opacity(0.28))
-                    .symbolEffect(.pulse, options: .repeating)
+        let now = Date()
+        Group {
+            if stale || state.start <= now.addingTimeInterval(1) {
+                Text(state.live).font(.system(size: 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7)
             } else {
-                Circle().fill(blue.opacity(0.28)).frame(width: 15, height: 15)
+                let mins = max(0, Int(state.start.timeIntervalSince(now) / 60))
+                let digits = CGFloat(String(mins).count)
+                HStack(spacing: 3) {
+                    Text(timerInterval: now...state.start, pauseTime: nil, countsDown: true, showsHours: false)
+                        .monospacedDigit()
+                        .frame(width: digits * 9.4, alignment: .leading)
+                        .clipped()
+                    Text("min")
+                }
+                .font(.system(size: 15, weight: .heavy))
             }
-            Dot()
         }
-        .frame(width: 15, height: 15)
+        .foregroundColor(.white)
+        .padding(.vertical, 5).padding(.horizontal, 9)
+        .background(Capsule().fill(blue))
+    }
+}
+
+@available(iOS 16.2, *)
+private struct PulseHalo: View {
+    var body: some View {
+        if #available(iOS 17.0, *) {
+            Image(systemName: "circle.fill").font(.system(size: 15)).foregroundColor(blue.opacity(0.28))
+                .symbolEffect(.pulse, options: .repeating)
+        } else {
+            Circle().fill(blue.opacity(0.28)).frame(width: 15, height: 15)
+        }
     }
 }
 
@@ -205,16 +229,14 @@ struct SquadLiveActivity: Widget {
                     IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, -7).padding(.bottom, 3)
                 }
             } compactLeading: {
-                HStack(spacing: 3) { PulseDot(); Text(ctx.state.title).font(.system(size: 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7).fixedSize(horizontal: false, vertical: true) }
-                    .frame(width: 72, alignment: .leading)
-            } compactTrailing: {
-                Group {
-                    if ctx.state.start <= Date() || ctx.isStale { Text(ctx.state.live) }
-                    else { Text(timerInterval: Date()...ctx.state.start, pauseTime: nil, countsDown: true, showsHours: false).monospacedDigit() }
+                HStack(spacing: 4) {
+                    Dot().overlay(PulseHalo())
+                    Text(ctx.state.title).font(.system(size: 15.5, weight: .black)).lineLimit(1).minimumScaleFactor(0.8)
                 }
-                .font(.system(size: 14, weight: .heavy)).foregroundColor(.white).lineLimit(1)
-                .padding(.horizontal, 7).padding(.vertical, 3).background(Capsule().fill(blue))
-                .fixedSize()
+                .frame(width: 72, alignment: .leading)
+            } compactTrailing: {
+                CompactMin(state: ctx.state, stale: ctx.isStale)
+                    .frame(width: 72, alignment: .trailing)
             } minimal: {
                 Dot()
             }
