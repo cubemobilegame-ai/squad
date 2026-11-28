@@ -256,7 +256,7 @@ struct SquadLiveActivity: Widget {
                     HostDot(s: ctx.state, idx: ctx.state.hi, size: 24).overlay(Circle().stroke(Color.white.opacity(0.16), lineWidth: 0.5))
                     Text("Drop").font(.system(size: 15, weight: .semibold)).foregroundColor(peri).lineLimit(1).fixedSize()
                 }
-                .frame(width: 72, alignment: .leading)
+                .fixedSize()
             } compactTrailing: {
                 if ctx.state.none {
                     Text(ctx.state.short).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
@@ -313,14 +313,14 @@ private struct PeriClock: View {
 }
 
 private let barTrack = Color(red: 0.165, green: 0.169, blue: 0.227)   // tor: ciemny granat
-private let barDone = Color(red: 0.804, green: 0.820, blue: 0.984)     // przebyta droga: bardzo jasny fiolet
+private let barDone = Color(red: 0.30, green: 0.31, blue: 0.38)         // przebyta droga: szary, lekko jaśniejszy od toru
 private let barDrop = Color(red: 0.333, green: 0.388, blue: 0.910)     // dropy: mocny fiolet
 
 /// Oś czasu dnia: jasny fiolet = minęło, odcinki = dropy (jeden mocny fiolet), twoja fotka = „teraz”.
 @available(iOS 16.2, *)
 private struct TimelineBar: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
-    var thick: CGFloat = 15
+    var thick: CGFloat = 13
     var knob: CGFloat = 28
     var body: some View {
         let s = ctx.state
