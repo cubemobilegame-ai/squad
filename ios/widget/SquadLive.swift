@@ -19,6 +19,11 @@ struct SquadLiveAttributes: ActivityAttributes {
         var live: String      // „Trwa”
         var seg: [Double]     // pary (start, koniec) dropów dnia, sekundy epoch
         var hi: Int           // indeks twarzy organizatora w `faces`
+        var none: Bool        // brak dropów dziś
+        var msg1: String      // „Nie masz na dziś dropów”
+        var msg2: String      // „Dołącz lub utwórz drop”
+        var cta: String       // „Utwórz drop”
+        var short: String     // „Brak”
     }
     var id: String
 }
@@ -46,7 +51,7 @@ private struct CompactMin: View {
         let now = Date()
         Group {
             if stale || state.start <= now.addingTimeInterval(1) {
-                Text(state.live).font(.system(size: 15, weight: .heavy)).lineLimit(1).minimumScaleFactor(0.7)
+                Text(state.live).font(.system(size: 15, weight: .heavy)).lineLimit(1).fixedSize()
             } else {
                 let mins = max(0, Int(state.start.timeIntervalSince(now) / 60))
                 let digits = CGFloat(String(mins).count)
@@ -225,23 +230,24 @@ private struct LiveBody: View {
 struct SquadLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: SquadLiveAttributes.self) { ctx in
-            VStack(alignment: .leading, spacing: 10) {
-                HStack { PeriTime(ctx: ctx); Spacer(minLength: 8); PeriClock(ctx: ctx) }
-                IslandBottom(ctx: ctx)
-            }
+            Group { if ctx.state.none { NoneBody(ctx: ctx) } else { DropBody(ctx: ctx) } }
                 .padding(.horizontal, 20).padding(.vertical, 14)
+                .widgetURL(URL(string: laSite + (ctx.state.none ? "" : "/d/" + ctx.attributes.id)))
                 .activityBackgroundTint(Color(red: 0.086, green: 0.086, blue: 0.11))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { ctx in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    PeriTime(ctx: ctx).padding(.leading, 12)
+                    if ctx.state.none { Color.clear.frame(width: 1, height: 1) }
+                    else { PeriTime(ctx: ctx).padding(.leading, 12) }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    PeriClock(ctx: ctx).padding(.trailing, 12)
+                    if ctx.state.none { Color.clear.frame(width: 1, height: 1) }
+                    else { PeriClock(ctx: ctx).padding(.trailing, 12) }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, 2).padding(.bottom, 4)
+                    if ctx.state.none { NoneBody(ctx: ctx).padding(.horizontal, 12).padding(.top, 0).padding(.bottom, 4) }
+                    else { IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, 2).padding(.bottom, 4) }
                 }
             } compactLeading: {
                 HStack(spacing: 6) {
@@ -250,12 +256,18 @@ struct SquadLiveActivity: Widget {
                 }
                 .frame(width: 72, alignment: .leading)
             } compactTrailing: {
-                CompactMin(state: ctx.state, stale: ctx.isStale)
-                    .frame(width: 72, alignment: .trailing)
+                if ctx.state.none {
+                    Text(ctx.state.short).font(.system(size: 15, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                        .lineLimit(1).fixedSize().padding(.vertical, 5).padding(.horizontal, 10).background(Capsule().fill(Color.white))
+                        .frame(width: 72, alignment: .trailing)
+                } else {
+                    CompactMin(state: ctx.state, stale: ctx.isStale)
+                        .frame(width: 72, alignment: .trailing)
+                }
             } minimal: {
                 HostDot(s: ctx.state, idx: ctx.state.hi, size: 22).overlay(Circle().stroke(Color.white.opacity(0.16), lineWidth: 0.5))
             }
-            .widgetURL(URL(string: laSite + "/d/" + ctx.attributes.id))
+            .widgetURL(URL(string: laSite + (ctx.state.none ? "" : "/d/" + ctx.attributes.id)))
         }
     }
 }
@@ -273,17 +285,18 @@ private struct PeriTime: View {
             let mins = max(0, Int(s.start.timeIntervalSince(now) / 60))
             let digits = CGFloat(String(mins).count)
             if mins >= 180 {
-                (Text("Drop " + s.pre + " ") + Text(s.start, style: .relative))
-                    .font(.system(size: size, weight: .medium)).foregroundColor(peri).lineLimit(1).minimumScaleFactor(0.7)
+                Text(cap(s.pre) + " " + String(mins / 60) + " h")
+                    .font(.system(size: size, weight: .medium)).foregroundColor(peri).lineLimit(1).truncationMode(.tail)
             } else {
             HStack(spacing: 4) {
-                Text("Drop " + s.pre).lineLimit(1).fixedSize()
+                Text(cap(s.pre)).lineLimit(1).fixedSize()
                 Text(timerInterval: now...s.start, pauseTime: nil, countsDown: true, showsHours: false)
                     .monospacedDigit().lineLimit(1).fixedSize()
                     .frame(width: digits * size * 0.6, alignment: .leading).clipped()
                 Text("min").lineLimit(1).fixedSize()
             }
             .font(.system(size: size, weight: .medium)).foregroundColor(peri)
+            .frame(maxWidth: .infinity, alignment: .leading).clipped()
             }
         }
     }
@@ -324,7 +337,7 @@ private struct TimelineBar: View {
                     Capsule().fill(segColors[i % segColors.count])
                         .frame(width: max(thick, w * (b - a)), height: thick).offset(x: min(w * a, w - max(thick, w * (b - a))))
                 }
-                HostDot(s: s, idx: 0, size: knob).overlay(Circle().stroke(Color.white, lineWidth: 2.5))
+                HostDot(s: s, idx: 0, size: knob)
                     .offset(x: min(max(w * nowF - knob / 2, 0), w - knob))
             }
             .frame(height: knob)
@@ -358,12 +371,12 @@ private struct IslandBottom: View {
         VStack(alignment: .leading, spacing: 12) {
             TimelineBar(ctx: ctx)
             HStack(spacing: 12) {
-                HostDot(s: s, idx: 1, size: 34)
+                HostDot(s: s, idx: s.hi, size: 34)
                 Text(s.title).font(.system(size: 20, weight: .bold)).foregroundColor(.white)
-                    .lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: .infinity, alignment: .leading)
+                    .lineLimit(1).truncationMode(.tail).layoutPriority(1).frame(maxWidth: .infinity, alignment: .leading)
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {
-                    Text(s.open).font(.system(size: 16, weight: .bold)).foregroundColor(peri)
-                        .lineLimit(1).padding(.horizontal, 20).frame(height: 36).background(Capsule().fill(slate))
+                    Text(s.open).font(.system(size: 16, weight: .bold)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                        .lineLimit(1).truncationMode(.tail).padding(.horizontal, 16).frame(minWidth: 96).frame(height: 36).background(Capsule().fill(Color.white))
                 }
             }
         }
@@ -488,6 +501,45 @@ struct SquadWeekActivity: Widget {
                     .frame(width: 22, height: 22).background(Circle().fill(blue))
             }
             .widgetURL(URL(string: laSite + (ctx.state.hasNext ? "/d/" + ctx.state.nid : "")))
+        }
+    }
+}
+
+private func cap(_ t: String) -> String { t.prefix(1).uppercased() + t.dropFirst() }
+
+/// Całość treści dropa (napis + godzina, oś dnia, organizator + przycisk) – ta sama na blokadzie i w rozwiniętej wyspie.
+@available(iOS 16.2, *)
+private struct DropBody: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack { PeriTime(ctx: ctx); Spacer(minLength: 8); PeriClock(ctx: ctx) }
+            IslandBottom(ctx: ctx)
+        }
+    }
+}
+
+/// Stan „brak dropów dziś”: komunikat, oś dnia z Twoją fotką i przycisk „Utwórz drop”.
+@available(iOS 16.2, *)
+private struct NoneBody: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    var body: some View {
+        let s = ctx.state
+        VStack(alignment: .leading, spacing: 10) {
+            Text(s.msg1).font(.system(size: 16.7, weight: .medium)).foregroundColor(peri).lineLimit(1).truncationMode(.tail)
+            TimelineBar(ctx: ctx)
+            HStack(spacing: 12) {
+                Text(s.msg2).font(.system(size: 16, weight: .medium)).foregroundColor(.white).lineLimit(2).layoutPriority(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Link(destination: URL(string: laSite + "/new")!) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "plus").font(.system(size: 14, weight: .heavy))
+                        Text(s.cta).font(.system(size: 16, weight: .bold)).lineLimit(1).truncationMode(.tail)
+                    }
+                    .foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
+                    .padding(.leading, 12).padding(.trailing, 16).frame(height: 36).background(Capsule().fill(Color.white))
+                }
+            }
         }
     }
 }

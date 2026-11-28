@@ -27,6 +27,11 @@ struct SquadLiveAttributes: ActivityAttributes {
         var live: String
         var seg: [Double]
         var hi: Int
+        var none: Bool
+        var msg1: String
+        var msg2: String
+        var cta: String
+        var short: String
     }
     var id: String
 }
@@ -120,15 +125,17 @@ public class SquadWidgetPlugin: CAPPlugin, CAPBridgedPlugin {
                 call.resolve(); return
             }
             var faces: [String] = []
-            for s in (o["av"] as? [String] ?? []).prefix(3) { if let f = await saveFace(s) { faces.append(f) } }
+            for s in (o["av"] as? [String] ?? []).prefix(3) { faces.append(await saveFace(s) ?? "") }
             let start = Date(timeIntervalSince1970: ts / 1000)
             let st = SquadLiveAttributes.ContentState(
                 title: o["t"] as? String ?? "", place: o["pl"] as? String ?? "", cat: o["k"] as? String ?? "",
                 start: start, from: start.addingTimeInterval(-2 * 3600), faces: faces,
                 people: o["pp"] as? String ?? "", more: o["more"] as? Int ?? 0,
                 pre: o["pre"] as? String ?? "", open: o["open"] as? String ?? "", live: o["lv"] as? String ?? "",
-                seg: (o["seg"] as? [Double]) ?? [], hi: o["hi"] as? Int ?? 1)
-            let content = ActivityContent(state: st, staleDate: start)
+                seg: (o["seg"] as? [Double]) ?? [], hi: o["hi"] as? Int ?? 1,
+                none: ((o["none"] as? Int) ?? 0) == 1, msg1: o["m1"] as? String ?? "", msg2: o["m2"] as? String ?? "",
+                cta: o["cta"] as? String ?? "", short: o["sh"] as? String ?? "")
+            let content = ActivityContent(state: st, staleDate: st.none ? nil : start)
             for a in cur where a.attributes.id != id { await a.end(nil, dismissalPolicy: .immediate) }
             if let a = cur.first(where: { $0.attributes.id == id }) {
                 await a.update(content)
