@@ -17,6 +17,8 @@ struct SquadLiveAttributes: ActivityAttributes {
         var pre: String       // „za”
         var open: String      // „Otwórz drop”
         var live: String      // „Trwa”
+        var seg: [Double]     // pary (start, koniec) dropów dnia, sekundy epoch
+        var hi: Int           // indeks twarzy organizatora w `faces`
     }
     var id: String
 }
@@ -26,6 +28,9 @@ private let laSite = "https://squad-64cd5.web.app"
 private let blue = Color(red: 0.31, green: 0.53, blue: 1.0)
 private let blueLt = Color(red: 0.50, green: 0.70, blue: 1.0)
 private let blueDk = Color(red: 0.18, green: 0.33, blue: 0.84)
+private let slate = Color(red: 0.29, green: 0.32, blue: 0.45)
+private let peri = Color(red: 0.557, green: 0.608, blue: 0.878)
+private let sky = Color(red: 0.435, green: 0.804, blue: 0.973)
 private let mute = Color(red: 0.60, green: 0.60, blue: 0.66)
 
 private func faceImage(_ n: String) -> UIImage? {
@@ -57,9 +62,9 @@ private struct CompactMin: View {
                 .font(.system(size: 15, weight: .heavy))
             }
         }
-        .foregroundColor(.white)
+        .foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
         .padding(.vertical, 5).padding(.horizontal, 9)
-        .background(Capsule().fill(blue))
+        .background(Capsule().fill(Color.white))
     }
 }
 
@@ -215,36 +220,123 @@ private struct LiveBody: View {
 struct SquadLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: SquadLiveAttributes.self) { ctx in
-            LiveBody(ctx: ctx, ring: Color(red: 0.10, green: 0.10, blue: 0.13), chat: false)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack { PeriTime(ctx: ctx); Spacer(minLength: 8); PeriClock(ctx: ctx) }
+                IslandBottom(ctx: ctx)
+            }
                 .padding(.horizontal, 20).padding(.vertical, 14)
-                .activityBackgroundTint(Color(red: 0.10, green: 0.10, blue: 0.13))
+                .activityBackgroundTint(Color(red: 0.086, green: 0.086, blue: 0.11))
                 .activitySystemActionForegroundColor(.white)
         } dynamicIsland: { ctx in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    TimeTxt(ctx: ctx, size: 17, weight: .heavy).padding(.leading, 12)
+                    PeriTime(ctx: ctx).padding(.leading, 12)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Faces(s: ctx.state, ring: .black, size: 30).padding(.trailing, 12)
+                    PeriClock(ctx: ctx).padding(.trailing, 12)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, -7).padding(.bottom, 3)
+                    IslandBottom(ctx: ctx).padding(.horizontal, 12).padding(.top, 2).padding(.bottom, 4)
                 }
             } compactLeading: {
-                HStack(spacing: 4) {
-                    Dot().overlay(PulseHalo())
-                    Text(ctx.state.title).font(.system(size: 12.5, weight: .black)).lineLimit(2).minimumScaleFactor(0.8)
-                        .multilineTextAlignment(.leading).lineSpacing(-1)
+                HStack(spacing: 6) {
+                    HostDot(s: ctx.state, idx: ctx.state.hi, size: 24).overlay(Circle().stroke(Color.white.opacity(0.16), lineWidth: 0.5))
+                    Text("Drop").font(.system(size: 15, weight: .semibold)).foregroundColor(peri).lineLimit(1).fixedSize()
                 }
                 .frame(width: 72, alignment: .leading)
             } compactTrailing: {
                 CompactMin(state: ctx.state, stale: ctx.isStale)
                     .frame(width: 72, alignment: .trailing)
             } minimal: {
-                Dot()
+                HostDot(s: ctx.state, idx: ctx.state.hi, size: 22).overlay(Circle().stroke(Color.white.opacity(0.16), lineWidth: 0.5))
             }
             .widgetURL(URL(string: laSite + "/d/" + ctx.attributes.id))
         }
+    }
+}
+
+@available(iOS 16.2, *)
+private struct PeriTime: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    private let size: CGFloat = 16.7
+    var body: some View {
+        let s = ctx.state
+        let now = Date()
+        if ctx.isStale || s.start <= now.addingTimeInterval(1) {
+            Text(s.live).font(.system(size: size, weight: .medium)).foregroundColor(peri)
+        } else {
+            let mins = max(0, Int(s.start.timeIntervalSince(now) / 60))
+            let digits = CGFloat(String(mins).count)
+            HStack(spacing: 4) {
+                Text("Drop " + s.pre).lineLimit(1).fixedSize()
+                Text(timerInterval: now...s.start, pauseTime: nil, countsDown: true, showsHours: false)
+                    .monospacedDigit().lineLimit(1).fixedSize()
+                    .frame(width: digits * size * 0.6, alignment: .leading).clipped()
+                Text("min").lineLimit(1).fixedSize()
+            }
+            .font(.system(size: size, weight: .medium)).foregroundColor(peri)
+        }
+    }
+}
+
+@available(iOS 16.2, *)
+private struct PeriClock: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    var body: some View {
+        Text(ctx.state.start, style: .time).font(.system(size: 16.7, weight: .medium).monospacedDigit()).foregroundColor(peri)
+    }
+}
+
+private let segColors: [Color] = [   // kolory dropów, o 6% ciemniejsze
+    Color(red: 0.929, green: 0.682, blue: 0.107), Color(red: 0.940, green: 0.351, blue: 0.155),
+    Color(red: 0.940, green: 0.338, blue: 0.583), Color(red: 0.611, green: 0.423, blue: 0.940)]
+
+/// Oś czasu dnia: błękit = minęło, odcinki = dropy (każdy w innym kolorze), twoja fotka = „teraz”.
+@available(iOS 16.2, *)
+private struct TimelineBar: View {
+    let ctx: ActivityViewContext<SquadLiveAttributes>
+    var thick: CGFloat = 15
+    var knob: CGFloat = 28
+    var body: some View {
+        let s = ctx.state
+        let t0 = s.from.timeIntervalSince1970
+        let t1 = max(s.seg.last ?? 0, s.start.timeIntervalSince1970 + 7200)
+        let span = max(t1 - t0, 1)
+        let nowF = min(max((Date().timeIntervalSince1970 - t0) / span, 0), 1)
+        GeometryReader { g in
+            let w = g.size.width
+            ZStack(alignment: .leading) {
+                Capsule().fill(slate).frame(height: thick)
+                Capsule().fill(sky).frame(width: max(thick, w * nowF), height: thick)
+                ForEach(0..<(s.seg.count / 2), id: \.self) { i in
+                    let a = (s.seg[2 * i] - t0) / span
+                    let b = (s.seg[2 * i + 1] - t0) / span
+                    Capsule().fill(segColors[i % segColors.count])
+                        .frame(width: max(thick, w * (b - a)), height: thick).offset(x: w * a)
+                }
+                HostDot(s: s, idx: 0, size: knob).overlay(Circle().stroke(Color.white, lineWidth: 2.5))
+                    .offset(x: min(max(w * nowF - knob / 2, 0), w - knob))
+            }
+            .frame(height: knob)
+        }
+        .frame(height: knob)
+    }
+}
+
+@available(iOS 16.2, *)
+private struct HostDot: View {
+    let s: SquadLiveAttributes.ContentState
+    var idx = 0
+    var size: CGFloat = 36
+    var body: some View {
+        Group {
+            if idx < s.faces.count, let im = faceImage(s.faces[idx]) {
+                Image(uiImage: im).resizable().scaledToFill()
+            } else {
+                Image(systemName: "person.fill").font(.system(size: size * 0.45)).foregroundColor(peri)
+            }
+        }
+        .frame(width: size, height: size).background(slate).clipShape(Circle())
     }
 }
 
@@ -253,17 +345,15 @@ private struct IslandBottom: View {
     let ctx: ActivityViewContext<SquadLiveAttributes>
     var body: some View {
         let s = ctx.state
-        VStack(alignment: .leading, spacing: 16) {
-            Text(s.title).font(.system(size: 22.6, weight: .heavy)).foregroundColor(.white)
-                .lineLimit(1).minimumScaleFactor(0.55).frame(maxWidth: .infinity, alignment: .leading)
-            HStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
+            TimelineBar(ctx: ctx)
+            HStack(spacing: 12) {
+                HostDot(s: s, idx: 1, size: 34)
+                Text(s.title).font(.system(size: 20, weight: .bold)).foregroundColor(.white)
+                    .lineLimit(1).minimumScaleFactor(0.6).frame(maxWidth: .infinity, alignment: .leading)
                 Link(destination: URL(string: laSite + "/d/" + ctx.attributes.id)!) {
-                    Text(s.open).font(.system(size: 14, weight: .heavy)).foregroundColor(Color(red: 0.04, green: 0.04, blue: 0.07))
-                        .frame(maxWidth: .infinity).frame(height: 34).background(Capsule().fill(Color.white))
-                }
-                Link(destination: URL(string: laSite + "/c/" + ctx.attributes.id)!) {
-                    ChatIcon().stroke(Color.white, style: StrokeStyle(lineWidth: 1.9, lineCap: .round, lineJoin: .round))
-                        .frame(width: 20, height: 20).frame(width: 34, height: 34).background(Circle().fill(Color.white.opacity(0.12)))
+                    Text(s.open).font(.system(size: 16, weight: .bold)).foregroundColor(peri)
+                        .lineLimit(1).padding(.horizontal, 20).frame(height: 36).background(Capsule().fill(slate))
                 }
             }
         }

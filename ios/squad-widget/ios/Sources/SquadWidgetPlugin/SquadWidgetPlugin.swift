@@ -25,6 +25,8 @@ struct SquadLiveAttributes: ActivityAttributes {
         var pre: String
         var open: String
         var live: String
+        var seg: [Double]
+        var hi: Int
     }
     var id: String
 }
@@ -124,7 +126,8 @@ public class SquadWidgetPlugin: CAPPlugin, CAPBridgedPlugin {
                 title: o["t"] as? String ?? "", place: o["pl"] as? String ?? "", cat: o["k"] as? String ?? "",
                 start: start, from: start.addingTimeInterval(-2 * 3600), faces: faces,
                 people: o["pp"] as? String ?? "", more: o["more"] as? Int ?? 0,
-                pre: o["pre"] as? String ?? "", open: o["open"] as? String ?? "", live: o["lv"] as? String ?? "")
+                pre: o["pre"] as? String ?? "", open: o["open"] as? String ?? "", live: o["lv"] as? String ?? "",
+                seg: (o["seg"] as? [Double]) ?? [], hi: o["hi"] as? Int ?? 1)
             let content = ActivityContent(state: st, staleDate: start)
             for a in cur where a.attributes.id != id { await a.end(nil, dismissalPolicy: .immediate) }
             if let a = cur.first(where: { $0.attributes.id == id }) {
